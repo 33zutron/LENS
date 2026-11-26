@@ -1,47 +1,47 @@
 # See https://pre-commit.com/#new-hooks for more information on this file.
-# It allows to call semgrep from pre-commit
+# It allows to call lens from pre-commit
 
 # This hook does not use 'docker_image' like the one below, and so is significantly
 # faster (especially on macOS).
-- id: semgrep
-  name: semgrep
-  entry: semgrep
+- id: lens
+  name: lens
+  entry: lens
   # language: python here provides pip as a dep for the hook, as pre-commit
   # installs tools in local environments.
   #
   # If you use 'language: python', then
   # pre-commit expects a toplevel 'setup.py'. This ./setup.py was defined just
-  # for pre-commit. Essentially, setup.py runs 'pip install semgrep==0.xxx.yyy'.
+  # for pre-commit. Essentially, setup.py runs 'pip install lens==0.xxx.yyy'.
   # It means that this hook does not even rely on the code in this repository;
-  # it just relies on pip and the availability of semgrep in pypy.
+  # it just relies on pip and the availability of lens in pypy.
   language: python
   args: ["--disable-version-check", "--quiet", "--skip-unknown-extensions"]
 
-- id: semgrep-ci
-  name: semgrep
-  entry: semgrep
+- id: lens-ci
+  name: lens
+  entry: lens
   # See above about why we need this
   language: python
   # Needed as ci command does not accept filenames as parameters
   pass_filenames: false
   args: ["ci", "--dry-run", "--baseline-commit", "HEAD"]
 
-# docker-based hooks, to use the bleeding edge Semgrep!
-- id: semgrep-docker-develop
-  name: semgrep
-  description: This hook runs semgrep:develop
+# docker-based hooks, to use the bleeding edge Lens!
+- id: lens-docker-develop
+  name: lens
+  description: This hook runs lens:develop
   # See https://pre-commit.com/#docker_image for more information
   language: docker_image
-  # Need to set SEMGREP_LOG_FILE and SEMGREP_VERSION_CACHE_PATH since pre-commit
+  # Need to set LENS_LOG_FILE and LENS_VERSION_CACHE_PATH since pre-commit
   # runs docker images with -u set to non-root uid which doesnt have permissions
-  # to default path /.semgrep
-  # alt: we could also fallback to use /tmp/ if we can't write to /.semgrep in the Python code.
-  entry: -e SEMGREP_LOG_FILE=/tmp/out.log -e SEMGREP_VERSION_CACHE_PATH=/tmp/cache returntocorp/semgrep:develop semgrep
+  # to default path /.lens
+  # alt: we could also fallback to use /tmp/ if we can't write to /.lens in the Python code.
+  entry: -e LENS_LOG_FILE=/tmp/out.log -e LENS_VERSION_CACHE_PATH=/tmp/cache returntocorp/lens:develop lens
 
 # using latest instead
-- id: semgrep-docker
-  name: semgrep
-  description: This hook runs semgrep (a.k.a. semgrep:latest)
+- id: lens-docker
+  name: lens
+  description: This hook runs lens (a.k.a. lens:latest)
   language: docker_image
-  # See the comment above for why we set those SEMGREP_XXX variables
-  entry: -e SEMGREP_LOG_FILE=/tmp/out.log -e SEMGREP_VERSION_CACHE_PATH=/tmp/cache returntocorp/semgrep:latest semgrep
+  # See the comment above for why we set those LENS_XXX variables
+  entry: -e LENS_LOG_FILE=/tmp/out.log -e LENS_VERSION_CACHE_PATH=/tmp/cache returntocorp/lens:latest lens

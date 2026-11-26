@@ -2,7 +2,7 @@
 # Explicitly specifying setuptools and wheel because pip >=24 no longer
 # includes wheel by default. We need both for our python installation.
 #
-# Without this, pip install semgrep with pip 24 would fail to build,
+# Without this, pip install lens with pip 24 would fail to build,
 # which has started to affect our docker and brew builds.
 #
 # A bit more discussion for context here:
@@ -12,9 +12,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 authors = [
-  { name = "Semgrep Inc.", email = "support@semgrep.com" }
+  { name = "Lens Inc.", email = "support@lens.com" }
 ]
-name = "semgrep"
+name = "lens"
 version = "1.183.0"
 description = "Lightweight static analysis for many languages. Find bug variants with patterns that look like source code."
 # README.md is a symlink to the canonical ../README.md.
@@ -38,15 +38,15 @@ classifiers = [
 ]
 
 # build deps
-# These specifiers are flexible so semgrep can coexist with other tools.
-# Even though we recommend giving semgrep its own virtualenv
-# (or using the official returntocorp/semgrep Docker image),
+# These specifiers are flexible so lens can coexist with other tools.
+# Even though we recommend giving lens its own virtualenv
+# (or using the official returntocorp/lens Docker image),
 # many users will first try to install it in their project's virtualenv.
 #
 # Flexibility is achieved by, in order of preference:
-# 1. >=x if you know the earliest version that works with Semgrep
-# 2. >=x,<y if you know the earliest version that works with Semgrep,
-#    and know that a later version breaks Semgrep.
+# 1. >=x if you know the earliest version that works with Lens
+# 2. >=x,<y if you know the earliest version that works with Lens,
+#    and know that a later version breaks Lens.
 # 3. ~=x.0 if you only know that major version 'x' works, and want to
 #    allow minor updates while preventing it from crossing into the
 #    next major release.
@@ -125,24 +125,24 @@ build = [
 ]
 
 [project.urls]
-Homepage = "https://semgrep.dev"
-Documentation = "https://semgrep.dev/docs"
-Repository = "https://github.com/semgrep/semgrep"
-Issues = "https://github.com/semgrep/semgrep/issues"
-Changelog = "https://github.com/semgrep/semgrep/blob/develop/CHANGELOG.md"
+Homepage = "https://lens.dev"
+Documentation = "https://lens.dev/docs"
+Repository = "https://github.com/lens/lens"
+Issues = "https://github.com/lens/lens/issues"
+Changelog = "https://github.com/lens/lens/blob/develop/CHANGELOG.md"
 
 [project.scripts]
-semgrep = "semgrep.console_scripts.entrypoint:main"
-pysemgrep = "semgrep.console_scripts.pysemgrep:main"
+lens = "lens.console_scripts.entrypoint:main"
+pylens = "lens.console_scripts.pylens:main"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
 # TODO: investigate if any of the two options below are needed anymore
 #
-# NOTE: introduced in https://github.com/semgrep/semgrep/pull/1558 to include
-# the jsonschema w/the semgrep package.
+# NOTE: introduced in https://github.com/lens/lens/pull/1558 to include
+# the jsonschema w/the lens package.
 include-package-data = true
-# NOTE: introduced in https://github.com/semgrep/semgrep/pull/698 w/o any
+# NOTE: introduced in https://github.com/lens/lens/pull/698 w/o any
 # documentation as to why
 zip-safe = false
 
@@ -150,7 +150,7 @@ zip-safe = false
 where = ["src"]
 
 [tool.setuptools.package-data]
-semgrep = ["bin/*", "bin/libs/*"]
+lens = ["bin/*", "bin/libs/*"]
 
 [tool.pytest.ini_options]
 # coupling: if you add a dep here it would be great if you added it to the top
@@ -167,15 +167,15 @@ markers = [
     "kinda_slow: test takes up to 2s",
     "slow: test takes more than 2s",
     "todo: the test is not implemented or needs work",
-    "no_semgrep_cli: this test doesn't invoke the semgrep CLI or osemgrep",
-    "osemfail: this test currently fails with osemgrep",
-    "pysemfail: this test currently fails with pysemgrep",
+    "no_lens_cli: this test doesn't invoke the lens CLI or olens",
+    "osemfail: this test currently fails with olens",
+    "pysemfail: this test currently fails with pylens",
     "requires_lockfileless_deps: this test requires lockfileless environment dependencies (java, etc)",
 ]
 asyncio_mode = "auto"
 
 [tool.uv]
-exclude-newer = "1 week"  # nosemgrep: uv-missing-dependency-cooldown -- "1 week" == 7-day cooldown (SEC-1765); rule only matches "N days"
+exclude-newer = "1 week"  # nolens: uv-missing-dependency-cooldown -- "1 week" == 7-day cooldown (SEC-1765); rule only matches "N days"
 # Remove after 2026-10-27, when the patched certifi release exits the normal cooldown.
 exclude-newer-package = { certifi = "2026-10-21T00:00:00Z" }
 required-version = ">=0.13.4"

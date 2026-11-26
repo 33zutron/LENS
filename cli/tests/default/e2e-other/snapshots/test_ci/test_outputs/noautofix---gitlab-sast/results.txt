@@ -7,21 +7,21 @@
   "$schema": "https://gitlab.com/gitlab-org/security-products/security-report-schemas/-/blob/master/dist/sast-report-format.json",
   "scan": {
     "analyzer": {
-      "id": "semgrep",
-      "name": "Semgrep",
-      "url": "https://semgrep.dev",
+      "id": "lens",
+      "name": "Lens",
+      "url": "https://lens.dev",
       "vendor": {
-        "name": "Semgrep"
+        "name": "Lens"
       },
       "version": "<MASKED>"
     },
     "end_time": "<MASKED>",
     "scanner": {
-      "id": "semgrep",
-      "name": "Semgrep",
-      "url": "https://semgrep.dev",
+      "id": "lens",
+      "name": "Lens",
+      "url": "https://lens.dev",
       "vendor": {
-        "name": "Semgrep"
+        "name": "Lens"
       },
       "version": "<MASKED>"
     },
@@ -41,9 +41,9 @@
       "id": "8c695a6a-4ab5-ffff-33d0-103309a310c1",
       "identifiers": [
         {
-          "name": "Semgrep - eqeq-bad",
-          "type": "semgrep_type",
-          "url": "https://semgrep.dev/r/eqeq-bad",
+          "name": "Lens - eqeq-bad",
+          "type": "lens_type",
+          "url": "https://lens.dev/r/eqeq-bad",
           "value": "eqeq-bad"
         }
       ],
@@ -54,10 +54,10 @@
       },
       "message": "useless comparison",
       "scanner": {
-        "id": "semgrep",
-        "name": "Semgrep",
+        "id": "lens",
+        "name": "Lens",
         "vendor": {
-          "name": "Semgrep"
+          "name": "Lens"
         }
       },
       "severity": "High"
@@ -71,9 +71,9 @@
       "id": "8abb389b-2f01-d0e5-2d66-3251e1d24ba7",
       "identifiers": [
         {
-          "name": "Semgrep - eqeq-bad",
-          "type": "semgrep_type",
-          "url": "https://semgrep.dev/r/eqeq-bad",
+          "name": "Lens - eqeq-bad",
+          "type": "lens_type",
+          "url": "https://lens.dev/r/eqeq-bad",
           "value": "eqeq-bad"
         }
       ],
@@ -84,10 +84,10 @@
       },
       "message": "useless comparison",
       "scanner": {
-        "id": "semgrep",
-        "name": "Semgrep",
+        "id": "lens",
+        "name": "Lens",
         "vendor": {
-          "name": "Semgrep"
+          "name": "Lens"
         }
       },
       "severity": "High"
@@ -101,9 +101,9 @@
       "id": "f6c666e6-921a-4402-8a20-15d0de15cc14",
       "identifiers": [
         {
-          "name": "Semgrep - eqeq-bad",
-          "type": "semgrep_type",
-          "url": "https://semgrep.dev/r/eqeq-bad",
+          "name": "Lens - eqeq-bad",
+          "type": "lens_type",
+          "url": "https://lens.dev/r/eqeq-bad",
           "value": "eqeq-bad"
         }
       ],
@@ -114,10 +114,10 @@
       },
       "message": "useless comparison",
       "scanner": {
-        "id": "semgrep",
-        "name": "Semgrep",
+        "id": "lens",
+        "name": "Lens",
         "vendor": {
-          "name": "Semgrep"
+          "name": "Lens"
         }
       },
       "severity": "High"
@@ -131,9 +131,9 @@
       "id": "d4404942-1636-e370-e790-6a6bed5fce54",
       "identifiers": [
         {
-          "name": "Semgrep - eqeq-bad",
-          "type": "semgrep_type",
-          "url": "https://semgrep.dev/r/eqeq-bad",
+          "name": "Lens - eqeq-bad",
+          "type": "lens_type",
+          "url": "https://lens.dev/r/eqeq-bad",
           "value": "eqeq-bad"
         }
       ],
@@ -144,10 +144,10 @@
       },
       "message": "useless comparison",
       "scanner": {
-        "id": "semgrep",
-        "name": "Semgrep",
+        "id": "lens",
+        "name": "Lens",
         "vendor": {
-          "name": "Semgrep"
+          "name": "Lens"
         }
       },
       "severity": "High"
@@ -161,9 +161,9 @@
       "id": "8646a2df-c020-9136-0696-9dcfe84e53c0",
       "identifiers": [
         {
-          "name": "Semgrep - eqeq-five",
-          "type": "semgrep_type",
-          "url": "https://semgrep.dev/r/eqeq-five",
+          "name": "Lens - eqeq-five",
+          "type": "lens_type",
+          "url": "https://lens.dev/r/eqeq-five",
           "value": "eqeq-five"
         }
       ],
@@ -174,10 +174,10 @@
       },
       "message": "useless comparison to 5",
       "scanner": {
-        "id": "semgrep",
-        "name": "Semgrep",
+        "id": "lens",
+        "name": "Lens",
         "vendor": {
-          "name": "Semgrep"
+          "name": "Lens"
         }
       },
       "severity": "High"
@@ -191,9 +191,9 @@
       "id": "87cd1247-dfc8-4bbd-502c-872035c71a63",
       "identifiers": [
         {
-          "name": "Semgrep - eqeq-four",
-          "type": "semgrep_type",
-          "url": "https://semgrep.dev/r/eqeq-four",
+          "name": "Lens - eqeq-four",
+          "type": "lens_type",
+          "url": "https://lens.dev/r/eqeq-four",
           "value": "eqeq-four"
         }
       ],
@@ -204,10 +204,10 @@
       },
       "message": "useless comparison to 4",
       "scanner": {
-        "id": "semgrep",
-        "name": "Semgrep",
+        "id": "lens",
+        "name": "Lens",
         "vendor": {
-          "name": "Semgrep"
+          "name": "Lens"
         }
       },
       "severity": "High"
@@ -221,9 +221,9 @@
       "id": "05a6d679-3a62-42a4-9ff8-3113ef4a83b3",
       "identifiers": [
         {
-          "name": "Semgrep - taint-test",
-          "type": "semgrep_type",
-          "url": "https://semgrep.dev/r/taint-test",
+          "name": "Lens - taint-test",
+          "type": "lens_type",
+          "url": "https://lens.dev/r/taint-test",
           "value": "taint-test"
         }
       ],
@@ -234,10 +234,10 @@
       },
       "message": "unsafe use of danger",
       "scanner": {
-        "id": "semgrep",
-        "name": "Semgrep",
+        "id": "lens",
+        "name": "Lens",
         "vendor": {
-          "name": "Semgrep"
+          "name": "Lens"
         }
       },
       "severity": "Medium"
@@ -257,9 +257,9 @@
       "id": "33cc4a1a-63bd-a197-79c4-f4bd6491df4a",
       "identifiers": [
         {
-          "name": "Semgrep - supply-chain1",
-          "type": "semgrep_type",
-          "url": "https://semgrep.dev/-/advisories/supply-chain1",
+          "name": "Lens - supply-chain1",
+          "type": "lens_type",
+          "url": "https://lens.dev/-/advisories/supply-chain1",
           "value": "supply-chain1"
         }
       ],
@@ -270,10 +270,10 @@
       },
       "message": "found a dependency",
       "scanner": {
-        "id": "semgrep",
-        "name": "Semgrep",
+        "id": "lens",
+        "name": "Lens",
         "vendor": {
-          "name": "Semgrep"
+          "name": "Lens"
         }
       },
       "severity": "High"
@@ -290,7 +290,7 @@
 └────────────────┘
 
   SCAN ENVIRONMENT
-  versions    - semgrep <MASKED> on python <MASKED>
+  versions    - lens <MASKED> on python <MASKED>
   environment - running in environment git, triggering event is unknown
 
   CONNECTION
@@ -331,11 +331,11 @@
  • Targets scanned: 3
  • Parsed lines: ~100.0%
  • Scan was limited to files tracked by git
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+ • For a detailed list of skipped files and lines, run lens with the --verbose flag
 CI scan completed successfully.
-  View results in Semgrep Cloud Platform:
-    https://semgrep.dev/orgs/org_name/findings?repo=local_scan/checkout_project_name&ref=some/branch-name
-    https://semgrep.dev/orgs/org_name/supply-chain/vulnerabilities?repo=local_scan/checkout_project_name&ref=some/branch-name
+  View results in Lens Cloud Platform:
+    https://lens.dev/orgs/org_name/findings?repo=local_scan/checkout_project_name&ref=some/branch-name
+    https://lens.dev/orgs/org_name/supply-chain/vulnerabilities?repo=local_scan/checkout_project_name&ref=some/branch-name
   Has findings for blocking rules so exiting with code 1
 Test Reason
 

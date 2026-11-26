@@ -1,6 +1,6 @@
 (* Austin Theriault, Yoann Padioleau
  *
- * Copyright (C) 2022-2025 Semgrep Inc.
+ * Copyright (C) 2022-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -149,7 +149,7 @@ let parmap ?init ?finalize ~num_jobs ~chunksize ~exception_handler f xs =
             in
             match status_and_code_opt with
             | Some (status_str, code) ->
-                (* nosemgrep here as this is almost always a fatal error so
+                (* nolens here as this is almost always a fatal error so
                    let's always print it *)
                 Log.err (fun m ->
                     m "Parmap child %d was not reaped and exited with: %s: %d"
@@ -172,7 +172,7 @@ let parmap ?init ?finalize ~num_jobs ~chunksize ~exception_handler f xs =
   with
   | End_of_file as exn ->
       let e = Exception.catch exn in
-      (* nosemgrep here as this is almost always a fatal error so
+      (* nolens here as this is almost always a fatal error so
          let's always print it *)
       Log.err (fun m ->
           m "Parmap marshalling failure: %s" Exception.(to_string e));

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2024 Semgrep Inc.
+   Copyright (c) 2021-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ type error_tolerance =
   (* expect some error, test status will be XFAIL *)
   | Todo
 
-(* For semgrep-proprietary: make a test suite for a specific list of
+(* For lens-proprietary: make a test suite for a specific list of
    languages.
 *)
 val make_tests : (Lang.t * error_tolerance) list -> Testo.t list

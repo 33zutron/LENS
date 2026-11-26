@@ -1,1 +1,1 @@
-file: lib_semgrep.jsonnet
+file: lib_lens.jsonnet

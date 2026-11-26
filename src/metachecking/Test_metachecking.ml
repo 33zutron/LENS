@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2021 Semgrep Inc.
+ * Copyright (C) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -69,7 +69,7 @@ let test_rules ?(unit_testing = false) xs =
               | Some (_, b2, ext2) ->
                   if
                     b = b2 && ext <> ext2
-                    (* .yaml.j2 files are Jinja2 templates to generate Semgrep config files *)
+                    (* .yaml.j2 files are Jinja2 templates to generate Lens config files *)
                     && ext2 <> "yaml.j2"
                     (* ugly: jsonnet exclusion below because of some .jsonnet and .yaml
                      * ambiguities in tests/rules *)

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2024 Semgrep Inc.
+# Copyright (c) 2023-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,19 +11,19 @@
 # LICENSE for more details.
 #
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
-# osemgrep returns the target correctly as not scanned but pysemgrep
+# olens returns the target correctly as not scanned but pylens
 # marks it as scanned.
-# TODO: exclude pysemfail tests or fix the problem in pysemgrep (output.py)
+# TODO: exclude pysemfail tests or fix the problem in pylens (output.py)
 # See comment in Scan_subcommand.ml.
 # @pytest.mark.pysemfail
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_pro_rule_skipping(run_semgrep_in_tmp: RunSemgrep, snapshot):
+def test_pro_rule_skipping(run_lens_in_tmp: RunLens, snapshot):
     snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             "rules/pro-rule-skipping.yaml", target_name="pro-rule-skipping/x.cls"
         ).stdout,
         "results.json",
@@ -34,9 +34,9 @@ def test_pro_rule_skipping(run_semgrep_in_tmp: RunSemgrep, snapshot):
 # @pytest.mark.pysemfail
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_pro_rule_skipping_no_parsing(run_semgrep_in_tmp: RunSemgrep, snapshot):
+def test_pro_rule_skipping_no_parsing(run_lens_in_tmp: RunLens, snapshot):
     snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             "rules/pro-rule-skipping-no-parsing.yaml",
             target_name="pro-rule-skipping-no-parsing/x.cls",
         ).stdout,

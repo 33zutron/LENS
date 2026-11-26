@@ -1,9 +1,9 @@
 (library
- (public_name semgrep.legacy_language_server)
- (name osemgrep_legacy_language_server)
+ (public_name lens.legacy_language_server)
+ (name olens_legacy_language_server)
  (libraries
-   semgrep.legacy_language_server.requests
-   semgrep.legacy_language_server.notifications
+   lens.legacy_language_server.requests
+   lens.legacy_language_server.notifications
    networking.http_mock_client
    fileutils
    testo

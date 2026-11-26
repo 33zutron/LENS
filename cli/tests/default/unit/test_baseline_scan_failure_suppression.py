@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,17 +15,17 @@ from pathlib import Path
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.error import SemgrepCoreError
-from semgrep.run_scan import _baseline_scan_failure_suppression_sets
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.error import LensCoreError
+from lens.run_scan import _baseline_scan_failure_suppression_sets
 
 
 def _scan_failure_at(
     path: str, *, rule_id: str | None, error_type: out.ErrorType | None = None
-) -> SemgrepCoreError:
-    """Helper to create a SemgrepCoreError at the given path with the given rule ID and error type."""
+) -> LensCoreError:
+    """Helper to create a LensCoreError at the given path with the given rule ID and error type."""
     et = error_type if error_type is not None else out.ErrorType(out.Timeout())
-    return SemgrepCoreError(
+    return LensCoreError(
         code=2,
         level=out.ErrorSeverity(out.Error_()),
         spans=None,

@@ -1,5 +1,5 @@
-semgrep-core rule validation failed (RuleParseError)
-[31m[22m[24msemgrep error[0m: Invalid rule schema
+lens-core rule validation failed (RuleParseError)
+[31m[22m[24mlens error[0m: Invalid rule schema
   --> rules/syntax/bad14.yaml:1
 [94m[22m[24m1 | [0mrules:
 [94m[22m[24m  | [0m[31m[22m[24m[0m

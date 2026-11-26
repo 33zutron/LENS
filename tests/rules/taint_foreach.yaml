@@ -5,7 +5,7 @@ rules:
     - pattern: $ANYTHING.getStackTrace(...)
   pattern-sinks:
     - pattern: System.out.println(...)
-  message: Semgrep found a match
+  message: Lens found a match
   languages:
     - java
   severity: WARNING

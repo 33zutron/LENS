@@ -1,0 +1,206 @@
+=====================================
+Ellipsis in relations
+=====================================
+
+model
+schema 1.1
+
+type document
+  relations
+    define reader: [user]
+    ...
+
+---
+
+(source_file
+  (model
+    (schema (version)))
+  (type_declaration
+    (identifier)
+    (relations
+      (definition
+        relation: (identifier)
+        (relation_def
+          (direct_relationship
+            (identifier))))
+      (lens_ellipsis))))
+
+=====================================
+Ellipsis between type declarations
+=====================================
+
+model
+schema 1.1
+
+type user
+
+...
+
+type document
+  relations
+    define reader: [user]
+
+---
+
+(source_file
+  (model
+    (schema (version)))
+  (type_declaration (identifier))
+  (lens_ellipsis)
+  (type_declaration
+    (identifier)
+    (relations
+      (definition
+        relation: (identifier)
+        (relation_def
+          (direct_relationship
+            (identifier)))))))
+
+=====================================
+Metavariable as type name
+=====================================
+
+model
+schema 1.1
+
+type $TYPE
+  relations
+    define reader: [user]
+
+---
+
+(source_file
+  (model
+    (schema (version)))
+  (type_declaration
+    (lens_metavariable)
+    (relations
+      (definition
+        relation: (identifier)
+        (relation_def
+          (direct_relationship
+            (identifier)))))))
+
+=====================================
+Metavariable as relation name
+=====================================
+
+model
+schema 1.1
+
+type document
+  relations
+    define $RELATION: [user]
+
+---
+
+(source_file
+  (model
+    (schema (version)))
+  (type_declaration
+    (identifier)
+    (relations
+      (definition
+        relation: (lens_metavariable)
+        (relation_def
+          (direct_relationship
+            (identifier)))))))
+
+=====================================
+Ellipsis in direct relationship list
+=====================================
+
+model
+schema 1.1
+
+type document
+  relations
+    define reader: [...]
+
+---
+
+(source_file
+  (model
+    (schema (version)))
+  (type_declaration
+    (identifier)
+    (relations
+      (definition
+        relation: (identifier)
+        (relation_def
+          (direct_relationship
+            (lens_ellipsis)))))))
+
+=====================================
+Ellipsis in condition expression
+=====================================
+
+model
+schema 1.1
+
+condition is_valid(x: int) {
+  ...
+}
+
+---
+
+(source_file
+  (model
+    (schema (version)))
+  (condition_declaration
+    name: (identifier)
+    (param (identifier) (type_identifier))
+    body: (condition_body
+      (lens_ellipsis))))
+
+=====================================
+Metavariable in expression
+=====================================
+
+model
+schema 1.1
+
+condition check(x: int) {
+  x > $VALUE
+}
+
+---
+
+(source_file
+  (model
+    (schema (version)))
+  (condition_declaration
+    name: (identifier)
+    (param
+      (identifier)
+      (type_identifier))
+    body: (condition_body
+      (binary_expression
+        left: (identifier)
+        right: (lens_metavariable)))))
+
+=====================================
+Metavariable in condition parameters
+=====================================
+
+model
+schema 1.1
+
+condition check($VAR: $TYPE) {
+  $VAR > some_value
+}
+
+---
+
+(source_file
+  (model
+    (schema (version)))
+  (condition_declaration
+    name: (identifier)
+    (param
+      (lens_metavariable)
+      (lens_metavariable))
+    body: (condition_body
+      (binary_expression
+        left: (lens_metavariable)
+        right: (identifier)))))

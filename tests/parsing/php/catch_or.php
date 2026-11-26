@@ -1,5 +1,5 @@
 <?php
-//https://github.com/returntocorp/semgrep/issues/2650
+//https://github.com/returntocorp/lens/issues/2650
 try {
     $data = $response->toArray();
 } catch (TransportExceptionInterface $e) {

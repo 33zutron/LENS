@@ -476,4 +476,4 @@ let any_of_string lang s =
       (* -------------------------------------------------- *)
       (* Call parser *)
       (* -------------------------------------------------- *)
-      Parser_cpp.semgrep_pattern (lexer_function tr) lexbuf_fake)
+      Parser_cpp.lens_pattern (lexer_function tr) lexbuf_fake)

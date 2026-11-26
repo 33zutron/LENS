@@ -1,4 +1,4 @@
-(* Copyright (C) Semgrep, Inc. All rights reserved.
+(* Copyright (C) Lens, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
  *)
 
 let protect ~finally work =
-  (* nosemgrep: no-fun-protect *)
+  (* nolens: no-fun-protect *)
   try Fun.protect ~finally work with
   | Fun.Finally_raised e ->
       let bt = Printexc.get_raw_backtrace () in

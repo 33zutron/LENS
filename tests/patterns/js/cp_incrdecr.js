@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/4667
+// https://github.com/returntocorp/lens/issues/4667
 
 function test1(event) {
   var newModelsCnt = 0;

@@ -1,7 +1,7 @@
 (* Yoann Padioleau
  *
  * Copyright (C) 2010 Facebook
- * Copyright (C) 2023 Semgrep Inc.
+ * Copyright (C) 2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@ open Common
 open Sexplib.Std
 
 (*
-   There are (too) many places in Semgrep where we define a "location"
+   There are (too) many places in Lens where we define a "location"
    and "position".
    A position is usually a place in a file, like a cursor.
    A location is usually a region in this file.
@@ -25,7 +25,7 @@ open Sexplib.Std
    Here are example of places where we define a loc (and often pos):
     - Tok.location (a Pos.t and a string)
     - Tok_range.t (a pair of Tok.t)
-    - semgrep_output_v1.location (a file and start/end positions)
+    - lens_output_v1.location (a file and start/end positions)
     - Spacegrep.Loc.t (using a range of Lexing.position)
     - Aliengrep.Match.loc (no filename, just start x length)
     - Tree_sitter_run.Loc.t (no filename either, just start/end positions)
@@ -33,7 +33,7 @@ open Sexplib.Std
    TODO: we should factorize some of those locations
 *)
 
-(* alias to the most common location type used in Semgrep
+(* alias to the most common location type used in Lens
 
    The fields are ordered such that deriving a 'compare' function with
    '@@deriving ord' works as expected (sort by file path first,
@@ -43,7 +43,7 @@ type t = {
   (* TODO? the content of Pos.t used to be inlined in this location type.
    * It is cleaner to factorize things in Pos.t, but this introduces
    * an extra pointer which actually can have real performance implication
-   * in Semgrep on huge monorepos. It might be worth inlining it back
+   * in Lens on huge monorepos. It might be worth inlining it back
    * (and also reduce its number of fields).
    *)
   pos : Pos.t;

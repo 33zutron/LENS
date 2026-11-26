@@ -50,12 +50,12 @@ open Telemetry
  * If you want to send traces to a different endpoint, append your command with
  * the `--trace-endpoint=<url> argument
  *
- * Communicates with the Python tracing in cli/src/semgrep/tracing.py
+ * Communicates with the Python tracing in cli/src/lens/tracing.py
  *
- * See also https://www.notion.so/semgrep/How-to-add-tracing-b0e1eaa1531e408cbb074663d1f840a6
+ * See also https://www.notion.so/lens/How-to-add-tracing-b0e1eaa1531e408cbb074663d1f840a6
  *
  * TODO:
- *  - code in libs/ should be independent of semgrep, so some of the
+ *  - code in libs/ should be independent of lens, so some of the
  *    hardcoded endpoints below should be moved to src/, not in libs/
  *  - get rid of our dependency to curl, but the current alternative is to
  *    use Opentelemetry_client_cohttp_lwt which require to lwt-ify the code
@@ -66,9 +66,9 @@ open Telemetry
 (* Constants *)
 (*****************************************************************************)
 (* Coupling: these need to be kept in sync with tracing.py *)
-let trace_level_var = "SEMGREP_TRACE_LEVEL"
-let parent_span_id_var = "SEMGREP_TRACE_PARENT_SPAN_ID"
-let parent_trace_id_var = "SEMGREP_TRACE_PARENT_TRACE_ID"
+let trace_level_var = "LENS_TRACE_LEVEL"
+let parent_span_id_var = "LENS_TRACE_PARENT_SPAN_ID"
+let parent_trace_id_var = "LENS_TRACE_PARENT_TRACE_ID"
 
 (* Otel never records or mutates [Span.dummy], so attributes attached to a
    filtered-out span are discarded. *)
@@ -119,7 +119,7 @@ let add_data_to_span sc attrs = Otel.Span.add_attrs' sc (fun () -> attrs)
 let opt_add_data_to_span data sc =
   sc |> Option.iter (fun sc -> add_data_to_span sc data)
 
-(* This function is helpful for Semgrep, which stores an optional span *)
+(* This function is helpful for Lens, which stores an optional span *)
 let add_data data (tracing_opt : config option) =
   tracing_opt
   |> Option.iter (fun tracing ->
@@ -219,8 +219,8 @@ let with_span_result ?(level = Info) ?__FUNCTION__ ~__FILE__ ~__LINE__ ?data
       | Ok _ as ok -> ok)
 
 (* Run the entrypoint function with a span. If a parent span is given
-   (e.g. via Semgrep Managed Scanning), use that as the parent span
-   so that we can connect the semgrep-core trace to other traces. *)
+   (e.g. via Lens Managed Scanning), use that as the parent span
+   so that we can connect the lens-core trace to other traces. *)
 let with_top_level_span ?(level = Info) ?parent_span_id ?parent_trace_id
     ?__FUNCTION__ ~__FILE__ ~__LINE__ ?data name f =
   ignore level;
@@ -252,12 +252,12 @@ let with_top_level_span ?(level = Info) ?parent_span_id ?parent_trace_id
 let log_trace_message () =
   match Otel.Ambient_span.get () with
   | None ->
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.info (fun m ->
           m "Tracing is enabled for this scan. There was no trace id recorded.")
   | Some scope ->
       let id = Otel.Trace_id.to_hex (Otel.Span.trace_id scope) in
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.info (fun m ->
           m "Tracing is enabled for this scan. The trace id is <%s>." id)
 

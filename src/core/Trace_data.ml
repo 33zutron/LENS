@@ -1,6 +1,6 @@
 (* Emma Jin
  *
- * Copyright (C) 2024 Semgrep Inc.
+ * Copyright (C) 2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -24,12 +24,12 @@
 
    In general, there are two places we can add "attributes" to Opentelemetry
    data. There are "resource" attributes, where a resource[^1] is basically a
-   service or program (think a rest API, a database, semgrep itself) that is
+   service or program (think a rest API, a database, lens itself) that is
    emitting telemetry. Resource attributes usually help categorize and describe
    what's emitting telemetry. Examples:
    * Version
    * Deployment environment (develop, staging, production...)
-   * Name of the deployment (semgrep, semgrep-app...)
+   * Name of the deployment (lens, lens-app...)
    * Runtime version (OCaml 4.15, OCaml 5.0...)
    * How the resource was executed (# of jobs, cli flags passed, )
    * Commonly defined resource attributes: https://opentelemetry.io/docs/specs/semconv/resource/
@@ -71,7 +71,7 @@
 (* Constants *)
 (*****************************************************************************)
 
-(* Only add Semgrep specific attributes here, the rest should go in Tracing.ml
+(* Only add Lens specific attributes here, the rest should go in Tracing.ml
    (like ocaml runtime version, if we're in a container etc.) *)
 module Attributes = struct
   (* Scan related attrs *)
@@ -178,7 +178,7 @@ let data_of_rule (rule : Rule.t) : (string * Telemetry.user_data) list =
             false) );
   ]
 
-(* NOTE: If this IS NOT semgrep specific stick it in Tracing.ml *)
+(* NOTE: If this IS NOT lens specific stick it in Tracing.ml *)
 (* WARNING: Let's be careful what we add as a resource attribute. TL;DR; these
    are used in different ways by the tools that ingest otel data , and certain
    types of data can have different performance and cost implications for these
@@ -187,7 +187,7 @@ let data_of_rule (rule : Rule.t) : (string * Telemetry.user_data) list =
 let get_resource_attrs ?(env = "prod") ~engine ~analysis_flags ~jobs ~eio () =
   let attrs =
     [
-      (* Version of Semgrep *)
+      (* Version of Lens *)
       (Telemetry.Attributes.version, `String Version.version);
       (* Whether we're running in a production, staging, or develop environment
        (Usually maps to SMS prod,staging,dev2) *)

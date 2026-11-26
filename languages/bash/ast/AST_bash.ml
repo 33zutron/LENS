@@ -1,6 +1,6 @@
 (* Martin Jambon
  *
- * Copyright (C) 2021 Semgrep Inc.
+ * Copyright (C) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -442,9 +442,9 @@ and expression =
   | Raw_string of (* '...' *) string wrap
   | Ansii_c_string of (* $'...' *) string wrap
   | Concatenation of loc * expression list
-  | Expr_semgrep_ellipsis of (* ... *) tok
-  | Expr_semgrep_deep_ellipsis of (* <... x ...> *) loc * expression bracket
-  | Expr_semgrep_metavar of (* $X in pattern mode *) string wrap
+  | Expr_lens_ellipsis of (* ... *) tok
+  | Expr_lens_deep_ellipsis of (* <... x ...> *) loc * expression bracket
+  | Expr_lens_metavar of (* $X in pattern mode *) string wrap
   | Equality_test of loc * eq_op * right_eq_operand (* should it be here? *)
   | Empty_expression of loc
   | Array of (* ( a b ) *) loc * expression list bracket
@@ -461,8 +461,8 @@ and string_fragment =
   | Arithmetic_expansion of
       (* $(( x + 1 )) or $[ x + 1 ] *)
       arithmetic_expression bracket
-  | Frag_semgrep_metavar of (* $X in pattern mode *) string wrap
-  | Frag_semgrep_named_ellipsis of (* $...X *) string wrap
+  | Frag_lens_metavar of (* $X in pattern mode *) string wrap
+  | Frag_lens_named_ellipsis of (* $...X *) string wrap
 
 (* $foo or something like ${foo ...} *)
 and expansion =
@@ -472,7 +472,7 @@ and expansion =
 and variable_name =
   | Simple_variable_name of string wrap
   | Special_variable_name of string wrap
-  | Var_semgrep_metavar of string wrap
+  | Var_lens_metavar of string wrap
 
 and complex_expansion =
   | Variable of loc * variable_name
@@ -501,7 +501,7 @@ type program = blist
 let variable_name_wrap = function
   | Simple_variable_name x
   | Special_variable_name x
-  | Var_semgrep_metavar x ->
+  | Var_lens_metavar x ->
       x
 
 let variable_name_tok x = variable_name_wrap x |> snd

@@ -4,7 +4,7 @@
 
 # Many targets in this Makefile assume some commands have been run before to
 # setup the correct build environment supporting the different languages
-# used for Semgrep development.
+# used for Lens development.
 #  - for OCaml: 'ocamlc' and 'ocamlopt' (currently 4.14.0), 'dune', 'opam'
 #  - for C: 'gcc', 'ld', 'pkgconfig', but also some C libs like PCRE, gmp
 #  - for Python: 'python3', 'pip', 'pipenv'
@@ -16,15 +16,15 @@
 #
 #     $ make install-deps
 #
-# to install the dependencies proper to semgrep (e.g., the necessary OPAM
-# packages used by semgrep-core).
+# to install the dependencies proper to lens (e.g., the necessary OPAM
+# packages used by lens-core).
 #
-# Then to compile semgrep simply type:
+# Then to compile lens simply type:
 #
 #     $ make all
 #
 # See INSTALL.md for more information
-# See also https://semgrep.dev/docs/contributing/contributing-code/
+# See also https://lens.dev/docs/contributing/contributing-code/
 
 # Most of the targets in this Makefile should work equally under
 # Linux (Alpine, Ubuntu, Arch), macOS (x86 and arm64), Windows (WSL, Cygwin),
@@ -46,7 +46,7 @@
 #     endif
 
 # This is to deal with paths that change depending on whether we're in the
-# semgrep-proprietary monorepo or detached as a standalone semgrep project.
+# lens-proprietary monorepo or detached as a standalone lens project.
 # The script 'scripts/make-symlinks' also deals with such issues.
 PROJECT_ROOT = $(shell git rev-parse --show-toplevel || pwd)
 ifeq ($(shell pwd),$(PROJECT_ROOT))
@@ -54,7 +54,7 @@ ifeq ($(shell pwd),$(PROJECT_ROOT))
   BUILD = _build
   BUILD_DEFAULT = _build/default
 else
-  # Assume we're in the semgrep-proprietary repo where OSS/ = semgrep.
+  # Assume we're in the lens-proprietary repo where OSS/ = lens.
   BUILD = ../_build
   BUILD_DEFAULT = ../_build/default/OSS
 endif
@@ -87,17 +87,17 @@ all:
 # Python setup
 	cd cli && pipenv install --dev
 
-# Make binaries available to pysemgrep
+# Make binaries available to pylens
 .PHONY: copy-core-for-cli
 copy-core-for-cli:
-	rm -f cli/src/semgrep/bin/semgrep-core$(EXE)
-	cp bin/semgrep-core$(EXE) cli/src/semgrep/bin/
+	rm -f cli/src/lens/bin/lens-core$(EXE)
+	cp bin/lens-core$(EXE) cli/src/lens/bin/
 
 # Per-language grammar C stubs need TREESITTER_*.
-# Don't call dune directly for semgrep-core — use
+# Don't call dune directly for lens-core — use
 # 'make core' (or source tree-sitter-config.sh).
 include tree-sitter-config.mk
-_TS_DUNE := libs/ocaml-tree-sitter-semgrep/core/tree-sitter-out
+_TS_DUNE := libs/ocaml-tree-sitter-lens/core/tree-sitter-out
 
 # Build the tree-sitter C runtime (headers + libtree-sitter).
 # Only the C library is built; the tree-sitter CLI (needs Rust/cargo) is not.
@@ -105,22 +105,22 @@ _TS_DUNE := libs/ocaml-tree-sitter-semgrep/core/tree-sitter-out
 tree-sitter-runtime:
 	dune build $(_TS_DUNE)
 
-# Minimal build of the semgrep-core executable. Intended for the docker build.
+# Minimal build of the lens-core executable. Intended for the docker build.
 # If you need other binaries, look at the build-xxx rules below.
-# We do not use .../bin/{semgrep-core,osemgrep,semgrep} below to
+# We do not use .../bin/{lens-core,olens,lens} below to
 # factorize because make under Alpine uses busybox/ash for /bin/sh which
 # does not support this bash feature.
 .PHONY: core
 core: tree-sitter-runtime
-	dune build $(BUILD)/install/default/bin/semgrep-core$(EXE)
-	dune build $(BUILD)/install/default/bin/osemgrep$(EXE)
-	chmod +w $(BUILD)/install/default/bin/semgrep-core$(EXE)
+	dune build $(BUILD)/install/default/bin/lens-core$(EXE)
+	dune build $(BUILD)/install/default/bin/olens$(EXE)
+	chmod +w $(BUILD)/install/default/bin/lens-core$(EXE)
 
-#coupling: The 'semgrep-oss' is the name of the step in the Dockerfile, the
-# 'semgrep' the name of the docker image produced (will be semgrep:latest)
+#coupling: The 'lens-oss' is the name of the step in the Dockerfile, the
+# 'lens' the name of the docker image produced (will be lens:latest)
 .PHONY: build-docker
 build-docker:
-	docker build -t semgrep --target semgrep-oss .
+	docker build -t lens --target lens-oss .
 
 .PHONY: build-ojsonnet
 build-ojsonnet:
@@ -131,8 +131,8 @@ build-ojsonnet:
 .PHONY: clean
 clean:
 	dune clean
-	rm -rf libs/ocaml-tree-sitter-semgrep/core/bin
-	$(MAKE) -C libs/ocaml-tree-sitter-semgrep/lang clean
+	rm -rf libs/ocaml-tree-sitter-lens/core/bin
+	$(MAKE) -C libs/ocaml-tree-sitter-lens/lang clean
 # We still need to keep the nonempty opam files in git for
 # 'make setup', so we should only remove the empty opam files.
 # This removes the gitignored opam files.
@@ -143,18 +143,18 @@ clean:
 # Install targets
 ###############################################################################
 
-# Install semgrep on a developer's machine with pip and opam installed.
+# Install lens on a developer's machine with pip and opam installed.
 # This should *not* install the open-source libraries that we maintain
-# as part of the semgrep project.
+# as part of the lens project.
 .PHONY: install
 install:
 	$(MAKE) copy-core-for-cli
-# Install semgrep and semgrep-core in editable mode, so that they are available in the PATH and can be called
+# Install lens and lens-core in editable mode, so that they are available in the PATH and can be called
 	uv tool install -e ./cli
 
 .PHONY: uninstall
 uninstall:
-	uv tool uninstall semgrep
+	uv tool uninstall lens
 
 ###############################################################################
 # Test target
@@ -181,7 +181,7 @@ test-all:
 	$(MAKE) -C cli osempass
 	$(MAKE) ots-test
 
-# Vendored ocaml-tree-sitter-semgrep unit tests (OCaml dune + Python pytest).
+# Vendored ocaml-tree-sitter-lens unit tests (OCaml dune + Python pytest).
 # coupling: .github/workflows/ocaml-tree-sitter-ci.yml runs the same targets.
 .PHONY: ots-test
 ots-test:
@@ -190,15 +190,15 @@ ots-test:
 
 .PHONY: ots-test-ocaml
 ots-test-ocaml: grammar-tools
-	PATH="$(abspath libs/ocaml-tree-sitter-semgrep/core/bin):$$PATH" dune runtest libs/ocaml-tree-sitter-semgrep/core
+	PATH="$(abspath libs/ocaml-tree-sitter-lens/core/bin):$$PATH" dune runtest libs/ocaml-tree-sitter-lens/core
 
 .PHONY: ots-test-python
 ots-test-python: setup-tree-sitter-versions
-	uv run --project cli --locked pytest libs/ocaml-tree-sitter-semgrep/scripts/test_*.py
+	uv run --project cli --locked pytest libs/ocaml-tree-sitter-lens/scripts/test_*.py
 
 .PHONY: setup-tree-sitter-versions
 setup-tree-sitter-versions:
-	./libs/ocaml-tree-sitter-semgrep/core/scripts/provision-tree-sitter-all
+	./libs/ocaml-tree-sitter-lens/core/scripts/provision-tree-sitter-all
 
 #coupling: this is run by .github/workflow/tests.yml
 .PHONY: core-test
@@ -246,20 +246,20 @@ check-opam-conflicts: dune-project
 
 # We need to install all the dependencies in a single 'opam install'
 # command so as to detect conflicts.
-# WEIRD: if you use ./libs/ocaml-tree-sitter-semgrep/ instead of the full
+# WEIRD: if you use ./libs/ocaml-tree-sitter-lens/ instead of the full
 # path, then recent versions of opam crash with a 'git ls-files fatal error'
-# about some 'libs/ocaml-tree-sitter-semgrep/../../.git/...' not being a git
+# about some 'libs/ocaml-tree-sitter-lens/../../.git/...' not being a git
 # repo.
 #
-# EXTRA_OPAM_DEPS allows us to add more opam files when building semgrep
-# as part of a larger project (e.g. semgrep-proprietary). Using a single
+# EXTRA_OPAM_DEPS allows us to add more opam files when building lens
+# as part of a larger project (e.g. lens-proprietary). Using a single
 # 'opam install' command to install all the dependencies allows us to detect
 # version constraints incompatibilities.
 #
-# weird: when ./semgrep.opam is left as ./, opam install errors with
+# weird: when ./lens.opam is left as ./, opam install errors with
 # "Undefined boolean filter value: os != win32"
 REQUIRED_DEPS = \
-  ./semgrep.opam \
+  ./lens.opam \
   ./dev/required.opam \
   $(EXTRA_OPAM_DEPS)
 
@@ -267,10 +267,10 @@ OPTIONAL_DEPS = $(REQUIRED_DEPS) ./dev/optional.opam
 
 # This target is portable; it only assumes you have 'gcc', 'opam' and
 # other build-essential tools and a working OCaml (e.g., ocamlc) switch setup.
-# Note that we call opam update below because semgrep.opam may mention
+# Note that we call opam update below because lens.opam may mention
 # new packages that are not covered yet by our ocaml-layer docker image.
-.PHONY: install-deps-for-semgrep-core
-install-deps-for-semgrep-core:
+.PHONY: install-deps-for-lens-core
+install-deps-for-lens-core:
 	./scripts/build-static-libcurl.sh
 	$(MAKE) install-opam-deps
 # Build the tree-sitter runtime so grammar bindings can compile against it
@@ -280,27 +280,27 @@ install-deps-for-semgrep-core:
 # Standalone grammar jobs only; full setup solves all dependencies together.
 .PHONY: install-grammar-deps
 install-grammar-deps:
-	opam install --yes --deps-only ./libs/ocaml-tree-sitter-semgrep/core/tree-sitter.opam
+	opam install --yes --deps-only ./libs/ocaml-tree-sitter-lens/core/tree-sitter.opam
 
 .PHONY: grammar-tools
 grammar-tools: tree-sitter-runtime
-	dune build libs/ocaml-tree-sitter-semgrep/core/bin/ocaml-tree-sitter libs/ocaml-tree-sitter-semgrep/core/tree-sitter.install
+	dune build libs/ocaml-tree-sitter-lens/core/bin/ocaml-tree-sitter libs/ocaml-tree-sitter-lens/core/tree-sitter.install
 
 # Regenerate an in-tree grammar, e.g. `make regen-grammar-python`.
 # Pattern rule (not LANG=) to avoid colliding with the LANG locale var.
 regen-grammar-%: grammar-tools
-	./libs/ocaml-tree-sitter-semgrep/scripts/regen-grammar $*
+	./libs/ocaml-tree-sitter-lens/scripts/regen-grammar $*
 
 .PHONY: test-grammars
 test-grammars: grammar-tools
-	$(MAKE) -C libs/ocaml-tree-sitter-semgrep/lang test
+	$(MAKE) -C libs/ocaml-tree-sitter-lens/lang test
 
 test-grammar-%: grammar-tools
-	./libs/ocaml-tree-sitter-semgrep/scripts/test-grammar $*
+	./libs/ocaml-tree-sitter-lens/scripts/test-grammar $*
 
 # Pin the upstream opam-repository to a known-good commit.
 # coupling: keep this commit in sync with opam_repository_pin in
-# .github/workflows/libs/semgrep.libsonnet
+# .github/workflows/libs/lens.libsonnet
 #
 OPAM_REPOSITORY_PIN = git+https://github.com/ocaml/opam-repository.git\#922f67e068446a8d8e809a40251a259bd0549552
 
@@ -330,19 +330,19 @@ switch-tsan:
 	opam install dune -y
 
 pin-ocaml-fork:
-	# the fork without TSan is pinned via our `semgrep.opam.template` file + `semgrep.opam`
+	# the fork without TSan is pinned via our `lens.opam.template` file + `lens.opam`
 	echo "skipping pinning ocaml fork via make"
 
 pin-ocaml-fork-tsan:
 	# NBT: our fork of the compiler
-	opam pin add ocaml-variants.5.4.0+options "git+https://github.com/semgrep/ocaml.git#5.4.0-semgrep-tsan" --update-invariant -y
+	opam pin add ocaml-variants.5.4.0+options "git+https://github.com/lens/ocaml.git#5.4.0-lens-tsan" --update-invariant -y
 # Install OCaml dependencies (globally) from *.opam files.
 # This now also installs the dev dependencies. This has the benefit
 # of installing all the packages in one shot and detecting possible
 # version conflicts.
 # OPAMSOLVERTIMEOUT default is 60 but seems not enough
 #
-# Per the note above install-deps-ALPINE-for-semgrep-core, we may want
+# Per the note above install-deps-ALPINE-for-lens-core, we may want
 # to keep it and add `--no-cache`
 #
 # Note that we do the upgrade --fixup here to ensure that the dependencies are
@@ -369,30 +369,30 @@ install-opam-deps: pin-ocaml-fork$(OPTIONS)
 	./scripts/validate-compiler-sha.sh
 
 # This installs pyro caml profiler, which allows us to do some nice continous
-# profiling (--profile passed to pysemgrep). This is separate from
+# profiling (--profile passed to pylens). This is separate from
 # install-opam-deps, as it is not compatible with tsan nor windows. This allows
 # us to only install it when needed, in the normal docker image build.
 # Additionally the profiler relies on Rust as a dependency, so this avoids
 # forcing developers to install Rust unless they need it.
-# COUPLING: semgrep.opam.template where we pin the library
+# COUPLING: lens.opam.template where we pin the library
 .PHONY: install-pyro-caml
 install-pyro-caml:
-	opam pin add --confirm-level=unsafe-yes pyro-caml.dev $$(cat semgrep.opam | grep -E -o "git\+.*pyro-caml.git#[a-zA-Z0-9]*" | head -1)
+	opam pin add --confirm-level=unsafe-yes pyro-caml.dev $$(cat lens.opam | grep -E -o "git\+.*pyro-caml.git#[a-zA-Z0-9]*" | head -1)
 	opam install pyro-caml -y  --confirm-level=unsafe-yes
 
-# This will fail if semgrep.opam isn't up-to-date (in git),
+# This will fail if lens.opam isn't up-to-date (in git),
 # and dune isn't installed yet. You can always install dune with
 # 'opam install dune' to get started.
-semgrep.opam: dune-project semgrep.opam.template
+lens.opam: dune-project lens.opam.template
 	dune build $@
 # Foolproofing
-	chmod a-w semgrep.opam
+	chmod a-w lens.opam
 
 # We could also add python dependencies at some point
-# and an 'install-deps-for-semgrep-cli' target
+# and an 'install-deps-for-lens-cli' target
 install-deps:
-	./scripts/pick-lockfile.sh --strict semgrep.opam
-	$(MAKE) install-deps-for-semgrep-core
+	./scripts/pick-lockfile.sh --strict lens.opam
+	$(MAKE) install-deps-for-lens-core
 
 # ******************************************
 # Release target
@@ -414,7 +414,7 @@ release:
 # -------------------------------------------------
 # See flake.nix top level comments for more information
 
-# always accept the semgrep cache substituer
+# always accept the lens cache substituer
 NIX=nix --accept-flake-config
 
 # Enter development environment with all dependencies installed
@@ -432,11 +432,11 @@ shell-pure-test:
 # Build targets
 # For all the .?submodules=1 we need because nix is weird:
 # https://github.com/NixOS/nix/issues/4423#issuecomment-791352686
-nix-semgrep:
-	$(NIX) build ".?submodules=1#semgrep"
+nix-lens:
+	$(NIX) build ".?submodules=1#lens"
 
-nix-semgrep-core:
-	$(NIX) build ".?submodules=1#semgrep-core"
+nix-lens-core:
+	$(NIX) build ".?submodules=1#lens-core"
 
 # Build + run tests (doesn't run python tests yet)
 nix-check:
@@ -457,7 +457,7 @@ configure-osx:
 	make configure
 
 configure:
-	opam switch create semgrep --empty
+	opam switch create lens --empty
 	eval $(opam env)
 
 # This is a best effort to install some external dependencies.
@@ -467,9 +467,9 @@ configure:
 setup:
 	./scripts/make-symlinks
 	./scripts/check-bash-version
-	./scripts/pick-lockfile.sh semgrep.opam
+	./scripts/pick-lockfile.sh lens.opam
 	$(MAKE) pin-opam-repo
-	LIBRARY_PATH="$(HOMEBREW_PREFIX)/lib:$(LIBRARY_PATH)" $(MAKE) install-deps-for-semgrep-core
+	LIBRARY_PATH="$(HOMEBREW_PREFIX)/lib:$(LIBRARY_PATH)" $(MAKE) install-deps-for-lens-core
 
 # Install optional development dependencies in addition to build dependencies.
 .PHONY: dev-setup
@@ -489,30 +489,30 @@ rebuild:
 pyroscope:
 	docker run --rm -it -p 4040:4040 grafana/pyroscope:latest
 
-# Run utop with all the semgrep-core libraries loaded.
+# Run utop with all the lens-core libraries loaded.
 .PHONY: utop
 utop:
 	dune utop
 
-DOCKER_IMAGE=semgrep/semgrep-nightly:develop
+DOCKER_IMAGE=lens/lens-nightly:develop
 
 # If you get parsing errors while running this command, maybe you have an old
 # cached version of the docker image. You can invalidate the cache with
-#   'docker rmi semgrep/semgrep-nightly:develop`
+#   'docker rmi lens/lens-nightly:develop`
 check_with_docker:
-	docker run --rm -v "${PWD}:/src" $(DOCKER_IMAGE) semgrep $(SEMGREP_ARGS)
+	docker run --rm -v "${PWD}:/src" $(DOCKER_IMAGE) lens $(LENS_ARGS)
 
 
 ###############################################################################
 # Martin's targets
 ###############################################################################
-# Build executables and place them where semgrep expects them.
+# Build executables and place them where lens expects them.
 # These are normally copied by '/cli/setup.py' but it doesn't happen if we
 # run only 'dune build'.
 #
 # Usage:
 #  $ make dev
-#  $ PIPENV_PIPFILE=~/semgrep/cli/Pipfile pipenv run semgrep ...
+#  $ PIPENV_PIPFILE=~/lens/cli/Pipfile pipenv run lens ...
 .PHONY: dev
 dev:
 	$(MAKE) core

@@ -3,7 +3,7 @@ rules:
   options:
     symbolic_propagation: true
   pattern: x(). ... .z()
-  message: Semgrep found a match
+  message: Lens found a match
   languages:
     - java
   severity: WARNING

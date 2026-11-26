@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2022 Semgrep Inc.
+ * Copyright (C) 2019-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -77,9 +77,9 @@ let metavar_of_json s : J.t -> value = function
   | J.Float f -> Float f
   | _ -> failwith (spf "wrong format for metavar %s" s)
 
-(* JSON format used internally in semgrep-python for metavariable-comparison.
- * metavariable-comparison is actually now handled directly in semgrep-core,
- * so this format is not used anymore in semgrep-python, but we still
+(* JSON format used internally in lens-python for metavariable-comparison.
+ * metavariable-comparison is actually now handled directly in lens-core,
+ * so this format is not used anymore in lens-python, but we still
  * use it for some of our regression tests in tests/eval/.
  *)
 let parse_json (file : string) : env * code =
@@ -586,7 +586,7 @@ let bindings_to_env_just_strings (config : Rule_options.t) ~file xs =
 (* Entry points *)
 (*****************************************************************************)
 
-(* for testing purpose, via semgrep-core -test_eval *)
+(* for testing purpose, via lens-core -test_eval *)
 let test_eval file =
   try
     let env, code = parse_json file in

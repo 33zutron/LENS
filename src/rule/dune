@@ -1,6 +1,6 @@
 ; Library defining mostly Rule.ml and a few related modules.
 ;
-; This library now also includes semgrep_output_v1.atd (see the dune rules
+; This library now also includes lens_output_v1.atd (see the dune rules
 ; below). This ATD file used to be in reporting/ because it was concerned
 ; mostly with JSON reporting of a scan result, but it now contains core data
 ; definitions (e.g., engine_kind, core_error_kind, skip_reason,
@@ -8,8 +8,8 @@
 ; here.
 
 (library
- (public_name semgrep.rule)
- (name semgrep_core_rule)
+ (public_name lens.rule)
+ (name lens_core_rule)
  (wrapped false)
  (libraries
    ; standard libraries
@@ -32,12 +32,12 @@
    parser_javascript.ast
 
    ; in src/
-   ; We should also not depend on any other semgrep libs (except the one below
+   ; We should also not depend on any other lens libs (except the one below
    ; because of our use of Rule_options.atd)
-   semgrep.configuring
+   lens.configuring
 
-   ; in cli/src/semgrep/semgrep_interfaces/
-   semgrep.interfaces
+   ; in cli/src/lens/lens_interfaces/
+   lens.interfaces
 
  )
  (preprocess

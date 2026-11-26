@@ -1236,7 +1236,7 @@ rules:
     languages:
       - javascript
     severity: WARNING
-  # Convert this to INFO when semgrep supports that
+  # Convert this to INFO when lens supports that
 
   - id: helmet_header_check_csp
     message: >-
@@ -2715,8 +2715,8 @@ rules:
     metadata:
       cwe: "CWE-522: Insufficiently Protected Credentials"
       owasp: "A2: Broken Authentication"
-  # Rule is from https://github.com/returntocorp/semgrep-rules/blob/develop/javascript/jwt-hardcode/jwt-hardcode.yaml
-  # module imports used as described in https://github.com/returntocorp/semgrep/issues/285
+  # Rule is from https://github.com/returntocorp/lens-rules/blob/develop/javascript/jwt-hardcode/jwt-hardcode.yaml
+  # module imports used as described in https://github.com/returntocorp/lens/issues/285
 
   - id: hardcoded_jwt_secret
     patterns:
@@ -2788,7 +2788,7 @@ rules:
     metadata:
       owasp: "A3: Sensitive Data Exposure"
       cwe: "CWE-798: Use of Hard-coded Credentials"
-  # Rule from : https://github.com/returntocorp/semgrep-rules/blob/develop/javascript/jwt-none-alg/jwt-none-alg.yaml
+  # Rule from : https://github.com/returntocorp/lens-rules/blob/develop/javascript/jwt-none-alg/jwt-none-alg.yaml
   # https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/#Meet-the--None--Algorithm
 
   - id: node_jwt_none_algorithm

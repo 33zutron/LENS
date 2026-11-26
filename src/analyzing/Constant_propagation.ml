@@ -1,7 +1,7 @@
 (* Yoann Padioleau
  * Iago Abal
  *
- * Copyright (C) 2020-2022 Semgrep Inc.
+ * Copyright (C) 2020-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -29,7 +29,7 @@ module Eval = Eval_generic_partial
  * 2. Second pass is flow-sensitive, but intraprocedural and ignores the
  * global scope, it uses and refines the outcome of the first pass.
  *
- * This is mainly to provide advanced features to semgrep such as the
+ * This is mainly to provide advanced features to lens such as the
  * constant propagation of literals.
  *
  * Partial evaluation for Generic is provided by core/ast/Normalize_generic.ml,
@@ -211,7 +211,7 @@ let obj_creation_mtx = Mutex.create ()
  *
  * Note that this may be incomplete and buggy. Worst case we do a
  * constant propagation on a variable containing a literal that may
- * have its content changed; not a big-deal in semgrep context actually.
+ * have its content changed; not a big-deal in lens context actually.
  *
  * TODO: do it also for Java private fields; if they are not used in an
  * lvalue in this class, they can't be accessed from anywhere else so it's
@@ -532,7 +532,7 @@ let propagate_basic lang prog =
                   id_flags := IdFlags.set_final !id_flags;
                   match (Eval.eval env e, e.e) with
                   (* When the name already has an svalue computed, just use
-                   * that. DeepSemgrep assigns svalues sometimes in its naming
+                   * that. DeepLens assigns svalues sometimes in its naming
                    * phase. *)
                   | Some svalue, _ -> add_constant_env id (sid, svalue) env
                   | None, L literal ->
@@ -663,7 +663,7 @@ let propagate_basic lang prog =
 [@@profiling] [@@trace_trace]
 
 let propagate_dataflow_one_function lang fun_cfg =
-  (* Exposed to help DeepSemgrep *)
+  (* Exposed to help DeepLens *)
   let mapping = Dataflow_svalue.fixpoint lang fun_cfg in
   Dataflow_svalue.update_svalue fun_cfg.cfg mapping
 

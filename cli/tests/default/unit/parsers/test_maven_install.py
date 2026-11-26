@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -26,10 +26,10 @@ import pytest
 
 from semdep.parsers.maven_install import _split_gav_coord
 from semdep.parsers.maven_install import parse_maven_install
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Direct
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Maven
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Transitive
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Unknown
+from lens.lens_interfaces.lens_output_v1 import Direct
+from lens.lens_interfaces.lens_output_v1 import Maven
+from lens.lens_interfaces.lens_output_v1 import Transitive
+from lens.lens_interfaces.lens_output_v1 import Unknown
 
 
 def _write_lockfile(tmp_path: Path, contents: dict) -> Path:

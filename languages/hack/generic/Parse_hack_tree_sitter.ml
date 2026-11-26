@@ -1,6 +1,6 @@
 (* David Frankel
  *
- * Copyright (c) 2021 Semgrep Inc.
+ * Copyright (c) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -24,7 +24,7 @@ module Log = (val Logs.src_log src : Logs.LOG)
    AST.
 
    This file is derived from and kept in sync with the generated
-   file 'semgrep-hack/lib/Boilerplate.ml'.
+   file 'lens-hack/lib/Boilerplate.ml'.
 *)
 module G = AST_generic
 module CST = Tree_sitter_hack.CST
@@ -46,7 +46,7 @@ let fb = Tok.unsafe_fake_bracket
 (* Remove this function when everything is done *)
 let todo (_env : env) _ = failwith "not implemented"
 
-(* TODO: Make sure not using any semgrep extensions for non-semgrep cases? *)
+(* TODO: Make sure not using any lens extensions for non-lens cases? *)
 
 (* Below are manual additions.
    There are more helpers in AST_generic.ml and AST_generic_helpers.ml.
@@ -100,7 +100,7 @@ let add_type_args_opt_to_expr (e : G.expr) (targs : G.type_arguments option) :
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-hack/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-hack/Boilerplate.ml *)
 
 let use_type (env : env) (x : CST.use_type) =
   match x with
@@ -255,8 +255,8 @@ let empty_statement (env : env) (x : CST.empty_statement) =
       let tok = token env tok in
       (* "..." *) G.ExprStmt (G.Ellipsis tok |> G.e, fk tok) |> G.s
 
-let semgrep_extended_identifier (env : env)
-    (x : CST.semgrep_extended_identifier) =
+let lens_extended_identifier (env : env)
+    (x : CST.lens_extended_identifier) =
   match x with
   | `Semg_id tok -> (* pattern \$[A-Z_][A-Z_0-9]* *) str env tok
   | `Id tok ->
@@ -548,7 +548,7 @@ let use_clause (env : env) ((v1, v2, v3) : CST.use_clause) =
 
 let const_declarator_id (env : env) (x : CST.anon_choice_semg_exte_id_8bbc8de) =
   match x with
-  | `Semg_exte_id x -> semgrep_extended_identifier env x
+  | `Semg_exte_id x -> lens_extended_identifier env x
   | `Choice_type x -> keyword env x
 
 (* TODO: change how treesitter grammar does this? We think SEMI is empty stmt? *)
@@ -1207,7 +1207,7 @@ and declaration (env : env) (x : CST.declaration) =
       let v5 = (* "class" *) token env v5 in
       let id =
         match v6 with
-        | `Semg_exte_id x -> semgrep_extended_identifier env x
+        | `Semg_exte_id x -> lens_extended_identifier env x
         | `Choice_xhp_id x -> xhp_identifier_ env x
       in
       let type_params = Option.map (type_parameters env) v7 in
@@ -1247,7 +1247,7 @@ and declaration (env : env) (x : CST.declaration) =
         | None -> []
       in
       let v2 = (* "interface" *) token env v2 in
-      let id = semgrep_extended_identifier env v3 in
+      let id = lens_extended_identifier env v3 in
       let type_params = Option.map (type_parameters env) v4 in
       let v5 =
         match v5 with
@@ -1279,7 +1279,7 @@ and declaration (env : env) (x : CST.declaration) =
         | None -> []
       in
       let v2 = (* "trait" *) token env v2 in
-      let id = semgrep_extended_identifier env v3 in
+      let id = lens_extended_identifier env v3 in
       let type_params = Option.map (type_parameters env) v4 in
       let v5 =
         match v5 with
@@ -1318,7 +1318,7 @@ and declaration (env : env) (x : CST.declaration) =
       let type_params = Option.map (type_parameters env) v4 in
       (* Q: Type params vs type attributes in generic? Which to use here?
          Put within Name or pass to Apply?*)
-      let id = semgrep_extended_identifier env v3 in
+      let id = lens_extended_identifier env v3 in
       let v5 =
         match v5 with
         (* TODO: Handle type constraint. Just an attr? *)
@@ -1380,7 +1380,7 @@ and declaration (env : env) (x : CST.declaration) =
         | None -> []
       in
       let _v2 = (* "enum" *) token env v2 in
-      let v3 = semgrep_extended_identifier env v3 in
+      let v3 = lens_extended_identifier env v3 in
       let _v4 = (* ":" *) token env v4 in
       let _v5TODO = type_ env v5 in
       let _v6 =
@@ -1475,7 +1475,7 @@ and enum_class env attrs modifiers enum cls name colon ty parents left members
 and typed_enumerator env ((ty, (name, _eq, value, semi)) : CST.typed_enumerator)
     =
   G.fld
-    ( G.basic_entity (semgrep_extended_identifier env name),
+    ( G.basic_entity (lens_extended_identifier env name),
       G.VarDef
         {
           vinit = Some (expression env value);
@@ -1492,7 +1492,7 @@ and embedded_braced_expression (env : env)
   | `Sele_exp x -> selection_expression env x
 
 and enumerator (env : env) ((v1, v2, v3, v4) : CST.enumerator) =
-  let v1 = semgrep_extended_identifier env v1 in
+  let v1 = lens_extended_identifier env v1 in
   let _v2 = (* "=" *) token env v2 in
   let v3 = expression env v3 in
   let _v4 = (* ";" *) token env v4 in
@@ -1925,7 +1925,7 @@ and function_declaration_header (env : env)
     | None -> None
   in
   let function_keyword = (* "function" *) token env v2 in
-  let identifier = semgrep_extended_identifier env v3 in
+  let identifier = lens_extended_identifier env v3 in
   let type_params = Option.map (type_parameters env) v4 in
   let parameters = parameters_with_capabilities env v5 caps in
   let attribute_modifier_and_return_type =
@@ -2091,7 +2091,7 @@ and parameters (env : env) ((v1, v2, v3) : CST.parameters) : G.parameters =
               }
             in
             if env.extra =*= Pattern then [ G.ParamEllipsis (token env tok) ]
-              (* Q: TODO: Even though not from Semgrep, can I use ParamEllipsis here? *)
+              (* Q: TODO: Even though not from Lens, can I use ParamEllipsis here? *)
             else [ G.ParamRest (token env tok, empty_param) ]
         | `Param_rep_COMMA_param_opt_COMMA (v1, v2, v3) ->
             let v1 = parameter env v1 in
@@ -2828,7 +2828,7 @@ and type_const_declaration (env : env)
   let v2 = List.map (member_modifier env) v2 in
   let v3 = (* "const" *) [ G.KeywordAttr (Const, token env v3) ] in
   let _v4 = (* "type" *) token env v4 in
-  let id = semgrep_extended_identifier env v5 in
+  let id = lens_extended_identifier env v5 in
   let type_params = Option.map (type_parameters env) v6 in
   (* Q: How to represent this `as __type__`? It is a constraint? Make an attribute?
      OTP_Constrained on type param? But then can't be builtin *)
@@ -3148,7 +3148,7 @@ and xhp_open (env : env) ((v1, v2, v3, v4) : CST.xhp_open) =
 
 and xhp_spread_expression (env : env)
     ((v1, v2, v3, v4) : CST.xhp_spread_expression) =
-  (* Q: How to differentiate this spread and Semgrep spread? Do I even need to? *)
+  (* Q: How to differentiate this spread and Lens spread? Do I even need to? *)
   (* TODO: Support native ellipsis *)
   let v1 = (* "{" *) token env v1 in
   let _v2TODO = (* "..." *) token env v2 in
@@ -3195,7 +3195,7 @@ let parse_pattern str =
     (fun cst _extras ->
       let file = Fpath.v "<pattern>" in
       (* TODO: do we need a special mode to convert $FOO in the
-       * right construct? Is $XXX ambiguous in a semgrep context?
+       * right construct? Is $XXX ambiguous in a lens context?
        * Imitate what we do in php_to_generic.ml?
        *)
       let extra = Pattern in

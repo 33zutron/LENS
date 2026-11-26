@@ -47,7 +47,7 @@ end = struct
   type t = int [@@deriving show, eq, hash, sexp]
   type partition = A | B
 
-  (* nosemgrep: no-ref-declarations-at-top-scope *)
+  (* nolens: no-ref-declarations-at-top-scope *)
   let partition = ref A
   let set_partition p = partition := p
   let counter_a = Atomic.make 0
@@ -56,9 +56,9 @@ end = struct
    *
    * For some reason, ppx derives a function that allocates a closure
    * unnecessarily, causing IL.compare_name to be responsible for
-   * ~7% of all allocations throughout a semgrep run!
+   * ~7% of all allocations throughout a lens run!
    *
-   * See: https://github.com/semgrep/semgrep-proprietary/pull/2266
+   * See: https://github.com/lens/lens-proprietary/pull/2266
    *)
   let compare = Int.compare
 

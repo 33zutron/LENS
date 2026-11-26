@@ -14,7 +14,7 @@ rules:
     - metavariable-regex:
         metavariable: $...METHOD
         regex: (a|b|c)
-    # ruleid: semgrep-metacheck-builtin
+    # ruleid: lens-metacheck-builtin
     - metavariable-regex:
         metavariable: $OTHER
         regex: (a|b|c)

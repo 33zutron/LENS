@@ -1,6 +1,6 @@
 (* Cooper Pierce and Yosef Alsuhaibani
  *
- * Copyright (C) Semgrep, Inc. All rights reserved.
+ * Copyright (C) Lens, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -128,7 +128,7 @@ let map ?(element_cost : [ `Coarse | `Cheap_uniform ] = `Coarse)
   let domain_count = max 1 (capped_length domain_count specs) in
   let pool = Executor_pool.create ~sw ~domain_count domain_mgr in
 
-  (* nosemgrep: no-logs-in-library *)
+  (* nolens: no-logs-in-library *)
   Logs.debug (fun m ->
       m "Mapping %d elements across %d domains (%d chunks of <= %d)"
         (List.length l) domain_count (List.length specs) chunk_size);

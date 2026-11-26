@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -13,8 +13,8 @@
 (*
    Tests for the Find_targets module.
 
-   Unlike the unit tests for semgrepignore/include/exclude
-   (in Unit_semgrepignore), this exercises the two main ways we have to list
+   Unlike the unit tests for lensignore/include/exclude
+   (in Unit_lensignore), this exercises the two main ways we have to list
    target files:
 
    - using 'git ls-files';
@@ -27,7 +27,7 @@
 open Printf
 open Fpath_.Operators
 module F = Testutil_files
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 
 (*
    TODO: create two test environments:
@@ -124,8 +124,8 @@ let tests_with_or_without_git ~with_git =
     test_find_targets ~with_git "basic gitignore"
       [ F.File (".gitignore", "b\n"); F.file "a"; F.file "b" ];
     (* Select file 'a', not 'b' *)
-    test_find_targets ~with_git "basic semgrepignore"
-      [ F.File (".semgrepignore", "b\n"); F.file "a"; F.file "b" ];
+    test_find_targets ~with_git "basic lensignore"
+      [ F.File (".lensignore", "b\n"); F.file "a"; F.file "b" ];
     (* Select file 'a', not 'b' *)
     test_find_targets ~with_git ~excludes:[ "b" ] "basic exclude"
       [ F.file "a"; F.file "b" ];
@@ -151,28 +151,28 @@ let tests_with_or_without_git ~with_git =
        Test that the '--include' filter takes place after all the other
        filters.
     *)
-    (* Can't select file 'a' via --include when semgrepignoring its folder. *)
+    (* Can't select file 'a' via --include when lensignoring its folder. *)
     test_find_targets ~with_git ~includes:[ "*.c" ]
-      "semgrepignore file takes precedence over --include"
+      "lensignore file takes precedence over --include"
       [
-        F.File (".semgrepignore", "dir\n");
+        F.File (".lensignore", "dir\n");
         F.dir "dir" [ F.file "a.c"; F.file "b.c" ];
         F.file "c.c";
       ];
     (* An explicit target is a scanning root that's also a target file
        and should not be ignored by the usual exclusion mechanisms
-       (.semgrepignore, --include, --exclude) *)
+       (.lensignore, --include, --exclude) *)
     test_find_targets ~with_git ~scanning_root:"a.py" "scan explicit target"
-      [ F.file "a.py"; F.File (".semgrepignore", "a.py\n") ];
+      [ F.file "a.py"; F.File (".lensignore", "a.py\n") ];
     (* Unspecified behavior: what to do with a scanning root that's
-       a symlink to a file that's semgrepignored? Should it be considered
+       a symlink to a file that's lensignored? Should it be considered
        an explicit target? This test assumes so. We could change it. *)
     test_find_targets ~with_git ~scanning_root:"symlink.py"
-      "scan symlink to semgrepignored target"
+      "scan symlink to lensignored target"
       [
-        F.symlink "symlink.py" "semgrepignored.py";
-        F.file "semgrepignored.py";
-        F.File (".semgrepignore", "semgrepignored.py\n");
+        F.symlink "symlink.py" "lensignored.py";
+        F.file "lensignored.py";
+        F.File (".lensignore", "lensignored.py\n");
       ];
     (* A binary file (.png extension + PNG magic bytes) is skipped with the
        'Binary' reason, while the regular source file is selected. *)
@@ -332,7 +332,7 @@ let test_drop_warnings () =
 *)
 let test_parallel_filter_paths_matches_sequential () =
   let files =
-    F.File (".semgrepignore", "ignored_*\n")
+    F.File (".lensignore", "ignored_*\n")
     :: List.init 40 (fun i -> F.file (sprintf "f%d.py" i))
     @ List.init 8 (fun i -> F.file (sprintf "ignored_%d.py" i))
   in

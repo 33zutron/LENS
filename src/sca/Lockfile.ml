@@ -1,6 +1,6 @@
 (* Matthew McQuaid, Cooper Pierce
  *
- * Copyright (c) 2024, Semgrep Inc.
+ * Copyright (c) 2024, Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
  * LICENSE for more details.
  *)
 open Common
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 
 (*****************************************************************************)
 (* Prelude *)
@@ -68,7 +68,7 @@ let mk_lockfile kind (path : Fpath.t) : t = { path; kind }
 (* coupling: if you need to add a case here, you probably need to also
  * extend of_string() above
  *)
-let kind_to_ecosystem_opt : kind -> Semgrep_output_v1_t.ecosystem option =
+let kind_to_ecosystem_opt : kind -> Lens_output_v1_t.ecosystem option =
   function
   | PipRequirementsTxt -> Some Out.Pypi
   | PoetryLock -> Some Out.Pypi

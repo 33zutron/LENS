@@ -1,6 +1,6 @@
 (* Emma Jin and Yoann Padioleau
  *
- * Copyright (C) 2022-2024 Semgrep Inc.
+ * Copyright (C) 2022-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -20,22 +20,22 @@
  *
  * Note that the extra information can take a lot of memory, which scales
  * with both the number of rules and files. On large repos, this used to
- * be (and may still be) the most significant factor driving semgrep's
+ * be (and may still be) the most significant factor driving lens's
  * memory consumption. Therefore, if the parsing times (for example) are
  * not being used, we don't want to save them.
  *
- * For example, on the semgrep-pro repo itself, running semgrep with
+ * For example, on the lens-pro repo itself, running lens with
  * 4000 rules on 22000 files can lead to a JSON core_output of
  * 650 MB! compared to 5 MB without the profiling info.
- * This puts lots of stress in semgrep-core when generating this
- * huge JSON and also in pysemgrep when reading it (and later
+ * This puts lots of stress in lens-core when generating this
+ * huge JSON and also in pylens when reading it (and later
  * when sending some of it to our metrics backend).
  *
  * Like for Core_error.ml and Core_result.ml, this "core" profiling
- * is eventually converted in semgrep_output_v1.core_timing,
+ * is eventually converted in lens_output_v1.core_timing,
  * which is then transformed in ProfilingData in profiling.py and
- * finally transformed in a semgrep_output_v1.profile type.
- * There's also Profiler.ml in osemgrep, and poor man profiler
+ * finally transformed in a lens_output_v1.profile type.
+ * There's also Profiler.ml in olens, and poor man profiler
  * stuff in libs/profiling/profiling.ml accessed via --profile
  * LATER: remove some intermediate types.
  *)
@@ -44,10 +44,10 @@
 (* Global *)
 (*****************************************************************************)
 
-(* Set by -json_time in semgrep-core or --time in pysemgrep/osemgrep to save
+(* Set by -json_time in lens-core or --time in pylens/olens to save
  * profiling info. Those profiling info found their way then in our metrics.
  *)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let profiling = ref false
 let profiling_opt prof = if !profiling then Some prof else None
 let if_profiling ~default f = if !profiling then f () else default
@@ -95,11 +95,11 @@ type t = {
   rules_parse_time : float;
   file_times : file_profiling list;
   (* This is meant to represent the maximum amount of memory used by
-     Semgrep during the course of its execution.
+     Lens during the course of its execution.
 
      This is useful to emit with the other profiling data for telemetry
      purposes, particuarly as it relates to measuring memory management
-     with DeepSemgrep.
+     with DeepLens.
 
      It's not important that this number be incredibly precise, but
      measuring general trends is useful for ascertaining our memory

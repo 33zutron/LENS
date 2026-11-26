@@ -50,7 +50,7 @@
           "four"
         ],
         "lines": "requires login",
-        "message": "If semgrep is not smart enough, the match of this rule will be out of range",
+        "message": "If lens is not smart enough, the match of this rule will be out of range",
         "metadata": {},
         "severity": "ERROR",
         "validation_state": "NO_VALIDATOR"

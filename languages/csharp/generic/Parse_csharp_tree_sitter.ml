@@ -1,6 +1,6 @@
 (* Sjoerd Langkemper
  *
- * Copyright (c) 2021, 2024 Semgrep Inc.
+ * Copyright (c) 2021, 2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -24,7 +24,7 @@ module H2 = AST_generic_helpers
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Csharp parser using tree-sitter-lang/semgrep-charp and converting
+(* Csharp parser using tree-sitter-lang/lens-charp and converting
  * directly to AST_generic.ml
  *
  * TODO:
@@ -51,8 +51,8 @@ let type_parameters_with_constraints (tparams : type_parameters option)
       let tparams' =
         tparams
         |> List.map (function
-          (* we do not generate those semgrep constructs for now in
-           * semgrep-java, we parse Java patterns in the Java pfff parser *)
+          (* we do not generate those lens constructs for now in
+           * lens-java, we parse Java patterns in the Java pfff parser *)
           | TParamEllipsis _ -> raise Impossible
           | OtherTypeParam (x, anys) ->
               (* TODO: add constraints *)
@@ -289,7 +289,7 @@ end
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-java/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-java/Boilerplate.ml *)
 
 (**
    Boilerplate to be used as a template when mapping the csharp CST
@@ -770,7 +770,7 @@ and interpolation_alignment_clause (env : env)
 and parenthesized_expression (env : env)
     ((_v1, v2, _v3) : CST.parenthesized_expression) =
   (* Due to ignoring the parentheses, an expression matched
-     by Semgrep which translates to this tree-sitter construct
+     by Lens which translates to this tree-sitter construct
      will not encompass the parentheses.
      It seems this is standard practice though, as we also
      ignore parentheses in our C, CPP, and Java parsers.
@@ -1550,7 +1550,7 @@ and member_access_ellipsis (env : env)
 and typed_metavariable (env : env) ((v1, v2, v3, v4) : CST.typed_metavariable) =
   let lp = (* "(" *) token env v1 in
   let ty = type_pattern env v2 in
-  let id = (* semgrep_metavariable *) str env v3 in
+  let id = (* lens_metavariable *) str env v3 in
   let _rp = (* ")" *) token env v4 in
   TypedMetavar (id, lp, ty) |> G.e
 
@@ -1558,7 +1558,7 @@ and expression (env : env) (x : CST.expression) : G.expr =
   match x with
   | `Non_lvalue_exp v1 -> non_lvalue_expression env v1
   | `Lvalue_exp v1 -> lvalue_expression env v1
-  (* semgrep: *)
+  (* lens: *)
   | `Ellips v1 -> Ellipsis (token env v1) |> G.e
   | `Deep_ellips v1 -> deep_ellipsis env v1
   | `Member_access_ellips_exp v1 -> member_access_ellipsis env v1
@@ -2187,7 +2187,7 @@ and expr_statement (env : env) (x : CST.expression_statement) : stmt =
       let v2 = (* ";" *) token env v2 in
       G.ExprStmt (v1, v2) |> G.s
   | `Semg_meta_SEMI (v1, v2) ->
-      let v1 = (* semgrep_metavariable *) str env v1 in
+      let v1 = (* lens_metavariable *) str env v1 in
       let v2 = (* ";" *) token env v2 in
       G.ExprStmt (G.N (AST_generic_helpers.name_of_id v1) |> G.e, v2) |> G.s
   | `Typed_meta_SEMI (v1, v2) ->
@@ -4398,7 +4398,7 @@ let parse file =
 let parse_pattern_aux str =
   (* ugly: coupling: see grammar.js of csharp.
    * todo: will need to adjust position information in parsing errors! *)
-  let expr_str = "__SEMGREP_EXPRESSION " ^ str in
+  let expr_str = "__LENS_EXPRESSION " ^ str in
   (* If possible, we always prefer to parse a pattern as an expression than
    * as a program, since an expression is also a statement, but a statement
    * is not an expression! E.g., `Foo()` as an statement will not match

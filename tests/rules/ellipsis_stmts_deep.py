@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep-rules/issues/660
+# https://github.com/returntocorp/lens-rules/issues/660
 
 def decorator_factory( foo ):
     def decorator( function ):

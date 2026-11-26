@@ -1,0 +1,30 @@
+{
+  "grammars": [
+    {
+      "name": "move_on_sui",
+      "scope": "source.move_on_sui",
+      "path": "."
+    }
+  ],
+  "metadata": {
+    "version": "0.0.0",
+    "license": "LGPL-2.1",
+    "description": "Lens-extended move_on_sui grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "Lens"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/lens/lens"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": false,
+    "node": false,
+    "python": false,
+    "rust": false,
+    "swift": false
+  }
+}

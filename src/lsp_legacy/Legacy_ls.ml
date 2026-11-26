@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) 2019-2023 Semgrep, Inc.
+ * Copyright (C) 2019-2023 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -66,7 +66,7 @@ let capabilities =
 
 (* LET'S GOOOOOO *)
 let start () =
-  Logs.debug (fun m -> m "Starting Semgrep Language Server");
+  Logs.debug (fun m -> m "Starting Lens Language Server");
   Lwt_platform.set_engine ();
   let server = Legacy_rpc_server.create capabilities in
   Legacy_rpc_server.start ~handler:{ on_notification; on_request } server

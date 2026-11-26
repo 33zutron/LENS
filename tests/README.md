@@ -1,12 +1,12 @@
-semgrep-core tests
+lens-core tests
 ==
-This folder contains mostly tests related to the semgrep-core program.
-For the (py)semgrep tests see the cli/tests/ folder instead.
+This folder contains mostly tests related to the lens-core program.
+For the (py)lens tests see the cli/tests/ folder instead.
 
 Running the tests
 --
 
-All the semgrep-core tests can be run from the project's root
+All the lens-core tests can be run from the project's root
 with `make core-test`. This will recompile the test programs if necessary.
 
 Only running the main test program can be done with `./test`. Try
@@ -26,7 +26,7 @@ Matching tests
 
 The `patterns/` folder contains pairs (pattern, target). A pattern must be a
 file with the `.sgrep` extension and a target must be a file in the target
-language with the language's usual extension, known to semgrep-core.
+language with the language's usual extension, known to lens-core.
 For example, the folder for the Go language looks like this:
 
 ```
@@ -89,7 +89,7 @@ The expectation is that each file will be parsed without an error.
 JSON/Web cheatsheet
 --
 
-The semgrep.dev live editor displays a cheatsheet for the selected
+The lens.dev live editor displays a cheatsheet for the selected
 language. This cheatsheet reuses some of the examples found in the
 language's folder. For details on what goes into the cheatsheet and
 how to generate it, look into the scripts:

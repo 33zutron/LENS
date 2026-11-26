@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2023 Semgrep Inc.
+ * Copyright (C) 2019-2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,9 +15,9 @@
 open Fpath_.Operators
 open Pfff_or_tree_sitter
 module Res = Parsing_result2
-module Flag = Flag_semgrep
+module Flag = Flag_lens
 module E = Core_error
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 module Log = Log_parsing.Log
 
 (*****************************************************************************)
@@ -45,7 +45,7 @@ let errors_from_skipped_tokens xs =
       let e = exn_of_loc x in
       let err = E.exn_to_error ~file:x.Loc.pos.file e in
       let locs =
-        xs |> List.map Semgrep_output_utils.location_of_token_location
+        xs |> List.map Lens_output_utils.location_of_token_location
       in
       Core_error.ErrorSet.singleton { err with typ = OutJ.PartialParsing locs }
 
@@ -266,7 +266,7 @@ let parse_and_resolve_name_warn_if_partial lang file =
   (match errors with
   | [] -> ()
   | _ ->
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.warn (fun m -> m "fail to fully parse %s" !!file));
   ast
 

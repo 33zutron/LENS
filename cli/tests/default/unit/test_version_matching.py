@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2024 Semgrep Inc.
+# Copyright (c) 2023-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,9 +14,9 @@ import pytest
 
 from semdep.package_restrictions import is_in_range
 from semdep.package_restrictions import is_unpinned_version
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Npm
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Pypi
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import Npm
+from lens.lens_interfaces.lens_output_v1 import Pypi
 
 # TODO: test_maven_matches
 

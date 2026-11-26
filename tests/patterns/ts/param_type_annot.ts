@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/5004
+// https://github.com/returntocorp/lens/issues/5004
 
 module.exports = function servePublicFiles () {
   //MATCH:

@@ -1,6 +1,6 @@
 (* Emma Jin, Yoann Padioleau
  *
- * Copyright (C) 2020, 2023 Semgrep Inc.
+ * Copyright (C) 2020, 2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -25,7 +25,7 @@ module Log = Log_printing.Log
  *
  * This module was started to help the pattern-from-code synthesizing project
  * (which is now in src/experiments/). It is also used for debugging
- * purpose in the code to handle 'semgrep-core -dfg_value'.
+ * purpose in the code to handle 'lens-core -dfg_value'.
  * TODO? It could also be used for correct autofixing (even though we probably
  * should use instead Ugly_print_AST.ml now).
  * TODO? It could also be used in Eval_generic.ml to pretty print code
@@ -910,7 +910,7 @@ and pattern env = function
 (* Misc *)
 (*****************************************************************************)
 
-(* this is mostly used for 'semgrep-core -dfg_value' *)
+(* this is mostly used for 'lens-core -dfg_value' *)
 let ctype = function
   | G.Cbool -> "bool"
   | G.Cint -> "int"

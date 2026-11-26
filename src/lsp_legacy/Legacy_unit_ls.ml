@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 open Fpath_.Operators
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 
 let t = Testo.create
 
@@ -31,7 +31,7 @@ let setup_git workspace =
   checked_command
     Bos.Cmd.(
       v "git" % "-C" % Fpath.to_string workspace % "config" % "user.email"
-      % "baselinetest@semgrep.com");
+      % "baselinetest@lens.com");
   checked_command
     Bos.Cmd.(
       v "git" % "-C" % Fpath.to_string workspace % "config" % "user.name"
@@ -147,24 +147,24 @@ let add_file ?(git = false) ?(dirty = false)
 
 let with_mock_envvars f () =
   (* TODO: we should simply do:
-   *    Semgrep_envvars.with_envvar "SEMGREP_APP_TOKEN" "123456789" f
+   *    Lens_envvars.with_envvar "LENS_APP_TOKEN" "123456789" f
    * but we then get CI failures on build-js-tests
-   * see https://github.com/semgrep/semgrep/pull/9285
-   * because of the use of putenv in Semgrep_envvars.with_envvar,
+   * see https://github.com/lens/lens/pull/9285
+   * because of the use of putenv in Lens_envvars.with_envvar,
    * even after adding a fake on in js/node_shared/unix.js
    *)
-  let old_settings = !Semgrep_envvars.v in
+  let old_settings = !Lens_envvars.v in
   let app_token = Some (Auth.unsafe_token_of_string "123456789") in
   let new_settings = { old_settings with app_token } in
-  Common.save_excursion Semgrep_envvars.v new_settings f
+  Common.save_excursion Lens_envvars.v new_settings f
 
 let with_legacy_envvars f () =
-  let old_settings = !Semgrep_envvars.v in
+  let old_settings = !Lens_envvars.v in
   let app_token = Some (Auth.unsafe_token_of_string "123456789") in
   let new_settings =
     { old_settings with app_token; disable_config_download_v2 = true }
   in
-  Common.save_excursion Semgrep_envvars.v new_settings f
+  Common.save_excursion Lens_envvars.v new_settings f
 
 (*****************************************************************************)
 (* Tests *)
@@ -376,7 +376,7 @@ let v2_fetch_async_tests () =
       (fun () ->
         Lwt_platform.run
           (let%lwt result =
-             Semgrep_App.fetch_scan_config_v2_async (fake_token ())
+             Lens_App.fetch_scan_config_v2_async (fake_token ())
            in
            Alcotest.(check bool) "v2 async success" true (Result.is_ok result);
            Lwt.return_unit))
@@ -407,7 +407,7 @@ let v2_fetch_async_tests () =
       (fun () ->
         Lwt_platform.run
           (let%lwt result =
-             Semgrep_App.fetch_scan_config_v2_async (fake_token ())
+             Lens_App.fetch_scan_config_v2_async (fake_token ())
            in
            Alcotest.(check bool)
              "v2 async pending->success" true (Result.is_ok result);
@@ -436,7 +436,7 @@ let v2_fetch_async_tests () =
       (fun () ->
         Lwt_platform.run
           (let%lwt result =
-             Semgrep_App.fetch_scan_config_v2_async (fake_token ())
+             Lens_App.fetch_scan_config_v2_async (fake_token ())
            in
            Alcotest.(check bool)
              "v2 async server failure" true (Result.is_error result);
@@ -459,7 +459,7 @@ let v2_fetch_async_tests () =
       (fun () ->
         Lwt_platform.run
           (let%lwt result =
-             Semgrep_App.fetch_scan_config_v2_async (fake_token ())
+             Lens_App.fetch_scan_config_v2_async (fake_token ())
            in
            Alcotest.(check bool)
              "v2 async POST error" true (Result.is_error result);

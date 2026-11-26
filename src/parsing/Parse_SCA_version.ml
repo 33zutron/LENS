@@ -1,6 +1,6 @@
 (* Matthew McQuaid, Yoann Padioleau
  *
- * Copyright (C) 2024-2025 Semgrep Inc.
+ * Copyright (C) 2024-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -93,7 +93,7 @@ let parse (str : string) : SCA_version.t =
         && not
              (Pcre2_.is_match almost_bailout_version str
              |> Result.value ~default:false)
-        (* nosemgrep: no-logs-in-library *)
+        (* nolens: no-logs-in-library *)
       then Logs.debug (fun m -> m "unrecognized version format for %s" str);
       (* alt: raise (Error (spf "wrong version format for %s" str)) in *)
       SCA_version.Other str

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -18,6 +18,6 @@
  * [Find_targets.conf.force_project_root] being set to the [root] parameter
  * (so one can use this function on test paths like "tests/tainting/"
  * and the targets will not be filtered by the toplevel .gitignore
- * or .semgrepignore of the repo containing those tests).
+ * or .lensignore of the repo containing those tests).
  *)
 val get_target_fpaths : Fpath.t (* root *) -> Lang.t -> Fpath.t list

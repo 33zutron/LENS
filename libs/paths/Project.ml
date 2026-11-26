@@ -1,6 +1,6 @@
 (* Martin Jambon
  *
- * Copyright (C) 2024-2025 Semgrep Inc.
+ * Copyright (C) 2024-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -40,7 +40,7 @@ and kind =
 
 type scanning_root_info = {
   path : Rfpath.t;
-  (* Path of a Semgrep scanning root express within the project, relative to
+  (* Path of a Lens scanning root express within the project, relative to
      the project root. *)
   inproject_path : Ppath.t;
 }
@@ -71,7 +71,7 @@ type scanning_roots = {
      project root: /path/to/foo  (not '.')
 
    To avoid relying on this nonobvious behavior, we recommend that users
-   run semgrep on the current folder '.'.
+   run lens on the current folder '.'.
 
    This function assumes that the path exists.
 *)

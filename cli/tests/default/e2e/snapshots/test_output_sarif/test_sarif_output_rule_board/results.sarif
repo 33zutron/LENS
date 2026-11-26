@@ -99,7 +99,7 @@
       ],
       "tool": {
         "driver": {
-          "name": "Semgrep OSS",
+          "name": "Lens OSS",
           "rules": [
             {
               "defaultConfiguration": {
@@ -121,7 +121,7 @@
                 ]
               },
               "shortDescription": {
-                "text": "Semgrep Finding: rules.rule-board-eqeq-five"
+                "text": "Lens Finding: rules.rule-board-eqeq-five"
               }
             }
           ],

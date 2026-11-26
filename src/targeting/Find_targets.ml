@@ -1,6 +1,6 @@
 (* Martin Jambon, Yoann Padioleau
  *
- * Copyright (C) 2023-2024 Semgrep Inc.
+ * Copyright (C) 2023-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,7 +15,7 @@
 open Common
 open List_.Operators
 open Fpath_.Operators
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 module Log = Log_targeting.Log
 
 (*************************************************************************)
@@ -30,10 +30,10 @@ module Log = Log_targeting.Log
    - scanning root: a path specified on the command line. It may be a folder,
      a regular file, or a symbolic link that resolves to a folder or a
      regular file.
-   - target: a regular file that semgrep will scan.
+   - target: a regular file that lens will scan.
    - project: a folder containing target files in its subfolders. The notion
      of project allows us to locate and consult project-specific settings
-     such as '.semgrepignore' files.
+     such as '.lensignore' files.
    - physical path: a path '/a/b/c' is a physical path to file 'c' if
      neither '/a/b/c', '/a/b', '/a', or '/' are symlinks.
 
@@ -42,9 +42,9 @@ module Log = Log_targeting.Log
    Challenges:
    - symbolic links! Symlinks make it possible and common for multiple paths
      to identify the same file. When the user specifies a path on the command
-     line, error messages and semgrep results should use that path as
+     line, error messages and lens results should use that path as
      a prefix rather than an equivalent path.
-   - Semgrep accepts scanning roots that potentially belong to different
+   - Lens accepts scanning roots that potentially belong to different
      projects (unlike Git).
    - the current folder doesn't necessarily belong to the project (unlike
      with Git).
@@ -105,14 +105,14 @@ module Log = Log_targeting.Log
      changed since that commit
 
      If allow_unknown_extensions is set then targets with extensions that are
-     not understood by semgrep will always be returned by get_files. Else will
+     not understood by lens will always be returned by get_files. Else will
      discard targets with unknown extensions
 
    TODO:
     - optimize, reduce the number of filesystem lookup? or memoize them?
       there are a few places where we stat for a file
     - add an option to select all git-tracked files regardless of
-      gitignore or semgrepignore exclusions (will be needed for Secrets)
+      gitignore or lensignore exclusions (will be needed for Secrets)
       and have the exclusions apply only to the files that aren't tracked.
 *)
 
@@ -122,7 +122,7 @@ module Log = Log_targeting.Log
 
 type project_root =
   | Filesystem of Rfpath.t
-  (* for Semgrep query console *)
+  (* for Lens query console *)
   | Git_remote of git_remote
 
 and git_remote = { url : Uri.t } [@@deriving show]
@@ -187,13 +187,13 @@ end
 type glob = string [@@deriving show]
 
 type conf = {
-  (* global exclude list, passed via semgrep '--exclude' *)
+  (* global exclude list, passed via lens '--exclude' *)
   exclude : glob list;
   (* !!! '--include' is very different from '--exclude' !!!
       The include filter is applied after after gitignore and
-      semgrepignore filters. It doesn't override them.
+      lensignore filters. It doesn't override them.
 
-     This field holds a list of patterns passed via 'semgrep --include'
+     This field holds a list of patterns passed via 'lens --include'
      [!] include_ = None is the opposite of Some [].
      If a list of include patterns is specified, a path must match
      at least of the patterns to be selected.
@@ -203,16 +203,16 @@ type conf = {
   include_ : glob list option;
   max_target_bytes : int;
   respect_gitignore : bool;
-  respect_semgrepignore_files : bool;
+  respect_lensignore_files : bool;
   extra_gitignore_patterns_to_exclude_git_untracked_files : string list;
-  semgrepignore_filename : string option;
+  lensignore_filename : string option;
   always_select_explicit_targets : bool;
   explicit_targets : Explicit_targets.t;
-  (* osemgrep-only: option
+  (* olens-only: option
      (see Git_project.find_any_project_root and the force_root parameter) *)
   force_project_root : project_root option;
   force_novcs_project : bool;
-  (* osemgrep-only option, exclude scanning minified files, default false *)
+  (* olens-only option, exclude scanning minified files, default false *)
   exclude_minified_files : bool;
   (* exclude scanning binary files, default true *)
   exclude_binary_files : bool;
@@ -232,14 +232,14 @@ let default_conf : conf =
     force_novcs_project = false;
     exclude = [];
     include_ = None;
-    (* Must be kept in sync w/ pysemgrep.
-       coupling: cli/src/semgrep/constants.py DEFAULT_MAX_TARGET_SIZE
+    (* Must be kept in sync w/ pylens.
+       coupling: cli/src/lens/constants.py DEFAULT_MAX_TARGET_SIZE
     *)
     max_target_bytes = 1000000;
     respect_gitignore = true;
-    respect_semgrepignore_files = true;
+    respect_lensignore_files = true;
     extra_gitignore_patterns_to_exclude_git_untracked_files = [];
-    semgrepignore_filename = None;
+    lensignore_filename = None;
     always_select_explicit_targets = false;
     explicit_targets = Explicit_targets.empty;
     exclude_minified_files = false;
@@ -255,7 +255,7 @@ let default_conf : conf =
 
 let get_reason_for_exclusion (sel_events : Gitignore.selection_event list) :
     Out.skip_reason =
-  let fallback = Out.Semgrepignore_patterns_match in
+  let fallback = Out.Lensignore_patterns_match in
   match sel_events with
   | Gitignore.Selected loc :: _ -> (
       match loc.source_kind with
@@ -263,12 +263,12 @@ let get_reason_for_exclusion (sel_events : Gitignore.selection_event list) :
           match str with
           | "include" -> Out.Cli_include_flags_do_not_match
           | "exclude" -> Out.Cli_exclude_flags_match
-          (* TODO: osemgrep supports the new Gitignore_patterns_match, but for
+          (* TODO: olens supports the new Gitignore_patterns_match, but for
            * legacy reason we don't generate it for now.
            *)
           | "gitignore"
-          | "semgrepignore" ->
-              Out.Semgrepignore_patterns_match
+          | "lensignore" ->
+              Out.Lensignore_patterns_match
           | __ -> (* shouldn't happen *) fallback)
       | None -> (* shouldn't happen *) fallback)
   | Gitignore.Deselected _ :: _
@@ -295,7 +295,7 @@ let ignore_path selection_events fpath =
       Out.path = fpath;
       reason;
       details =
-        Some "excluded by --include/--exclude, gitignore, or semgrepignore";
+        Some "excluded by --include/--exclude, gitignore, or lensignore";
       rule_id = None;
     }
 
@@ -308,7 +308,7 @@ let apply_include_filter status selection_events include_filter ppath =
       | Some include_filter -> Include_filter.select include_filter ppath)
 
 (* Note that include_filter applies only to the paths of regular files. They're
- * applied last, after the exclude/gitignore/semgrepignore filters.
+ * applied last, after the exclude/gitignore/lensignore filters.
  *)
 let filter_path (ign : Gitignore_filter.t)
     (include_filter : Include_filter.t option) (fppath : Fppath.t) :
@@ -508,8 +508,8 @@ let filter_binary paths =
  * which could potentially speedup things because git may rely on
  * internal data-structures to answer the question instead of walking
  * the filesystem and read the potentially many .gitignore files.
- * However this was not handling .semgrepignore and especially the new
- * ability in osemgrep to negate gitignore decisions in a .semgrepignore,
+ * However this was not handling .lensignore and especially the new
+ * ability in olens to negate gitignore decisions in a .lensignore,
  * so I think it's simpler to just walk the filesystem whatever the value of
  * conf.respect_git_ignore is. That's what ripgrep does too.
  *
@@ -583,7 +583,7 @@ let git_files_changed_since_commit ~baseline_commit ~cwd =
         (* In rare cases, Git may fail to obtain a merge base. In this case,
            using the baseline commit directly is a reasonable fallback.*)
         Log.warn (fun m ->
-            (* message copied from pysemgrep *)
+            (* message copied from pylens *)
             m
               "git could not find a single branch-off point, so we will \
                compare the baseline commit");
@@ -600,7 +600,7 @@ let git_ls_files ~baseline_commit ~cwd ~untracked_exclude ~kinds =
 (*
    Get the list of files being tracked by git. Return a list of paths
    relative to the project root in addition to their system path
-   so that we can filter them with semgrepignore.
+   so that we can filter them with lensignore.
 
    exclude_standard is the --exclude-standard flag to 'git ls-files'
    and requests filtering based on gitignore rules. We don't want it when
@@ -668,7 +668,7 @@ let git_list_files ~(baseline_commit : string option) ~untracked_exclude
 
    This doesn't include the "untracked files" reported by 'git status'.
    These untracked files may or may not be desirable. Their fate will be
-   determined by the semgrepignore rules separately, along with the gitignored
+   determined by the lensignore rules separately, along with the gitignored
    files that are not being tracked.
 
    Returning a set gives us the option to take the union, set difference,
@@ -710,7 +710,7 @@ let git_list_untracked_files ~baseline_commit ~respect_gitignore
    Identify the project root for each scanning root and group them
    by project root. If the project_root is specified, then we use that.
 
-   This is important to avoid reading the gitignore and semgrepignore files
+   This is important to avoid reading the gitignore and lensignore files
    twice when multiple scanning roots that belong to the same project.
 
    TODO? move in paths/Project.ml?
@@ -723,7 +723,7 @@ let group_scanning_roots_by_project (conf : conf)
      it would make the scanning root /foo. So it doesn't make sense to
      combine this with the git remote unless we wanted to make it so git
      remotes could be further specified (say
-     github.com/semgrep/semgrep.git:/src/foo).
+     github.com/lens/lens.git:/src/foo).
 
      TODO: revise the above. 'force_root' is the project root.
   *)
@@ -734,8 +734,8 @@ let group_scanning_roots_by_project (conf : conf)
     match conf.force_project_root with
     | Some (Filesystem proj_root) ->
         (* This is when --project-root is specified on the command line.
-           It allows choosing the location of the root '.semgrepignore'
-           in no-VCS projects or ignore the root '.semgrepignore' in a
+           It allows choosing the location of the root '.lensignore'
+           in no-VCS projects or ignore the root '.lensignore' in a
            Git project (like we do in our tests). *)
         Some Project.{ kind = Project.Gitignore_project; root = proj_root }
     | Some (Git_remote _)
@@ -750,12 +750,12 @@ let group_scanning_roots_by_project (conf : conf)
         let fpath = Scanning_root.to_fpath sc_root in
         if UFile.is_dir_or_reg ~follow_symlinks:true fpath then true
         else (
-          (* nosemgrep: no-logs-in-library *)
+          (* nolens: no-logs-in-library *)
           Logs.err (fun m -> m "Invalid scanning root: %s" !!fpath);
           Stack_.push
             ({
                (* TODO: introduce a more specific error type? *)
-               typ = SemgrepError;
+               typ = LensError;
                msg = spf "Invalid scanning root: %s" !!fpath;
                loc = None;
                rule_id = None;
@@ -772,7 +772,7 @@ let group_scanning_roots_by_project (conf : conf)
         with
         | Ok x -> Some x
         | Error msg ->
-            (* nosemgrep: no-logs-in-library *)
+            (* nolens: no-logs-in-library *)
             Logs.warn (fun m -> m "%s" msg);
             None)
     (* Using a realpath (physical path) in Project.t ensures we group
@@ -797,21 +797,21 @@ let setup_path_filters conf (project_roots : Project.scanning_roots) :
   let Project.{ project = { kind; root = project_root }; scanning_roots = _ } =
     project_roots
   in
-  (* filter with .gitignore and .semgrepignore *)
-  let exclusion_mechanism : Semgrepignore.exclusion_mechanism =
+  (* filter with .gitignore and .lensignore *)
+  let exclusion_mechanism : Lensignore.exclusion_mechanism =
     match kind with
     | Git_project
     | Gitignore_project ->
-        { use_semgrepignore_files = conf.respect_semgrepignore_files }
+        { use_lensignore_files = conf.respect_lensignore_files }
     | Mercurial_project
     | Subversion_project
     | Darcs_project
     | No_VCS_project ->
-        { use_semgrepignore_files = conf.respect_semgrepignore_files }
+        { use_lensignore_files = conf.respect_lensignore_files }
   in
   (* filter also the --include and --exclude from the CLI args
    * (the paths: exclude: include: in a rule are handled elsewhere, in
-   * Run_semgrep.ml by calling Filter_target.filter_paths
+   * Run_lens.ml by calling Filter_target.filter_paths
    *
    * We currently handle gitignores by creating this
    * ign below that then will internally use some cache and complex
@@ -824,10 +824,10 @@ let setup_path_filters conf (project_roots : Project.scanning_roots) :
    * We would still need to intialize at the beginning with
    * the .gitignore of all the parents of the scan_root.
    *)
-  let semgrepignore_filter =
-    Semgrepignore.create ~cli_patterns:conf.exclude
-      ?semgrepignore_filename:conf.semgrepignore_filename
-      ~default_semgrepignore_patterns:Semgrep_scan_legacy ~exclusion_mechanism
+  let lensignore_filter =
+    Lensignore.create ~cli_patterns:conf.exclude
+      ?lensignore_filename:conf.lensignore_filename
+      ~default_lensignore_patterns:Lens_scan_legacy ~exclusion_mechanism
       ~project_root:(Rfpath.to_fpath project_root)
       ()
   in
@@ -836,7 +836,7 @@ let setup_path_filters conf (project_roots : Project.scanning_roots) :
       (Include_filter.create ~project_root:(Rfpath.to_fpath project_root))
       conf.include_
   in
-  (semgrepignore_filter, include_filter)
+  (lensignore_filter, include_filter)
 [@@trace]
 
 (* Work from a list of target paths obtained with git *)
@@ -852,9 +852,9 @@ let get_targets_from_filesystem (conf : conf)
   List.fold_left
     (fun (selected, skipped) (scan_root : Project.scanning_root_info) ->
       (* better: Note that we use UUnix.stat below, not UUnix.lstat, so
-       * osemgrep accepts symlink paths on the command--line;
-       * you can do 'osemgrep -e ... ~/symlink-to-proj' or even
-       * 'osemgrep -e ... symlink-to-file.py' whereas pysemgrep
+       * olens accepts symlink paths on the command--line;
+       * you can do 'olens -e ... ~/symlink-to-proj' or even
+       * 'olens -e ... symlink-to-file.py' whereas pylens
        * exits with '"/home/foo/symlink-to-proj" file not found'
        * Note: This may raise Unix.Unix_error.
        * TODO? improve Unix.Unix_error in Find_targets specific exn?
@@ -889,7 +889,7 @@ let get_targets_from_filesystem (conf : conf)
 
 (*
    Select the scanning roots that are regular files or symlinks to regular
-   files regardless of filters (gitignore, semgrepignore, --include,
+   files regardless of filters (gitignore, lensignore, --include,
    --exclude, ...).
    If they already occur in the list of skipped targets, they will be removed.
 *)
@@ -930,8 +930,8 @@ let force_select_scanning_roots (project_roots : Project.scanning_roots)
       This list may include files that would be excluded by the gitignore
       mechanism but are nonetheless being tracked by git (it happens).
    3. The scanning roots from step (1) are expanded using our own
-      semgrepignore mechanism. This allows the inclusion of additional
-      files that are not under git control because .semgrepignore
+      lensignore mechanism. This allows the inclusion of additional
+      files that are not under git control because .lensignore
       files allows de-exclusion/re-inclusion patterns such as e.g.
       '!*.min.js'.
       Typically, the sets of files produced by (2) and (3) overlap vastly.
@@ -975,7 +975,7 @@ let get_targets_for_project (conf : conf)
   (selected_targets, skipped_targets)
 [@@trace]
 
-(* for semgrep query console *)
+(* for lens query console *)
 let clone_if_remote_project_root conf =
   match conf.force_project_root with
   | Some (Git_remote { url }) ->
@@ -1003,7 +1003,7 @@ let get_targets (conf : conf) (scanning_roots : Scanning_root.t list) :
   clone_if_remote_project_root conf;
   (* Skipped scanning roots are more serious errors than ordinary skipped
      targets. They are reported as errors, normally causing the
-     semgrep run to terminate with an error status. *)
+     lens run to terminate with an error status. *)
   let grouped_scanning_roots, errors =
     scanning_roots |> group_scanning_roots_by_project conf
   in

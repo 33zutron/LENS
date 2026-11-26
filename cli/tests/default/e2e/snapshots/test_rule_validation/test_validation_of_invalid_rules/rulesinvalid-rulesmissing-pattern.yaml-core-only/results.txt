@@ -1,5 +1,5 @@
 Configuration is invalid - found 2 configuration error(s), and 0 rule(s).
-semgrep error: Invalid rule schema
+lens error: Invalid rule schema
   --> rules/invalid-rules/missing-pattern.yaml:2
 2 | - id: eqeq
   |   ^

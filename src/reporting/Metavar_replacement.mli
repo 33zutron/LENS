@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
 type replacement_ctx
 
 val of_bindings : Metavariable.bindings -> replacement_ctx
-val of_out : Semgrep_output_v1_t.metavars -> replacement_ctx
+val of_out : Lens_output_v1_t.metavars -> replacement_ctx
 
 val interpolate_metavars :
   ?fmt:(string -> string) -> string -> replacement_ctx -> string

@@ -1,0 +1,4 @@
+__LENS_EXPRESSION @Query(...)
+async qux(...){
+  ...
+}

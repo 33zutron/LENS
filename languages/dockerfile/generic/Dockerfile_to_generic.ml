@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2024 Semgrep Inc.
+   Copyright (c) 2022-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -98,7 +98,7 @@ let expansion_expr loc (x : expansion) =
   let arg =
     match x with
     | Expand_var var -> id_expr var
-    | Expand_semgrep_metavar mv -> metavar_expr mv
+    | Expand_lens_metavar mv -> metavar_expr mv
   in
   let func = make_hidden_function loc "expand" in
   let start, end_ = loc in
@@ -109,7 +109,7 @@ let simple_double_quoted_string_expr
   match x with
   | Dbl_string_content s -> quoted_string_expr (open_, s, close)
   | Dbl_expansion (loc, x) -> expansion_expr loc x
-  | Dbl_frag_semgrep_metavar s -> metavar_expr s
+  | Dbl_frag_lens_metavar s -> metavar_expr s
 
 let simple_docker_string_expr (x : docker_string_fragment) : G.expr =
   match x with
@@ -129,7 +129,7 @@ let simple_docker_string_expr (x : docker_string_fragment) : G.expr =
           let start, end_ = loc in
           G.Call (func, (start, args, end_)) |> G.e)
   | Expansion (loc, x) -> expansion_expr loc x
-  | Frag_semgrep_metavar s -> metavar_expr s
+  | Frag_lens_metavar s -> metavar_expr s
 
 let docker_string_expr ((loc, fragments) : docker_string) : G.expr =
   match fragments with
@@ -146,7 +146,7 @@ let str_or_ellipsis_expr = function
   | Str_template x ->
       (* TODO: distinguish heredocs from ordinary strings *)
       unquoted_string_expr x.body
-  | Str_semgrep_ellipsis tok -> ellipsis_expr tok
+  | Str_lens_ellipsis tok -> ellipsis_expr tok
 
 let array_elt_expr (x : array_elt) : G.expr =
   match x with
@@ -163,8 +163,8 @@ let string_array ((open_, args, close) : string_array) : G.expr =
 *)
 let command (env : env) (x : command) : G.expr list =
   match x with
-  | Command_semgrep_ellipsis tok -> [ G.Ellipsis tok |> G.e ]
-  | Command_semgrep_named_ellipsis x -> [ id_expr x ]
+  | Command_lens_ellipsis tok -> [ G.Ellipsis tok |> G.e ]
+  | Command_lens_named_ellipsis x -> [ id_expr x ]
   | Argv (_loc, array) -> [ string_array array ]
   | Sh_command (loc, x) ->
       (* !!! Calling Bash_to_generic !!! *)
@@ -218,23 +218,23 @@ let from (params : param list) (image_spec : image_spec) opt_alias :
 let ident_or_metavar_expr (x : ident_or_metavar) =
   match x with
   | Ident key -> id_expr key
-  | Semgrep_metavar mv -> metavar_expr mv
+  | Lens_metavar mv -> metavar_expr mv
 
 let key_or_metavar_expr (x : key_or_metavar) =
   match x with
   | Key key -> simple_docker_string_expr key
-  | Semgrep_metavar mv -> metavar_expr mv
+  | Lens_metavar mv -> metavar_expr mv
 
 let env_decl pairs =
   let decls =
     pairs
     |> List.map (function
-      | Env_semgrep_ellipsis tok ->
+      | Env_lens_ellipsis tok ->
           G.ExprStmt (G.Ellipsis tok |> G.e, G.sc) |> G.s
       | Env_pair (_loc, key, _eq, value) -> (
           match key with
           | Ident v
-          | Semgrep_metavar v ->
+          | Lens_metavar v ->
               let entity = G.basic_entity v in
               let vardef =
                 G.VarDef
@@ -263,7 +263,7 @@ let label_pair_exprs (instr_name : string wrap) (kv_pairs : label_pair list) :
   in
   kv_pairs
   |> List.filter_map (function
-    | Label_semgrep_ellipsis tok ->
+    | Label_lens_ellipsis tok ->
         if is_one_element then
           (* LABEL ... *)
           let loc = (tok, tok) in
@@ -332,7 +332,7 @@ let healthcheck_cmd_args env (params : param_or_ellipsis list) (cmd : cmd_instr)
 
 let string_or_metavar_expr = function
   | Str_string x -> unquoted_string_expr x
-  | Str_semgrep_metavar mv -> metavar_expr mv
+  | Str_lens_metavar mv -> metavar_expr mv
 
 let arg_args key opt_value : G.expr list =
   let key = ident_or_metavar_expr key in
@@ -350,7 +350,7 @@ let array_or_paths (x : array_or_paths) : G.expr list =
 
 let expose_port_expr (x : expose_port) : G.expr list =
   match x with
-  | Expose_semgrep_ellipsis tok -> [ ellipsis_expr tok ]
+  | Expose_lens_ellipsis tok -> [ ellipsis_expr tok ]
   | Expose_port (port_tok, None) -> [ unquoted_string_expr port_tok ]
   | Expose_port (port_tok, Some protocol_tok) ->
       [
@@ -377,7 +377,7 @@ let expose_port_expr (x : expose_port) : G.expr list =
 
 let healthcheck env loc name (x : healthcheck) =
   match x with
-  | Healthcheck_semgrep_metavar id -> call_exprs name loc [ metavar_expr id ]
+  | Healthcheck_lens_metavar id -> call_exprs name loc [ metavar_expr id ]
   | Healthcheck_ellipsis tok -> G.Ellipsis tok |> G.e
   | Healthcheck_none tok ->
       call_exprs name loc [ unquoted_string_expr (Tok.content_of_tok tok, tok) ]
@@ -418,8 +418,8 @@ let rec instruction_exprs env (x : instruction) : G.expr list =
       [ call_exprs name loc [ string_or_metavar_expr maintainer ] ]
   | Cross_build_xxx (loc, name, data) ->
       [ call_exprs name loc [ unquoted_string_expr data ] ]
-  | Instr_semgrep_ellipsis tok -> [ G.Ellipsis tok |> G.e ]
-  | Instr_semgrep_metavar x -> [ metavar_expr x ]
+  | Instr_lens_ellipsis tok -> [ G.Ellipsis tok |> G.e ]
+  | Instr_lens_metavar x -> [ metavar_expr x ]
 
 let instruction env (x : instruction) : G.stmt list =
   instruction_exprs env x

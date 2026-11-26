@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -20,9 +20,9 @@ module R = Rule
 module E = Core_error
 module PM = Core_match
 module RP = Core_result
-module SJ = Semgrep_output_v1_j
+module SJ = Lens_output_v1_j
 module Mvar_set = Sets.String_set
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 
 (*****************************************************************************)
 (* Prelude *)
@@ -30,30 +30,30 @@ module Out = Semgrep_output_v1_t
 (* Checking the checker (metachecking).
  *
  * The goal of this module is to detect bugs, performance issues, or
- * to suggest the use of certain features in semgrep rules. This enables
- * `semgrep --check-rules`, which users can run to verify their rules
+ * to suggest the use of certain features in lens rules. This enables
+ * `lens --check-rules`, which users can run to verify their rules
  *
- * Called via `semgrep-core -check_rules <metachecks> <files or dirs>`
+ * Called via `lens-core -check_rules <metachecks> <files or dirs>`
  *
  * There are two kinds of checks:
  * - OCaml checks implemented directly in this file
- * - semgrep checks passed in via metachecks
- *     (by default, semgrep will call this with the rules in the rulepack
- *      https://semgrep.dev/p/semgrep-rule-lints)
+ * - lens checks passed in via metachecks
+ *     (by default, lens will call this with the rules in the rulepack
+ *      https://lens.dev/p/lens-rule-lints)
  *
- * Both are necessary because semgrep checks are easier to write, especially
- * for security experts, but not all checks can be expressed with semgrep.
- * Whenever possible, add a check by contributing to p/semgrep-rule-lints
+ * Both are necessary because lens checks are easier to write, especially
+ * for security experts, but not all checks can be expressed with lens.
+ * Whenever possible, add a check by contributing to p/lens-rule-lints
  *
  * We chose to have `-check_rules` run both kinds of checks to make the
- * logic in semgrep simpler. This way, semgrep will receive a list of errors
+ * logic in lens simpler. This way, lens will receive a list of errors
  * and only have to display them.
  *
  * Alternatives considered were having `-check_rules` only run the OCaml checks
- * and have semgrep call `semgrep-core -rules` on the checks
+ * and have lens call `lens-core -rules` on the checks
  *
- * TODO: make it possible to run `semgrep-core -check_rules` with no metachecks
- * TODO: merge code with `osemgrep validate`
+ * TODO: make it possible to run `lens-core -check_rules` with no metachecks
+ * TODO: merge code with `olens validate`
  *)
 
 (*****************************************************************************)
@@ -72,9 +72,9 @@ let error (rule : Rule.t) (t : Tok.t) (s : string) : Core_error.t =
     (* TODO? Logs? *)
     | Error _ -> None
   in
-  let _check_idTODO = "semgrep-metacheck-builtin" in
+  let _check_idTODO = "lens-metacheck-builtin" in
   let rule_id, _ = rule.id in
-  E.mk_error ~rule_id ~msg:s ?loc Out.SemgrepMatchFound
+  E.mk_error ~rule_id ~msg:s ?loc Out.LensMatchFound
 
 (*****************************************************************************)
 (* Checks *)
@@ -215,8 +215,8 @@ let check_pattern (lang : Analyzer.t) f =
        Visit_rule.visit_xpatterns
          (fun { pat; pstr = _pat_str, t; pid = _ } ~inside:_ ->
            match (pat, lang) with
-           | Sem (semgrep_pat, _lang), L (lang, _rest) -> (
-               match Check_pattern.check lang semgrep_pat with
+           | Sem (lens_pat, _lang), L (lang, _rest) -> (
+               match Check_pattern.check lang lens_pat with
                | Ok () -> ()
                | Error s -> raise (CheckPatternFailure (s, t)))
            | Spacegrep _spacegrep_pat, LSpacegrep -> ()
@@ -254,15 +254,15 @@ let check r =
   | `SCA _ -> (* TODO *) []
   | `Join _ -> (* TODO *) []
 
-let semgrep_check (metachecks : Fpath.t) (rules : Fpath.t list) :
+let lens_check (metachecks : Fpath.t) (rules : Fpath.t list) :
     Core_error.t list =
-  let match_to_semgrep_error (m : Core_match.t) : Core_error.t =
+  let match_to_lens_error (m : Core_match.t) : Core_error.t =
     let loc, _ = m.range_loc in
     (* TODO use the end location in errors *)
     let s = m.rule_id.message in
     let _check_id = m.rule_id.id in
     (* TODO: why not set ~rule_id here?? bug? *)
-    E.mk_error ~msg:s ~loc Out.SemgrepMatchFound
+    E.mk_error ~msg:s ~loc Out.LensMatchFound
   in
   (* LATER: what if the rule is written in Jsonnet or JSON ? *)
   let lang : Lang.t = Yaml in
@@ -279,7 +279,7 @@ let semgrep_check (metachecks : Fpath.t) (rules : Fpath.t list) :
       Core_scan_config.default with
       rule_source = Rule_files [ metachecks ];
       target_source = Targets targets;
-      (* we're used from pysemgrep --validate *)
+      (* we're used from pylens --validate *)
       output_format = Json true;
       use_parmap = false;
       par_conf = Parallelism_config.create env;
@@ -290,7 +290,7 @@ let semgrep_check (metachecks : Fpath.t) (rules : Fpath.t list) :
   | Ok result ->
       result.processed_matches
       |> List.map (fun (m : Core_result.processed_match) -> m.pm)
-      |> List.map match_to_semgrep_error
+      |> List.map match_to_lens_error
   | Error exn -> Exception.reraise exn
 
 let run_checks (metachecks : Fpath.t) (xs : Fpath.t list) : Core_error.t list =
@@ -309,7 +309,7 @@ let run_checks (metachecks : Fpath.t) (xs : Fpath.t list) : Core_error.t list =
           m "no valid yaml rules to run on (.test.yaml files are excluded)");
       []
   | _ ->
-      let semgrep_found_errs = semgrep_check metachecks rules in
+      let lens_found_errs = lens_check metachecks rules in
       let ocaml_found_errs =
         rules
         |> List.concat_map (fun file ->
@@ -317,16 +317,16 @@ let run_checks (metachecks : Fpath.t) (xs : Fpath.t list) : Core_error.t list =
             match Parse_rule.parse file with
             | Ok rs -> rs |> List.concat_map (fun file -> check file)
             (* TODO this error is special cased because YAML files that
-                  aren't semgrep rules are getting scanned *)
+                  aren't lens rules are getting scanned *)
             | Error ({ kind = InvalidYaml _; _ } : Rule_error.t) -> []
             | Error e -> [ Core_error.error_of_rule_error e ]
             | exception exn ->
                 let e = Exception.catch exn in
                 [ E.exn_to_error ~file e ])
       in
-      semgrep_found_errs @ ocaml_found_errs
+      lens_found_errs @ ocaml_found_errs
 
-(* for semgrep-core -check_rules, called from pysemgrep --validate *)
+(* for lens-core -check_rules, called from pylens --validate *)
 let check_files (output_format : Core_scan_config.output_format)
     (input : Fpath.t list) : unit =
   let errors =
@@ -352,7 +352,7 @@ let check_files (output_format : Core_scan_config.output_format)
       let json = Core_json_output.core_output_of_matches_and_errors res in
       UConsole.print (SJ.string_of_core_output json)
 
-(* for semgrep-core -stat_rules *)
+(* for lens-core -stat_rules *)
 let stat_files xs =
   let generate_prefilter = Prefiltering.File.of_rule ~interfile:false in
   let fullxs =
@@ -379,8 +379,8 @@ let stat_files xs =
               | Some prefilter ->
                   incr good;
                   let s =
-                    Prefiltering.Semgrep_prefilter_j.string_of_formula
-                      (Prefiltering.File.to_semgrep_formula prefilter)
+                    Prefiltering.Lens_prefilter_j.string_of_formula
+                      (Prefiltering.File.to_lens_formula prefilter)
                   in
                   Logs.debug (fun m -> m "regexp: %s" s))
       | Error e ->

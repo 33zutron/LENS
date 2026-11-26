@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -58,13 +58,13 @@ import colorama
 import pytest
 from ruamel.yaml import YAML
 from tests import fixtures
-from tests.semgrep_runner import SemgrepRunner
+from tests.lens_runner import LensRunner
 
-from semgrep import __VERSION__
-from semgrep.cli import cli
-from semgrep.constants import OutputFormat
-from semgrep.util import IS_WINDOWS
-from semgrep.util import json_win_paths_to_posix
+from lens import __VERSION__
+from lens.cli import cli
+from lens.constants import OutputFormat
+from lens.util import IS_WINDOWS
+from lens.util import json_win_paths_to_posix
 
 ##############################################################################
 # Constants
@@ -143,9 +143,9 @@ class str_containing:
         return self._pattern
 
 
-def make_semgrepconfig_file(dir_path: Path, contents: str) -> None:
-    semgrepconfig_path = dir_path / ".semgrepconfig"
-    semgrepconfig_path.write_text(contents)
+def make_lensconfig_file(dir_path: Path, contents: str) -> None:
+    lensconfig_path = dir_path / ".lensconfig"
+    lensconfig_path.write_text(contents)
 
 
 def make_settings_file(unique_path: Path) -> None:
@@ -184,7 +184,7 @@ def mark_masked(obj, path):
 
 
 def _clean_stdout(out):
-    """Make semgrep's output deterministic."""
+    """Make lens's output deterministic."""
     json_output = json.loads(out)
     if json_output.get("version"):
         json_output["version"] = "0.42"
@@ -193,7 +193,7 @@ def _clean_stdout(out):
 
 
 def _clean_output_if_json(output_json: str, clean_fingerprint: bool) -> str:
-    """Make semgrep's output deterministic and nicer to read."""
+    """Make lens's output deterministic and nicer to read."""
     try:
         output = json.loads(output_json)
     except json.decoder.JSONDecodeError:
@@ -210,12 +210,12 @@ def _clean_output_if_json(output_json: str, clean_fingerprint: bool) -> str:
 
     # The masking code below is a little complicated. We could use the
     # regexp-based mechanism above (mark_masked) for everything to simplify
-    # the porting to osemgrep.
+    # the porting to olens.
 
     # Remove temp file paths
     results = output.get("results")
     if isinstance(results, Sequence):
-        # for semgrep scan output
+        # for lens scan output
         if output.get("version"):
             output["version"] = "0.42"
         for r in results:
@@ -291,8 +291,8 @@ def remove_cert_warnings(text_output: str) -> str:
 ALWAYS_MASK: Maskers = (
     __VERSION__,
     re.compile(r"python (\d+[.]\d+[.]\d+[ ]+)"),
-    re.compile(r'SEMGREP_SETTINGS_FILE="(.+?)"'),
-    re.compile(r'SEMGREP_VERSION_CACHE_PATH="(.+?)"'),
+    re.compile(r'LENS_SETTINGS_FILE="(.+?)"'),
+    re.compile(r'LENS_VERSION_CACHE_PATH="(.+?)"'),
     # Dates
     re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:(?:\.\d+)?Z)?"),
     # Hide any substring that resembles a temporary file path.
@@ -303,8 +303,8 @@ ALWAYS_MASK: Maskers = (
     # can vary from one OS to another.
     # This regexp masks the tail of a path containing 'tmp' or '/tmp'.
     re.compile(f"((?:{re.escape(tempfile.gettempdir())})(?:[\\/][A-Za-z0-9_.-]*)*)"),
-    # osemgrep only. Needed to match the pysemgrep output b/c pysemgrep
-    # uses a temporary path to store rules by osemgrep doesn't.
+    # olens only. Needed to match the pylens output b/c pylens
+    # uses a temporary path to store rules by olens doesn't.
     re.compile(r'"path": *"(rules/[^"]*)"'),
     remove_cert_warnings,
 )
@@ -322,8 +322,8 @@ def mask_variable_text(
             text = pattern.sub(mask_capture_group, text)
         elif callable(pattern):
             text = pattern(text)
-    # strip trailing whitespace characters that are emitted by pysemgrep,
-    # but we do not plan to emit them in osemgrep
+    # strip trailing whitespace characters that are emitted by pylens,
+    # but we do not plan to emit them in olens
     text = re.sub(r"[ \t]+$", "", text, flags=re.M)
     # special code for JSON cleaning, used to be in ALWAYS_MASK
     # but sometimes we want fingerprint masking and sometimes not
@@ -340,12 +340,12 @@ def create_git_repo() -> None:
 
 
 ##############################################################################
-# Calls to semgrep
+# Calls to lens
 ##############################################################################
 
 
 @dataclass
-class SemgrepResult:
+class LensResult:
     command: str
     raw_stdout: str
     raw_stderr: str
@@ -414,15 +414,15 @@ class SemgrepResult:
         print(self.stderr, file=sys.stderr)
 
     def __iter__(self):
-        """For backwards compat with usages like `stdout, stderr = run_semgrep(...)`"""
+        """For backwards compat with usages like `stdout, stderr = run_lens(...)`"""
         yield self.stdout
         yield self.stderr
 
 
-# Implements the 'RunSemgrep' function type (type checking is done
+# Implements the 'RunLens' function type (type checking is done
 # right after this definition) defined in 'fixtures.py'
 # coupling: if you add params, you'll need to also modify fixtures.py
-def _run_semgrep(
+def _run_lens(
     config: Optional[Union[str, Path, List[str]]] = None,
     *,
     target_name: Optional[str] = None,
@@ -442,22 +442,22 @@ def _run_semgrep(
     force_metrics_off: bool = True,
     stdin: Optional[str] = None,
     clean_fingerprint: bool = True,
-    # Deprecated! see semgrep_runner.py toplevel comment
+    # Deprecated! see lens_runner.py toplevel comment
     use_click_runner: bool = False,
     prepare_workspace: Callable[[], None] = lambda: None,
     teardown_workspace: Callable[[], None] = lambda: None,
     context_manager: Optional[ContextManager] = None,
     is_logged_in_weak=False,
-    osemgrep_force_project_root: Optional[str] = None,
-) -> SemgrepResult:
-    """Run the semgrep CLI.
+    olens_force_project_root: Optional[str] = None,
+) -> LensResult:
+    """Run the lens CLI.
 
     :param config: what to pass as --config's value
     :param target_name: which path (either relative or absolute) within ./default/e2e/targets/ to scan
     :param options: additional CLI flags to add
     :param output_format: which format to use
     :param stderr: whether to merge stderr into the returned string
-    :param settings_file: what setting file for semgrep to use. If None, a random temp file is generated
+    :param settings_file: what setting file for lens to use. If None, a random temp file is generated
                           with default params for anonymous_user_id and has_shown_metrics_notification
     """
     try:
@@ -467,37 +467,37 @@ def _run_semgrep(
             env_ = cast(dict[str, str | None], {} if not env else env.copy())
 
             if force_color:
-                env_["SEMGREP_FORCE_COLOR"] = "true"
+                env_["LENS_FORCE_COLOR"] = "true"
                 # NOTE: We should also apply the known color flags to the env_
                 env_["FORCE_COLOR"] = "1"
                 if "NO_COLOR" in env_:
                     del env_["NO_COLOR"]
 
-            if "SEMGREP_USER_AGENT_APPEND" not in env_:
-                env_["SEMGREP_USER_AGENT_APPEND"] = "pytest"
+            if "LENS_USER_AGENT_APPEND" not in env_:
+                env_["LENS_USER_AGENT_APPEND"] = "pytest"
 
             # If delete_setting_file is false and a settings file doesnt exist, put a default
             # as we are not testing said setting. Note that if Settings file exists we want to keep it
             # Use a unique settings file so multithreaded pytest works well
-            if "SEMGREP_SETTINGS_FILE" not in env_:
+            if "LENS_SETTINGS_FILE" not in env_:
                 unique_settings_file = tempfile.NamedTemporaryFile().name
                 make_settings_file(Path(unique_settings_file))
-                env_["SEMGREP_SETTINGS_FILE"] = unique_settings_file
-            if "SEMGREP_VERSION_CACHE_PATH" not in env_:
-                env_["SEMGREP_VERSION_CACHE_PATH"] = tempfile.TemporaryDirectory().name
-            if "SEMGREP_ENABLE_VERSION_CHECK" not in env_:
-                env_["SEMGREP_ENABLE_VERSION_CHECK"] = "0"
-            if force_metrics_off and "SEMGREP_SEND_METRICS" not in env_:
-                env_["SEMGREP_SEND_METRICS"] = "off"
+                env_["LENS_SETTINGS_FILE"] = unique_settings_file
+            if "LENS_VERSION_CACHE_PATH" not in env_:
+                env_["LENS_VERSION_CACHE_PATH"] = tempfile.TemporaryDirectory().name
+            if "LENS_ENABLE_VERSION_CHECK" not in env_:
+                env_["LENS_ENABLE_VERSION_CHECK"] = "0"
+            if force_metrics_off and "LENS_SEND_METRICS" not in env_:
+                env_["LENS_SEND_METRICS"] = "off"
 
-            # In https://github.com/semgrep/semgrep-proprietary/pull/2605
+            # In https://github.com/lens/lens-proprietary/pull/2605
             # we started to gate some JSON fields with an is_logged_in check
             # and certain tests needs those JSON fields hence this parameter
-            if is_logged_in_weak and "SEMGREP_APP_TOKEN" not in env_:
-                env_["SEMGREP_APP_TOKEN"] = "fake_token"
+            if is_logged_in_weak and "LENS_APP_TOKEN" not in env_:
+                env_["LENS_APP_TOKEN"] = "fake_token"
 
             # We don't want *our* CI environment variables to be picked up
-            # by semgrep, and env only *overrides* environment variables,
+            # by lens, and env only *overrides* environment variables,
             # so make sure to explicitly delete any ambient CI variables.
             for var in os.environ:
                 if (var == "CI" or var.startswith("GITHUB_")) and var not in env_:
@@ -507,18 +507,18 @@ def _run_semgrep(
                 options = []
             options = copy.copy(options)
 
-            # This is a hack to make osemgrep's new semgrepignore behavior
-            # compatible with pysemgrep when the current folder is not
+            # This is a hack to make olens's new lensignore behavior
+            # compatible with pylens when the current folder is not
             # the project's root.
-            # - pysemgrep will use the .semgrepignore in the current folder
-            # - osemgrep will locate the project root and use all the
-            #   .semgrepignore and .gitignore files it finds in the project.
-            # In tests, we want to ignore the project-wide's semgrepignore.
+            # - pylens will use the .lensignore in the current folder
+            # - olens will locate the project root and use all the
+            #   .lensignore and .gitignore files it finds in the project.
+            # In tests, we want to ignore the project-wide's lensignore.
             # This is what the '--project-root .' option achieves.
             if (
                 subcommand is None or subcommand == "scan" or subcommand == "ci"
-            ) and osemgrep_force_project_root:
-                options.extend(["--project-root", osemgrep_force_project_root])
+            ) and olens_force_project_root:
+                options.extend(["--project-root", olens_force_project_root])
 
             if subcommand is None or subcommand == "scan" or subcommand == "ci":
                 if timeout:
@@ -534,7 +534,7 @@ def _run_semgrep(
 
             if use_parmap:
                 options.append("--x-parmap")
-                # Currently `semgrep test` does not consume `-j`.  We should contemplate
+                # Currently `lens test` does not consume `-j`.  We should contemplate
                 # running those tests in parallel with Concurrent.map, but until then, just
                 # elide the argument.
                 if subcommand is None or subcommand == "scan" or subcommand == "ci":
@@ -569,16 +569,16 @@ def _run_semgrep(
             args = " ".join(shlex.quote(str(c)) for c in [*options, *targets])
             env_string = " ".join(f'{k}="{v}"' for k, v in env_.items())
 
-            runner = SemgrepRunner(
+            runner = LensRunner(
                 env=env_, mix_stderr=False, use_click_runner=use_click_runner
             )
             click_result = runner.invoke(
                 cli, subcommand=subcommand, args=args, input=stdin
             )
             subcommand_prefix = f"{subcommand} " if subcommand else ""
-            result = SemgrepResult(
-                # the actual executable was either semgrep or osemgrep. Is it bad?
-                f"{env_string} semgrep {subcommand_prefix}{args}",
+            result = LensResult(
+                # the actual executable was either lens or olens. Is it bad?
+                f"{env_string} lens {subcommand_prefix}{args}",
                 click_result.stdout,
                 click_result.stderr,
                 click_result.exit_code,
@@ -622,8 +622,8 @@ def _run_semgrep(
 
 
 @pytest.fixture
-def run_semgrep() -> fixtures.RunSemgrep:
-    return _run_semgrep
+def run_lens() -> fixtures.RunLens:
+    return _run_lens
 
 
 @pytest.fixture()
@@ -635,7 +635,7 @@ def unique_home_dir(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     yield tmp_path
 
 
-def _mk_osemgrep_project_root():
+def _mk_olens_project_root():
     """Return the directory containing targets/ and rules/ dirs.
 
     We run different tests in slightly different setups - either 1)
@@ -652,9 +652,9 @@ def _mk_osemgrep_project_root():
     return str(Path("targets").resolve().parent)
 
 
-# Provide a run_semgrep function with alternate defaults
-_run_strict_semgrep_on_basic_targets_with_json_output: fixtures.RunSemgrep = partial(
-    _run_semgrep,
+# Provide a run_lens function with alternate defaults
+_run_strict_lens_on_basic_targets_with_json_output: fixtures.RunLens = partial(
+    _run_lens,
     strict=True,
     target_name="basic",
     output_format=OutputFormat.JSON,
@@ -662,11 +662,11 @@ _run_strict_semgrep_on_basic_targets_with_json_output: fixtures.RunSemgrep = par
 
 
 @pytest.fixture
-def run_semgrep_in_tmp(
+def run_lens_in_tmp(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> fixtures.RunSemgrep:
+) -> fixtures.RunLens:
     """
-    [DEPRECATED] Same as 'run_semgrep_on_copied_files' but with symlinks
+    [DEPRECATED] Same as 'run_lens_on_copied_files' but with symlinks
     instead of file copies.
     Symlinks cause complications with target selection which are best
     avoided if possible.
@@ -676,15 +676,15 @@ def run_semgrep_in_tmp(
     monkeypatch.chdir(tmp_path)
 
     return partial(
-        _run_strict_semgrep_on_basic_targets_with_json_output,
-        osemgrep_force_project_root=_mk_osemgrep_project_root(),
+        _run_strict_lens_on_basic_targets_with_json_output,
+        olens_force_project_root=_mk_olens_project_root(),
     )
 
 
 @pytest.fixture
-def run_semgrep_on_copied_files(
+def run_lens_on_copied_files(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-) -> fixtures.RunSemgrep:
+) -> fixtures.RunLens:
     """
     Copy the rules/ and targets/ into a temporary workspace and cd into it.
     Use this function only if the test leaves dirty data behind.
@@ -695,29 +695,29 @@ def run_semgrep_on_copied_files(
     monkeypatch.chdir(tmp_path)
 
     return partial(
-        _run_strict_semgrep_on_basic_targets_with_json_output,
-        osemgrep_force_project_root=_mk_osemgrep_project_root(),
+        _run_strict_lens_on_basic_targets_with_json_output,
+        olens_force_project_root=_mk_olens_project_root(),
     )
 
 
 @pytest.fixture
-def run_semgrep_in_test_folder(
+def run_lens_in_test_folder(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
-) -> fixtures.RunSemgrep:
+) -> fixtures.RunLens:
     """
     Change the current directory to where targets/ and rules/ exist without
     copying them. This saves time but is only suitable for read-only tests.
-    In doubt, use 'run_semgrep_in_tmp' which is safe but may be a little
+    In doubt, use 'run_lens_in_tmp' which is safe but may be a little
     slower.
     This stays within the project which is presumably a git repo. Running
-    semgrep in a git repo causes it to do certain git-specific operations.
+    lens in a git repo causes it to do certain git-specific operations.
     """
     monkeypatch.chdir(RULES_AND_TARGETS_PATH)
 
     return partial(
-        _run_strict_semgrep_on_basic_targets_with_json_output,
-        osemgrep_force_project_root=_mk_osemgrep_project_root(),
+        _run_strict_lens_on_basic_targets_with_json_output,
+        olens_force_project_root=_mk_olens_project_root(),
     )
 
 
@@ -727,7 +727,7 @@ def git_tmp_path(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     # Initialize State
     subprocess.run(["git", "init"], check=True, capture_output=True)
     subprocess.run(
-        ["git", "config", "user.email", "baselinetest@semgrep.com"],
+        ["git", "config", "user.email", "baselinetest@lens.com"],
         check=True,
         capture_output=True,
     )

@@ -1,13 +1,13 @@
-; Utilities for testing the semgrep command
+; Utilities for testing the lens command
 ;
 ; This not a test suite.
 
 (library
- (public_name semgrep.testing)
- (name semgrep_testing)
+ (public_name lens.testing)
+ (name lens_testing)
  (libraries
    commons
-   ; Type definitions for the output of semgrep commands
-   semgrep_core_rule
+   ; Type definitions for the output of lens commands
+   lens_core_rule
  )
 )

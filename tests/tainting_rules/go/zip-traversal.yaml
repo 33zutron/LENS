@@ -1,4 +1,4 @@
-# Based on https://semgrep.dev/s/eKq8/ example by François Proulx
+# Based on https://lens.dev/s/eKq8/ example by François Proulx
 rules:
   - id: tainting
     mode: taint

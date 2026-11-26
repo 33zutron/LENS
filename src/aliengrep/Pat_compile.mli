@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -34,5 +34,5 @@ type t = private {
 (* Shortcut for all parsing + compilation *)
 val from_string : Conf.t -> string -> t
 
-(* Convert a metavariable to concrete semgrep syntax e.g. '$X' or '$...X' *)
+(* Convert a metavariable to concrete lens syntax e.g. '$X' or '$...X' *)
 val string_of_metavariable : metavariable -> string

@@ -1,6 +1,6 @@
 (* Brandon Wu
  *
- * Copyright (C) 2019-2023 Semgrep, Inc.
+ * Copyright (C) 2019-2023 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -18,8 +18,8 @@ open Legacy_lsp_
 open Types
 open Jsonrpc
 open Fpath_.Operators
-module Env = Semgrep_envvars
-module OutJ = Semgrep_output_v1_t
+module Env = Lens_envvars
+module OutJ = Lens_output_v1_t
 module SR = Server_request
 module CR = Client_request
 module CN = Client_notification
@@ -71,7 +71,7 @@ let create_info () =
 (* Constants *)
 (*****************************************************************************)
 
-(* These tests are run separately from both the JS side and the regular Semgrep
+(* These tests are run separately from both the JS side and the regular Lens
    side.
 *)
 
@@ -90,14 +90,14 @@ let project_root () =
       if Sys_.file_exists "CONTRIBUTING.md" then Fpath.v (Sys.getcwd ())
       else
         failwith
-          "You must run the test program from within the semgrep repo and not \
+          "You must run the test program from within the lens repo and not \
            one of its subfolders or submodules."
 
 let get_rule_path () =
   match Git_wrapper.project_root_for_files_in_dir Fpath_.current_dir with
   | Some root -> root // Fpath.v "cli/tests/default/e2e/targets/ls/rules.yaml"
   | None ->
-      failwith "The test program must run from within the semgrep git project"
+      failwith "The test program must run from within the lens git project"
 
 (* We run this here because we can't run it during lwt's event loop. *)
 let rule_path = get_rule_path ()
@@ -113,7 +113,7 @@ if x == 4: # CI rule
 
 let login_url_regex =
   Pcre2_.compile_exn ~options:[ `MULTILINE ]
-    {|https://semgrep.dev/login\?cli-token=.*"|}
+    {|https://lens.dev/login\?cli-token=.*"|}
 
 let prog_regex = Pcre2_.compile_exn ~options:[ `MULTILINE ] {|Pr([\s\S]*)|}
 
@@ -286,7 +286,7 @@ let with_git_tmp_path f =
     Testutil_files.with_tempdir ~persist:true (fun dir ->
         Git_wrapper.init_exn ~cwd:dir ();
         Git_wrapper.config_set_exn ~cwd:dir "user.email"
-          "baselinetest@semgrep.com";
+          "baselinetest@lens.com";
         Git_wrapper.config_set_exn ~cwd:dir "user.name" "Baseline Test";
         dir)
   in
@@ -545,36 +545,36 @@ let send_hover info (path : Fpath.t) ~character ~line =
   in
   send_request info req
 
-let _send_semgrep_login info = send_custom_request info ~meth:"semgrep/login"
+let _send_lens_login info = send_custom_request info ~meth:"lens/login"
 
-let _send_semgrep_login_finish info =
+let _send_lens_login_finish info =
   let params = `Assoc [ ("url", `String ""); ("sessionId", `String "") ] in
-  send_custom_notification info ~meth:"semgrep/loginFinish" ~params
+  send_custom_notification info ~meth:"lens/loginFinish" ~params
 
-let _send_semgrep_logout info =
-  send_custom_notification info ~meth:"semgrep/logout"
+let _send_lens_logout info =
+  send_custom_notification info ~meth:"lens/logout"
 
-let send_semgrep_scan_workspace ?(full = false) info =
-  send_custom_notification info ~meth:"semgrep/scanWorkspace"
+let send_lens_scan_workspace ?(full = false) info =
+  send_custom_notification info ~meth:"lens/scanWorkspace"
     ~params:(`Assoc [ ("full", `Bool full) ])
 
-let _send_semgrep_refresh_rules info =
-  send_custom_notification info ~meth:"semgrep/refreshRules"
+let _send_lens_refresh_rules info =
+  send_custom_notification info ~meth:"lens/refreshRules"
 
-let send_semgrep_search info ?language ~includes ~excludes pattern =
+let send_lens_search info ?language ~includes ~excludes pattern =
   let params =
     Legacy_search.mk_params ~lang:language ~fix:None ~includes ~excludes pattern
   in
-  send_custom_request info ~meth:"semgrep/search" ~params
+  send_custom_request info ~meth:"lens/search" ~params
 
-let send_semgrep_search_ongoing info =
-  send_custom_request info ~meth:"semgrep/searchOngoing"
+let send_lens_search_ongoing info =
+  send_custom_request info ~meth:"lens/searchOngoing"
     ~params:(Jsonrpc.Structured.t_of_yojson (`Assoc []))
 
-let send_semgrep_show_ast info ?(named = false) (path : Fpath.t) =
+let send_lens_show_ast info ?(named = false) (path : Fpath.t) =
   let uri = Uri.of_path (Fpath.to_string path) |> Uri.yojson_of_t in
   let params = `Assoc [ ("uri", uri); ("named", `Bool named) ] in
-  send_custom_request info ~meth:"semgrep/showAst" ~params
+  send_custom_request info ~meth:"lens/showAst" ~params
 
 (*****************************************************************************)
 (* Checking functions *)
@@ -692,7 +692,7 @@ let check_startup info folders (files : Fpath.t list) =
   let remaining_packets =
     map_asserts
       (assert_progress "Refreshing Rules"
-      @ [ ("received rules refreshed", assert_notif "semgrep/rulesRefreshed") ]
+      @ [ ("received rules refreshed", assert_notif "lens/rulesRefreshed") ]
       @ assert_progress "Scanning Open Documents")
       packets
   in
@@ -724,11 +724,11 @@ let do_search ?(pattern = "print(...)") ?(includes = []) ?(excludes = []) info =
     YS.Util.(resp.result |> Result.get_ok |> member "locations" |> to_list)
   in
   let%lwt info, resps =
-    send_semgrep_search info pattern ~includes ~excludes get_matches
+    send_lens_search info pattern ~includes ~excludes get_matches
   in
   let resp = expect_one_msg resps in
   let send_ongoing info =
-    let%lwt info, resps = send_semgrep_search_ongoing info get_matches in
+    let%lwt info, resps = send_lens_search_ongoing info get_matches in
     Lwt.return (info, expect_one_msg resps)
   in
   let rec gather_matches info acc =
@@ -820,7 +820,7 @@ let test_ls_specs () =
                   assert (
                     CodeActionKind.yojson_of_t (Option.get kind)
                     = `String "quickfix");
-                  assert (command.command = "semgrep/ignore");
+                  assert (command.command = "lens/ignore");
                   assert (Option.is_some command.arguments);
                   command
               | _ -> Alcotest.fail "expected code action kind"
@@ -894,7 +894,7 @@ let test_ls_ext () =
 
           (* scan workspace *)
           let%lwt info, scan_messages =
-            send_semgrep_scan_workspace info Fun.id
+            send_lens_scan_workspace info Fun.id
           in
           let leftover_packets =
             map_asserts (assert_progress "Scanning Workspace") scan_messages
@@ -921,7 +921,7 @@ let test_ls_ext () =
 
           (* scan workspace full *)
           let%lwt info, full_scan_messages =
-            send_semgrep_scan_workspace ~full:true info Fun.id
+            send_lens_scan_workspace ~full:true info Fun.id
           in
           let scan_warn_msg =
             "Scanning all files regardless of git status. These diagnostics \
@@ -991,7 +991,7 @@ let test_ls_ext () =
           (* showAst *)
           let check_show_ast file info =
             let%lwt info, resp =
-              send_semgrep_show_ast info file receive_response
+              send_lens_show_ast info file receive_response
             in
             let resp = expect_one_msg resp in
             let ast = resp.result |> Result.get_ok |> YS.Util.to_string in
@@ -1076,7 +1076,7 @@ let test_login () =
       Testutil_files.with_chdir root (fun () ->
           let%lwt info = check_startup info [ root ] files in
           let%lwt info, resp =
-            send_custom_request ~meth:"semgrep/login" info receive_response
+            send_custom_request ~meth:"lens/login" info receive_response
           in
           let msg = expect_one_msg resp in
 
@@ -1189,7 +1189,7 @@ let test_ls_delete_cache () =
         Result.get_ok @@ Fpath.of_string s
       in
       let assert_cache_exists () =
-        let cache_dir = !Env.v.user_dot_semgrep_dir / "cache" in
+        let cache_dir = !Env.v.user_dot_lens_dir / "cache" in
         if not (Sys_.Fpath.exists cache_dir) then
           Alcotest.fail "cache wasn't created!"
       in
@@ -1198,15 +1198,15 @@ let test_ls_delete_cache () =
       let%lwt info = check_startup info [ root ] files in
 
       (* Since the goal of this test is testing how the LS handles filesystem
-       * manipulation, modify the environment's $HOME & $SEMGREP to tmp/
-       * & tmp/.semgrep
+       * manipulation, modify the environment's $HOME & $LENS to tmp/
+       * & tmp/.lens
        *)
       let tmp = to_fpath_exn (Filename.get_temp_dir_name ()) in
       Env.v :=
         {
           !Env.v with
           user_home_dir = tmp;
-          user_dot_semgrep_dir = tmp / ".semgrep";
+          user_dot_lens_dir = tmp / ".lens";
         };
 
       (* do a simple search *)
@@ -1219,12 +1219,12 @@ let test_ls_delete_cache () =
       (* ASSERT: cache exists after shutdown *)
       assert_cache_exists ();
 
-      (* mimic deleting cache dir by changing .semgrep/ to .semgrepp/ *)
+      (* mimic deleting cache dir by changing .lens/ to .lensp/ *)
       Env.v :=
         {
           !Env.v with
-          user_dot_semgrep_dir =
-            to_fpath_exn (!!(!Env.v.user_dot_semgrep_dir) ^ "p");
+          user_dot_lens_dir =
+            to_fpath_exn (!!(!Env.v.user_dot_lens_dir) ^ "p");
         };
       (* TEST: run the server again after shut down *)
       let%lwt info, _ = do_search ~pattern:"x = 0" info in
@@ -1277,7 +1277,7 @@ Because logging in is side-effecting, if the test never completes, we
 will stay log in, which can mangle some of the later tests.|}
       ~expected_outcome:
         (Should_fail "TODO: currently failing in js tests in CI");
-    pair "LS /semgrep/search includes/excludes" test_search_includes_excludes
+    pair "LS /lens/search includes/excludes" test_search_includes_excludes
       ?skipped:Testutil.skip_on_windows ~tolerate_chdir:true;
     pair "LS exts" test_ls_ext ?skipped:Testutil.skip_on_windows
       ~tolerate_chdir:true;

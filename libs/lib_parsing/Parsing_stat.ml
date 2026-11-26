@@ -1,7 +1,7 @@
 (* Yoann Padioleau
  *
  * Copyright (C) 2010 Facebook
- * Copyright (C) 2020 Semgrep Inc.
+ * Copyright (C) 2020 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -215,7 +215,7 @@ let regression_information ~ext (xs : Fpath.t list) (newscore : Common2.score) :
               Filename.concat score_path
                 ("score_parsing__" ^ str ^ ext ^ ".marshalled")
             in
-            (* nosemgrep: no-logs-in-library *)
+            (* nolens: no-logs-in-library *)
             Logs.info (fun m -> m "saving regression info in %s" file);
             Common2.regression_testing newscore file)
       else prf "no regression info available: %s does not exist" score_path)

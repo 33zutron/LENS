@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2024 Semgrep Inc.
+# Copyright (c) 2021-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,12 +15,12 @@ import json
 from pprint import pprint
 
 parser = argparse.ArgumentParser(description="Read JSON output.")
-parser.add_argument("newer", type=str, help="newer semgrep output object")
-parser.add_argument("older", type=str, help="older semgrep output object")
+parser.add_argument("newer", type=str, help="newer lens output object")
+parser.add_argument("older", type=str, help="older lens output object")
 
 args = parser.parse_args()
 
-# Read json files (expect semgrep CLI format)
+# Read json files (expect lens CLI format)
 
 newer = open(args.newer)
 newer_results = json.load(newer)

@@ -1,10 +1,10 @@
 # Aliengrep
 
 Aliengrep is a generic mode design to complement and address the
-shortcomings of Spacegrep aka Semgrep's generic mode.
+shortcomings of Spacegrep aka Lens's generic mode.
 
 Aliengrep is designed as an easy way to write patterns for matching
-text targets. It is meant to be easier and more Semgrep-friendly than
+text targets. It is meant to be easier and more Lens-friendly than
 regexps and their usual syntax.
 
 ## Example
@@ -57,7 +57,7 @@ The major differences with Spacegrep are:
 
 Other features:
 
-- Like in Semgrep and Spacegrep, patterns support ellipses (`...`) and
+- Like in Lens and Spacegrep, patterns support ellipses (`...`) and
   metavariables (`$FOO`, `$...FOO`).
 - Like in Spacegrep, a regular metavariable such as `$FOO` captures a
   single word.
@@ -77,8 +77,8 @@ implementation doesn't use ocamllex. Patterns are parsed with a custom
 parser and translated into a PCRE pattern. Target code is not parsed
 per se but directly used to scan target code.
 
-## Semgrep integration
+## Lens integration
 
-In a Semgrep rule, aliengrep is a specific engine for analyzing
+In a Lens rule, aliengrep is a specific engine for analyzing
 generic targets. It's specified as an option in the `options`
 section.

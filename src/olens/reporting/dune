@@ -1,0 +1,37 @@
+;LATER: to merge with lens_reporting at some point
+(library
+ (public_name lens.olens_reporting)
+ (name olens_reporting)
+ (wrapped false)
+ (libraries
+   base
+   collections
+   commons
+   fmt ; TODO: get rid of this dependency
+   terminal_size
+   digestif
+   xmlm
+   sarif
+   python-str-repr
+   ; for Console_spinner
+   lwt
+   lwt_platform
+
+   murmur3
+   olens_configuring
+   olens_core
+   lens.reporting
+   lens.targeting
+   lens.fixing ; for Cli_json_output.ml
+ )
+ (preprocess
+   (pps
+     ppx_profiling
+     ppx_deriving.show
+     ppx_deriving.eq
+     ppx_hash
+     lwt_ppx
+     commons.ppx
+   )
+ )
+)

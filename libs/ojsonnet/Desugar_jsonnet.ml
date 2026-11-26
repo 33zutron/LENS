@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2022 Semgrep Inc.
+ * Copyright (C) 2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -37,7 +37,7 @@ module C = Core_jsonnet
  * the PATH or None, in which case it will default to a regular
  * jsonnet file import as in `local x = import "foo.jsonnet".
  *
- * This callback is useful for example in osemgrep to let ojsonnet
+ * This callback is useful for example in olens to let ojsonnet
  * import yaml files (e.g., local x = import 'foo.yaml') or rules from the
  * registry (e.g., local x = import 'p/python').
  *)
@@ -122,7 +122,7 @@ and expr_or_null v : expr =
 
 let freshvar =
   (* TODO: false positive *)
-  (* nosemgrep: no-ref-declarations-at-top-scope *)
+  (* nolens: no-ref-declarations-at-top-scope *)
   let store = ref 0 in
   fun () ->
     incr store;
@@ -161,7 +161,7 @@ let rec desugar_expr env v : C.expr =
   try desugar_expr_aux env v with
   | Failure "TODO" ->
       let expr = show_expr v in
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.debug (fun m -> m "construct not handled:\n %s" expr);
       failwith "TODO:desugar"
 
@@ -263,7 +263,7 @@ and desugar_expr_aux env v =
       e
   | Ellipsis tk
   | DeepEllipsis (tk, _, _) ->
-      error tk "Ellipsis can appear only in semgrep patterns"
+      error tk "Ellipsis can appear only in lens patterns"
 
 and desugar_special _env v =
   match v with
@@ -410,7 +410,7 @@ and desugar_parameter env v =
               fk,
               C.Error (fk, C.L (mk_str_literal ("Parameter not bound", fk))) ))
   | ParamEllipsis tk ->
-      error tk "ParamEllipsis can appear only in semgrep patterns"
+      error tk "ParamEllipsis can appear only in lens patterns"
 
 and desugar_obj_inside env (l, v, r) : C.expr =
   let l = desugar_tok env l in
@@ -422,7 +422,7 @@ and desugar_obj_inside env (l, v, r) : C.expr =
         |> Either_.partition_either3 (function
           | OLocal (_tlocal, x) -> Left3 x
           | OEllipsis tk ->
-              error tk "OEllipsis can appear only in semgrep patterns"
+              error tk "OEllipsis can appear only in lens patterns"
           | OAssert x -> Middle3 x
           | OField x -> Right3 x)
       in

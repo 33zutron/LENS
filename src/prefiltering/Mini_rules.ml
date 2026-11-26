@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2020 Semgrep Inc.
+ * Copyright (C) 2020 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
  * LICENSE for more details.
  *)
-module Flag = Flag_semgrep
+module Flag = Flag_lens
 module R = Mini_rule
 
 (*****************************************************************************)
@@ -22,7 +22,7 @@ module R = Mini_rule
  *
  * This is deprecated; It is better to do the
  * regexp-extraction-from-pattern optimization at the rule level
- * in Semgrep.ml (instead of on mini-rule level in Semgrep_generic.ml).
+ * in Lens.ml (instead of on mini-rule level in Lens_generic.ml).
  *)
 
 (*****************************************************************************)

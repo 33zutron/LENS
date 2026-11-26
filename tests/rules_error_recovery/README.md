@@ -1,5 +1,5 @@
 This directory contains tests that may trigger errors at runtime
-(e.g., some parsing error on some target files) but semgrep should
+(e.g., some parsing error on some target files) but lens should
 still recover from those errors and find matches.
 
 We can't put those tests in ../rules/ because there we are more

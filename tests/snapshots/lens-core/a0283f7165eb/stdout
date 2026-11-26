@@ -1,0 +1,28 @@
+Test name: with git > lensignore file takes precedence over --include
+--- Files added before 'git add' ---
+.lensignore
+c.c
+dir/a.c
+dir/b.c
+--- begin input files ---
+.lensignore
+c.c
+dir/a.c
+dir/b.c
+--- end input files ---
+Initialized empty Git repository in <TMP>/<MASKED>/.git/
+[main (root-commit) <MASKED>] Add files
+ 4 files changed, 1 insertion(+)
+ create mode 100644 .lensignore
+ create mode 100644 c.c
+ create mode 100644 dir/a.c
+ create mode 100644 dir/b.c
+--- '--include' patterns ---
+*.c
+--- Errors ---
+--- Selected targets ---
+selected c.c
+--- Skipped targets ---
+ignored .lensignore [Lens_output_v1_t.Cli_include_flags_do_not_match]
+ignored dir/a.c [Lens_output_v1_t.Lensignore_patterns_match]
+ignored dir/b.c [Lens_output_v1_t.Lensignore_patterns_match]

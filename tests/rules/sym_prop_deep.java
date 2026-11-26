@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/3207
+// https://github.com/returntocorp/lens/issues/3207
 public class Test {
 
   public final ZipEntry getNextEntry() {

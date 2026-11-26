@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -16,16 +16,16 @@ from unittest.mock import patch
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.parsers.util import DependencyParser
 from semdep.parsers.util import LockfileParseFailure
-from semgrep.resolve_dependency_source import _handle_lockfile_source
-from semgrep.resolve_dependency_source import _handle_manifest_only_source
-from semgrep.subproject import DependencyResolutionConfig
+from lens.resolve_dependency_source import _handle_lockfile_source
+from lens.resolve_dependency_source import _handle_manifest_only_source
+from lens.subproject import DependencyResolutionConfig
 
 
 @pytest.mark.quick
-@patch("semgrep.resolve_dependency_source.PARSERS_BY_LOCKFILE_KIND")
+@patch("lens.resolve_dependency_source.PARSERS_BY_LOCKFILE_KIND")
 def test_handle_missing_parser_for_lockfile(mock_parsers_dict) -> None:
     """
     Test that _handle_lockfile_source returns the correct values when a parser is missing for the lockfile kind.
@@ -59,7 +59,7 @@ def test_handle_missing_parser_for_lockfile(mock_parsers_dict) -> None:
 
 
 @pytest.mark.quick
-@patch("semgrep.resolve_dependency_source.PARSERS_BY_LOCKFILE_KIND")
+@patch("lens.resolve_dependency_source.PARSERS_BY_LOCKFILE_KIND")
 def test_dependency_parser_exception(mock_parsers_dict) -> None:
     """
     Test that _handle_lockfile_source returns the correct values when a parser is raises an exception
@@ -139,7 +139,7 @@ def _poetry_error(cls, path, reason):
     ],
     ids=["manifest-error", "empty-lockfile", "skipped-entry"],
 )
-@patch("semgrep.resolve_dependency_source.PARSERS_BY_LOCKFILE_KIND")
+@patch("lens.resolve_dependency_source.PARSERS_BY_LOCKFILE_KIND")
 def test_non_fatal_error_keeps_subproject_resolved(mock_parsers_dict, error) -> None:
     parser = DependencyParser(lambda lockfile_path, manifest_path: ([], [error]))
     mock_parsers_dict.get.return_value = parser
@@ -154,7 +154,7 @@ def test_non_fatal_error_keeps_subproject_resolved(mock_parsers_dict, error) -> 
 
 
 @pytest.mark.quick
-@patch("semgrep.resolve_dependency_source.PARSERS_BY_LOCKFILE_KIND")
+@patch("lens.resolve_dependency_source.PARSERS_BY_LOCKFILE_KIND")
 def test_lockfile_parse_failure_marks_subproject_unresolved(mock_parsers_dict) -> None:
     error = _poetry_error(LockfileParseFailure, "poetry.lock", "invalid TOML")
     parser = DependencyParser(lambda lockfile_path, manifest_path: ([], [error]))
@@ -182,7 +182,7 @@ def test_gradle_module_attribution_rpc_transport(mocker, enabled, persistent):
         out.Manifest(out.ManifestKind(out.BuildGradle()), out.Fpath("build.gradle"))
     )
     session = mocker.Mock() if persistent else None
-    call = session.call if session else mocker.patch("semgrep.rpc_call.rpc_call")
+    call = session.call if session else mocker.patch("lens.rpc_call.rpc_call")
     call.return_value = None
 
     _handle_manifest_only_source(source, config, rpc_session=session)

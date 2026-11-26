@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2025 Semgrep Inc.
+# Copyright (c) 2022-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -18,16 +18,16 @@ from typing import Union
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.config_resolver import parse_config_string
-from semgrep.dependency_aware_rule import SCA_FINDING_SCHEMA
-from semgrep.rule import Rule
-from semgrep.rule_match import remove_content
-from semgrep.rule_match import remove_content_call
-from semgrep.rule_match import remove_content_int_var
-from semgrep.rule_match import remove_content_loc
-from semgrep.rule_match import RuleMatch
-from semgrep.rule_match import RuleMatches
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.config_resolver import parse_config_string
+from lens.dependency_aware_rule import SCA_FINDING_SCHEMA
+from lens.rule import Rule
+from lens.rule_match import remove_content
+from lens.rule_match import remove_content_call
+from lens.rule_match import remove_content_int_var
+from lens.rule_match import remove_content_loc
+from lens.rule_match import RuleMatch
+from lens.rule_match import RuleMatches
 
 
 def create_rule() -> Rule:
@@ -260,7 +260,7 @@ def test_rule_match_hashing(mocker):
 
 
 @pytest.mark.quick
-def test_rule_match_is_nosemgrep_agnostic(mocker):
+def test_rule_match_is_nolens_agnostic(mocker):
     file_content = dedent(
         """
         # first line
@@ -290,7 +290,7 @@ def test_rule_match_is_nosemgrep_agnostic(mocker):
         """
         # first line
         def foo():
-            (5  # nosemgrep: something
+            (5  # nolens: something
                 ==
             5)
         """
@@ -315,7 +315,7 @@ def test_rule_match_is_nosemgrep_agnostic(mocker):
         """
         # first line
         def foo():
-            # nosemgrep: something
+            # nolens: something
             (5
                 ==
             5)
@@ -339,10 +339,10 @@ def test_rule_match_is_nosemgrep_agnostic(mocker):
     )
     assert (
         match_1.ci_unique_key == match_2.ci_unique_key
-    ), "matches are identical per semgrep ci deduplication if the only difference is an inline nosemgrep comment"
+    ), "matches are identical per lens ci deduplication if the only difference is an inline nolens comment"
     assert (
         match_1.ci_unique_key == match_3.ci_unique_key
-    ), "matches are identical per semgrep ci deduplication if the only difference is a previous-line nosemgrep comment"
+    ), "matches are identical per lens ci deduplication if the only difference is a previous-line nolens comment"
 
 
 @pytest.mark.quick
@@ -568,7 +568,7 @@ def create_sca_rule_match(sca_kind, reachable_in_code, transitivity):
     )
     return RuleMatch(
         message="message",
-        metadata={"sca-kind": sca_kind, "dev.semgrep.actions": ["block"]},
+        metadata={"sca-kind": sca_kind, "dev.lens.actions": ["block"]},
         severity=out.MatchSeverity(out.Error()),
         match=out.CoreMatch(
             check_id=out.RuleId("rule.id"),
@@ -613,8 +613,8 @@ def create_validator_rule_match(
     return RuleMatch(
         message="message",
         metadata={
-            "dev.semgrep.actions": [action],
-            "dev.semgrep.validation_state.actions": validation_state_actions,
+            "dev.lens.actions": [action],
+            "dev.lens.validation_state.actions": validation_state_actions,
         },
         severity=out.MatchSeverity(out.Error()),
         match=out.CoreMatch(

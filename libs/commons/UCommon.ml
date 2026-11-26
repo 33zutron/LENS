@@ -42,16 +42,16 @@ let pr2_gen x = pr2 (Dumper.dump x)
 let exn_to_real_unixexit f =
   try f () with
   | UnixExit (0, _) ->
-      (* nosemgrep: forbid-exit *)
+      (* nolens: forbid-exit *)
       Stdlib.exit 0
   | UnixExit (x, msg) ->
       pr2 (spf "UnixExit(%d): %s%!" x msg);
-      (* nosemgrep: forbid-exit *)
+      (* nolens: forbid-exit *)
       Stdlib.exit x
   | exn ->
       let e = Exception.catch exn in
       pr2 (spf "UnixExit(1):\n%s%!" (Exception.to_string e));
-      (* nosemgrep: forbid-exit *)
+      (* nolens: forbid-exit *)
       Stdlib.exit 1
 
 let pp_do_in_zero_box f =
@@ -59,7 +59,7 @@ let pp_do_in_zero_box f =
   f ();
   Format.close_box ()
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let before_exit = ref []
 
 let main_boilerplate f =
@@ -126,6 +126,6 @@ let main_boilerplate f =
                     raise (Unix.Unix_error (e, fm, argm))))
           (fun () ->
             !before_exit |> List.iter (fun f -> f ());
-            (* nosemgrep: forbid-tmp *)
+            (* nolens: forbid-tmp *)
             UTmp.erase_temp_files ()))
 (* let _ = if not !Sys.interactive then (main ()) *)

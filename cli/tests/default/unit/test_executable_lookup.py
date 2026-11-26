@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -10,7 +10,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
 # LICENSE for more details.
 #
-# Testing src/semgrep/executable_lookup.py. Windows behavior is simulated so
+# Testing src/lens/executable_lookup.py. Windows behavior is simulated so
 # these run on every platform.
 import functools
 import importlib.resources
@@ -19,11 +19,11 @@ import sys
 
 import pytest
 
-from semgrep import executable_lookup
-from semgrep import semgrep_core
-from semgrep.error import SemgrepError
-from semgrep.git import git_check_output
-from semgrep.util import sub_check_output
+from lens import executable_lookup
+from lens import lens_core
+from lens.error import LensError
+from lens.git import git_check_output
+from lens.util import sub_check_output
 
 GIT = r"C:\Git\cmd\git.exe"
 
@@ -128,7 +128,7 @@ def test_git_check_output_error_shows_logical_command(monkeypatch) -> None:
         executable_lookup, "search_windows_path", lambda *_args: sys.executable
     )
     url = "https://user:LEAK_ME@example.com/repo.git"
-    with pytest.raises(SemgrepError) as error:
+    with pytest.raises(LensError) as error:
         git_check_output(["git", "-c", "import sys; sys.exit(3)", url])
     message = str(error.value)
     assert "exit code: 3" in message
@@ -151,38 +151,38 @@ def test_sub_check_output_fails_closed(monkeypatch, mocker) -> None:
 @pytest.mark.parametrize(
     "find,expected",
     [
-        ("entrypoint", r"C:\Tools\semgrep-core.exe"),
-        ("semgrep-core", r"C:\Tools\semgrep-core.exe"),
+        ("entrypoint", r"C:\Tools\lens-core.exe"),
+        ("lens-core", r"C:\Tools\lens-core.exe"),
     ],
 )
 def test_executable_path_fallback_ignores_cwd(monkeypatch, find, expected) -> None:
     # Importing entrypoint appends to PATH; let monkeypatch restore it.
     monkeypatch.setenv("PATH", os.environ.get("PATH", ""))
-    entrypoint = importlib.import_module("semgrep.console_scripts.entrypoint")
+    entrypoint = importlib.import_module("lens.console_scripts.entrypoint")
     monkeypatch.setattr(entrypoint, "IS_WINDOWS", True)
-    monkeypatch.setattr(semgrep_core, "IS_WINDOWS", True)
+    monkeypatch.setattr(lens_core, "IS_WINDOWS", True)
 
     def no_packaged_binary(*_args):
         raise FileNotFoundError
 
     # Windows CI has packaged binaries, which take precedence over PATH.
     monkeypatch.setattr(importlib.resources, "path", no_packaged_binary)
-    files = {r".\semgrep-core.exe", r"C:\Tools\semgrep-core.exe"}
+    files = {r".\lens-core.exe", r"C:\Tools\lens-core.exe"}
     simulate_windows(monkeypatch, r".;C:\Tools", files)
 
     if find == "entrypoint":
-        assert entrypoint.find_semgrep_core_path() == expected
+        assert entrypoint.find_lens_core_path() == expected
     else:
-        assert semgrep_core.compute_executable_path(find) == expected
+        assert lens_core.compute_executable_path(find) == expected
 
     # PATH has no fully qualified entry and sys.executable gives no directory.
     monkeypatch.setenv("PATH", ".")
     monkeypatch.setattr("sys.executable", "")
     if find == "entrypoint":
         with pytest.raises(entrypoint.CoreNotFound):
-            entrypoint.find_semgrep_core_path()
+            entrypoint.find_lens_core_path()
     else:
-        assert semgrep_core.compute_executable_path(find) is None
+        assert lens_core.compute_executable_path(find) is None
 
 
 @pytest.mark.quick
@@ -191,10 +191,10 @@ def test_executable_path_without_interpreter_ignores_cwd(
     monkeypatch, mocker, tmp_path, python_executable
 ) -> None:
     mocker.patch.object(importlib.resources, "path", side_effect=FileNotFoundError)
-    mocker.patch.object(semgrep_core, "find_executable", return_value=None)
+    mocker.patch.object(lens_core, "find_executable", return_value=None)
     monkeypatch.chdir(tmp_path)
-    core = "semgrep-core.exe" if semgrep_core.IS_WINDOWS else "semgrep-core"
+    core = "lens-core.exe" if lens_core.IS_WINDOWS else "lens-core"
     (tmp_path / core).touch()
     monkeypatch.setattr(sys, "executable", python_executable)
 
-    assert semgrep_core.compute_executable_path("semgrep-core") is None
+    assert lens_core.compute_executable_path("lens-core") is None

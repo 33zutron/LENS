@@ -16,7 +16,7 @@ void assignment_expression_parens() {
 
 class Foo {
   // added to check if menhir parser can parse virtual specifiers.
-  // minimized version of https://semgrep.dev/playground/s/zzBG
+  // minimized version of https://lens.dev/playground/s/zzBG
   //
   // TODO: safe to remove once tree-sitter-cpp successfully parses this file.
   void bar() override {};

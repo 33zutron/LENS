@@ -1,17 +1,17 @@
-## [1.183.0](https://github.com/semgrep/semgrep/releases/tag/v1.183.0) - 2026-10-29
+## [1.183.0](https://github.com/lens/lens/releases/tag/v1.183.0) - 2026-10-29
 
 ### ### Added
 
-- The `--help` output of `semgrep` subcommands now includes a "THIRD-PARTY
-  LICENSES" section linking to the licenses and notices for Semgrep's open
-  source dependencies at https://semgrep.dev/cli-credits. (cli-credits)
+- The `--help` output of `lens` subcommands now includes a "THIRD-PARTY
+  LICENSES" section linking to the licenses and notices for Lens's open
+  source dependencies at https://lens.dev/cli-credits. (cli-credits)
 - Pro: Supply Chain now records which Go module requires which when dependency paths are enabled and local builds are allowed, so transitive Go findings can show the dependency path. (SC-4268)
 
 ### ### Changed
 
-- Semgrep no longer ships binaries for Intel Macs; 1.182 is the last release that supports them. On Intel Macs, use the `semgrep/semgrep` Docker image; on Apple Silicon, use a native arm64 Python. (drop-intel-macos)
+- Lens no longer ships binaries for Intel Macs; 1.182 is the last release that supports them. On Intel Macs, use the `lens/lens` Docker image; on Apple Silicon, use a native arm64 Python. (drop-intel-macos)
 - Speed up scans with many rules that share file prefilter conditions by checking each condition once per file. (prefilter-predicate-memo)
-- semgrep ci `--no-suppress-errors` now exits with code 2 (instead of 0) when dependency resolution fails for a subproject while local builds are allowed (--allow-local-builds): a build or package manager command fails, a lockfile cannot be parsed at all, or a build succeeds but reports an incomplete dependency list (for example, a registry refused a request). The affected dependency sources are listed in the scan output and the scan no longer reports that it completed successfully. Findings from the other subprojects are still reported. The default behavior, where errors are suppressed, is unchanged, and so is any scan without --allow-local-builds. Semgrep Managed Scanning scans are not affected. (SC-3613)
+- lens ci `--no-suppress-errors` now exits with code 2 (instead of 0) when dependency resolution fails for a subproject while local builds are allowed (--allow-local-builds): a build or package manager command fails, a lockfile cannot be parsed at all, or a build succeeds but reports an incomplete dependency list (for example, a registry refused a request). The affected dependency sources are listed in the scan output and the scan no longer reports that it completed successfully. Findings from the other subprojects are still reported. The default behavior, where errors are suppressed, is unchanged, and so is any scan without --allow-local-builds. Lens Managed Scanning scans are not affected. (SC-3613)
 - bash grammar update (v0.25.1):
 
   - Bash arithmetic (`$(( ))`, `$[ ]`, `(( ))`, C-style `for` headers) is now translated into operator trees with bash precedence, so patterns such as `$(( $X * 2 ))` match structurally. `$((...))` is no longer confused with `$(...)`.
@@ -22,7 +22,7 @@
   (bash-v0.25.1)
 - clojure grammar update (v0.0.13):
 
-  - Clojure source parsing now accepts reader-evaluated metadata, such as ^#=(keyword "a") [1 2], including the legacy #^ prefix. Semgrep does not execute reader evaluation, and metadata remains ignored during matching.
+  - Clojure source parsing now accepts reader-evaluated metadata, such as ^#=(keyword "a") [1 2], including the legacy #^ prefix. Lens does not execute reader evaluation, and metadata remains ignored during matching.
   - Clojure source parsing now supports reader conditionals inside symbolic values, such as ## #?(:clj Inf :cljs NaN), retaining the conditional branches without evaluating them.
 
   (clojure-v0.0.13)
@@ -41,14 +41,14 @@
 
 ### ### Fixed
 
-- The Cursor hooks installed by `semgrep mcp` now track edited files separately for each Cursor conversation, so one window's stop scan no longer scans or discards another conversation's edits. (mcp-hook-cache-per-conversation)
-- The `semgrep mcp` server's `semgrep_scan` tool now only scans files inside the client's workspace root, or the server's working directory when the client reports none. Set `SEMGREP_MCP_ALLOW_SCAN_OUTSIDE_WORKSPACE=true` to scan files outside it. (mcp-scan-workspace-roots)
+- The Cursor hooks installed by `lens mcp` now track edited files separately for each Cursor conversation, so one window's stop scan no longer scans or discards another conversation's edits. (mcp-hook-cache-per-conversation)
+- The `lens mcp` server's `lens_scan` tool now only scans files inside the client's workspace root, or the server's working directory when the client reports none. Set `LENS_MCP_ALLOW_SCAN_OUTSIDE_WORKSPACE=true` to scan files outside it. (mcp-scan-workspace-roots)
 - Interfile scans no longer fail with `Failure: Failed to unmarshal cached
   value: Exception during parallelization: Exception.Timeout(...)` when a
   taint configuration timeout fires at an unlucky moment. The timeout now only
   skips the affected rule and file, as intended. (CODE-9810)
-- The Semgrep source distribution on PyPI is once again published with provenance. (CODE-10070)
-- Update certificate trust in Semgrep and its container images to address the eMudhra certificate authority compromise. Disable curl-based telemetry on macOS and Windows; default telemetry and scanning remain available. (INCID-521)
+- The Lens source distribution on PyPI is once again published with provenance. (CODE-10070)
+- Update certificate trust in Lens and its container images to address the eMudhra certificate authority compromise. Disable curl-based telemetry on macOS and Windows; default telemetry and scanning remain available. (INCID-521)
 - Supply Chain: multi-document pnpm-lock.yaml files (written by pnpm 11+) are
   now parsed instead of reporting zero dependencies. A lockfile that fails to
   parse now marks its subproject as unresolved rather than resolved with zero

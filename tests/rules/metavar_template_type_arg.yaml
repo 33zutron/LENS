@@ -4,7 +4,7 @@ rules:
       - pattern-either:
           - pattern: shared_ptr $LOCAL_VAR;
           - pattern: shared_ptr<$TY> $LOCAL_VAR;
-    message: Semgrep found a match
+    message: Lens found a match
     languages:
       - cpp
     severity: WARNING

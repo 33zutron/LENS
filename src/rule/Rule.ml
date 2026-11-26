@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
  * LICENSE for more details.
  *)
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 
 (* for deriving hash *)
 open Ppx_hash_lib.Std.Hash.Builtin
@@ -20,9 +20,9 @@ open Ppx_hash_lib.Std.Hash.Builtin
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Data structures to represent a Semgrep rule (=~ AST of a rule).
+(* Data structures to represent a Lens rule (=~ AST of a rule).
  *
- * See also semgrep-interfaces/rule_schema_v2.atd which specifies the
+ * See also lens-interfaces/rule_schema_v2.atd which specifies the
  * concrete syntax of a rule.
  * See also Mini_rule.ml where formula and many other features disappear.
  *)
@@ -103,7 +103,7 @@ and formula_kind =
    * The same is true for pattern-not and pattern-not-inside
    * (see tests/rules/negation_exact.yaml)
    * todo: try to remove this at some point, but difficult. See
-   * https://github.com/semgrep/semgrep/issues/1218
+   * https://github.com/lens/lens/issues/1218
    *)
   | Inside of tok * formula
   (* alt: Could do this under a `where` (call it something like `also`).
@@ -180,13 +180,13 @@ let mk_formula ?fix ?(focus = []) ?(conditions = []) ?as_ kind =
 let f kind = mk_formula kind
 
 (*****************************************************************************)
-(* Semgrep_output aliases *)
+(* Lens_output aliases *)
 (*****************************************************************************)
 
-(* This enum type is now defined in semgrep_output_v1.atd.
+(* This enum type is now defined in lens_output_v1.atd.
  * This used to be essentially Error/Warning/Info, but starting from 1.72.0 we
  * want to migrate to Critical/High/Medium/Low/Info as explained in
- * https://linear.app/semgrep/issue/FIND-1240/unified-severity-levels-across-productslocations
+ * https://linear.app/lens/issue/FIND-1240/unified-severity-levels-across-productslocations
  *)
 type severity = Out.match_severity [@@deriving eq, ord, show]
 type validation_state = Out.validation_state [@@deriving eq, ord, show]
@@ -237,7 +237,7 @@ type taint_spec_id = string [@@deriving show, eq]
 type byte_range = { start : int; end_ : int } [@@deriving show, eq]
 (** A byte-range in a file: [(start_bytepos, end_bytepos)].
     Isomorphic to [Range.t] but defined here to avoid a dependency on
-    [semgrep.core] from [semgrep.rule]. *)
+    [lens.core] from [lens.rule]. *)
 
 (** A formula field in a taint spec entry (source, sink, sanitizer).
     Either a normal pattern formula, or a list of precomputed file/range
@@ -415,7 +415,7 @@ type sca_dependency_formula = (* SCA_Or of *) SCA_pattern.t list
 [@@deriving show, eq]
 
 (*****************************************************************************)
-(* Extract mode (semgrep as a preprocessor, Pro-only) *)
+(* Extract mode (lens as a preprocessor, Pro-only) *)
 (*****************************************************************************)
 
 (* See also Extract.ml for extract mode helpers *)
@@ -455,12 +455,12 @@ and extract_reduction = Separate | Concat [@@deriving show, eq]
 
 (* This type encodes a basic HTTP request; mainly used for in the secrets
  * post-processor; such that a basic http request like
- * GET semgrep.dev
+ * GET lens.dev
  * Auth: ok
  * Type: tau
  * would be represented as
  * {
- *   url     = semgrep.dev/user;
+ *   url     = lens.dev/user;
  *   meth    = `GET;
  *   headers =
  *  [
@@ -549,7 +549,7 @@ type validator =
 (*****************************************************************************)
 
 (*
-   Gitignore/Semgrepignore-compliant glob matching. The compiled pattern
+   Gitignore/Lensignore-compliant glob matching. The compiled pattern
    is not right-anchored e.g. pattern 'a' will match path 'a' but also 'a/b'.
    The patterns are left-anchored or not based on Gitignore conventions.
 *)
@@ -669,9 +669,9 @@ type 'mode rule_info = {
    * We can now start to decouple file selection from their analysis.
    * For example, we can select Bash files using the predefined
    * rules that inspect the file extension (.sh) or the shebang line (#!)
-   * but analyze them using a regexp instead of a regular Semgrep pattern.
+   * but analyze them using a regexp instead of a regular Lens pattern.
    *
-   * see also https://www.notion.so/semgrep/What-s-a-language-3f4e75546edd4a0389fa29a24eedb6c0
+   * see also https://www.notion.so/lens/What-s-a-language-3f4e75546edd4a0389fa29a24eedb6c0
    *
    * TODO: instead of always deriving those two fields automatically from
    * the 'languages:' field of the rule in Parse_rule.ml, we should add
@@ -679,8 +679,8 @@ type 'mode rule_info = {
    *
    * target_selector: How to *select* target files e.g. "files that look
    * like C files". If None, the selector selects all the files that are not
-   * ignored by generic mechanisms such as semgrepignore.
-   * In a Semgrep rule where a string is expected, the standard way
+   * ignored by generic mechanisms such as lensignore.
+   * In a Lens rule where a string is expected, the standard way
    * is to use "generic" but "regex" and "none" have the same effect.
    * They all translate into 'None'.
    *
@@ -698,7 +698,7 @@ type 'mode rule_info = {
    *
    * Examples:
    * - "pattern for the C parser using the generic AST" (regular programming
-   *   language using a classic Semgrep pattern)
+   *   language using a classic Lens pattern)
    * - "pattern for Fortran77 or for Fortran90" (two possible parsers)
    * - "spacegrep pattern"
    * - "high-entropy detection" (doesn't use a pattern)
@@ -725,8 +725,8 @@ type 'mode rule_info = {
    *            bar($X)
    * which are parsed by the yaml parser as 'fix: "bar($X)\n"', but we don't
    * want the extra newline added by the autofix.
-   * history: this used to be done only on the pysemgrep side in rule_match.py
-   * but better to do it here so osemgrep behaves like pysemgrep.
+   * history: this used to be done only on the pylens side in rule_match.py
+   * but better to do it here so olens behaves like pylens.
    * Note that this trimming is useful only for languages where the AST-based
    * autofix is not supported, in which case we don't parse the fix pattern
    * but perform a basic textual replacement on the fix pattern string.
@@ -750,20 +750,20 @@ type 'mode rule_info = {
    * is now done via Rule_options instead.
    *)
   metadata : JSON.t option;
-  (* Range of Semgrep versions supported by the rule.
+  (* Range of Lens versions supported by the rule.
    * Note that a rule with these fields may not even be parseable
-   * in the current version of Semgrep and wouldn't even reach this point.
+   * in the current version of Lens and wouldn't even reach this point.
    * coupling: unfortunately, rule filtering is currently done in 3 places:
-   *  - in Parse_rule.check_version_compatibility() for semgrep-core and osemgrep
+   *  - in Parse_rule.check_version_compatibility() for lens-core and olens
    *    since 1.41.0
-   *  - in rule_lang.py remove_incompatible_rules_based_on_version() for pysemgrep
+   *  - in rule_lang.py remove_incompatible_rules_based_on_version() for pylens
    *    since 1.76.0
-   *  - in semgrep-app in server/semgrep_app/foundations/scan/providers/config.py
+   *  - in lens-app in server/lens_app/foundations/scan/providers/config.py
    *    in filter_rules_by_supported_version() since 1.79.0
    * The last one was done because we wanted to start using Critical severity in
    * our rules without having to wait for everybody to switch to 1.76.0
-   * (adding version filtering in semgrep-core was not enough; it was still crashing
-   *  pysemgrep which was still doing its own rule validation via jsonschema).
+   * (adding version filtering in lens-core was not enough; it was still crashing
+   *  pylens which was still doing its own rule validation via jsonschema).
    *)
   min_version : Semver_.t option;
   max_version : Semver_.t option;
@@ -945,7 +945,7 @@ let split_and (xs : formula list) : formula list * (tok * formula) list =
       | Not (tok, f) -> Right (tok, f))
 
 (* create a fake rule when we only have a pattern and language.
- * This is used when someone calls `semgrep -e print -l python`
+ * This is used when someone calls `lens -e print -l python`
  *)
 
 let rule_of_formula ?fix (analyzer : Analyzer.t) (formula : formula) : rule =

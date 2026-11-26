@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -12,11 +12,11 @@
 *)
 (* Type to represent a token (e.g., an identifier, a keyword).
  * Tok.t is used in many ASTs (including in AST_generic.ml) and CSTs
- * across Semgrep.
+ * across Lens.
  *
  * Tok.t is a bit complicated because we want to represent "fake" and
  * "expanded" tokens. We use fake tokens because in many of
- * the ASTs/CSTs in Semgrep (including in AST_generic.ml) we store the
+ * the ASTs/CSTs in Lens (including in AST_generic.ml) we store the
  * tokens in the ASTs/CSTs at the leaves, and sometimes the actual
  * token is optional (e.g., a virtual semicolon in Javascript).
  * We could use an option type, but that would involve a big refactoring
@@ -26,7 +26,7 @@
  *
  * Ideally, we should not store tokens in the ASTs, just location information,
  * but again this would involve a big refactoring and redesigning deeply how
- * we track location in Semgrep.
+ * we track location in Lens.
  *
  * It is reliable to extract the string and position from a token when
  * the token is an OriginTok (see also Tok.is_origintok()). For the other
@@ -82,7 +82,7 @@ val pp_full_token_info : bool ref
 (* As opposed to 't', the equal and hash functions for 't_always_equal'
  * are actually not automatically derived; Tok.ml provides customized
  * behavior where we assume all tokens are equal.
- * This is used by Semgrep in AST_generic and Raw_tree to be able to
+ * This is used by Lens in AST_generic and Raw_tree to be able to
  * check for equality of big AST constructs (e.g., complex expressions) by not
  * caring about differences in token positions.
  *)
@@ -105,7 +105,7 @@ val of_lexing_position : Lexing.position -> string -> t
 (* the token will be empty, but its pos will be the beginning of the file *)
 val first_tok_of_file : Fpath.t -> t
 
-(* used mainly by tree-sitter based parsers in semgrep.
+(* used mainly by tree-sitter based parsers in lens.
  * [combine_toks t1 ts] will return a token where t1::ts
  * have been combined in a single token, with a starting pos
  * of t1.pos.
@@ -221,7 +221,7 @@ val file_of_tok : t -> Fpath.t
 (* Adjust string *)
 (*****************************************************************************)
 
-(* Deprecated: but still used in many ocamllex lexers in Semgrep *)
+(* Deprecated: but still used in many ocamllex lexers in Lens *)
 val rewrap_str : string -> t -> t
 val tok_add_s : string -> t -> t
 

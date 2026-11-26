@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2025 Semgrep Inc.
+# Copyright (c) 2022-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
 # LICENSE for more details.
 #
 """
-Tests for parse rates from semgrep.metrics.
+Tests for parse rates from lens.metrics.
 
 Ensures that the parse errors reported from core are correctly picked up by the
 CLI.
@@ -23,9 +23,9 @@ from shutil import copytree
 
 import pytest
 from tests.conftest import TARGETS_PATH
-from tests.semgrep_runner import SemgrepRunner
+from tests.lens_runner import LensRunner
 
-from semgrep.cli import cli
+from lens.cli import cli
 
 
 @pytest.mark.quick
@@ -58,7 +58,7 @@ def test_parse_metrics(tmp_path, posix_snapshot, mocker, monkeypatch):
     )
 
     monkeypatch.chdir(tmp_path / "parse_metrics")
-    SemgrepRunner(use_click_runner=True).invoke(
+    LensRunner(use_click_runner=True).invoke(
         cli, subcommand="scan", args=["--config=rules.yaml", "--metrics=on"]
     )
 

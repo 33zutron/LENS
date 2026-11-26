@@ -20,7 +20,7 @@ module H2 = AST_generic_helpers
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Objective-C parser using tree-sitter-lang/semgrep-objc and converting
+(* Objective-C parser using tree-sitter-lang/lens-objc and converting
  * directly to AST_generic.
  *
  * This covers the *minimal security subset* only: the constructs that
@@ -1105,15 +1105,15 @@ let parse file =
    top-level item on its own (a top-level expression statement needs a trailing
    `;`, and error recovery over a semicolon-less unary message send fails). So
    first try parsing the pattern as-is, and on any error retry through the
-   grammar's dedicated `semgrep_expression` entry point by prefixing the
-   `__SEMGREP_EXPRESSION` sentinel, which forces "parse a standalone
-   expression" mode. Mirrors the semgrep-cpp overlay. *)
+   grammar's dedicated `lens_expression` entry point by prefixing the
+   `__LENS_EXPRESSION` sentinel, which forces "parse a standalone
+   expression" mode. Mirrors the lens-cpp overlay. *)
 let parse_expression_or_source_file str =
   let res = Tree_sitter_objc.Parse.string str in
   match res.errors with
   | [] -> res
   | _ ->
-      let expr_str = "__SEMGREP_EXPRESSION " ^ str in
+      let expr_str = "__LENS_EXPRESSION " ^ str in
       Tree_sitter_objc.Parse.string expr_str
 
 let parse_pattern str_ =

@@ -1,6 +1,6 @@
 (* Iago Abal
  *
- * Copyright (C) 2025 Semgrep Inc.
+ * Copyright (C) 2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
  * LICENSE for more details.
  *)
 
-module Out_v1 = Semgrep_output_v1_j
+module Out_v1 = Lens_output_v1_j
 
 (*****************************************************************************)
 (* Time *)
@@ -21,18 +21,18 @@ module Out_v1 = Semgrep_output_v1_j
 
 type 'key time = { key : 'key; time : float } [@@deriving show]
 
-let to_file_time (t : Fpath.t time) : Semgrep_output_v1_t.file_time =
-  Semgrep_output_v1_t.{ fpath = t.key; ftime = t.time }
+let to_file_time (t : Fpath.t time) : Lens_output_v1_t.file_time =
+  Lens_output_v1_t.{ fpath = t.key; ftime = t.time }
 
 let to_file_rule_time (t : (Fpath.t * Rule_ID.t) time) :
-    Semgrep_output_v1_t.file_rule_time =
+    Lens_output_v1_t.file_rule_time =
   let fpath, rule_id = t.key in
-  Semgrep_output_v1_t.{ fpath; rule_id; time = t.time }
+  Lens_output_v1_t.{ fpath; rule_id; time = t.time }
 
 let to_def_rule_time (t : (Fpath.t * Pos.t * Rule_ID.t) time) :
-    Semgrep_output_v1_t.def_rule_time =
+    Lens_output_v1_t.def_rule_time =
   let fpath, pos, rule_id = t.key in
-  Semgrep_output_v1_t.{ fpath; fline = pos.line; rule_id; time = t.time }
+  Lens_output_v1_t.{ fpath; fline = pos.line; rule_id; time = t.time }
 
 (*****************************************************************************)
 (* Stats *)

@@ -23,13 +23,13 @@ rules:
     technology:
     - jinja2
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
+    source: https://lens.dev/r/python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
     shortlink: https://sg.run/KlGX
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: pKUOrp
         version_id: yeTDg8
-        url: https://semgrep.dev/playground/r/yeTDg8/python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
+        url: https://lens.dev/playground/r/yeTDg8/python.jinja2.security.audit.autoescape-disabled.autoescape-disabled
   languages:
   - python
   severity: WARNING
@@ -68,13 +68,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
+    source: https://lens.dev/r/python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
     shortlink: https://sg.run/ydYx
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: x8UnBk
         version_id: e1TA7A
-        url: https://semgrep.dev/playground/r/e1TA7A/python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
+        url: https://lens.dev/playground/r/e1TA7A/python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
   severity: WARNING
   languages:
   - python
@@ -98,13 +98,13 @@ rules:
     impact: MEDIUM
     confidence: LOW
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.deserialization.pickle.avoid-pickle
+    source: https://lens.dev/r/python.lang.security.deserialization.pickle.avoid-pickle
     shortlink: https://sg.run/OPwB
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: EwU2BJ
         version_id: jQTeDJ
-        url: https://semgrep.dev/playground/r/jQTeDJ/python.lang.security.deserialization.pickle.avoid-pickle
+        url: https://lens.dev/playground/r/jQTeDJ/python.lang.security.deserialization.pickle.avoid-pickle
   languages:
   - python
   message: Avoid using `pickle`, which is known to lead to code execution vulnerabilities.
@@ -136,13 +136,13 @@ rules:
     cwe:
     - 'CWE-611: Improper Restriction of XML External Entity Reference'
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/contrib.dlint.dlint-equivalent.insecure-xml-use
+    source: https://lens.dev/r/contrib.dlint.dlint-equivalent.insecure-xml-use
     shortlink: https://sg.run/5QOW
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: zdUkvA
         version_id: 0bToER
-        url: https://semgrep.dev/playground/r/0bToER/contrib.dlint.dlint-equivalent.insecure-xml-use
+        url: https://lens.dev/playground/r/0bToER/contrib.dlint.dlint-equivalent.insecure-xml-use
   pattern-either:
   - patterns:
     - pattern: xml.$ANYTHING
@@ -172,13 +172,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.use-defused-xml.use-defused-xml
+    source: https://lens.dev/r/python.lang.security.use-defused-xml.use-defused-xml
     shortlink: https://sg.run/kX47
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: d8UjRx
         version_id: nWTwqD
-        url: https://semgrep.dev/playground/r/nWTwqD/python.lang.security.use-defused-xml.use-defused-xml
+        url: https://lens.dev/playground/r/nWTwqD/python.lang.security.use-defused-xml.use-defused-xml
   message: The Python documentation recommends using `defusedxml` instead of `xml`
     because the native Python `xml` library is vulnerable to XML External Entity (XXE)
     attacks. These attacks can leak confidential data and "XML bombs" can cause denial
@@ -207,13 +207,13 @@ rules:
     impact: LOW
     confidence: LOW
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.requests.security.disabled-cert-validation.disabled-cert-validation
+    source: https://lens.dev/r/python.requests.security.disabled-cert-validation.disabled-cert-validation
     shortlink: https://sg.run/AlYp
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: qNUoYR
         version_id: rxTbO4
-        url: https://semgrep.dev/playground/r/rxTbO4/python.requests.security.disabled-cert-validation.disabled-cert-validation
+        url: https://lens.dev/playground/r/rxTbO4/python.requests.security.disabled-cert-validation.disabled-cert-validation
   languages:
   - python
   severity: ERROR
@@ -262,13 +262,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
+    source: https://lens.dev/r/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
     shortlink: https://sg.run/J92w
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: DbUpz2
         version_id: 6xT0p5
-        url: https://semgrep.dev/playground/r/6xT0p5/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
+        url: https://lens.dev/playground/r/6xT0p5/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
   languages:
   - python
   severity: ERROR
@@ -294,13 +294,13 @@ rules:
     impact: HIGH
     confidence: LOW
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.formatted-sql-query.formatted-sql-query
+    source: https://lens.dev/r/python.lang.security.audit.formatted-sql-query.formatted-sql-query
     shortlink: https://sg.run/EkWw
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 3qUP9k
         version_id: vdT3k4
-        url: https://semgrep.dev/playground/r/vdT3k4/python.lang.security.audit.formatted-sql-query.formatted-sql-query
+        url: https://lens.dev/playground/r/vdT3k4/python.lang.security.audit.formatted-sql-query.formatted-sql-query
   severity: WARNING
   languages:
   - python
@@ -350,13 +350,13 @@ rules:
     impact: MEDIUM
     confidence: LOW
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.audit.avoid-mark-safe.avoid-mark-safe
+    source: https://lens.dev/r/python.django.security.audit.avoid-mark-safe.avoid-mark-safe
     shortlink: https://sg.run/yd0P
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: eqU8Wr
         version_id: DkTeDR
-        url: https://semgrep.dev/playground/r/DkTeDR/python.django.security.audit.avoid-mark-safe.avoid-mark-safe
+        url: https://lens.dev/playground/r/DkTeDR/python.django.security.audit.avoid-mark-safe.avoid-mark-safe
   languages:
   - python
   severity: WARNING
@@ -391,13 +391,13 @@ rules:
     impact: HIGH
     confidence: LOW
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.eval-detected.eval-detected
+    source: https://lens.dev/r/python.lang.security.audit.eval-detected.eval-detected
     shortlink: https://sg.run/ZvrD
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: gxU149
         version_id: O9TZ0D
-        url: https://semgrep.dev/playground/r/O9TZ0D/python.lang.security.audit.eval-detected.eval-detected
+        url: https://lens.dev/playground/r/O9TZ0D/python.lang.security.audit.eval-detected.eval-detected
   languages:
   - python
   severity: WARNING

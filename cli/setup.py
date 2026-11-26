@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -19,13 +19,13 @@ import setuptools
 
 IS_WINDOWS = platform.system() == "Windows"
 # See ../scripts/build-wheels.sh, which is called from our GHA workflows.
-# This script assumes the presence of a semgrep-core binary copied under
-# cli/src/semgrep/bin by the caller (the GHA workflow).
+# This script assumes the presence of a lens-core binary copied under
+# cli/src/lens/bin by the caller (the GHA workflow).
 WHEEL_CMD = "bdist_wheel"
 
 
-# coupling: this function is duplicated in src/semgrep/commands/install.py.
-# Deduplication would require setup.py to import from the semgrep package, which
+# coupling: this function is duplicated in src/lens/commands/install.py.
+# Deduplication would require setup.py to import from the lens package, which
 # is not ideal
 def linux_detect_libc():
     try:
@@ -45,10 +45,10 @@ def linux_detect_libc():
 
 # To prevent potential compatibility issues when mixing glibc and libmusl,
 # PyPI does not accept the default linux_x86_64 and linux_aarch64 platform
-# tags. We build semgrep on glibc and musl, so we must make sure we tag
+# tags. We build lens on glibc and musl, so we must make sure we tag
 # each build as either glibc (manylinux) or musl (musllinux) compatible
 #
-# NOTE: semgrep-core is dynamically linked to the user's libc; the libc version
+# NOTE: lens-core is dynamically linked to the user's libc; the libc version
 # in these tags MUST match the libc version we use to build the binary, see:
 # musllinux: https://peps.python.org/pep-0656/
 # manylinux: https://peps.python.org/pep-0600/
@@ -83,8 +83,8 @@ if WHEEL_CMD in sys.argv:
             # coupling: if you drop support for some python, you'll probably
             # have to update 'python_requires' at the end of this file
             # and a few workflows as show for example in this PR:
-            # https://github.com/semgrep/semgrep-proprietary/pull/2606/files
-            # coupling: semgrep.libsonnet default_python_version
+            # https://github.com/lens/lens-proprietary/pull/2606/files
+            # coupling: lens.libsonnet default_python_version
             python = "cp310.cp311.cp312.cp313.cp314.py310.py311.py312.py313.py314"
 
             # We don't require a specific Python ABI

@@ -1,6 +1,6 @@
 (* Iago Abal
  *
- * Copyright (C) 2025 Semgrep Inc.
+ * Copyright (C) 2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -102,7 +102,7 @@ module Prefiltering_stats = struct
     else float_of_int numerator /. float_of_int denominator
 
   (* Convert internal counts to the external ratio format *)
-  let to_ratio_stats (counts : t) : Semgrep_output_v1_t.prefiltering_stats =
+  let to_ratio_stats (counts : t) : Lens_output_v1_t.prefiltering_stats =
     {
       project_level_time = counts.project_level_time;
       file_level_time = counts.file_level_time;

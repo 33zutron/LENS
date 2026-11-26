@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -14,9 +14,9 @@
    Parse a glob pattern
 *)
 
-(* This normalization is for compatibility with Semgrepignore v1.
+(* This normalization is for compatibility with Lensignore v1.
    It's not supported by Gitignore and should not be supported
-   by Semgrepignore v2 in the long term.
+   by Lensignore v2 in the long term.
 
    If the pattern starts with './', we remove the '.'.
    Deeper normalization is not attempted for simplicity and because users

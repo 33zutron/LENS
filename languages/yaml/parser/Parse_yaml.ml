@@ -1,6 +1,6 @@
 (* Emma Jin
  *
- * Copyright (C) 2021, 2025 Semgrep Inc.
+ * Copyright (C) 2021, 2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -31,7 +31,7 @@ module A = AST_yaml
  *
  * This is why instead of using tree-sitter-yaml to parse YAML files we use
  * the OCaml library ocaml-yaml (which itself relies on a C library). We
- * also use this parser to parse YAML rules for semgrep. To get positions, we
+ * also use this parser to parse YAML rules for lens. To get positions, we
  * use the low-level ocaml-yaml Stream API, which we now parse into AST_yaml
  * (we used to go directly to the generic AST).
  *
@@ -694,7 +694,7 @@ let mask_unicode (str : string) : string =
      characters. *)
   (* Note that the YAML parser does return a correct line and col, which we
      use everywhere else. However, it gives an exclusive end when returning
-     the token that ends a mapping/sequence/other bracket, whereas Semgrep
+     the token that ends a mapping/sequence/other bracket, whereas Lens
      expects an inclusive end. To adjust this, we currently need the bytepos *)
   let char_range = 128 in
   let control_char_start_range = 32 in

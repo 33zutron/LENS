@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2021 Semgrep Inc.
+ * Copyright (C) 2019-2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -358,7 +358,7 @@ let argument_to_expr arg =
   | OtherArg _ ->
       raise NotAnExpr
 
-(* used in controlflow_build and semgrep *)
+(* used in controlflow_build and lens *)
 let vardef_to_assign (ent, def) =
   let name_or_expr = entity_name_to_expr ent.name None in
   let v =
@@ -471,7 +471,7 @@ let abstract_for_comparison_visitor =
 
     method! visit_id_info env ii =
       (* TODO: false positive? *)
-      (* nosemgrep: no-ref-declarations-at-top-scope *)
+      (* nolens: no-ref-declarations-at-top-scope *)
       super#visit_id_info env { ii with AST_generic.id_svalue = ref G.Unknown }
   end
 

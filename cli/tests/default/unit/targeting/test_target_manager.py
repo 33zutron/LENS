@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -21,17 +21,17 @@ from typing import Optional
 
 import pytest
 
-from semgrep.error import InvalidScanningRootError
-from semgrep.git import BaselineHandler
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Pypi
-from semgrep.semgrep_types import Language
-from semgrep.target_manager import SAST_PRODUCT
-from semgrep.target_manager import SCA_PRODUCT
-from semgrep.target_manager import SECRETS_PRODUCT
-from semgrep.target_manager import TargetManager
-from semgrep.types import fpaths_of_targets
-from semgrep.types import Target
+from lens.error import InvalidScanningRootError
+from lens.git import BaselineHandler
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import Pypi
+from lens.lens_types import Language
+from lens.target_manager import SAST_PRODUCT
+from lens.target_manager import SCA_PRODUCT
+from lens.target_manager import SECRETS_PRODUCT
+from lens.target_manager import TargetManager
+from lens.types import fpaths_of_targets
+from lens.types import Target
 
 
 def assert_path_sets_equal(
@@ -557,7 +557,7 @@ def test_ignore_baseline_handler(monkeypatch, tmp_path):
     # Initialize State
     subprocess.check_call(["git", "init"])
     subprocess.check_call(
-        ["git", "config", "user.email", "baselinehandlertest@semgrep.com"]
+        ["git", "config", "user.email", "baselinehandlertest@lens.com"]
     )
     subprocess.check_call(["git", "config", "user.name", "Baseline TestHandler"])
     subprocess.check_call(["git", "checkout", "-B", "main"])
@@ -627,14 +627,14 @@ def test_ignore_baseline_handler(monkeypatch, tmp_path):
 @pytest.mark.quick
 def test_file_scanning_root_no_subprocess(tmp_path, monkeypatch):
     """
-    File scanning roots must not spawn a semgrep-core subprocess.
+    File scanning roots must not spawn a lens-core subprocess.
 
     When many files are passed on the command line, one subprocess per file
-    makes semgrep unusably slow (issue #11404). The fast path in
+    makes lens unusably slow (issue #11404). The fast path in
     ScanningRoot.target_files_full returns file targets directly without
-    calling semgrep-core.
+    calling lens-core.
     """
-    import semgrep.rpc
+    import lens.rpc
 
     foo = tmp_path / "foo.py"
     foo.write_text("x = 1")
@@ -646,11 +646,11 @@ def test_file_scanning_root_no_subprocess(tmp_path, monkeypatch):
     # Fail the test if the RPC subprocess is spawned for a file scanning root.
     def no_subprocess(*args, **kwargs):
         raise AssertionError(
-            "semgrep-core subprocess was spawned for a file scanning root; "
+            "lens-core subprocess was spawned for a file scanning root; "
             "the fast path should have handled it without a subprocess"
         )
 
-    monkeypatch.setattr(semgrep.rpc.subprocess, "Popen", no_subprocess)
+    monkeypatch.setattr(lens.rpc.subprocess, "Popen", no_subprocess)
 
     target_manager = TargetManager(
         scanning_root_strings=frozenset([foo, bar]),

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,36 +15,36 @@ from pathlib import Path
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.package_restrictions import dependencies_range_match_any
-from semgrep.dependency_aware_rule import generate_reachable_sca_findings
-from semgrep.dependency_aware_rule import generate_unreachable_sca_findings
-from semgrep.dependency_aware_rule import SubprojectDependencyIndex
-from semgrep.rule import Rule
-from semgrep.rule_match import RuleMatch
-from semgrep.semgrep_interfaces.semgrep_output_v1 import DependencyKind
-from semgrep.semgrep_interfaces.semgrep_output_v1 import DependencySource
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Direct
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Fpath
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Lockfile
-from semgrep.semgrep_interfaces.semgrep_output_v1 import LockfileKind
-from semgrep.semgrep_interfaces.semgrep_output_v1 import LockfileParsing
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Manifest
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ManifestKind
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ManifestLockfile
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Maven
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Npm
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Pipfile
-from semgrep.semgrep_interfaces.semgrep_output_v1 import PipfileLock
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Pypi
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ResolutionMethod
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ResolvedDependency
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ResolvedSubproject
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ScaPattern
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Subproject
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Transitive
-from semgrep.subproject import from_resolved_dependencies
+from lens.dependency_aware_rule import generate_reachable_sca_findings
+from lens.dependency_aware_rule import generate_unreachable_sca_findings
+from lens.dependency_aware_rule import SubprojectDependencyIndex
+from lens.rule import Rule
+from lens.rule_match import RuleMatch
+from lens.lens_interfaces.lens_output_v1 import DependencyKind
+from lens.lens_interfaces.lens_output_v1 import DependencySource
+from lens.lens_interfaces.lens_output_v1 import Direct
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import Fpath
+from lens.lens_interfaces.lens_output_v1 import Lockfile
+from lens.lens_interfaces.lens_output_v1 import LockfileKind
+from lens.lens_interfaces.lens_output_v1 import LockfileParsing
+from lens.lens_interfaces.lens_output_v1 import Manifest
+from lens.lens_interfaces.lens_output_v1 import ManifestKind
+from lens.lens_interfaces.lens_output_v1 import ManifestLockfile
+from lens.lens_interfaces.lens_output_v1 import Maven
+from lens.lens_interfaces.lens_output_v1 import Npm
+from lens.lens_interfaces.lens_output_v1 import Pipfile
+from lens.lens_interfaces.lens_output_v1 import PipfileLock
+from lens.lens_interfaces.lens_output_v1 import Pypi
+from lens.lens_interfaces.lens_output_v1 import ResolutionMethod
+from lens.lens_interfaces.lens_output_v1 import ResolvedDependency
+from lens.lens_interfaces.lens_output_v1 import ResolvedSubproject
+from lens.lens_interfaces.lens_output_v1 import ScaPattern
+from lens.lens_interfaces.lens_output_v1 import Subproject
+from lens.lens_interfaces.lens_output_v1 import Transitive
+from lens.subproject import from_resolved_dependencies
 
 
 @pytest.fixture

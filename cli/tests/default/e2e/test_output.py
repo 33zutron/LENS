@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2025 Semgrep Inc.
+# Copyright (c) 2021-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -28,9 +28,9 @@ from tests.conftest import mask_variable_text
 from tests.conftest import RULES_PATH
 from tests.conftest import skip_on_windows
 from tests.conftest import TARGETS_PATH
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 # coupling: also in test_ci.py
 REPO_DIR_NAME = "project_name"
@@ -66,8 +66,8 @@ def _etree_to_dict(t):
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replace logic
-def test_output_highlighting(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _errors = run_semgrep_in_tmp(
+def test_output_highlighting(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _errors = run_lens_in_tmp(
         "rules/basic.yaml",
         target_name="basic.py",
         output_format=OutputFormat.TEXT,
@@ -82,8 +82,8 @@ def test_output_highlighting(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_output_highlighting__no_color(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _errors = run_semgrep_in_tmp(
+def test_output_highlighting__no_color(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _errors = run_lens_in_tmp(
         "rules/basic.yaml",
         target_name="basic.py",
         output_format=OutputFormat.TEXT,
@@ -100,7 +100,7 @@ def test_output_highlighting__no_color(run_semgrep_in_tmp: RunSemgrep, posix_sna
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replace logic
 def test_output_highlighting__force_color_and_no_color(
-    run_semgrep_in_tmp: RunSemgrep, posix_snapshot
+    run_lens_in_tmp: RunLens, posix_snapshot
 ):
     """
     NO_COLOR would normally disable color: https://no-color.org/
@@ -108,7 +108,7 @@ def test_output_highlighting__force_color_and_no_color(
     But a tool specific flag should override a global flag.
     So when both are set, we should have color.
     """
-    results, _errors = run_semgrep_in_tmp(
+    results, _errors = run_lens_in_tmp(
         "rules/basic.yaml",
         target_name="basic.py",
         output_format=OutputFormat.TEXT,
@@ -124,8 +124,8 @@ def test_output_highlighting__force_color_and_no_color(
 
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_yaml_capturing(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _errors = run_semgrep_in_tmp(
+def test_yaml_capturing(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _errors = run_lens_in_tmp(
         "rules/yaml_capture.yaml",
         target_name="yaml/yaml_capture.yaml",
         output_format=OutputFormat.TEXT,
@@ -142,8 +142,8 @@ def test_yaml_capturing(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 # mess this up.
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_yaml_metavariables(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    stdout, _ = run_semgrep_in_tmp(
+def test_yaml_metavariables(run_lens_in_tmp: RunLens, posix_snapshot):
+    stdout, _ = run_lens_in_tmp(
         "rules/yaml_key.yaml",
         target_name="yaml/target.yaml",
         output_format=OutputFormat.JSON,
@@ -169,14 +169,14 @@ def test_yaml_metavariables(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 
 
 @pytest.mark.kinda_slow
-def test_quiet_mode_has_empty_stderr(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
+def test_quiet_mode_has_empty_stderr(run_lens_in_tmp: RunLens, posix_snapshot):
     """
     Test that quiet mode doesn't print anything to stderr.
 
     This is because some contexts e.g. Kubernetes jobs force-mix stdout and stderr,
     and --quiet is the only way to get valid JSON output in that case.
     """
-    stdout, stderr = run_semgrep_in_tmp(
+    stdout, stderr = run_lens_in_tmp(
         "rules/yaml_key.yaml",
         target_name="yaml/target.yaml",
         output_format=OutputFormat.JSON,
@@ -193,8 +193,8 @@ def test_quiet_mode_has_empty_stderr(run_semgrep_in_tmp: RunSemgrep, posix_snaps
     ["--json", "--emacs", "--vim", "--sarif", "--gitlab-sast", "--gitlab-secrets"],
 )
 @skip_on_windows  # better backslash replace logic
-def test_output_format(run_semgrep_in_tmp: RunSemgrep, posix_snapshot, format):
-    stdout, _ = run_semgrep_in_tmp(
+def test_output_format(run_lens_in_tmp: RunLens, posix_snapshot, format):
+    stdout, _ = run_lens_in_tmp(
         "rules/eqeq.yaml",
         target_name="basic/stupid.py",
         options=[format],
@@ -206,8 +206,8 @@ def test_output_format(run_semgrep_in_tmp: RunSemgrep, posix_snapshot, format):
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replace logic
-def test_additional_outputs(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    stdout, _ = run_semgrep_in_tmp(
+def test_additional_outputs(run_lens_in_tmp: RunLens, posix_snapshot):
+    stdout, _ = run_lens_in_tmp(
         "rules/eqeq.yaml",
         target_name="basic/stupid.py",
         options=[
@@ -258,9 +258,9 @@ def test_additional_outputs(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replace logic
 def test_additional_outputs_with_format_flag(
-    run_semgrep_in_tmp: RunSemgrep, posix_snapshot, format
+    run_lens_in_tmp: RunLens, posix_snapshot, format
 ):
-    stdout, _ = run_semgrep_in_tmp(
+    stdout, _ = run_lens_in_tmp(
         "rules/eqeq.yaml",
         target_name="basic/stupid.py",
         options=[
@@ -285,9 +285,9 @@ def test_additional_outputs_with_format_flag(
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replace logic
 def test_additional_outputs_with_format_output_flag(
-    run_semgrep_in_tmp: RunSemgrep, posix_snapshot, format
+    run_lens_in_tmp: RunLens, posix_snapshot, format
 ):
-    stdout, _ = run_semgrep_in_tmp(
+    stdout, _ = run_lens_in_tmp(
         "rules/eqeq.yaml",
         target_name="basic/stupid.py",
         options=[format, "--sarif-output=sarif.json", "--output=result.out"],
@@ -306,8 +306,8 @@ def test_additional_outputs_with_format_output_flag(
 
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_long_rule_id(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    stdout, _ = run_semgrep_in_tmp(
+def test_long_rule_id(run_lens_in_tmp: RunLens, posix_snapshot):
+    stdout, _ = run_lens_in_tmp(
         "rules/long_rule_id.yaml",
         target_name="basic.py",
         output_format=OutputFormat.TEXT,
@@ -317,8 +317,8 @@ def test_long_rule_id(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail  # TODO: fix text wrapping of findings
-def test_long_rule_id_long_text(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    stdout, _ = run_semgrep_in_tmp(
+def test_long_rule_id_long_text(run_lens_in_tmp: RunLens, posix_snapshot):
+    stdout, _ = run_lens_in_tmp(
         "rules/long_rule_id.yaml",
         target_name="long_text.py",
         output_format=OutputFormat.TEXT,
@@ -329,8 +329,8 @@ def test_long_rule_id_long_text(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 # it should not report findings from rules using the "INVENTORY" severity
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_omit_inventory(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    stdout, _ = run_semgrep_in_tmp(
+def test_omit_inventory(run_lens_in_tmp: RunLens, posix_snapshot):
+    stdout, _ = run_lens_in_tmp(
         "rules/severity_inventory.yaml", target_name="basic.py"
     )
     posix_snapshot.assert_match(stdout, "results.out")
@@ -338,8 +338,8 @@ def test_omit_inventory(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 
 # it should not report findings from rules using the "EXPERIMENT" severity
 @pytest.mark.kinda_slow
-def test_omit_experiment(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    stdout, _ = run_semgrep_in_tmp(
+def test_omit_experiment(run_lens_in_tmp: RunLens, posix_snapshot):
+    stdout, _ = run_lens_in_tmp(
         "rules/severity_experiment.yaml",
         target_name="basic.py",
     )
@@ -348,8 +348,8 @@ def test_omit_experiment(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 
 @pytest.mark.kinda_slow
 @skip_on_windows  # better backslash replacement logic
-def test_junit_xml_output(run_semgrep_in_tmp: RunSemgrep, snapshot):
-    output, _ = run_semgrep_in_tmp(
+def test_junit_xml_output(run_lens_in_tmp: RunLens, snapshot):
+    output, _ = run_lens_in_tmp(
         "rules/eqeq.yaml", output_format=OutputFormat.JUNIT_XML
     )
     result = _etree_to_dict(cElementTree.XML(output))
@@ -364,10 +364,10 @@ def test_junit_xml_output(run_semgrep_in_tmp: RunSemgrep, snapshot):
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replace logic
 def test_junit_xml_output_flag(
-    run_semgrep_in_tmp: RunSemgrep,
+    run_lens_in_tmp: RunLens,
     posix_snapshot,
 ):
-    stdout, _ = run_semgrep_in_tmp(
+    stdout, _ = run_lens_in_tmp(
         "rules/eqeq.yaml",
         target_name="basic/stupid.py",
         options=["--junit-xml-output=result.xml"],
@@ -380,10 +380,10 @@ def test_junit_xml_output_flag(
 
 @pytest.mark.kinda_slow
 def test_json_output_with_dataflow_traces(
-    run_semgrep_in_tmp: RunSemgrep, posix_snapshot
+    run_lens_in_tmp: RunLens, posix_snapshot
 ):
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             "rules/taint_trace.yaml",
             target_name="taint/taint_trace.cpp",
             output_format=OutputFormat.JSON,
@@ -394,28 +394,28 @@ def test_json_output_with_dataflow_traces(
 
 
 IGNORE_LOG_REPORT_FIRST_LINE = "Files skipped:"
-IGNORE_LOG_REPORT_LAST_LINE = "   ◦ Files matching .semgrepignore patterns: \\d+"
+IGNORE_LOG_REPORT_LAST_LINE = "   ◦ Files matching .lensignore patterns: \\d+"
 
 
 # TODO: remove this test: too many things being tested at once, too hard
 #       to debug.
 #
-# pysemgrep/osemgrep/v2 status: osemgrep reports 2 more files that are being
+# pylens/olens/v2 status: olens reports 2 more files that are being
 # excluded. They're excluded in both implementations.
-def _test_semgrepignore_ignore_log_report(
-    run_semgrep_on_copied_files: RunSemgrep,
+def _test_lensignore_ignore_log_report(
+    run_lens_on_copied_files: RunLens,
     tmp_path,
     posix_snapshot,
 ):
     shutil.copyfile(
-        Path(TARGETS_PATH / "ignores" / ".semgrepignore"), tmp_path / ".semgrepignore"
+        Path(TARGETS_PATH / "ignores" / ".lensignore"), tmp_path / ".lensignore"
     )
     # See remarks in test_ignores.py:
     shutil.copyfile(
         Path(TARGETS_PATH / "ignores" / ".gitignore"), tmp_path / ".gitignore"
     )
 
-    _, stderr = run_semgrep_on_copied_files(
+    _, stderr = run_lens_on_copied_files(
         "rules/eqeq-basic.yaml",
         # This set of options is carefully crafted
         # to trigger one entry for most ignore reasons.
@@ -448,27 +448,27 @@ def _test_semgrepignore_ignore_log_report(
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replace logic
-def test_semgrepignore_ignore_log_report(
-    run_semgrep_on_copied_files: RunSemgrep, tmp_path, posix_snapshot
+def test_lensignore_ignore_log_report(
+    run_lens_on_copied_files: RunLens, tmp_path, posix_snapshot
 ):
-    _test_semgrepignore_ignore_log_report(
-        run_semgrep_on_copied_files,
+    _test_lensignore_ignore_log_report(
+        run_lens_on_copied_files,
         tmp_path,
         posix_snapshot,
     )
 
 
-# Tolerate a different snapshot with pysemgrep than osemgrep/v2.
+# Tolerate a different snapshot with pylens than olens/v2.
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replace logic
-def test_semgrepignore_ignore_log_report_pysemgrep(
-    run_semgrep_on_copied_files: RunSemgrep,
+def test_lensignore_ignore_log_report_pylens(
+    run_lens_on_copied_files: RunLens,
     tmp_path,
     posix_snapshot,
 ):
-    _test_semgrepignore_ignore_log_report(
-        run_semgrep_on_copied_files,
+    _test_lensignore_ignore_log_report(
+        run_lens_on_copied_files,
         tmp_path,
         posix_snapshot,
     )
@@ -477,22 +477,22 @@ def test_semgrepignore_ignore_log_report_pysemgrep(
 # TODO: remove this test: too many things being tested at once, too hard
 #       to review when something changes.
 #
-# pysemgrep/osemgrep status: osemgrep reports 2 more files that are being
+# pylens/olens status: olens reports 2 more files that are being
 # excluded. They're excluded in both implementations.
-def _test_semgrepignore_ignore_log_json_report(
-    run_semgrep_on_copied_files: RunSemgrep,
+def _test_lensignore_ignore_log_json_report(
+    run_lens_on_copied_files: RunLens,
     tmp_path,
     posix_snapshot,
 ):
     shutil.copyfile(
-        Path(TARGETS_PATH / "ignores" / ".semgrepignore"), tmp_path / ".semgrepignore"
+        Path(TARGETS_PATH / "ignores" / ".lensignore"), tmp_path / ".lensignore"
     )
     # See remarks in test_ignores.py:
     shutil.copyfile(
         Path(TARGETS_PATH / "ignores" / ".gitignore"), tmp_path / ".gitignore"
     )
 
-    stdout, _ = run_semgrep_on_copied_files(
+    stdout, _ = run_lens_on_copied_files(
         "rules/eqeq-basic.yaml",
         # This set of options is carefully crafted
         # to trigger one entry for most ignore reasons.
@@ -519,23 +519,23 @@ def _test_semgrepignore_ignore_log_json_report(
 
 @pytest.mark.kinda_slow
 @pytest.mark.pysemfail
-def test_semgrepignore_ignore_log_json_report(
-    run_semgrep_on_copied_files: RunSemgrep, tmp_path, posix_snapshot
+def test_lensignore_ignore_log_json_report(
+    run_lens_on_copied_files: RunLens, tmp_path, posix_snapshot
 ):
-    _test_semgrepignore_ignore_log_json_report(
-        run_semgrep_on_copied_files, tmp_path, posix_snapshot
+    _test_lensignore_ignore_log_json_report(
+        run_lens_on_copied_files, tmp_path, posix_snapshot
     )
 
 
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_semgrepignore_ignore_log_json_report_pysemgrep(
-    run_semgrep_on_copied_files: RunSemgrep,
+def test_lensignore_ignore_log_json_report_pylens(
+    run_lens_on_copied_files: RunLens,
     tmp_path,
     posix_snapshot,
 ):
-    _test_semgrepignore_ignore_log_json_report(
-        run_semgrep_on_copied_files, tmp_path, posix_snapshot
+    _test_lensignore_ignore_log_json_report(
+        run_lens_on_copied_files, tmp_path, posix_snapshot
     )
 
 
@@ -546,7 +546,7 @@ def test_semgrepignore_ignore_log_json_report_pysemgrep(
 )
 @pytest.mark.osemfail
 def test_git_repo_output(
-    run_semgrep: RunSemgrep, git_repo, tmp_path, monkeypatch, posix_snapshot
+    run_lens: RunLens, git_repo, tmp_path, monkeypatch, posix_snapshot
 ):
     """
     Initialize a git repo at a temp directory
@@ -569,7 +569,7 @@ def test_git_repo_output(
 
     monkeypatch.chdir(tmp_path)
     posix_snapshot.assert_match(
-        run_semgrep(
+        run_lens(
             "rules/eqeq-basic.yaml",
             output_format=OutputFormat.TEXT,
             assume_targets_dir=False,
@@ -580,14 +580,14 @@ def test_git_repo_output(
 
 
 # This is currently not passing because the loc field in the explanation
-# differs between pysemgrep and osemgrep because it's a location in the rule
-# (not in the target), and pysemgrep passes a preprocessed rule file to
-# semgrep-core hence the mistmatch.
+# differs between pylens and olens because it's a location in the rule
+# (not in the target), and pylens passes a preprocessed rule file to
+# lens-core hence the mistmatch.
 @pytest.mark.slow
 @pytest.mark.osemfail
 @skip_on_windows  # better masking logic
-def test_output_matching_explanations(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    stdout, _ = run_semgrep_in_tmp(
+def test_output_matching_explanations(run_lens_in_tmp: RunLens, posix_snapshot):
+    stdout, _ = run_lens_in_tmp(
         "rules/eqeq-basic.yaml",
         target_name="basic/stupid.js",
         options=["--matching-explanations"],
@@ -603,9 +603,9 @@ def test_output_matching_explanations(run_semgrep_in_tmp: RunSemgrep, posix_snap
 )
 @pytest.mark.osemfail
 def test_file_count_multifile(
-    run_semgrep_in_tmp: RunSemgrep, posix_snapshot, target_dir
+    run_lens_in_tmp: RunLens, posix_snapshot, target_dir
 ):
-    _, stderr = run_semgrep_in_tmp(
+    _, stderr = run_lens_in_tmp(
         "rules/filecount.yaml",
         output_format=OutputFormat.TEXT,
         target_name=target_dir,
@@ -617,8 +617,8 @@ def test_file_count_multifile(
 @pytest.mark.slow
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replace logic
-def test_output_truncated_messages(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    stdout, _ = run_semgrep_in_tmp(
+def test_output_truncated_messages(run_lens_in_tmp: RunLens, posix_snapshot):
+    stdout, _ = run_lens_in_tmp(
         "rules/eqeq-basic-c.yaml",
         target_name="bad/invalid_c_long.c",
         output_format=OutputFormat.JSON,
@@ -637,16 +637,16 @@ _CONSOLE_LOG_RULE = "rules/console-log.yaml"
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 def test_max_match_context_size_truncates_minified_js(
-    run_semgrep_in_tmp: RunSemgrep,
+    run_lens_in_tmp: RunLens,
 ) -> None:
     """--max-match-context-size truncates the lines field for minified JS matches.
 
-    Truncation is only applied in the OCaml output path (osemgrep). In the
-    pysemgrep path the lines field is returned as-is from the core subprocess,
+    Truncation is only applied in the OCaml output path (olens). In the
+    pylens path the lines field is returned as-is from the core subprocess,
     so we skip the truncation assertion there.
     """
     limit = 50
-    stdout, _ = run_semgrep_in_tmp(
+    stdout, _ = run_lens_in_tmp(
         _CONSOLE_LOG_RULE,
         target_name=_MINIFIED_JS,
         output_format=OutputFormat.JSON,
@@ -669,10 +669,10 @@ def test_max_match_context_size_truncates_minified_js(
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 def test_max_match_context_size_zero_means_unlimited(
-    run_semgrep_in_tmp: RunSemgrep,
+    run_lens_in_tmp: RunLens,
 ) -> None:
     """--max-match-context-size=0 (the default) leaves lines untruncated."""
-    stdout_limited, _ = run_semgrep_in_tmp(
+    stdout_limited, _ = run_lens_in_tmp(
         _CONSOLE_LOG_RULE,
         target_name=_MINIFIED_JS,
         output_format=OutputFormat.JSON,
@@ -680,7 +680,7 @@ def test_max_match_context_size_zero_means_unlimited(
         assert_exit_code={0, 1},
         is_logged_in_weak=True,
     )
-    stdout_default, _ = run_semgrep_in_tmp(
+    stdout_default, _ = run_lens_in_tmp(
         _CONSOLE_LOG_RULE,
         target_name=_MINIFIED_JS,
         output_format=OutputFormat.JSON,
@@ -699,10 +699,10 @@ def test_max_match_context_size_zero_means_unlimited(
 
 @pytest.mark.quick
 def test_structured_finding_preserves_identity_and_masks_secrets(tmp_path, monkeypatch):
-    import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-    from semgrep.output import OutputHandler
-    from semgrep.output import OutputSettings
-    from semgrep.rule_match import RuleMatch
+    import lens.lens_interfaces.lens_output_v1 as out
+    from lens.output import OutputHandler
+    from lens.output import OutputSettings
+    from lens.rule_match import RuleMatch
 
     path = tmp_path / "Credentials.py"
     path.write_text('token = "SensitiveTokenValue"\n')
@@ -728,8 +728,8 @@ def test_structured_finding_preserves_identity_and_masks_secrets(tmp_path, monke
         processors=[capture],
         wrapper_class=BoundLogger,
     )
-    monkeypatch.setattr("semgrep.output.log", event_log)
-    monkeypatch.setattr("semgrep.structured_logging.log", event_log)
+    monkeypatch.setattr("lens.output.log", event_log)
+    monkeypatch.setattr("lens.structured_logging.log", event_log)
     handler = OutputHandler(OutputSettings(output_format=OutputFormat.TEXT))
     handler.rule_matches = [match]
     handler._emit_findings()
@@ -748,10 +748,10 @@ def test_structured_finding_preserves_identity_and_masks_secrets(tmp_path, monke
 def test_structured_finding_tolerates_optional_fix_metadata(
     tmp_path, monkeypatch, fix_metadata
 ):
-    import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-    from semgrep.output import OutputHandler
-    from semgrep.output import OutputSettings
-    from semgrep.rule_match import RuleMatch
+    import lens.lens_interfaces.lens_output_v1 as out
+    from lens.output import OutputHandler
+    from lens.output import OutputSettings
+    from lens.rule_match import RuleMatch
 
     path = tmp_path / "yarn.lock"
     path.write_text("lodash@4.17.20:\n")
@@ -796,8 +796,8 @@ def test_structured_finding_tolerates_optional_fix_metadata(
         processors=[capture],
         wrapper_class=BoundLogger,
     )
-    monkeypatch.setattr("semgrep.output.log", event_log)
-    monkeypatch.setattr("semgrep.structured_logging.log", event_log)
+    monkeypatch.setattr("lens.output.log", event_log)
+    monkeypatch.setattr("lens.structured_logging.log", event_log)
     handler = OutputHandler(OutputSettings(output_format=OutputFormat.JSON))
     handler.rule_matches = [match]
     handler._emit_findings()

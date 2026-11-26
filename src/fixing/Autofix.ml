@@ -1,6 +1,6 @@
 (* Nat Mote, Brandon Wu
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -13,13 +13,13 @@
  * LICENSE for more details.
  *)
 open Common
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 module Log = Log_fixing.Log
 
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Autofix logic entry point for semgrep.
+(* Autofix logic entry point for lens.
  *
  * This is the main module for AST-based autofix. This module will attempt to
  * synthesize a fix based a rule's fix pattern and the match's metavariable
@@ -94,7 +94,7 @@ let parse_pattern lang pattern =
  *)
 let parse_target lang text =
   (* ext shouldn't matter, but could use Lang.exts_of_lang if needed *)
-  (* nosemgrep: forbid-tmp *)
+  (* nolens: forbid-tmp *)
   UTmp.with_temp_file ~contents:text ~suffix:".check" (fun file ->
       try Ok (Parse_target.just_parse_with_lang lang file) with
       | Time_limit.Timeout _ as e -> Exception.catch_and_reraise e
@@ -106,7 +106,7 @@ let parse_target lang text =
  * of one case where this needs to be done (see the function body). Another
  * option in this case might be to omit or downrank matches that rely on
  * unordered keyword matching, but that assumes that a better match does in fact
- * exist. Such a change would also have a larger impact on Semgrep as a whole.
+ * exist. Such a change would also have a larger impact on Lens as a whole.
  *)
 let transform_fix lang ast =
   match lang with

@@ -3,18 +3,18 @@
 # Create symbolic links that depend on the location of the
 # root of Dune project.
 #
-# The OSS 'semgrep' repo appears as a folder within a larger monorepo.
+# The OSS 'lens' repo appears as a folder within a larger monorepo.
 # This script creates symbolic links according to the situation.
 #
-# This script must run from the root folder of the 'semgrep' project.
+# This script must run from the root folder of the 'lens' project.
 #
 set -eu -o pipefail
 
 project_root=$(git rev-parse --show-toplevel || pwd)
-semgrep_root=$(pwd)
+lens_root=$(pwd)
 
-if [[ "$project_root" != "$semgrep_root" ]]; then
-  echo -n "Creating symlinks to pretend $semgrep_root is the project root... "
+if [[ "$project_root" != "$lens_root" ]]; then
+  echo -n "Creating symlinks to pretend $lens_root is the project root... "
   mkdir -p _build
   (
     cd _build

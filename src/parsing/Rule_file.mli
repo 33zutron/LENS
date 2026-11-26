@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024 Semgrep Inc.
+   Copyright (c) 2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -16,7 +16,7 @@
  * foo.json (and foo.jsonnet) are currently not considered
  * valid_rule_filename.
  *
- * This function is currently used for osemgrep, to get all
+ * This function is currently used for olens, to get all
  * the valid rule files when using --config <DIR>,
  * and also in Test_engine.ml.
  *)

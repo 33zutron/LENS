@@ -10,6 +10,6 @@ rules:
         regex: '(foo|bar)'
   - pattern: return ...
   message: |
-    Semgrep found a match
+    Lens found a match
   severity: WARNING
   languages: [python]

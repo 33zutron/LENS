@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2024 Semgrep Inc.
+# Copyright (c) 2021-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -31,23 +31,23 @@ class Corpus:
         name: str,
         rule_dir: Union[str, Path],
         target_dir: Union[str, Path],
-        semgrep_options: List[str],
+        lens_options: List[str],
         language: Optional[str] = None,
     ):
         # name for the input corpus (rules and targets)
         self.name = name
 
-        # folder containing the semgrep rules
+        # folder containing the lens rules
         self.rule_dir = rule_dir
 
         # folder containing the target source files
         self.target_dir = target_dir
 
-        # language to run rules with (because semgrep-core requires it)
+        # language to run rules with (because lens-core requires it)
         self.language = language
 
-        # extra semgrep arguments
-        self.semgrep_options = semgrep_options
+        # extra lens arguments
+        self.lens_options = lens_options
 
     # Fetch rules and targets is delegated to an ad-hoc script named 'prep'.
     def prep(self) -> None:
@@ -60,7 +60,7 @@ LARGE_CORPUSES = Path("configs/ci_large_repos.yaml")
 
 # For corpuses that cannot be run in CI because they use private repos
 INTERNAL_CORPUSES = [
-    Corpus("dogfood", "input/semgrep.yml", "input/", []),
+    Corpus("dogfood", "input/lens.yml", "input/", []),
 ]
 
 DUMMY_CORPUSES = [Corpus("dummy", "input/dummy/rules", "input/dummy/targets", [], "js")]

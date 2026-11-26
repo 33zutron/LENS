@@ -1,7 +1,7 @@
 (* Yoann Padioleau
  *
  * Copyright (C) 2010, 2013 Facebook
- * Copyright (C) 2019 Semgrep Inc.
+ * Copyright (C) 2019 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -161,9 +161,9 @@ let fix_tokens toks =
       | T.T_LPAREN info when Base.Hashtbl.mem retag_lparen_arrow info ->
           T.T_LPAREN_ARROW info
       | T.T_LPAREN info when Base.Hashtbl.mem retag_lparen_method info ->
-          T.T_LPAREN_METHOD_SEMGREP info
+          T.T_LPAREN_METHOD_LENS info
       | T.T_LCURLY info when Base.Hashtbl.mem retag_lbrace info ->
-          T.T_LCURLY_SEMGREP info
+          T.T_LCURLY_LENS info
       | T.T_IMPORT info when Base.Hashtbl.mem retag_keywords info ->
           T.T_ID (Tok.content_of_tok info, info)
       | x -> x)
@@ -219,7 +219,7 @@ let fix_tokens_ASI xs =
     | (T.T_ID _ | T.T_FALSE _ | T.T_TRUE _), (T.T_INCR _ | T.T_DECR _)
       when TH.line_of_tok x <> TH.line_of_tok prev ->
         push_sc_before_x x
-    (* Note that we would like to insert a ';' for semgrep patterns like:
+    (* Note that we would like to insert a ';' for lens patterns like:
      * xxxx()
      * ...
      *
@@ -229,7 +229,7 @@ let fix_tokens_ASI xs =
      * in which case we don't want the semicolon.
      * We need to rely on the parse-error-based ASI to handle this.
      *
-     * Note that we used to support ellipsis in method chaining in semgrep
+     * Note that we used to support ellipsis in method chaining in lens
      * with a single '...' such as '$o.foo() ... .bar()' but when you wrote:
      *   $APP = express()
      *   ...
@@ -241,7 +241,7 @@ let fix_tokens_ASI xs =
      *   ...
      * it internally first generated a parse error, and the ASI kicked in,
      * but after 0.35 we did not generate a parse error,
-     * because it was a valid semgrep pattern, and so we don't get ASI
+     * because it was a valid lens pattern, and so we don't get ASI
      * to trigger.
      * The only way to fix it is to change the syntax for method chaining
      * to require an extra dot, to disambiguate.

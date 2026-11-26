@@ -1,4 +1,4 @@
-# Run this against semgrep-app/frontend/src/types with and without
+# Run this against lens-app/frontend/src/types with and without
 # --optimizations all to see the differences 
 rules:
 - id: eslint.detect-object-injection-lite

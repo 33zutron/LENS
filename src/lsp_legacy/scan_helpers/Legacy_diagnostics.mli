@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
 *)
 val diagnostics_of_results :
   is_intellij:bool ->
-  Semgrep_output_v1_t.cli_match list ->
+  Lens_output_v1_t.cli_match list ->
   Fpath.t list ->
   Lsp.Server_notification.t list
 (** [diagnostics_of_results is_intellij results files] returns a list of LSP diagnostics
@@ -42,6 +42,6 @@ val diagnostics_of_results :
              }
          },
          "severity": 2,
-         "source": "Semgrep"
+         "source": "Lens"
    }
 *)

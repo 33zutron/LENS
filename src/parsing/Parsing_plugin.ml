@@ -1,6 +1,6 @@
 (* Martin Jambon
  *
- * Copyright (C) 2023 Semgrep Inc.
+ * Copyright (C) 2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -18,7 +18,7 @@ open Common
 (* Prelude *)
 (*****************************************************************************)
 (*
-   External parsers to be registered here by semgrep-pro.
+   External parsers to be registered here by lens-pro.
 *)
 
 (*****************************************************************************)
@@ -55,7 +55,7 @@ let missing_plugins : (Lang.t, unit) Base.Hashtbl.t =
 
 let missing_plugin_msg lang =
   spf
-    "Missing Semgrep extension needed for parsing %s target. Try adding \
+    "Missing Lens extension needed for parsing %s target. Try adding \
      `--pro-languages` to your command."
     (Lang.to_string lang)
 
@@ -119,7 +119,7 @@ let make ?(optional = false) lang =
     | None ->
         let msg =
           spf
-            "Missing Semgrep extension needed for parsing %s pattern. Try \
+            "Missing Lens extension needed for parsing %s pattern. Try \
              adding `--pro` to your command."
             (Lang.to_string lang)
         in

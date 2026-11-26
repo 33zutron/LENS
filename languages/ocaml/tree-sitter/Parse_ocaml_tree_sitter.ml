@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (c) 2021-2024 Semgrep Inc.
+ * Copyright (c) 2021-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -21,7 +21,7 @@ open AST_ocaml
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* OCaml parser using tree-sitter-lang/semgrep-ocaml and converting
+(* OCaml parser using tree-sitter-lang/lens-ocaml and converting
  * to ../ast/ast_ml.ml
  *
  * The resulting AST can then be converted to the generic AST by using
@@ -48,7 +48,7 @@ let seq1 = function
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-ocaml/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-ocaml/Boilerplate.ml *)
 
 (**
    Boilerplate to be used as a template when mapping the ocaml CST

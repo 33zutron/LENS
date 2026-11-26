@@ -1,2 +1,2 @@
-# This used to crash semgrep with a NotHandle exn
+# This used to crash lens with a NotHandle exn
 os.getenv('a', 'b')

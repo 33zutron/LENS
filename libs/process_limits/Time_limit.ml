@@ -46,7 +46,7 @@ let string_of_timeout_info { Exception.name; max_duration } =
   spf "%s:%g" name max_duration
 
 (* Only used in non multicore settings *)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 
 (* We use a per domain check since these alarms are per domain if using the gc
    based alarm *)
@@ -115,7 +115,7 @@ let timed_computation_and_clear_timer info max_duration f :
 
 (* Id of the stack (fiber) the current domain is running on, unique for the
    lifetime of the stack. See Time_limit_stubs.c. *)
-external current_stack_id : unit -> int = "semgrep_current_stack_id" [@@noalloc]
+external current_stack_id : unit -> int = "lens_current_stack_id" [@@noalloc]
 
 (* If we can't use signals we set a gc alarm, since it is checked pretty
    regularly, and we can raise exceptions there.

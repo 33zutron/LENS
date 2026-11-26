@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 #
-# Compare the benchmarks run for two different versions of semgrep.
-# It's meant to run within a semgrep pull request.
+# Compare the benchmarks run for two different versions of lens.
+# It's meant to run within a lens pull request.
 # This posts a GitHub PR comment if a performance anomaly is detected.
 # It fails if the anomaly is really big.
 #
@@ -29,7 +29,7 @@ def send_comment(message: str, github_token: str, pull_request_number: str) -> N
 
     session = requests.Session()
     session.headers["Authorization"] = f"Token {github_token}"
-    url = f"https://api.github.com/repos/returntocorp/semgrep/issues/{pull_request_number}/comments"
+    url = f"https://api.github.com/repos/returntocorp/lens/issues/{pull_request_number}/comments"
     session.headers["Accept"] = "application/vnd.github.comfort-fade-preview+json"
 
     commit_id = json.loads(Path(os.getenv("GITHUB_EVENT_PATH")).read_text())[

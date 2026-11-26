@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/4150
+// https://github.com/returntocorp/lens/issues/4150
 class Test {
     boolean f() {
         int x = 0;

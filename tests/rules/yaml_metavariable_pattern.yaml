@@ -7,7 +7,7 @@ rules:
       - metavariable-pattern:
           metavariable: $X
           pattern: $Y
-    message: Semgrep found a match - $X
+    message: Lens found a match - $X
     languages:
       - yaml
     severity: WARNING

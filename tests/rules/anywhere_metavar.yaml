@@ -5,7 +5,7 @@ rules:
     message: Found!
     metadata:
     patterns:
-    - semgrep-internal-pattern-anywhere:
+    - lens-internal-pattern-anywhere:
         pattern: |
           def $F(...):
               ...

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -35,13 +35,13 @@
    2. Replace this file with the Boilerplate.ml that was generated for tsx
       (because it has more definitions than the one for pure typescript):
 
-        cp ../../tree-sitter-lang/semgrep-tsx/lib/Boilerplate.ml \
+        cp ../../tree-sitter-lang/lens-tsx/lib/Boilerplate.ml \
           Boilerplate_tree_sitter_typescript.ml
 
    3. Edit the new file Boilerplate_tree_sitter_typescript.ml:
       a. Copy this header.
       b. Add the "type assertion" case. Look for 'Type_asse' in
-         the new generated file semgrep-typescript/lib/Boilerplate.ml
+         the new generated file lens-typescript/lib/Boilerplate.ml
 *)
 (**
    Boilerplate to be used as a template when mapping the tsx CST
@@ -3683,7 +3683,7 @@ let map_method_pattern (env : env) (x : CST.method_pattern) =
           in
           R.Tuple [ v1; v2 ] )
 
-let map_semgrep_pattern (env : env) (x : CST.semgrep_pattern) =
+let map_lens_pattern (env : env) (x : CST.lens_pattern) =
   match x with
   | `Exp x -> R.Case ("Exp", map_expression env x)
   | `Pair_opt_choice_auto_semi (v1, v2) ->
@@ -3754,8 +3754,8 @@ let map_program (env : env) (x : CST.program) =
   | `Semg_exp (v1, v2) ->
       R.Case
         ( "Semg_exp",
-          let v1 = (* "__SEMGREP_EXPRESSION" *) token env v1 in
-          let v2 = map_semgrep_pattern env v2 in
+          let v1 = (* "__LENS_EXPRESSION" *) token env v1 in
+          let v2 = map_lens_pattern env v2 in
           R.Tuple [ v1; v2 ] )
 
 let map_comment (env : env) (tok : CST.comment) = (* comment *) token env tok

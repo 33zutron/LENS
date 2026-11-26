@@ -1,6 +1,6 @@
 # from https://github.com/rails/rails/blob/main/activejob/lib/active_job/enqueuing.rb
 
-# this actually parses in semgrep because even if tree-sitter
+# this actually parses in lens because even if tree-sitter
 # says ... is an error, pfff accepts it
 # but for more complex files where pfff will fail, then
 # we will get an error.

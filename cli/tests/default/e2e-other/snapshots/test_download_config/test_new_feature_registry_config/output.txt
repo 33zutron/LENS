@@ -1,11 +1,11 @@
-semgrep-core rule validation failed (RuleParseError)
+lens-core rule validation failed (RuleParseError)
 
-Rules downloaded from https://semgrep.dev/c/p/ci failed to parse.
-This is likely because rules have been added that use functionality introduced in later versions of semgrep.
-Please upgrade to latest version of semgrep (see https://semgrep.dev/docs/upgrading/) and try again.
+Rules downloaded from https://lens.dev/c/p/ci failed to parse.
+This is likely because rules have been added that use functionality introduced in later versions of lens.
+Please upgrade to latest version of lens (see https://lens.dev/docs/upgrading/) and try again.
 
-semgrep error: Invalid rule schema
-  --> https://semgrep.dev/...:2
+lens error: Invalid rule schema
+  --> https://lens.dev/...:2
 2 | - id: eqeq-bad
 3 |   pattern-new-feature: $X == $X
 4 |   message: "useless comparison"

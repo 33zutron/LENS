@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024 Semgrep Inc.
+   Copyright (c) 2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 (*
-   A dedicated type for Semgrep scanning roots to avoid confusion with
+   A dedicated type for Lens scanning roots to avoid confusion with
    discovered target files.
 *)
 

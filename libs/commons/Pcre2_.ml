@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2026 Semgrep Inc.
+   Copyright (c) 2026 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -60,7 +60,7 @@ let capture_groups ({ regex; _ } : t) = Pcre2.Interp.capture_groups regex
 let captures_length = Pcre2.Interp.captures_length
 
 (*
-   'match_limit' and 'depth_limit' are set explicitly to make semgrep
+   'match_limit' and 'depth_limit' are set explicitly to make lens
    fail consistently across platforms (e.g. CI vs. local Mac): the PCRE2
    compile-time defaults are 10_000_000 for both, but they can be overridden
    during the installation of the pcre2 library, so we protect ourselves from
@@ -69,8 +69,8 @@ let captures_length = Pcre2.Interp.captures_length
    They are also much lower than the defaults because PCRE2 does not support
    timeouts (and `Common.set_timeout` cannot interrupt the C library): these
    limits are what stops a catastrophically backtracking regex from appearing
-   to hang semgrep. See perf/input/semgrep_targets.txt and
-   perf/input/semgrep_targets.yaml for an example where Semgrep appeared to
+   to hang lens. See perf/input/lens_targets.txt and
+   perf/input/lens_targets.yaml for an example where Lens appeared to
    hang (but it was just the PCRE engine taking way too much time).
 *)
 let match_limit = 1_000_000
@@ -276,9 +276,9 @@ let quote s =
 (*****************************************************************************)
 (* Small wrapper to the actual regexp engine(s).
  *
- * Regexps are used in many places in Semgrep:
+ * Regexps are used in many places in Lens:
  *  - in Pattern_vs_code to support the "=~/.../",
- *  - in Semgrep.ml for the metavariable-regexp and pattern-regexp
+ *  - in Lens.ml for the metavariable-regexp and pattern-regexp
  *  - in Optimizing/ for skipping rules or target files
  *    (See Analyze_pattern.ml for more information).
  *  - TODO for include/exclude globbing
@@ -287,7 +287,7 @@ let quote s =
  * because I thought it would be faster, and because it offers regexp
  * combinators (alt, rep, etc.) which might be useful at some point to
  * handle patterns containing explicit DisjExpr or for Analyze_rule.ml.
- * However when running on Zulip codebase with zulip semgrep rules,
+ * However when running on Zulip codebase with zulip lens rules,
  * Str is actually faster than Re.
  *
  * alternatives:

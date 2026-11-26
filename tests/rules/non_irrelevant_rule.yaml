@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/3755
+# https://github.com/returntocorp/lens/issues/3755
 rules:
   - id: insecure-crypto-usage
     languages:

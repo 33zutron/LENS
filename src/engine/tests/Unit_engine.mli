@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ type fix_type =
       (* regex *) string * (* count *) int option * (* replacement *) string
   | NoFix
 
-(* Can be used from other test code to concisely run Semgrep *)
+(* Can be used from other test code to concisely run Lens *)
 val match_pattern :
   lang:Lang.t ->
   hook:(Core_match.t -> unit) ->
@@ -57,7 +57,7 @@ val make_lang_regression_tests :
   (Lang.t * string * string) list ->
   Testo.t list
 
-(* coupling: https://semgrep.dev/docs/language-support/
+(* coupling: https://lens.dev/docs/language-support/
  * See also https://r2c.quip.com/FOAuA4ThzULc/How-to-promote-a-language-
  *)
 type maturity_level = GA | Beta | Experimental

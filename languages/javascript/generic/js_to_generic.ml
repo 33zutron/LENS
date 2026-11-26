@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019 Semgrep Inc.
+ * Copyright (C) 2019 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -74,13 +74,13 @@ let special (x, tok) =
   | This -> SR_Expr (G.N (G.IdSpecial ((G.This, tok), G.empty_id_info ())))
   | Super -> SR_Expr (G.N (G.IdSpecial ((G.Super, tok), G.empty_id_info ())))
   | Require -> SR_Special (G.Require, tok)
-  (* We could add a new IdSpecial to Semgrep and DeepSemgrep for `module` and
+  (* We could add a new IdSpecial to Lens and DeepLens for `module` and
    * `exports` like we did for `Require`, but we only need to analyze CJS
    * exports in a couple places, so it doesn't seem as worth it. Require needs
-   * special naming behavior in Semgrep and DeepSemgrep, special matching
-   * behavior in Semgrep, and special treatment when extracting dependencies in
-   * DeepSemgrep. In contrast, `module` and `exports` should only need to be
-   * handled in one place in DeepSemgrep. *)
+   * special naming behavior in Lens and DeepLens, special matching
+   * behavior in Lens, and special treatment when extracting dependencies in
+   * DeepLens. In contrast, `module` and `exports` should only need to be
+   * handled in one place in DeepLens. *)
   | Exports -> SR_Expr (G.N (G.Id (("exports", tok), G.empty_id_info ())))
   | Module -> SR_Expr (G.N (G.Id (("module", tok), G.empty_id_info ())))
   | Define -> other_expr "Define"
@@ -307,7 +307,7 @@ and expr (x : expr) =
       let e = G.Lambda def |> G.e in
       (* Since the attrs aren't included in the AST, at least update the range
        * to include them. See
-       * https://github.com/semgrep/semgrep/issues/7353 *)
+       * https://github.com/lens/lens/issues/7353 *)
       let attrs_any = List.map (fun attr -> G.At attr) more_attrs in
       H.set_e_range_with_anys (G.Dk (G.FuncDef def) :: attrs_any) e;
       e
@@ -435,7 +435,7 @@ and catch_block = function
       let v1 =
         stmt v1
         (* bugfix: reusing 't' to avoid NoTokenLocation error when
-         * a semgrep patter like catch($ERR) matches an UnboundCatch. *)
+         * a lens patter like catch($ERR) matches an UnboundCatch. *)
       in
       (t, G.CatchPattern (G.PatWildcard t), v1)
 
@@ -723,7 +723,7 @@ and property x =
       let def =
         match def with
         (* ugly: this is to prevent assignment to match object field
-         * definitions in semgrep *)
+         * definitions in lens *)
         | G.VarDef x -> G.FieldDefColon x
         | _ -> def
       in
@@ -780,7 +780,7 @@ and module_directive x =
 
 and list_stmt xs =
   (* converting require() in import, so they can benefit from the
-   * other goodies coming with import in semgrep (e.g., equivalence aliasing)
+   * other goodies coming with import in lens (e.g., equivalence aliasing)
    *)
   xs |> List.map (fun st -> [ stmt st ]) |> List_.flatten
 

@@ -58,7 +58,7 @@
     "pypa": {
       "gh-action-pypi-publish": "cef221092ed1bacb1cc03d23a2d87d1d172e277b"
     },
-    "semgrep": {
+    "lens": {
       "claude-taskmaster": "e65485b0defbd6ef6c59adcdc91a1c3d9893c215",
       "github-api-commit-action": "455b1aaa1455b8c1d7ef123c4cb918a1a4709a5d",
       "setup-ocaml": "a739c5405d73c42ef15a9dc995efc0f87396cc36"

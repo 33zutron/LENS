@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2020 Semgrep Inc.
+ * Copyright (C) 2020 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -151,7 +151,7 @@ let log_fixme kind gany : unit =
       log_warning ?tok
         "Unsupported construct(s) may affect the accuracy of dataflow analyses"
   | Sgrep_construct ->
-      log_error ?tok "Cannot translate Semgrep construct(s) into IL"
+      log_error ?tok "Cannot translate Lens construct(s) into IL"
   | Impossible ->
       log_error ?tok "Impossible happened during AST-to-IL translation"
 

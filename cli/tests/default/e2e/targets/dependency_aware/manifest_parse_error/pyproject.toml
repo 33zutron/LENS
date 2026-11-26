@@ -21,6 +21,6 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [[tool.poetry.source]]
-name = "semgrep"
-url = "https://artifact.semgrep.com/"
+name = "lens"
+url = "https://artifact.lens.com/"
 secondary = false

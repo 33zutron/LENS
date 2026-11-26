@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -33,7 +33,7 @@ let related_file_of_target ?polyglot_pattern_path ~ext file =
         if Sys_.file_exists candidate2 then Ok (Fpath.v candidate2) else fail ()
     | _ -> fail ()
 
-(* Allows the semgrep-core test runner that we use to test matches to also test
+(* Allows the lens-core test runner that we use to test matches to also test
  * autofix. The format is pretty simple: add a `.fix` file with the fix pattern
  * and a `.fixed` file with the expected contents of the target after fixes are
  * applied.
@@ -41,11 +41,11 @@ let related_file_of_target ?polyglot_pattern_path ~ext file =
  * There are also end-to-end tests which test autofix on the CLI side.
  * Unfortunately, modifying them involves updating a large snapshot file, and
  * maintaining any large quantity of them would be onerous. Additionally, it's
- * not easy to adapt tests from our large existing test suite in semgrep-core to
+ * not easy to adapt tests from our large existing test suite in lens-core to
  * also exercise autofix.
  *
- * Semgrep's `--test` flag can also test autofix
- * (https://github.com/semgrep/semgrep/pull/5190), but it has the same
+ * Lens's `--test` flag can also test autofix
+ * (https://github.com/lens/lens/pull/5190), but it has the same
  * problems as the existing autofix e2e tests for these purposes. *)
 let compare_fixes ?polyglot_pattern_path ~file matches =
   let expected_fixed_text =

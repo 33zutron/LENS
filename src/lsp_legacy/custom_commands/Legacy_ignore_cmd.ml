@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) Semgrep, Inc.
+ * Copyright (C) Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,7 +15,7 @@
 
 (* Commentary *)
 (* Ignore command takes in a match based id, and then won't display them. these *)
-(* ignored findings are stored in .semgrep/cache/fingerprint_ignored_findings *)
+(* ignored findings are stored in .lens/cache/fingerprint_ignored_findings *)
 
 (*****************************************************************************)
 (* Prelude *)
@@ -26,7 +26,7 @@ open Types
 (*****************************************************************************)
 (* Types *)
 (*****************************************************************************)
-let command = "semgrep/ignore"
+let command = "lens/ignore"
 
 type t = { path : string; fingerprint : string } [@@deriving yojson]
 

@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/3881
+# https://github.com/returntocorp/lens/issues/3881
 
 def test1():
     #ERROR:

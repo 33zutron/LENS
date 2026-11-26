@@ -2,12 +2,12 @@
 ; static analysis.
 ;
 ; Try to not add too many dependencies in this directory. This library
-; is still used in projects outside semgrep (e.g., codemap/efuns) which rely
+; is still used in projects outside lens (e.g., codemap/efuns) which rely
 ; on small dependencies.
 
 (library
- (public_name semgrep.il)
- (name semgrep_core_il)
+ (public_name lens.il)
+ (name lens_core_il)
  (wrapped false)
  (libraries
    commons

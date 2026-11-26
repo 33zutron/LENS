@@ -1,14 +1,14 @@
-// Build and validate our (multi-arch) semgrep docker image defined in our
+// Build and validate our (multi-arch) lens docker image defined in our
 // Dockerfile and save it as a GHA artifact.
 
 local docker = import 'libs/docker.libsonnet';
 local gha = import 'libs/gha.libsonnet';
-local semgrep = import 'libs/semgrep.libsonnet';
+local lens = import 'libs/lens.libsonnet';
 local uses = import 'libs/uses.libsonnet';
 
 local build_job = docker.build_and_run_gha_job(
   description='Build Core',
-  target='semgrep-cli',
+  target='lens-cli',
 );
 
 // ----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,7 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-(** Origins of content which may be consumed by Semgrep.
+(** Origins of content which may be consumed by Lens.
 
    An origin is the {e user-relevant origin} of content (e.g., source code).
    This should be used when reporting findings to a user.
@@ -47,8 +47,8 @@
 
     {ul
       {- [Target_file fppath] origins are for target files. A target file
-         is a file subject to Semgrepignore path filtering
-         (--exclude/--include, .semgrepignore files, and in-rule
+         is a file subject to Lensignore path filtering
+         (--exclude/--include, .lensignore files, and in-rule
          paths.exclude/include). Path filtering operates on the ppath
          which is included in the fppath. }
       {- [Unfilterable_target_file path] origins are for temporary

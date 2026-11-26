@@ -1,6 +1,6 @@
 (* Cooper Pierce
  *
- * Copyright (c) 2024-2026 Semgrep Inc.
+ * Copyright (c) 2024-2026 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -22,7 +22,7 @@ module H2 = AST_generic_helpers
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Scala parser using tree-sitter-lang/semgrep-scala and converting
+(* Scala parser using tree-sitter-lang/lens-scala and converting
  * directly to AST_generic.ml
  *)
 
@@ -45,7 +45,7 @@ let in_pattern env =
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-scala/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-scala/Boilerplate.ml *)
 
 (* ---------------------------------------------------------------------- *)
 (* Token-level helpers *)

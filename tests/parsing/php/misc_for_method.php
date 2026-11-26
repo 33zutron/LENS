@@ -1,5 +1,5 @@
 <?php
-//https://github.com/returntocorp/semgrep/issues/3590
+//https://github.com/returntocorp/lens/issues/3590
 function configureRateLimiting()
 {
     RateLimiter::for('api', function (Request $request) {

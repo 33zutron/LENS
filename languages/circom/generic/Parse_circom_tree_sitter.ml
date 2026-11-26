@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024 Semgrep Inc.
+   Copyright (c) 2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -32,7 +32,7 @@ let _fb = Tok.unsafe_fake_bracket
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying from semgrep-circom/lib/Boilerplate.ml *)
+(* This was started by copying from lens-circom/lib/Boilerplate.ml *)
 
 (* Disable warnings against unused variables *)
 [@@@warning "-26-27-32"]

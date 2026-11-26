@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -25,7 +25,7 @@ let t = Testo.create
 (* Constants *)
 (*****************************************************************************)
 
-(* ran from the root of the semgrep repository *)
+(* ran from the root of the lens repository *)
 let tests_path = Fpath.v "tests"
 let tests_path_parsing = tests_path / "parsing"
 let tests_path_parsing_missing = tests_path / "parsing_missing"
@@ -59,7 +59,7 @@ let snapshot_ast (lang : Lang.t) =
 (* Golden AST output may live next to a fixture as [foo.ast.expect] (same
    sidecar convention as maturity tests: replace the source extension). When
    absent, fall back to Testo's default hash-based snapshot under
-   [tests/snapshots/semgrep-core/]. *)
+   [tests/snapshots/lens-core/]. *)
 let checked_output_for_snapshot file =
   let ast_expect_path file = Fpath.set_ext "ast.expect" (Fpath.v file) in
   let expect_path = ast_expect_path file in
@@ -196,7 +196,7 @@ let lang_parsing_tests langs_with_error_tolerance : Testo.t list =
   |> Testo.categorize_suites "lang parsing"
 
 (* It's important that our parsers generate classic parsing errors
- * exns (e.g., Parsing_error, Lexical_error), otherwise semgrep
+ * exns (e.g., Parsing_error, Lexical_error), otherwise lens
  * will report some "Fatal error" and abort.
  *)
 let parsing_error_tests () =

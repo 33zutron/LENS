@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2022 Semgrep Inc.
+ * Copyright (C) 2019-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -240,12 +240,12 @@ let subexprs_of_expr_implicit (with_symbolic_propagation : bool) (e : expr) :
    * also want to match code like 'db.find().then(stuff).
    *)
   | DotAccess (e, _, _) -> [ e ]
-  (* TODO: ugly but in semgrep-rules/python/.../flush.yaml there is
+  (* TODO: ugly but in lens-rules/python/.../flush.yaml there is
    * '$F.name' that is matching cmd = [stuff, fout.name, otherstuff].
    * They should rewrite the rule and use '... <... $F.name ...>' there.
    *)
   | Container (_, xs) -> Tok.unbracket xs
-  (* TODO: ugly but in semgrep-rules/terraform/.../missing-athena...yaml
+  (* TODO: ugly but in lens-rules/terraform/.../missing-athena...yaml
    * we look for '{ ... encryption_configuration {...} ...}' and
    * the encryption_configuration can actually be nested deeper.
    * They should rewrite the rule.

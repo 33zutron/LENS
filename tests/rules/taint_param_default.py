@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/6298
+# https://github.com/returntocorp/lens/issues/6298
 # The minimal test would be test3 or test4, but we include the original
 # example for extra coverage.
 import requests

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2024 Semgrep Inc.
+# Copyright (c) 2021-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,13 +11,13 @@
 # LICENSE for more details.
 #
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
-# Running semgrep with multiple configs should fail fast if any of them have errors
+# Running lens with multiple configs should fail fast if any of them have errors
 @pytest.mark.kinda_slow
-def test_multi_config_fail(run_semgrep_in_tmp: RunSemgrep):
-    run_semgrep_in_tmp(
+def test_multi_config_fail(run_lens_in_tmp: RunLens):
+    run_lens_in_tmp(
         [
             "rules/multi_config_fail/error.yaml",
             "rules/multi_config_fail/no_error.yaml",

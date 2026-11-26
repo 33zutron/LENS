@@ -61,11 +61,11 @@ Creating git worktree from 'foo' to scan baseline.
 ┌──────────────┐
 │ Scan Summary │
 └──────────────┘
-Semgrep's file targeting is getting a revamp! To keep scanning the same files
-after version 1.116.0, you will need to update your .semgrepignore. If you have
-any questions, ask on the Community Slack or file an issue on https://github.com/semgrep/semgrep/issues.
+Lens's file targeting is getting a revamp! To keep scanning the same files
+after version 1.116.0, you will need to update your .lensignore. If you have
+any questions, ask on the Community Slack or file an issue on https://github.com/lens/lens/issues.
 
-See https://semgrep.dev/docs/kb/semgrep-code/semgrepignore-ignored for the new specification.
+See https://lens.dev/docs/kb/lens-code/lensignore-ignored for the new specification.
 
 Here's the list of files that will no longer be scanned:
  • foo.py
@@ -79,5 +79,5 @@ Here's the list of new files that will be scanned:
  • Targets scanned: 3
  • Parsed lines: ~100.0%
  • Scan was limited to files changed since baseline commit.
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+ • For a detailed list of skipped files and lines, run lens with the --verbose flag
 Ran 1 rule on 3 files: 16 findings.

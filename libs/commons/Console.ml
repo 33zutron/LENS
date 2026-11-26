@@ -1,6 +1,6 @@
 (* Martin Jambon, Yoann Padioleau
  *
- * Copyright (C) 2024-2025 Semgrep Inc.
+ * Copyright (C) 2024-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -54,7 +54,7 @@ open Common
  *
  * TODO:
  *  - use this module for printing all user-facing messages.
- *    Maybe it's only possible once we drop pysemgrep because of bugs and
+ *    Maybe it's only possible once we drop pylens because of bugs and
  *    quirks we have to reproduce for now.
  *  - allow to mock the output, with_mock_output () ?
  *    update: or use Testo recent capture_stdout which uses
@@ -87,10 +87,10 @@ type highlight_setting = Auto | On | Off [@@deriving show]
 (* The result of applying 'highlight_setting' *)
 type highlight = On | Off [@@deriving show]
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let highlight_setting : highlight_setting ref = ref Auto
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let highlight : highlight ref = ref (Off : highlight)
 
 (* accessors *)
@@ -162,8 +162,8 @@ let color c s = sprintf [ c ] "%s" s
 (* Error/Warning/Success messages *)
 (*****************************************************************************)
 
-(* hopefully not too semgrep specific *)
-type semgrep_style = Error | Warning | Success
+(* hopefully not too lens specific *)
+type lens_style = Error | Warning | Success
 
 let color_of_style = function
   | Error -> red

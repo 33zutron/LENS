@@ -10,7 +10,7 @@ rules:
       to: $X
   pattern-sinks:
     - pattern: sink(...)
-  message: Semgrep found a match
+  message: Lens found a match
   languages:
     - javascript
   severity: WARNING

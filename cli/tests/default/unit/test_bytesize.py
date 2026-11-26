@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2024 Semgrep Inc.
+# Copyright (c) 2021-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
 #
 import pytest
 
-from semgrep.bytesize import parse_size
+from lens.bytesize import parse_size
 
 
 TESTS = [

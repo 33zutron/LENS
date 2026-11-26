@@ -10,7 +10,7 @@
 // it easier to iterate on)
 
 local gha = import 'libs/gha.libsonnet';
-local semgrep = import 'libs/semgrep.libsonnet';
+local lens = import 'libs/lens.libsonnet';
 local uses = import 'libs/uses.libsonnet';
 
 // ----------------------------------------------------------------------------
@@ -20,7 +20,7 @@ local uses = import 'libs/uses.libsonnet';
 local job = {
   'runs-on': 'ubuntu-latest',
   permissions: gha.write_permissions,
-  steps: [semgrep.github_bot.get_token_step(['semgrep', 'semgrep-proprietary'])] + [
+  steps: [lens.github_bot.get_token_step(['lens', 'lens-proprietary'])] + [
     {
       name: 'Checkout OSS',
       uses: uses.actions.checkout,
@@ -29,25 +29,25 @@ local job = {
         // fetch all history to get base branch and all PR commits
         'fetch-depth': 0,
         // Use the token provided by the JWT token getter above
-        token: semgrep.github_bot.token_ref,
+        token: lens.github_bot.token_ref,
       },
     },
     {
       name: 'Checkout PRO',
       uses: uses.actions.checkout,
       with: {
-        repository: 'semgrep/semgrep-proprietary',
+        repository: 'lens/lens-proprietary',
         path: 'PRO',
         ref: '${{ inputs.pro_ref }}',
         lfs: true,
-        token: semgrep.github_bot.token_ref,
+        token: lens.github_bot.token_ref,
       },
     },
     {
       name: 'Creating the branch and commiting to it',
       env: {
         BRANCHNAME: 'sync-with-PRO-${{ github.run_id }}-${{ github.run_attempt }}',
-        GITHUB_TOKEN: semgrep.github_bot.token_ref,
+        GITHUB_TOKEN: lens.github_bot.token_ref,
         PR_NUMBER: '${{ inputs.pr_number }}',
       },
       // the git config are needed otherwise GHA complains about
@@ -69,11 +69,11 @@ local job = {
         echo $AUTHOR > /tmp/pr_author
         # Add original attribution
         echo "" >> /tmp/pr_body
-        echo "Synced from OSS PR https://github.com/semgrep/semgrep/pull/$PR_NUMBER" >> /tmp/pr_body
+        echo "Synced from OSS PR https://github.com/lens/lens/pull/$PR_NUMBER" >> /tmp/pr_body
         echo "Author: @$AUTHOR" >> /tmp/pr_body
         echo "Imported by: @${{ github.actor }}" >> /tmp/pr_body
         echo "" >> /tmp/pr_body
-        echo "Closes https://github.com/semgrep/semgrep/pull/$PR_NUMBER" >> /tmp/pr_body
+        echo "Closes https://github.com/lens/lens/pull/$PR_NUMBER" >> /tmp/pr_body
 
         # Indicates to our sync tool that this commit should be attributed to
         # the original author when it is synced back to OSS. This is the
@@ -107,7 +107,7 @@ local job = {
     {
       name: 'Create the Pull request with gh',
       env: {
-        GITHUB_TOKEN: semgrep.github_bot.token_ref,
+        GITHUB_TOKEN: lens.github_bot.token_ref,
       },
       run: |||
         cd PRO
@@ -128,14 +128,14 @@ local job = {
     {
       name: 'Comment on OSS PR with link to PRO PR',
       env: {
-        GITHUB_TOKEN: semgrep.github_bot.token_ref,
+        GITHUB_TOKEN: lens.github_bot.token_ref,
         PR_NUMBER: '${{ inputs.pr_number }}',
       },
       run: |||
         PRO_PR_URL=$(cat /tmp/pro_pr_url)
         AUTHOR=$(cat /tmp/pr_author)
         echo -en "@${{ github.actor }} has imported this pull request. " >> /tmp/comment_body
-        echo -en "Semgrep employees can find it at $PRO_PR_URL.\n" >> /tmp/comment_body
+        echo -en "Lens employees can find it at $PRO_PR_URL.\n" >> /tmp/comment_body
         echo -en "\n" >> /tmp/comment_body
         echo -en "@$AUTHOR, thank you for your contribution! " >> /tmp/comment_body
         echo -en "Once the internal PR has been merged, this PR will be " >> /tmp/comment_body

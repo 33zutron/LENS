@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2025 Semgrep Inc.
+ * Copyright (C) 2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,7 +19,7 @@
  *
  * There are already YAML parsers for OCaml (see below) with their own ASTs, but
  * those ASTs do not contain location information which is useful for error
- * reporting and also for Semgrep matching (Semgrep relies on "ranges" computed
+ * reporting and also for Lens matching (Lens relies on "ranges" computed
  * from token locations during matching).
  *
  * alternatives:
@@ -106,7 +106,7 @@ type value =
   | Sequence of value list bracket
   (* A Mapping is a Dict (YAML terminology).
    * alt: transform in '(value * value) list bracket' or even better in
-   * '(string wrap * value) list bracket' and remove KV below? But with Semgrep
+   * '(string wrap * value) list bracket' and remove KV below? But with Lens
    *  we might want to have a Metavar or Ellipsis for the key, so we need
    *  at least '(value * value) list bracket'. Then we might also want a Metavar
    *  or Ellipsis for the whole entry (and with anchors it might be also more?) so
@@ -133,7 +133,7 @@ type value =
    *)
   | Tag of string (* without the ! *) wrap * value
   (* -------------- *)
-  (* Semgrep constructs *)
+  (* Lens constructs *)
   (* -------------- *)
   | Metavar of string wrap
   | Ellipsis of Tok.t

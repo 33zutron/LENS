@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2024 Semgrep Inc.
+   Copyright (c) 2023-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -14,7 +14,7 @@
    Similar to Gitignore_filter but select paths to be kept rather than ignored.
 
    Negated patterns are not supported as they wouldn't make much sense here.
-   Exclusions can be made via --exclude or gitignore/semgrepignore.
+   Exclusions can be made via --exclude or gitignore/lensignore.
 
    Example: --include a --include '*.ml'
      /a/b.c  --> selected because /a matches a pattern
@@ -22,14 +22,14 @@
      x.ml    --> selected because x.ml matches a pattern
      x.c     --> excluded because x.c doesn't match a pattern
 
-   The logic is different from gitignore/semgrepignore and --exclude.
+   The logic is different from gitignore/lensignore and --exclude.
    It is applied before all of these filters.
 
-   In semgrep, this is used in two contexts:
+   In lens, this is used in two contexts:
    - pre-filtering of all target files based on the --include command-line
      options
    - per-rule filtering, which is an extra filtering step requested
-     by specific semgrep rules
+     by specific lens rules
 *)
 
 type t [@@deriving show]

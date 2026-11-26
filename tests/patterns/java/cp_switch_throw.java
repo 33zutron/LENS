@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/4265
+// https://github.com/returntocorp/lens/issues/4265
 
 // We want to test that the CFG is correctly constructed despite the last
 // statement of the `switch` being a `throw`, which interrupts execution.

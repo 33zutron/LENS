@@ -1,7 +1,7 @@
 (* Yoann Padioleau
  *
  * Copyright (C) 2009-2013 Facebook
- * Copyright (C) 2020 Semgrep Inc.
+ * Copyright (C) 2020 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -27,7 +27,7 @@ open Common
  * type definitions, implicit fields via constructor parameters).
  *
  * Update: I removed many facebook extensions to simplify (e.g., XHP).
- * Moreover, this CST is mostly used for semgrep now, so we may
+ * Moreover, this CST is mostly used for lens now, so we may
  * gradually transform it into ast_php.ml to avoid an extra intermediate
  * when converting from PHP to the generic AST.
  * For example, use Foo\Bar\{A, B} is not represented faithfully anymore
@@ -280,7 +280,7 @@ and expr =
   | YieldBreak of tok * tok
   (* php-facebook-ext: Just like yield, this should be at the statement level *)
   | Await of tok * expr
-  (* semgrep-ext:  *)
+  (* lens-ext:  *)
   | Ellipsis of tok
   | DeepEllipsis of expr bracket
   (* unparser: *)
@@ -554,7 +554,7 @@ and func_def = {
   (* can be a Name("__lambda", f_tok) when used for lambdas *)
   f_name : ident;
   f_tparams : type_params option;
-  (* the dots should be only at the end (unless in semgrep mode) *)
+  (* the dots should be only at the end (unless in lens mode) *)
   f_params : parameter comma_list_dots paren;
   (* static-php-ext: *)
   f_return_type : (tok (* : *) * hint_type) option;
@@ -690,7 +690,7 @@ and class_stmt =
       * (tok (* ; *), trait_rule list brace) Either_.t
   (* ?? *)
   | ClassType of type_def
-  (* semgrep-ext:  *)
+  (* lens-ext:  *)
   | DeclEllipsis of tok
 
 and class_constant = ident * static_scalar_affect

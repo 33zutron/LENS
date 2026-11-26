@@ -41,7 +41,7 @@ Creating git worktree from 'bar' to scan baseline.
 ┌──────────────┐
 │ Scan Summary │
 └──────────────┘
-Semgrep's file targeting is getting a revamp! This scan wouldn't see any changes. To learn about what will be different after version 1.116.0, visit https://semgrep.dev/docs/kb/semgrep-code/semgrepignore-ignored for the new specification.
+Lens's file targeting is getting a revamp! This scan wouldn't see any changes. To learn about what will be different after version 1.116.0, visit https://lens.dev/docs/kb/lens-code/lensignore-ignored for the new specification.
 
 ✅ Scan completed successfully.
  • Findings: 8 (8 blocking)
@@ -49,5 +49,5 @@ Semgrep's file targeting is getting a revamp! This scan wouldn't see any changes
  • Targets scanned: 1
  • Parsed lines: ~100.0%
  • Scan was limited to files changed since baseline commit.
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+ • For a detailed list of skipped files and lines, run lens with the --verbose flag
 Ran 1 rule on 1 file: 8 findings.

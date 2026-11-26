@@ -1,6 +1,6 @@
 (* Brandon Wu
  *
- * Copyright (c) 2022 Semgrep Inc.
+ * Copyright (c) 2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ open AST_generic
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Dart parser using tree-sitter-lang/semgrep-dart and converting
+(* Dart parser using tree-sitter-lang/lens-dart and converting
  * directly to AST_generic.ml
  *
  *)
@@ -44,7 +44,7 @@ let _map_trailing_comma env x =
   | Some tok -> Some ((* "," *) token env tok)
   | None -> None
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let forward_reference_map_template_substitution =
   ref (fun _env _x -> failwith "Foward reference not set.")
 
@@ -52,7 +52,7 @@ let forward_reference_map_template_substitution =
 (* Boilerplate converter *)
 (*****************************************************************************)
 
-(* This was started by copying tree-sitter-lang/semgrep-dart/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-dart/Boilerplate.ml *)
 
 let _map_break_builtin (env : env) (tok : CST.break_builtin) =
   (* break_builtin *) token env tok
@@ -3183,7 +3183,7 @@ and map_template_substitution (env : env) ((v1, v2) : CST.template_substitution)
       (* '$id' resolves to a variable reference in real programs. In pattern
          mode we keep most '$id' fragments as raw text so that real Dart
          interpolations inside patterns don't accidentally bind, BUT if the
-         name matches Semgrep's metavariable convention (`$NAME` —
+         name matches Lens's metavariable convention (`$NAME` —
          uppercase/underscore, never a real Dart identifier), emit it as an
          expression so it can bind interpolated values like in any other
          language. *)
@@ -5268,12 +5268,12 @@ let map_top_level_definition (env : env) (x : CST.top_level_definition) :
         |> G.s;
       ]
 
-let map_semgrep_pattern (env : env) (x : CST.semgrep_pattern) =
+let map_lens_pattern (env : env) (x : CST.lens_pattern) =
   match x with
   | `Exp x -> E (map_expression env x)
   | `Stmt x -> Pr (map_statement env x)
   | `Semg_stmt_list (first, rest) ->
-      (* Multi-statement pattern (`__SEMGREP_EXPRESSION s1; s2; …`) used
+      (* Multi-statement pattern (`__LENS_EXPRESSION s1; s2; …`) used
          by polyglot patterns like `dots_stmts` and `metavar_equality_var`
          that consist of a sequence of statements. Produce a `Pr [stmts]`
          shape — same as a real Dart program — so the matcher can search
@@ -5283,8 +5283,8 @@ let map_semgrep_pattern (env : env) (x : CST.semgrep_pattern) =
 let map_program (env : env) (prog : CST.program) =
   match prog with
   | `Semg_exp (v1, v2) ->
-      let _v1 = (* "__SEMGREP_EXPRESSION" *) token env v1 in
-      map_semgrep_pattern env v2
+      let _v1 = (* "__LENS_EXPRESSION" *) token env v1 in
+      map_lens_pattern env v2
   | `Opt_script_tag_opt_libr_name_rep_import_or_export_rep_part_dire_rep_part_of_dire_rep_top_level_defi
       (v1, v2, v3, v4, v5, v6) ->
       let v1 =
@@ -5364,14 +5364,14 @@ let starts_with_statement_keyword str =
 (* Cribbed from the Cairo parser. *)
 let parse_expression_or_source_file str =
   if starts_with_statement_keyword str then
-    let expr_str = "__SEMGREP_EXPRESSION " ^ str in
+    let expr_str = "__LENS_EXPRESSION " ^ str in
     Tree_sitter_dart.Parse.string expr_str
   else
     let res = Tree_sitter_dart.Parse.string str in
     match res.errors with
     | [] -> res
     | _ ->
-        let expr_str = "__SEMGREP_EXPRESSION " ^ str in
+        let expr_str = "__LENS_EXPRESSION " ^ str in
         Tree_sitter_dart.Parse.string expr_str
 
 let parse_pattern str =

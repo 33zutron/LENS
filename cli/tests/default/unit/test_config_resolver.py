@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2025 Semgrep Inc.
+# Copyright (c) 2023-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -18,44 +18,44 @@ from uuid import uuid4
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep import __VERSION__
-from semgrep.config_resolver import ConfigFile
-from semgrep.config_resolver import ConfigLoader
-from semgrep.config_resolver import ConfigType
-from semgrep.config_resolver import legacy_url_for_scan
-from semgrep.config_resolver import parse_config_string
-from semgrep.config_resolver import PRODUCT_NAMES
-from semgrep.constants import DEFAULT_SEMGREP_APP_CONFIG_URL
-from semgrep.error import InvalidRuleSchemaError
-from semgrep.error import SemgrepError
-from semgrep.rule_lang import RpcValidationError
-from semgrep.rule_lang import RuleValidationMode
-from semgrep.state import SemgrepState
+import lens.lens_interfaces.lens_output_v1 as out
+from lens import __VERSION__
+from lens.config_resolver import ConfigFile
+from lens.config_resolver import ConfigLoader
+from lens.config_resolver import ConfigType
+from lens.config_resolver import legacy_url_for_scan
+from lens.config_resolver import parse_config_string
+from lens.config_resolver import PRODUCT_NAMES
+from lens.constants import DEFAULT_LENS_APP_CONFIG_URL
+from lens.error import InvalidRuleSchemaError
+from lens.error import LensError
+from lens.rule_lang import RpcValidationError
+from lens.rule_lang import RuleValidationMode
+from lens.state import LensState
 
 FAKE_USER_AGENT = "user-agent"
-API_URL = "https://semgrep.dev"
+API_URL = "https://lens.dev"
 
 
 @pytest.fixture
 def mock_env(monkeypatch):
     # Set the environment variable
-    monkeypatch.setenv("SEMGREP_REPO_NAME", "test_repo")
+    monkeypatch.setenv("LENS_REPO_NAME", "test_repo")
 
 
 @pytest.fixture
 def mocked_state(mocker):
     mocked = mocker.MagicMock()
     mocked.local_scan_id = uuid4()
-    mocked.env.semgrep_url = API_URL
-    mocker.patch("semgrep.config_resolver.get_state", return_value=mocked)
+    mocked.env.lens_url = API_URL
+    mocker.patch("lens.config_resolver.get_state", return_value=mocked)
     return mocked
 
 
 @pytest.fixture
 def mocked_rpc_validation_error(mocker):
     mocker.patch(
-        "semgrep.rule_lang.run_rpc_validate_exn",
+        "lens.rule_lang.run_rpc_validate_exn",
         side_effect=RpcValidationError(
             out.CoreError(
                 error_type=out.ErrorType(value=out.InvalidYaml()),
@@ -70,7 +70,7 @@ def mocked_rpc_validation_error(mocker):
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.parametrize("include_engine_params", [False, True])
 def test_platform_config_fetches_have_distinct_request_ids(
     mock_env, requests_mock, mocker, include_engine_params
@@ -100,7 +100,7 @@ def test_platform_config_fetches_have_distinct_request_ids(
         re.compile(f"^{API_URL}/api/cli/v2/scans/[^/]+/config$"), json=get_config
     )
     fallback = mocker.patch.object(
-        ConfigLoader, "_download_semgrep_cloud_platform_fallback_scan_config"
+        ConfigLoader, "_download_lens_cloud_platform_fallback_scan_config"
     )
 
     for product in ["code", "secrets", "code"]:
@@ -123,7 +123,7 @@ class TestConfigLoaderForProducts:
     @pytest.mark.quick
     @pytest.mark.osemfail
     def test_init(self, config_loader, product):
-        assert config_loader._origin == ConfigType.SEMGREP_CLOUD_PLATFORM
+        assert config_loader._origin == ConfigType.LENS_CLOUD_PLATFORM
         assert config_loader._config_path == product
         assert config_loader._supports_fallback_config is True
 
@@ -133,12 +133,12 @@ class TestConfigLoaderForProducts:
         config_file = ConfigFile(
             None,
             "rules: []",
-            "https://semgrep.dev/c/p/ci",
+            "https://lens.dev/c/p/ci",
         )
 
         patched_fetch = mocker.patch.object(
             ConfigLoader,
-            "_fetch_semgrep_cloud_platform_scan_config",
+            "_fetch_lens_cloud_platform_scan_config",
             return_value=config_file,
         )
 
@@ -149,7 +149,7 @@ class TestConfigLoaderForProducts:
 
     @pytest.mark.quick
     @pytest.mark.osemfail
-    def test__fetch_semgrep_cloud_platform_scan_config(
+    def test__fetch_lens_cloud_platform_scan_config(
         self,
         config_loader,
         mocker,
@@ -158,16 +158,16 @@ class TestConfigLoaderForProducts:
         config_file = ConfigFile(
             None,
             "rules: []",
-            "https://semgrep.dev/c/p/ci",
+            "https://lens.dev/c/p/ci",
         )
 
         patched_download = mocker.patch.object(
             ConfigLoader,
-            "_download_semgrep_cloud_platform_scan_config",
+            "_download_lens_cloud_platform_scan_config",
             return_value=config_file,
         )
 
-        config = config_loader._fetch_semgrep_cloud_platform_scan_config()
+        config = config_loader._fetch_lens_cloud_platform_scan_config()
 
         products = [
             out.Product.from_json(PRODUCT_NAMES[p])
@@ -183,20 +183,20 @@ class TestConfigLoaderForProducts:
 
     @pytest.mark.quick
     @pytest.mark.osemfail
-    def test__fetch_semgrep_cloud_platform_scan_config__fallback(
+    def test__fetch_lens_cloud_platform_scan_config__fallback(
         self, config_loader, mocker, mock_env
     ):
         config_file = ConfigFile(
             None,
             "rules: []",
-            "https://semgrep.dev/c/p/ci",
+            "https://lens.dev/c/p/ci",
         )
 
         patched_download = mocker.patch.object(
             ConfigLoader,
-            "_download_semgrep_cloud_platform_scan_config",
+            "_download_lens_cloud_platform_scan_config",
             side_effect=[
-                SemgrepError(
+                LensError(
                     "Failed to download configuration. HTTP 500 when fetching URL"
                 ),
             ],
@@ -204,11 +204,11 @@ class TestConfigLoaderForProducts:
 
         patched_fallback_download = mocker.patch.object(
             ConfigLoader,
-            "_download_semgrep_cloud_platform_fallback_scan_config",
+            "_download_lens_cloud_platform_fallback_scan_config",
             return_value=config_file,
         )
 
-        config = config_loader._fetch_semgrep_cloud_platform_scan_config()
+        config = config_loader._fetch_lens_cloud_platform_scan_config()
 
         assert config == config_file
         assert patched_download.call_count == 1
@@ -260,7 +260,7 @@ class TestConfigLoaderForProducts:
     @pytest.mark.osemfail
     @pytest.mark.parametrize("pending", [False, True])
     @pytest.mark.parametrize("include_engine_params", [False, True])
-    def test__download_semgrep_cloud_platform_scan_config_success(
+    def test__download_lens_cloud_platform_scan_config_success(
         self,
         config_loader: ConfigLoader,
         mocked_scan_request: out.CreateScanRequestV2,
@@ -271,11 +271,11 @@ class TestConfigLoaderForProducts:
         include_engine_params,
     ):
         requests_mock.post(
-            "https://semgrep.dev/api/cli/v2/scans",
+            "https://lens.dev/api/cli/v2/scans",
             json={"info": mocked_scan_response.info.to_json()},
         )
 
-        sleep = mocker.patch("semgrep.app.scan_config.sleep")
+        sleep = mocker.patch("lens.app.scan_config.sleep")
         responses = [{"json": {"status": "pending"}}] if pending else []
         success = {
             "status": "success",
@@ -289,7 +289,7 @@ class TestConfigLoaderForProducts:
             responses,
         )
 
-        config = config_loader._download_semgrep_cloud_platform_scan_config(
+        config = config_loader._download_lens_cloud_platform_scan_config(
             mocked_scan_request
         )
 
@@ -302,19 +302,19 @@ class TestConfigLoaderForProducts:
 
     @pytest.mark.quick
     @pytest.mark.osemfail
-    def test__download_semgrep_cloud_platform_scan_config_unauthorized(
+    def test__download_lens_cloud_platform_scan_config_unauthorized(
         self,
         config_loader: ConfigLoader,
         mocked_scan_request: out.CreateScanRequestV2,
         requests_mock,
     ):
         requests_mock.post(
-            "https://semgrep.dev/api/cli/v2/scans",
+            "https://lens.dev/api/cli/v2/scans",
             status_code=401,
         )
 
-        with pytest.raises(SemgrepError) as exc:
-            config_loader._download_semgrep_cloud_platform_scan_config(
+        with pytest.raises(LensError) as exc:
+            config_loader._download_lens_cloud_platform_scan_config(
                 mocked_scan_request
             )
 
@@ -325,7 +325,7 @@ class TestConfigLoaderForProducts:
     def test__project_metadata_for_standalone_scan(
         self, config_loader: ConfigLoader, monkeypatch
     ):
-        monkeypatch.setenv("SEMGREP_REPO_NAME", "test_repo")
+        monkeypatch.setenv("LENS_REPO_NAME", "test_repo")
         metadata = config_loader._project_metadata_for_standalone_scan(
             require_repo_name=True
         )
@@ -337,8 +337,8 @@ class TestConfigLoaderForProducts:
     def test__project_metadata_for_standalone_scan__no_repo_throws(
         self, config_loader: ConfigLoader, monkeypatch
     ):
-        monkeypatch.delenv("SEMGREP_REPO_NAME", raising=False)
-        with pytest.raises(SemgrepError):
+        monkeypatch.delenv("LENS_REPO_NAME", raising=False)
+        with pytest.raises(LensError):
             config_loader._project_metadata_for_standalone_scan(require_repo_name=True)
 
     @pytest.mark.quick
@@ -346,7 +346,7 @@ class TestConfigLoaderForProducts:
     def test__project_metadata_for_standalone_scan__no_repo_success(
         self, config_loader: ConfigLoader, monkeypatch
     ):
-        monkeypatch.delenv("SEMGREP_REPO_NAME", raising=False)
+        monkeypatch.delenv("LENS_REPO_NAME", raising=False)
         metadata = config_loader._project_metadata_for_standalone_scan(
             require_repo_name=False
         )
@@ -361,25 +361,25 @@ class TestConfigLoaderForProducts:
         (
             {},
             None,
-            f"{API_URL}/{DEFAULT_SEMGREP_APP_CONFIG_URL}?dry_run=True&full_scan=True&semgrep_version={__VERSION__}",
+            f"{API_URL}/{DEFAULT_LENS_APP_CONFIG_URL}?dry_run=True&full_scan=True&lens_version={__VERSION__}",
         ),
         (
             {"sca": True},
             None,
-            f"{API_URL}/{DEFAULT_SEMGREP_APP_CONFIG_URL}?dry_run=True&full_scan=True&semgrep_version={__VERSION__}&sca=True",
+            f"{API_URL}/{DEFAULT_LENS_APP_CONFIG_URL}?dry_run=True&full_scan=True&lens_version={__VERSION__}&sca=True",
         ),
         (
             {},
             "example_repo",
-            f"{API_URL}/{DEFAULT_SEMGREP_APP_CONFIG_URL}?dry_run=True&full_scan=True&semgrep_version={__VERSION__}&repo_name=example_repo",
+            f"{API_URL}/{DEFAULT_LENS_APP_CONFIG_URL}?dry_run=True&full_scan=True&lens_version={__VERSION__}&repo_name=example_repo",
         ),
     ],
 )
 def test_legacy_url_for_scan(
-    mocked_state: SemgrepState, mocker, extra_params, repo_name, expected_url
+    mocked_state: LensState, mocker, extra_params, repo_name, expected_url
 ):
     if repo_name:
-        mocker.patch("os.environ", {"SEMGREP_REPO_NAME": repo_name})
+        mocker.patch("os.environ", {"LENS_REPO_NAME": repo_name})
 
     assert legacy_url_for_scan(extra_params) == expected_url
 
@@ -414,16 +414,16 @@ def test_parse_config_string_jsonschema_fallback(mocked_rpc_validation_error):
 def test_parse_config_string_as_rules_no_surrogate_pairs_in_rules_file(mocker):
     """
     Rules whose original source contains characters above U+FFFF (e.g. emoji)
-    must reach semgrep-core in a form its parser can handle. For JSON input,
-    we write the content with a .json suffix so semgrep-core's JSON parser
+    must reach lens-core in a form its parser can handle. For JSON input,
+    we write the content with a .json suffix so lens-core's JSON parser
     (which handles \\uXXXX surrogate escapes natively) runs. For YAML input,
     we write it with a .yaml suffix so the YAML parser runs (which reads the
     raw UTF-8 bytes). Either way, RPC validation should succeed without a
     fallback to Python's jsonschema.
     """
-    import semgrep.rule_lang
+    import lens.rule_lang
 
-    spy = mocker.spy(semgrep.rule_lang, "run_rpc_validate_exn")
+    spy = mocker.spy(lens.rule_lang, "run_rpc_validate_exn")
 
     # Input contains a surrogate pair (valid JSON for U+1F6AB 🚫)
     rule_config = """{
@@ -443,7 +443,7 @@ def test_parse_config_string_as_rules_no_surrogate_pairs_in_rules_file(mocker):
     assert len(result.rules) == 1
     assert result.rules[0].id == "emoji-rule"
     assert len(result.errors) == 0
-    # Verify semgrep-core accepted the rules file directly, rather than
+    # Verify lens-core accepted the rules file directly, rather than
     # falling back to Python's jsonschema validation.
     spy.assert_called_once()
     assert spy.spy_exception is None
@@ -452,13 +452,13 @@ def test_parse_config_string_as_rules_no_surrogate_pairs_in_rules_file(mocker):
 @pytest.mark.quick
 @pytest.mark.osemfail
 def test_parse_config_string_skips_validation_when_none(mocker):
-    import semgrep.config_resolver
+    import lens.config_resolver
 
     validate_rpc = mocker.patch.object(
-        semgrep.config_resolver, "validate_via_rpc_with_fallback"
+        lens.config_resolver, "validate_via_rpc_with_fallback"
     )
     validate_jsonschema = mocker.patch.object(
-        semgrep.config_resolver, "run_jsonschema_validation"
+        lens.config_resolver, "run_jsonschema_validation"
     )
 
     rule_config = """{
@@ -492,13 +492,13 @@ def test_parse_config_string_skips_validation_when_none(mocker):
 def test_parse_config_string_core_only_skips_jsonschema_under_force(mocker):
     # CORE_ONLY is a hard constraint: even when --validate sets
     # force_jsonschema=True, we must take the RPC path, not jsonschema.
-    import semgrep.config_resolver
+    import lens.config_resolver
 
     validate_rpc = mocker.patch.object(
-        semgrep.config_resolver, "validate_via_rpc_with_fallback"
+        lens.config_resolver, "validate_via_rpc_with_fallback"
     )
     validate_jsonschema = mocker.patch.object(
-        semgrep.config_resolver, "run_jsonschema_validation"
+        lens.config_resolver, "run_jsonschema_validation"
     )
 
     rule_config = """{
@@ -529,10 +529,10 @@ def test_parse_config_string_core_only_skips_jsonschema_under_force(mocker):
 @pytest.mark.quick
 @pytest.mark.osemfail
 def test_parse_config_string_validates_core_rules_by_default(mocker):
-    import semgrep.config_resolver
+    import lens.config_resolver
 
     validate_rpc = mocker.patch.object(
-        semgrep.config_resolver, "validate_via_rpc_with_fallback"
+        lens.config_resolver, "validate_via_rpc_with_fallback"
     )
 
     rule_config = """{

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2024 Semgrep Inc.
+# Copyright (c) 2021-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -12,20 +12,20 @@
 #
 import pytest
 
-import semgrep.run_scan
-from semgrep.join_rule import Condition
-from semgrep.join_rule import create_collection_set_from_conditions
-from semgrep.join_rule import create_model_map
-from semgrep.join_rule import InvalidConditionError
-from semgrep.join_rule import JoinOperator
-from semgrep.join_rule import model_factory
-from semgrep.join_rule import run_join_rule
+import lens.run_scan
+from lens.join_rule import Condition
+from lens.join_rule import create_collection_set_from_conditions
+from lens.join_rule import create_model_map
+from lens.join_rule import InvalidConditionError
+from lens.join_rule import JoinOperator
+from lens.join_rule import model_factory
+from lens.join_rule import run_join_rule
 
 
 @pytest.mark.kinda_slow
 def test_join_rule_disables_product_telemetry_for_nested_scan(mocker):
     nested_scan = mocker.patch.object(
-        semgrep.run_scan,
+        lens.run_scan,
         "run_scan_and_return_json",
         return_value={"results": [], "errors": []},
     )

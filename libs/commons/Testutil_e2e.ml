@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -109,7 +109,7 @@ let run_command ?(expected_exit_code = 0) ?(on_error = fun () -> ()) argv =
   in
   let command_string = UCmd.quote_command_for_bash argv in
   eprintf "Command: %s\n%!" command_string;
-  (* nosemgrep: forbid-exec *)
+  (* nolens: forbid-exec *)
   match UCmd.run_subprocess cmd with
   | Ok (`Exited n) when n = expected_exit_code ->
       eprintf "Command '%s' exited with expected code %i\n" command_string n

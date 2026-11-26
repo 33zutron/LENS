@@ -36,7 +36,7 @@ let iter_with_view_into_neighbor_elements
 exception Map2_different_lengths
 
 let map2_exn f l1 l2 =
-  (* nosemgrep: no-list-map2 *)
+  (* nolens: no-list-map2 *)
   try List.map2 f l1 l2 with
   | Invalid_argument "List.map2" -> raise Map2_different_lengths
 
@@ -148,7 +148,7 @@ let filter_map_endo f xs =
             changed := true;
             acc
         | Some y ->
-            (* nosemgrep: physical-inequality *)
+            (* nolens: physical-inequality *)
             if x != y then changed := true;
             y :: acc)
       [] xs
@@ -156,7 +156,7 @@ let filter_map_endo f xs =
   in
   if !changed then xs' else xs
 
-(* nosemgrep: no-list-filter-map *)
+(* nolens: no-list-filter-map *)
 let filter_some xs = List.filter_map (fun x -> x) xs
 
 let rec find_some_opt p = function

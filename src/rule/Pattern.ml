@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2021 Semgrep Inc.
+ * Copyright (C) 2019-2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@ open Common
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* A semgrep pattern.
+(* A lens pattern.
  *
  * A pattern is represented essentially as an AST_generic.any
  * where special constructs are now allowed (e.g., Ellipsis),
@@ -55,7 +55,7 @@ let is_js lang =
   | None -> true
 
 (* This is used in Analyze_pattern.ml to skip
- * semgrep special identifiers.
+ * lens special identifiers.
  * new TODO: instead of relying on this list of exceptions, set 'hidden' flag
  * in the 'id_info'.
  *)

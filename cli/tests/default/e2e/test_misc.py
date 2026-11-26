@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -21,31 +21,31 @@ import pytest
 from tests.conftest import mask_floats
 from tests.conftest import mask_variable_text
 from tests.conftest import skip_on_windows
-from tests.fixtures import RunSemgrep
-from tests.semgrep_runner import SEMGREP_BASE_SCAN_COMMAND
-from tests.semgrep_runner import SEMGREP_BASE_SCAN_COMMAND_STR
+from tests.fixtures import RunLens
+from tests.lens_runner import LENS_BASE_SCAN_COMMAND
+from tests.lens_runner import LENS_BASE_SCAN_COMMAND_STR
 
-from semgrep.constants import OutputFormat
-from semgrep.util import IS_WINDOWS
+from lens.constants import OutputFormat
+from lens.util import IS_WINDOWS
 
 
 GITHUB_TEST_GIST_URL = (
-    "https://raw.githubusercontent.com/returntocorp/semgrep-rules/develop/template.yaml"
+    "https://raw.githubusercontent.com/returntocorp/lens-rules/develop/template.yaml"
 )
 
 
 @pytest.mark.kinda_slow
-def test_basic_rule__local(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_basic_rule__local(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files("rules/eqeq.yaml").stdout,
+        run_lens_on_copied_files("rules/eqeq.yaml").stdout,
         "results.json",
     )
 
 
 @pytest.mark.kinda_slow
-def test_basic_rule__relative(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_basic_rule__relative(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files("rules/../rules/eqeq.yaml").stdout,
+        run_lens_on_copied_files("rules/../rules/eqeq.yaml").stdout,
         "results.json",
     )
 
@@ -54,8 +54,8 @@ def test_basic_rule__relative(run_semgrep_on_copied_files: RunSemgrep, posix_sna
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 @skip_on_windows  # backslashes in txt file
-def test_verbose(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
-    results, _ = run_semgrep_on_copied_files(
+def test_verbose(run_lens_on_copied_files: RunLens, posix_snapshot):
+    results, _ = run_lens_on_copied_files(
         "rules/basic.yaml",
         options=["--verbose"],
         target_name="basic.py",
@@ -72,8 +72,8 @@ def test_verbose(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
 @pytest.mark.osemfail
 @pytest.mark.kinda_slow
 @skip_on_windows  # backslashes in txt file
-def test_time(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
-    results, _ = run_semgrep_on_copied_files(
+def test_time(run_lens_on_copied_files: RunLens, posix_snapshot):
+    results, _ = run_lens_on_copied_files(
         "rules/basic.yaml",
         options=["--time"],
         target_name="basic.py",
@@ -89,9 +89,9 @@ def test_time(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
 
 @pytest.mark.kinda_slow
 def test_show_supported_languages(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
-    results, _ = run_semgrep_on_copied_files(
+    results, _ = run_lens_on_copied_files(
         "rules/basic.yaml",
         options=["--show-supported-languages"],
         target_name="basic.py",
@@ -105,12 +105,12 @@ def test_show_supported_languages(
 
 
 @pytest.mark.kinda_slow
-def test_deduplication(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_deduplication(run_lens_on_copied_files: RunLens, posix_snapshot):
     """
-    Check that semgrep runs a rule only once even when different in the metadata
+    Check that lens runs a rule only once even when different in the metadata
     """
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/duplicate-rule.yaml", target_name="basic/stupid.py"
         ).stdout,
         "results.json",
@@ -119,14 +119,14 @@ def test_deduplication(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
 
 @pytest.mark.kinda_slow
 def test_noextension_with_explicit_lang(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
     """
     Check that we can scan all the target files on the command line when
     specifying the pattern with -e or -f.
     """
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             None,  # no --config
             target_name="basic/simple_python_no_extension",
             options=["--scan-unknown-extensions", "--lang", "python", "-e", "hello"],
@@ -136,13 +136,13 @@ def test_noextension_with_explicit_lang(
 
 
 @pytest.mark.kinda_slow
-def test_noextension_filtering(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_noextension_filtering(run_lens_on_copied_files: RunLens, posix_snapshot):
     """
-    Check that semgrep does not filter out files without extensions when
+    Check that lens does not filter out files without extensions when
     said file is explicitly passed AND when we use --scan-unknown-extensions.
     """
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/eqeq-python.yaml",
             target_name="basic/stupid_no_extension",
             options=["--scan-unknown-extensions"],
@@ -153,14 +153,14 @@ def test_noextension_filtering(run_semgrep_on_copied_files: RunSemgrep, posix_sn
 
 @pytest.mark.kinda_slow
 def test_noextension_filtering_optimizations(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
     """
-    Check that semgrep does not filter out files without extensions when
+    Check that lens does not filter out files without extensions when
     said file is explicitly passed AND when we use --scan-unknown-extensions.
     """
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/eqeq-python.yaml",
             target_name="basic/stupid_no_extension",
             options=["--scan-unknown-extensions", "--optimizations", "all"],
@@ -170,12 +170,12 @@ def test_noextension_filtering_optimizations(
 
 
 @pytest.mark.kinda_slow
-def test_script(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_script(run_lens_on_copied_files: RunLens, posix_snapshot):
     """
-    Validates that Semgrep scans scripts with matching shebangs
+    Validates that Lens scans scripts with matching shebangs
     """
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/eqeq-python.yaml",
             target_name="script/",
         ).stdout,
@@ -184,9 +184,9 @@ def test_script(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
 
 
 @pytest.mark.kinda_slow
-def test_basic_rule__absolute(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_basic_rule__absolute(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(Path.cwd() / "rules" / "eqeq.yaml").stdout,
+        run_lens_on_copied_files(Path.cwd() / "rules" / "eqeq.yaml").stdout,
         "results.json",
     )
 
@@ -194,24 +194,24 @@ def test_basic_rule__absolute(run_semgrep_on_copied_files: RunSemgrep, posix_sna
 @pytest.mark.slow
 @pytest.mark.osemfail
 @skip_on_windows  # backslashes in txt file
-def test_terminal_output(run_semgrep_in_test_folder: RunSemgrep, posix_snapshot):
+def test_terminal_output(run_lens_in_test_folder: RunLens, posix_snapshot):
     # Have shared settings file to test second run doesnt show metric output
     settings_file = tempfile.NamedTemporaryFile().name
 
-    results = run_semgrep_in_test_folder(
+    results = run_lens_in_test_folder(
         "rules/eqeq.yaml",
         output_format=OutputFormat.TEXT,
         force_color=True,
-        env={"SEMGREP_SETTINGS_FILE": settings_file},
+        env={"LENS_SETTINGS_FILE": settings_file},
     )
     posix_snapshot.assert_match(results.as_snapshot(), "results.txt")
 
     # Metric message should not appear in second output
-    results = run_semgrep_in_test_folder(
+    results = run_lens_in_test_folder(
         "rules/eqeq.yaml",
         output_format=OutputFormat.TEXT,
         force_color=True,
-        env={"SEMGREP_SETTINGS_FILE": settings_file},
+        env={"LENS_SETTINGS_FILE": settings_file},
     )
     posix_snapshot.assert_match(results.as_snapshot(), "results_second.txt")
 
@@ -219,23 +219,23 @@ def test_terminal_output(run_semgrep_in_test_folder: RunSemgrep, posix_snapshot)
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 @skip_on_windows  # backslashes in txt file
-def test_terminal_output_quiet(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_terminal_output_quiet(run_lens_on_copied_files: RunLens, posix_snapshot):
     """
     Quiet output should just have finding output
     """
-    results = run_semgrep_on_copied_files(
+    results = run_lens_on_copied_files(
         "rules/eqeq.yaml",
         output_format=OutputFormat.TEXT,
         force_color=True,
         quiet=True,
         # Pass named temporary file to force metric notice behavior
         # on first scan (but should not see anything cause of --quiet)
-        env={"SEMGREP_SETTINGS_FILE": tempfile.NamedTemporaryFile().name},
+        env={"LENS_SETTINGS_FILE": tempfile.NamedTemporaryFile().name},
     )
     posix_snapshot.assert_match(results.as_snapshot(), "results.txt")
 
 
-# Feed 'a' to semgrep's stdin and search for the pattern 'a', expecting
+# Feed 'a' to lens's stdin and search for the pattern 'a', expecting
 # one finding.
 @pytest.mark.kinda_slow
 @skip_on_windows  # masking code needs fix
@@ -246,18 +246,18 @@ def test_stdin_input(posix_snapshot):
         "has_shown_metrics_notification: true\n"
     )
     if IS_WINDOWS:
-        cmd = [sys.executable] + SEMGREP_BASE_SCAN_COMMAND
+        cmd = [sys.executable] + LENS_BASE_SCAN_COMMAND
     else:
-        cmd = SEMGREP_BASE_SCAN_COMMAND
+        cmd = LENS_BASE_SCAN_COMMAND
     process = subprocess.Popen(
         cmd + ["--json", "-e", "a", "--lang", "js", "-"],
         encoding="utf-8",
         env={
             **os.environ,
-            "SEMGREP_SETTINGS_FILE": unique_settings_file,
-            "SEMGREP_VERSION_CACHE_PATH": tempfile.TemporaryDirectory().name,
-            "SEMGREP_ENABLE_VERSION_CHECK": "0",
-            "SEMGREP_SEND_METRICS": "off",
+            "LENS_SETTINGS_FILE": unique_settings_file,
+            "LENS_VERSION_CACHE_PATH": tempfile.TemporaryDirectory().name,
+            "LENS_ENABLE_VERSION_CHECK": "0",
+            "LENS_SEND_METRICS": "off",
         },
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
@@ -278,15 +278,15 @@ def test_subshell_input(posix_snapshot):
         [
             "bash",
             "-c",
-            f"{SEMGREP_BASE_SCAN_COMMAND_STR} --json -e 'a' --lang js <(echo 'a')",
+            f"{LENS_BASE_SCAN_COMMAND_STR} --json -e 'a' --lang js <(echo 'a')",
         ],
         encoding="utf-8",
         env={
             **os.environ,
-            "SEMGREP_SETTINGS_FILE": unique_settings_file,
-            "SEMGREP_VERSION_CACHE_PATH": tempfile.TemporaryDirectory().name,
-            "SEMGREP_ENABLE_VERSION_CHECK": "0",
-            "SEMGREP_SEND_METRICS": "off",
+            "LENS_SETTINGS_FILE": unique_settings_file,
+            "LENS_VERSION_CACHE_PATH": tempfile.TemporaryDirectory().name,
+            "LENS_ENABLE_VERSION_CHECK": "0",
+            "LENS_SEND_METRICS": "off",
         },
     )
     # Clean fingerprint from result since it's path dependent and that changes
@@ -307,24 +307,24 @@ def test_multi_subshell_input(posix_snapshot):
         [
             "bash",
             "-c",
-            f"{SEMGREP_BASE_SCAN_COMMAND_STR} --json -e 'a' --lang js <(echo 'a') <(echo 'b + a')",
+            f"{LENS_BASE_SCAN_COMMAND_STR} --json -e 'a' --lang js <(echo 'a') <(echo 'b + a')",
         ],
         encoding="utf-8",
         env={
             **os.environ,
-            "SEMGREP_SETTINGS_FILE": unique_settings_file,
-            "SEMGREP_VERSION_CACHE_PATH": tempfile.TemporaryDirectory().name,
-            "SEMGREP_ENABLE_VERSION_CHECK": "0",
-            "SEMGREP_SEND_METRICS": "off",
+            "LENS_SETTINGS_FILE": unique_settings_file,
+            "LENS_VERSION_CACHE_PATH": tempfile.TemporaryDirectory().name,
+            "LENS_ENABLE_VERSION_CHECK": "0",
+            "LENS_SEND_METRICS": "off",
         },
     )
     posix_snapshot.assert_match(mask_variable_text(stdout), "results.json")
 
 
 @pytest.mark.kinda_slow
-def test_multiline(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_multiline(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/multiline.yaml", target_name="multiline"
         ).stdout,
         "results.json",
@@ -332,61 +332,61 @@ def test_multiline(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
 
 
 @pytest.mark.slow
-def test_url_rule(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_url_rule(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(GITHUB_TEST_GIST_URL).stdout, "results.json"
+        run_lens_on_copied_files(GITHUB_TEST_GIST_URL).stdout, "results.json"
     )
 
 
 @pytest.mark.slow
-def test_auto_config(run_semgrep_on_copied_files: RunSemgrep, mocker):
+def test_auto_config(run_lens_on_copied_files: RunLens, mocker):
     # --config auto will change over time, so lets just make sure this doesn't error out
     # TODO: Mock config response for more detailed testing
     # Use --no-strict to avoid error from unmatched nosem comment
-    mocker.patch("semgrep.metrics.Metrics.send")
-    run_semgrep_on_copied_files(
+    mocker.patch("lens.metrics.Metrics.send")
+    run_lens_on_copied_files(
         "auto", target_name="auto", force_metrics_off=False, strict=False
     )
     assert True
 
 
 @pytest.mark.kinda_slow
-def test_hidden_rule__explicit(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_hidden_rule__explicit(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files("rules/hidden/.hidden").stdout, "results.json"
+        run_lens_on_copied_files("rules/hidden/.hidden").stdout, "results.json"
     )
 
 
 # we use to throw an error for such test because we would not explore
 # dot files under the config, but we don't anymore to simplify things.
 @pytest.mark.kinda_slow
-def test_hidden_rule__implicit(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_hidden_rule__implicit(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files("rules/hidden/").stdout, "results.json"
+        run_lens_on_copied_files("rules/hidden/").stdout, "results.json"
     )
 
 
 @pytest.mark.kinda_slow
-def test_nested_patterns_rule(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_nested_patterns_rule(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files("rules/nested-patterns.yaml").stdout, "results.json"
+        run_lens_on_copied_files("rules/nested-patterns.yaml").stdout, "results.json"
     )
 
 
 @pytest.mark.kinda_slow
 def test_nested_pattern_either_rule(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files("rules/nested-pattern-either.yaml").stdout,
+        run_lens_on_copied_files("rules/nested-pattern-either.yaml").stdout,
         "results.json",
     )
 
 
 @pytest.mark.kinda_slow
-def test_multiple_configs_file(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_multiple_configs_file(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             ["rules/eqeq.yaml", "rules/eqeq-python.yaml"]
         ).stdout,
         "results.json",
@@ -395,18 +395,18 @@ def test_multiple_configs_file(run_semgrep_on_copied_files: RunSemgrep, posix_sn
 
 @pytest.mark.slow
 def test_multiple_configs_different_origins(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(["rules/eqeq.yaml", GITHUB_TEST_GIST_URL]).stdout,
+        run_lens_on_copied_files(["rules/eqeq.yaml", GITHUB_TEST_GIST_URL]).stdout,
         "results.json",
     )
 
 
 @pytest.mark.kinda_slow
-def test_taint_mode(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_taint_mode(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/taint.yaml",
             target_name="taint/taint.py",
         ).stdout,
@@ -416,12 +416,12 @@ def test_taint_mode(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
 
 @pytest.mark.kinda_slow
 def test_deduplication_same_message(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
     """
     With same message, should deduplicate and only have one finding
     """
-    output, _ = run_semgrep_on_copied_files(
+    output, _ = run_lens_on_copied_files(
         "rules/deduplication/duplication-same-message.yaml",
         target_name="deduplication/deduplication.py",
     )
@@ -432,9 +432,9 @@ def test_deduplication_same_message(
 
 @pytest.mark.kinda_slow
 def test_deduplication_different_message(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
-    output, _ = run_semgrep_on_copied_files(
+    output, _ = run_lens_on_copied_files(
         "rules/deduplication/duplication-different-message.yaml",
         target_name="deduplication/deduplication.py",
     )
@@ -446,10 +446,10 @@ def test_deduplication_different_message(
 @pytest.mark.osemfail
 @pytest.mark.kinda_slow
 def test_inventory_finding_output(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/inventory-rule.yaml",
             target_name="auto/fingerprints",
             strict=False,
@@ -462,10 +462,10 @@ def test_inventory_finding_output(
 @pytest.mark.osemfail
 @pytest.mark.kinda_slow
 def test_experiment_finding_output(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/experiment-rule.yaml",
             target_name="auto/fingerprints",
             strict=False,
@@ -477,9 +477,9 @@ def test_experiment_finding_output(
 
 @pytest.mark.osemfail
 @pytest.mark.quick
-def multi_focus_metavariable(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def multi_focus_metavariable(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/multi-focus-metavariable.yaml",
             target_name="targets/multi-focus-metavariable.py",
             strict=False,
@@ -494,9 +494,9 @@ def multi_focus_metavariable(run_semgrep_on_copied_files: RunSemgrep, posix_snap
 # The JavaScript rule should match only the JavaScript file and the Python
 # rule should match only the Python file.
 @pytest.mark.kinda_slow
-def test_language_filtering(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_language_filtering(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/language-filtering.yaml",
             target_name="language-filtering",
         ).stdout,
@@ -505,11 +505,11 @@ def test_language_filtering(run_semgrep_on_copied_files: RunSemgrep, posix_snaps
 
 
 # A simple test to check that per-rule include/exclude filtering is
-# taking place in semgrep-core and osemgrep.
+# taking place in lens-core and olens.
 @pytest.mark.kinda_slow
-def test_per_rule_include(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_per_rule_include(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/per-rule-include.yaml",
             target_name="per-rule-include",
         ).stdout,
@@ -517,13 +517,13 @@ def test_per_rule_include(run_semgrep_on_copied_files: RunSemgrep, posix_snapsho
     )
 
 
-# Check that pysemgrep and osemgrep sort the results identically.
+# Check that pylens and olens sort the results identically.
 # We don't really need it as a product feature but it's important to
-# compare the output of osemgrep with the output of pysemgrep.
+# compare the output of olens with the output of pylens.
 @pytest.mark.slow
-def test_sort_json_findings(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_sort_json_findings(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/sort-findings.yaml",
             target_name="sort-findings",
             strict=False,
@@ -532,13 +532,13 @@ def test_sort_json_findings(run_semgrep_on_copied_files: RunSemgrep, posix_snaps
     )
 
 
-# Check that pysemgrep and osemgrep sort the results as intended
+# Check that pylens and olens sort the results as intended
 # when presenting them in text format.
 @pytest.mark.slow
 @pytest.mark.osemfail
-def test_sort_text_findings(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_sort_text_findings(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/sort-findings.yaml",
             target_name="sort-findings",
             strict=False,
@@ -552,9 +552,9 @@ def test_sort_text_findings(run_semgrep_on_copied_files: RunSemgrep, posix_snaps
 @pytest.mark.osemfail
 @skip_on_windows  # backslashes in txt file
 def test_match_rules_same_message(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
-    results, _ = run_semgrep_on_copied_files(
+    results, _ = run_lens_on_copied_files(
         "rules/two_rules_same_message.yaml",
         target_name="basic.py",
         output_format=OutputFormat.TEXT,
@@ -568,9 +568,9 @@ def test_match_rules_same_message(
 
 # It should accept rules with the new "CRITICAL" severity
 @pytest.mark.kinda_slow
-def test_critical_severity(run_semgrep_on_copied_files: RunSemgrep, posix_snapshot):
+def test_critical_severity(run_lens_on_copied_files: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/severity_critical.yaml",
             target_name="basic.py",
         ).stdout,
@@ -582,13 +582,13 @@ def test_critical_severity(run_semgrep_on_copied_files: RunSemgrep, posix_snapsh
 @pytest.mark.osemfail
 @pytest.mark.parametrize("output_format", [OutputFormat.TEXT, OutputFormat.JSON])
 def test_structured_execution_logs(
-    run_semgrep_on_copied_files: RunSemgrep, tmp_path, output_format
+    run_lens_on_copied_files: RunLens, tmp_path, output_format
 ):
     log_file = tmp_path / "events.jsonl"
-    result = run_semgrep_on_copied_files(
+    result = run_lens_on_copied_files(
         "rules/eqeq.yaml",
         target_name="basic/stupid.py",
-        env={"SEMGREP_LOG_JSON_FILE": str(log_file)},
+        env={"LENS_LOG_JSON_FILE": str(log_file)},
         quiet=False,
         output_format=output_format,
     )
@@ -621,7 +621,7 @@ def test_structured_execution_logs(
         ]
         assert phase_events == [f"{phase} started", f"{phase} completed"]
     assert '"schema.version"' not in result.stderr
-    baseline = run_semgrep_on_copied_files(
+    baseline = run_lens_on_copied_files(
         "rules/eqeq.yaml",
         target_name="basic/stupid.py",
         quiet=False,

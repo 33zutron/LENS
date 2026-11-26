@@ -1,6 +1,6 @@
 (* Sophia Roshal
  *
- * Copyright (C) 2023 Semgrep Inc.
+ * Copyright (C) 2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -65,7 +65,7 @@ let _is_imp_std s =
 
 let freshvar =
   (* TODO: false positive *)
-  (* nosemgrep: no-ref-declarations-at-top-scope *)
+  (* nolens: no-ref-declarations-at-top-scope *)
   let store = ref 0 in
   fun () ->
     incr store;

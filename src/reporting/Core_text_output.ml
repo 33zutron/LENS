@@ -1,7 +1,7 @@
 (* Yoann Padioleau
  *
  * Copyright (C) 2013 Facebook
- * Copyright (C) 2020-2024 Semgrep Inc.
+ * Copyright (C) 2020-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,16 +15,16 @@
  *)
 open Common
 open Fpath_.Operators
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* This file is mostly deprecated. You should use osemgrep text output instead
- * and stop using directly semgrep-core.
+(* This file is mostly deprecated. You should use olens text output instead
+ * and stop using directly lens-core.
  *
- * it is unfortunately still useful to use the text output of semgrep-core,
- * even when combined with the -rules and -targets passed from pysemgrep,
+ * it is unfortunately still useful to use the text output of lens-core,
+ * even when combined with the -rules and -targets passed from pylens,
  * to better see what is going on when debugging.
  *)
 

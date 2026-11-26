@@ -1,7 +1,7 @@
 (* Yoann Padioleau, Iago Abal
  *
  * Copyright (C) 2009, 2010, 2011 Facebook
- * Copyright (C) 2020-2024 Semgrep
+ * Copyright (C) 2020-2024 Lens
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -522,7 +522,7 @@ and cfg_of_stmts ?tok (xs : stmt list) : IL.cfg * Fun_CFG.lambdas_cfgs =
     let cfg = CFG.make g enteri exiti in
     let nested =
       (* Nested definitions should always be analyzed (among other reasons due to
-        compatibility with Semgrep CE), so we consider them reachable. *)
+        compatibility with Lens CE), so we consider them reachable. *)
       cfg.graph#nodes |> Int_map.to_seq
       |> Seq.filter (fun (_nodei, node) ->
           match node.n with

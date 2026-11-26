@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024 Semgrep Inc.
+# Copyright (c) 2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,8 +14,8 @@ from unittest.mock import patch
 
 import pytest
 
-from semgrep.git import clean_project_url
-from semgrep.git import get_project_url
+from lens.git import clean_project_url
+from lens.git import get_project_url
 
 
 @pytest.mark.quick
@@ -29,7 +29,7 @@ def test_git_url_clean():
 
 
 @pytest.mark.quick
-@patch("semgrep.git.clean_project_url")
+@patch("lens.git.clean_project_url")
 def test_get_project_url(patched_clean_project_url):
     get_project_url()
     patched_clean_project_url.assert_called_once()

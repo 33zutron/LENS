@@ -4,7 +4,7 @@ rules:
       1
     fix: |
       once
-    message: Semgrep found a match
+    message: Lens found a match
     languages:
       - python
     severity: WARNING
@@ -13,7 +13,7 @@ rules:
       1
     fix: |
       twice
-    message: Semgrep found a match
+    message: Lens found a match
     languages:
       - python
     severity: WARNING

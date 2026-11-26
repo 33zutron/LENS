@@ -1,11 +1,11 @@
 (library
- (public_name semgrep.fixing.tests)
- (name semgrep_fixing_tests)
+ (public_name lens.fixing.tests)
+ (name lens_fixing_tests)
  (wrapped false)
  (libraries
    commons
-   semgrep.parsing
-   semgrep.engine.tests
+   lens.parsing
+   lens.engine.tests
  )
  (preprocess (pps ppx_deriving.show ppx_profiling commons.ppx))
 )

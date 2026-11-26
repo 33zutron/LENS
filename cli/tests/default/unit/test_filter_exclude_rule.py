@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2024 Semgrep Inc.
+# Copyright (c) 2022-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,8 +15,8 @@ from typing import Any
 
 import pytest
 
-from semgrep.config_resolver import Config
-from semgrep.exclude_rules import filter_exclude_rule
+from lens.config_resolver import Config
+from lens.exclude_rules import filter_exclude_rule
 
 MAX_RULES_TO_EXCLUDE = 10
 
@@ -25,7 +25,7 @@ MAX_RULES_TO_EXCLUDE = 10
 def test_parse_exclude_rules_auto() -> None:
     configs_obj, _ = Config.from_config_list(
         configs=("auto",),
-        project_url="git@github.com/returntocorp/semgrep",
+        project_url="git@github.com/returntocorp/lens",
     )
 
     all_rules = configs_obj.get_rules(False)

@@ -1,0 +1,2 @@
+__LENS_EXPRESSION
+$X = $O.foo(). ... .bar(). ...;

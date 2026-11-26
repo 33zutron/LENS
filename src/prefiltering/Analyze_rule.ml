@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Cooper Pierce
 
-   Copyright (C) Semgrep Inc.
+   Copyright (C) Lens Inc.
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License version 2.1 as
@@ -291,7 +291,7 @@ let prefilter_of_formula ~interfile ~analyzer f : prefilter option =
        if the metavariable meets certain conditions. Note that, in general, if
        we're looking for a string matching a certain regex, that regex may
        not match the source file, but there could be a string expression that
-       would match it at runtime, and that can be known to Semgrep statically
+       would match it at runtime, and that can be known to Lens statically
        via constant folding. *)
     match (analyzer : Analyzer.t) with
     | LRegex

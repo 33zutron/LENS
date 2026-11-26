@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/4301
+// https://github.com/returntocorp/lens/issues/4301
 
 // ERROR:
 var a = require('b')

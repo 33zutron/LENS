@@ -1,0 +1,27 @@
+; OCaml implementation of the 'lens login' and 'lens logout' subcommands.
+;
+(library
+  (public_name lens.olens_cli_login)
+  (name olens_cli_login)
+  (wrapped false)
+  (libraries
+  ; External libraries
+    ANSITerminal
+    cmdliner
+    ocolor
+    commons
+
+    olens_configuring
+    olens_core
+    olens_networking
+    olens_reporting
+  )
+ (preprocess
+   (pps
+     ppx_profiling
+     ppx_deriving.show
+     ppx_deriving.eq
+     ppx_hash
+   )
+ )
+)

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,11 +11,11 @@
    LICENSE for more details.
 *)
 (*
-   Target discovery can now be done in semgrep-core using scanning roots
-   passed by pysemgrep.
+   Target discovery can now be done in lens-core using scanning roots
+   passed by pylens.
 
    This module takes care of splitting targets by language as requested
-   by the legacy semgrep-core input interface.
+   by the legacy lens-core input interface.
 *)
 
 open Common

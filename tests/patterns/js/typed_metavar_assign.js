@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/3122
+// https://github.com/returntocorp/lens/issues/3122
 
 function foo(someVar, obj) {
   two = 2 // implicit declaration

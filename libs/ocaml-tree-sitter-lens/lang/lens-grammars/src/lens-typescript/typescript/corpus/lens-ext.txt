@@ -1,0 +1,156 @@
+==================================
+Expression Ellipsis
+==================================
+
+...
+foo(...);
+x + ...;
+switch (...) { }
+if (...) { }
+[..., 1, ...]
+
+---
+
+(program
+  (expression_statement
+    (lens_expression_ellipsis))
+  (expression_statement
+    (call_expression
+      (identifier)
+      (arguments
+        (lens_expression_ellipsis))))
+  (expression_statement
+    (binary_expression
+      (identifier)
+      (lens_expression_ellipsis)))
+  (switch_statement
+    (parenthesized_expression
+      (lens_expression_ellipsis))
+    (switch_body))
+  (if_statement
+    (parenthesized_expression
+      (lens_expression_ellipsis))
+    (statement_block))
+  (expression_statement
+    (array
+      (lens_expression_ellipsis)
+      (number)
+      (lens_expression_ellipsis))))
+
+==================================
+Case pattern
+==================================
+
+case "Foo":
+  ...
+
+---
+
+(program
+  (switch_case
+    (string
+      (string_fragment))
+    (expression_statement
+      (lens_expression_ellipsis))))
+
+==================================
+Ellipsis in class body
+==================================
+
+class $C {
+  ...
+  @$DEC(...)
+  $FUNC(@$PARAMDEC $BODY: $TYPE, ...) { ... }
+  ...
+}
+
+---
+
+(program
+  (class_declaration
+    (type_identifier)
+    (class_body
+      (lens_ellipsis)
+      (decorator
+        (call_expression
+          (identifier)
+          (arguments
+            (lens_expression_ellipsis))))
+      (method_definition
+        (property_identifier)
+        (formal_parameters
+          (required_parameter
+            (decorator
+              (identifier))
+            (identifier)
+            (type_annotation
+              (type_identifier)))
+          (lens_ellipsis))
+        (statement_block
+          (expression_statement
+            (lens_expression_ellipsis))))
+      (lens_ellipsis))))
+
+==================================
+Ellipsis in function params
+==================================
+
+function foo(...) { ... }
+function foo(..., a) { ... }
+function foo(a, ...) { ... }
+function foo(..., a, ...) { ... }
+function foo(..., @Bar(...) $X, ...) { ... }
+
+---
+
+(program
+  (function_declaration
+    (identifier)
+    (formal_parameters
+      (lens_ellipsis))
+    (statement_block
+      (expression_statement
+        (lens_expression_ellipsis))))
+  (function_declaration
+    (identifier)
+    (formal_parameters
+      (lens_ellipsis)
+      (required_parameter
+        (identifier)))
+    (statement_block
+      (expression_statement
+        (lens_expression_ellipsis))))
+  (function_declaration
+    (identifier)
+    (formal_parameters
+      (required_parameter
+        (identifier))
+      (lens_ellipsis))
+    (statement_block
+      (expression_statement
+        (lens_expression_ellipsis))))
+  (function_declaration
+    (identifier)
+    (formal_parameters
+      (lens_ellipsis)
+      (required_parameter
+        (identifier))
+      (lens_ellipsis))
+    (statement_block
+      (expression_statement
+        (lens_expression_ellipsis))))
+  (function_declaration
+    (identifier)
+    (formal_parameters
+      (lens_ellipsis)
+      (required_parameter
+        (decorator
+          (call_expression
+            (identifier)
+            (arguments
+              (lens_expression_ellipsis))))
+        (identifier))
+      (lens_ellipsis))
+    (statement_block
+      (expression_statement
+        (lens_expression_ellipsis)))))

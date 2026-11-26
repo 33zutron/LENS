@@ -3,19 +3,19 @@
 def bar():
     a == a
     a == a
-    a == a  # nosemgrep
+    a == a  # nolens
     a == a
 
-    x == x  # nosemgrep
+    x == x  # nolens
 
     y == y
 
-    z == z  # nosemgrep
+    z == z  # nolens
 
     x == 5
-    y == 5  # nosemgrep
+    y == 5  # nolens
 
-    baz == 4  # nosemgrep
+    baz == 4  # nolens
     baz == 4
 
     potato == 3

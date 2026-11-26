@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2025 Semgrep Inc.
+# Copyright (c) 2023-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
 # Type definitions used in tests
 #
 # These definitions are presumably not placed in 'conftest.py' so they can be
-# shared across semgrep and semgrep-proprietary, each having their own
+# shared across lens and lens-proprietary, each having their own
 # 'conftest.py'.
 # TODO: confirm the assumption above
 #
@@ -26,7 +26,7 @@ from typing import Optional
 from typing import Protocol
 from typing import TYPE_CHECKING
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 
 # TYPE_CHECKING is a constant that ensures some imports (e.g., from
@@ -38,13 +38,13 @@ from semgrep.constants import OutputFormat
 # TODO: simplify!
 #
 if TYPE_CHECKING:
-    from tests.conftest import SemgrepResult
+    from tests.conftest import LensResult
 
 
-# The type of run_semgrep functions defined in a project's 'conftest.py'.
+# The type of run_lens functions defined in a project's 'conftest.py'.
 # Run 'make typecheck' to run mypy on the project.
 #
-class RunSemgrep(Protocol):
+class RunLens(Protocol):
     def __call__(
         self,
         config: str | Path | list[str] | None = None,
@@ -71,15 +71,15 @@ class RunSemgrep(Protocol):
         # the context manager that can also be provided:
         prepare_workspace: Callable[[], None] = lambda: None,
         teardown_workspace: Callable[[], None] = lambda: None,
-        # Context manager to wrap around the semgrep invocation:
+        # Context manager to wrap around the lens invocation:
         context_manager: Optional[ContextManager] = None,
         is_logged_in_weak: bool = False,
-        # The --project-root option is used to prevent the .semgrepignore
+        # The --project-root option is used to prevent the .lensignore
         # at the root of the git project to be taken into account when testing,
-        # which is a new behavior in osemgrep. It makes semgrep view the
+        # which is a new behavior in olens. It makes lens view the
         # project as a non-git project. This option is only used to manage
-        # the transition from pysemgrep to osemgrep. Avoid using it if
+        # the transition from pylens to olens. Avoid using it if
         # you can.
-        osemgrep_force_project_root: Optional[str] = None,
-    ) -> SemgrepResult:
+        olens_force_project_root: Optional[str] = None,
+    ) -> LensResult:
         ...

@@ -1,0 +1,28 @@
+(library
+ (public_name lens.interfaces)
+ (name lens_interfaces)
+ (wrapped false)
+ (modules
+   Analyzer
+   Lang
+   Language
+   Rule_ID
+   Rule_schema_v2_adapter
+   Lens_output_v1_t
+   Lens_output_v1_j
+   Target_selector)
+ (libraries
+   base
+   collections
+   atdgen-runtime
+   yojson
+   commons
+   paths)
+ (preprocess
+   (pps
+     ppx_deriving.show
+     ppx_deriving.eq
+     ppx_deriving.ord
+     ppx_deriving_yojson
+     ppx_hash
+     ppx_sexp_conv)))

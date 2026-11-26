@@ -1,6 +1,6 @@
 (* Romain J
  *
- * Copyright (c) 2023 Semgrep Inc.
+ * Copyright (c) 2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -22,7 +22,7 @@ module G = AST_generic
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Cairo parser using tree-sitter-lang/semgrep-cairo and converting directly
+(* Cairo parser using tree-sitter-lang/lens-cairo and converting directly
  * to AST_generic.ml
  *
  * Cairo is a language based on Rust, therefore this transformer has been
@@ -967,12 +967,12 @@ let parse_expression_or_source_file str =
   match res.errors with
   | [] -> res
   | _ -> (
-      let expr_str = "__SEMGREP_EXPRESSION " ^ str in
+      let expr_str = "__LENS_EXPRESSION " ^ str in
       let expr_res = Tree_sitter_cairo.Parse.string expr_str in
       match expr_res.errors with
       | [] -> expr_res
       | _ ->
-          let stmt_str = "__SEMGREP_STATEMENT " ^ str in
+          let stmt_str = "__LENS_STATEMENT " ^ str in
           Tree_sitter_cairo.Parse.string stmt_str)
 
 let parse_pattern str =

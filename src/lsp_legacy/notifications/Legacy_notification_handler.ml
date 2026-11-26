@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) 2019-2023 Semgrep, Inc.
+ * Copyright (C) 2019-2023 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -148,18 +148,18 @@ let on_notification (server : Legacy_rpc_server.t) notification =
     | CN.Exit ->
         Logs.debug (fun m -> m "Server exiting");
         ({ server with state = Legacy_lsp_.State.Stopped }, None)
-    | CN.UnknownNotification { method_ = "semgrep/refreshRules"; _ } ->
+    | CN.UnknownNotification { method_ = "lens/refreshRules"; _ } ->
         (server, Some (Legacy_scan_helpers.refresh_rules session))
-    | CN.UnknownNotification { method_ = "semgrep/logout"; _ } ->
+    | CN.UnknownNotification { method_ = "lens/logout"; _ } ->
         let reply =
           if
-            Semgrep_settings.save
-              { (Semgrep_settings.load ()) with api_token = None }
+            Lens_settings.save
+              { (Lens_settings.load ()) with api_token = None }
           then
             let notif_reply =
               Reply.now
                 (notify_show_message ~kind:MessageType.Info
-                   "Logged out of Semgrep Code")
+                   "Logged out of Lens Code")
             in
             let refresh_reply = Legacy_scan_helpers.refresh_rules session in
             Reply.both notif_reply refresh_reply
@@ -169,14 +169,14 @@ let on_notification (server : Legacy_rpc_server.t) notification =
         in
         (server, Some reply)
     | CN.UnknownNotification
-        { method_ = "semgrep/scanWorkspace"; params = Some json } -> (
+        { method_ = "lens/scanWorkspace"; params = Some json } -> (
         match session.cached_session.initialized with
         | false ->
             ( server,
               Some
                 (Reply.now
                    (notify_show_message ~kind:MessageType.Warning
-                      "The Semgrep Extension is still loading rules. Please \
+                      "The Lens Extension is still loading rules. Please \
                        wait a moment and try again.")) )
         | true ->
             let full =

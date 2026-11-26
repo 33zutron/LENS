@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,13 +10,13 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-(* The type of the semgrep "core" scan. We define it here so that
-   semgrep and semgrep-proprietary use the same definition *)
+(* The type of the lens "core" scan. We define it here so that
+   lens and lens-proprietary use the same definition *)
 type func = Core_scan_config.t -> Core_result.result_or_exn
 
 (* See the comment for scan() below explaining the need for those capabilities *)
-(* Entry point. This is used in Core_CLI.ml for semgrep-core, in tests,
- * and finally in osemgrep.
+(* Entry point. This is used in Core_CLI.ml for lens-core, in tests,
+ * and finally in olens.
  *
  * [scan config] runs a core scan with a fixed list of targets
  * and rules and capture any exception.
@@ -24,20 +24,20 @@ type func = Core_scan_config.t -> Core_result.result_or_exn
  * parallel, with some time and memory limits, and aggregates the results.
  *
  * It can print things on stdout depending on Core_scan_config.output_format:
- *  - incremental dots when used from pysemgrep in Json true mode
- *  - incremental matches when used from semgrep-core in Text mode
- *  - nothing when called from osemgrep (or the playground), unless
+ *  - incremental dots when used from pylens in Json true mode
+ *  - incremental matches when used from lens-core in Text mode
+ *  - nothing when called from olens (or the playground), unless
  *    file_match_hook is also set in which case it can display incremental
  *    matches too
  * The rest of the output is done in the caller of scan() such as
- * Core_CLI.main_exn() for semgrep-core with Core_CLI.output_core_results().
+ * Core_CLI.main_exn() for lens-core with Core_CLI.output_core_results().
  *
  * The scan function has the type [func] defined above.
  *)
 val scan : Core_scan_config.t -> Core_result.result_or_exn
 
 (*****************************************************************************)
-(* Utilities functions used in tests or semgrep-pro *)
+(* Utilities functions used in tests or lens-pro *)
 (*****************************************************************************)
 
 (* Compute the set of targets, either by reading what was passed
@@ -48,14 +48,14 @@ val scan : Core_scan_config.t -> Core_result.result_or_exn
 val targets_of_config :
   Core_scan_config.t ->
   Rule.t list ->
-  Target.t list * Core_error.t list * Semgrep_output_v1_t.skipped_target list
+  Target.t list * Core_error.t list * Lens_output_v1_t.skipped_target list
 
-(* pysemgrep/semgrep-core RPC *)
-val get_targets_for_pysemgrep :
+(* pylens/lens-core RPC *)
+val get_targets_for_pylens :
   par_conf:Parallelism_config.t ->
   num_jobs:int ->
-  Semgrep_output_v1_t.scanning_roots ->
-  Semgrep_output_v1_t.target_discovery_result
+  Lens_output_v1_t.scanning_roots ->
+  Lens_output_v1_t.target_discovery_result
 
 (* Get the rules *)
 val rules_of_config : Core_scan_config.t -> Rule_error.rules_and_invalid
@@ -64,7 +64,7 @@ val rules_of_config : Core_scan_config.t -> Rule_error.rules_and_invalid
 val applicable_rules_of_config :
   Core_scan_config.t -> Rule_error.rules_and_invalid
 
-(* This is also used by semgrep-proprietary. It filters the rules that
+(* This is also used by lens-proprietary. It filters the rules that
    apply to a given target file for a given analyzer.
    It takes into account the analyzer (specified by 'languages' field)
    and the per-rule include/exclude patterns; possibly more in the future.
@@ -76,7 +76,7 @@ val rules_for_target :
   Rule.t list ->
   Rule.t list
 
-(* This is used only by semgrep-proprietary.
+(* This is used only by lens-proprietary.
    Compare to select_applicable_rules_for_target which additionally can
    honor per-rule include/exclude patterns based on the target path.
 *)
@@ -86,14 +86,14 @@ val rules_for_analyzer :
 (* exposed for SCA_scan *)
 val origin_satisfy_paths_filter : Origin.t -> Rule.path_filter -> bool
 
-(* This function prints a dot, which is consumed by pysemgrep to update
+(* This function prints a dot, which is consumed by pylens to update
    the progress bar if the output_format is Json true.
    See also `core_runner.py`
 *)
 val print_cli_progress : Core_scan_config.t -> unit
 
 (* This function prints the number of additional targets, which is consumed by
-   pysemgrep to update the progress bar, if the output_format is Json true.
+   pylens to update the progress bar, if the output_format is Json true.
    This was used by extract-mode (TODO still useful?).
    See `core_runner.py`
 *)
@@ -112,14 +112,14 @@ val filter_files_with_too_many_matches_and_transform_as_timeout :
   Core_result.processed_match list ->
   Core_result.processed_match list
   * Core_error.t list
-  * Semgrep_output_v1_j.skipped_target list
+  * Lens_output_v1_j.skipped_target list
 
 type post_processor =
   Core_result.processed_match -> Core_result.processed_match * Core_error.t list
 
 val post_process_matches : post_processor -> Core_result.t -> Core_result.t
 val post_autofix : post_processor
-val post_nosemgrep : strict:bool -> post_processor
+val post_nolens : strict:bool -> post_processor
 
 (* small wrapper around Parse_target.parse_and_resolve_name *)
 val parse_and_resolve_name :
@@ -138,7 +138,7 @@ val log_scan_inputs :
   Core_scan_config.t ->
   targets:Target.t list ->
   errors:Core_error.t list ->
-  skipped:Semgrep_output_v1_t.skipped_target list ->
+  skipped:Lens_output_v1_t.skipped_target list ->
   valid_rules:Rule.t list ->
   invalid_rules:Rule_error.invalid_rule list ->
   unit

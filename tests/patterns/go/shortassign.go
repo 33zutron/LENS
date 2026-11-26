@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/2452
+// https://github.com/returntocorp/lens/issues/2452
 package foo
 
 import "fmt"

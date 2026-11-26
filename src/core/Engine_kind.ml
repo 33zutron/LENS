@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,8 +10,8 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-type t = Semgrep_output_v1_t.engine_kind
+type t = Lens_output_v1_t.engine_kind
 (* = `OSS | `PRO *) [@@deriving ord, show]
 
-type engine_of_finding = Semgrep_output_v1_t.engine_of_finding
+type engine_of_finding = Lens_output_v1_t.engine_of_finding
 [@@deriving ord, show]

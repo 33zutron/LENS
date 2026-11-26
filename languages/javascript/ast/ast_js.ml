@@ -40,7 +40,7 @@
  *    thx to arrows).
  *  - old: no Period vs Bracket (actually good to differentiate)
  *  - old: no Object vs Array (actually good to differentiate)
- *  - old: no type (actually need that back for semgrep-typescript)
+ *  - old: no type (actually need that back for lens-typescript)
  *  - no func vs method vs arrow, just a single function_definition type
  *  - no class elements vs object elements
  *  - No Nop (EmptyStmt); transformed in an empty Block,
@@ -192,7 +192,7 @@ and expr =
   (* old: we used to have a Nop, without any token attached, which allowed
    * to simplify a bit the AST by replacing some 'expr option' into simply
    * 'expr' (for v_init, ForClassic, Return) but this bited us in the long term
-   * in semgrep where we don't want metavariables to match code that does
+   * in lens where we don't want metavariables to match code that does
    * not exist.
    *)
   (* should be a statement ... *)
@@ -584,7 +584,7 @@ and partial =
   | PartialTry of tok * stmt
   | PartialCatch of catch
   | PartialFinally of (tok * stmt)
-  (* partial object, used only in JSON semgrep patterns for now *)
+  (* partial object, used only in JSON lens patterns for now *)
   | PartialSingleField of string wrap (* an id or str *) * tok (* : *) * expr
   (* not really a partial, but the partial machinery can help with that *)
   | PartialFunOrFuncDef of tok (* ... *) * function_definition

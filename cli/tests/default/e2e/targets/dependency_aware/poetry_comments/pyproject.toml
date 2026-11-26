@@ -30,6 +30,6 @@ preview = true
 
 [[tool.poetry.source]]
 # comments
-name = "semgrep"
-url = "https://artifact.semgrep.com/"
+name = "lens"
+url = "https://artifact.lens.com/"
 secondary = false

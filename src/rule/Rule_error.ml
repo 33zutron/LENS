@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -35,7 +35,7 @@ open Rule
 (*****************************************************************************)
 
 (* Those are recoverable errors; We can just skip the rules containing them.
- * TODO? put in semgrep_output_v1.atd?
+ * TODO? put in lens_output_v1.atd?
  *)
 type invalid_rule = invalid_rule_kind * Rule_ID.t * Tok.t
 
@@ -53,7 +53,7 @@ and invalid_rule_kind =
   | MissingPositiveTermInAnd
   | InvalidNotInOr
   | IncompatibleRule of
-      Semver_.t (* this version of Semgrep *)
+      Semver_.t (* this version of Lens *)
       * (Semver_.t option (* minimum version supported by this rule *)
         * Semver_.t option (* maximum version *))
   | MissingPlugin of string (* error message *)
@@ -111,7 +111,7 @@ let string_of_invalid_rule_kind = function
   | InvalidLanguage language -> spf "invalid language %s" language
   | InvalidRegexp message -> spf "invalid regex %s" message
   (* coupling: this is actually intercepted in
-   * Semgrep_error_code.exn_to_error to generate a PatternParseError instead
+   * Lens_error_code.exn_to_error to generate a PatternParseError instead
    * of a RuleParseError *)
   | InvalidPattern (pattern, analyzer, message, _yaml_path) ->
       spf
@@ -127,18 +127,18 @@ let string_of_invalid_rule_kind = function
       "you cannot negate in an Or; you can only negate inside an And"
   | DeprecatedFeature s -> spf "deprecated feature: %s" s
   | IncompatibleRule (cur, (Some min_version, None)) ->
-      spf "This rule requires upgrading Semgrep from version %s to at least %s"
+      spf "This rule requires upgrading Lens from version %s to at least %s"
         (Semver.to_string cur)
         (Semver.to_string min_version)
   | IncompatibleRule (cur, (None, Some max_version)) ->
       spf
-        "This rule is no longer supported by Semgrep. The last compatible \
-         version was %s. This version of Semgrep is %s"
+        "This rule is no longer supported by Lens. The last compatible \
+         version was %s. This version of Lens is %s"
         (Semver.to_string max_version)
         (Semver.to_string cur)
   | IncompatibleRule (cur, (Some min_version, Some max_version)) ->
       spf
-        "This rule requires a version of Semgrep within [%s, %s] but we're \
+        "This rule requires a version of Lens within [%s, %s] but we're \
          using version %s"
         (Semver.to_string min_version)
         (Semver.to_string max_version)
@@ -170,7 +170,7 @@ let string_of_error (error : t) : string =
 
 (*
    Determine if an error can be skipped. This is for presumably well-formed
-   rules that aren't compatible with the current version of semgrep
+   rules that aren't compatible with the current version of lens
    and shouldn't cause a failure.
 *)
 let is_skippable_error (kind : invalid_rule_kind) : bool =

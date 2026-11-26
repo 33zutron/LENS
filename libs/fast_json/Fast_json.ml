@@ -1,6 +1,6 @@
 (* Brandon Wu (but really Claude Code)
 
-   Copyright (c) 2026 Semgrep Inc.
+   Copyright (c) 2026 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -34,7 +34,7 @@
 
    Human-written comment:
    This was spawned off of a desire to have a faster JSON-parsing approach for
-   Semgrep's increasingly large JSON rule inputs. Our previous approach involved
+   Lens's increasingly large JSON rule inputs. Our previous approach involved
    piggy-backing off of the JS parser, which was bulkier than necessary and used
    Menhir, which my intuition seemed to indicate would be more overhead than just
    raw OCaml.
@@ -57,7 +57,7 @@
    legacy path tolerates `//` line comments (it delegates to the JS lexer),
    while this parser implements RFC 8259 strictly and rejects them.
    Several test fixtures in [tests/patterns/json/] and
-   [tests/semgrep-rules/json/] rely on the comment relaxation, so we keep
+   [tests/lens-rules/json/] rely on the comment relaxation, so we keep
    the legacy path for those.
 
    Other behaviors deliberately match the legacy path:

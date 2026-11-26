@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -29,17 +29,17 @@ from pydantic import FileUrl
 def mk_server_params(port: int):
     # Create server parameters for stdio connection
     return StdioServerParameters(
-        command="semgrep",  # Executable
+        command="lens",  # Executable
         args=["mcp", "--port", str(port)],  # Optional command line arguments
         env={
-            "USE_SEMGREP_RPC": "false",
+            "USE_LENS_RPC": "false",
             **os.environ,
         },
     )
 
 
 async def list_roots(context) -> ListRootsResult:
-    # semgrep_scan only reads files inside a workspace root, and the scanned
+    # lens_scan only reads files inside a workspace root, and the scanned
     # file is created in the temp directory.
     return ListRootsResult(
         roots=[Root(uri=FileUrl(Path(gettempdir()).resolve().as_uri()))]
@@ -65,9 +65,9 @@ async def test_local_scan(available_port):
 
                 path = tmp.name
 
-                # Scan code for security issues using local semgrep_scan
+                # Scan code for security issues using local lens_scan
                 results = await session.call_tool(
-                    "semgrep_scan",
+                    "lens_scan",
                     {
                         "code_files": [
                             {

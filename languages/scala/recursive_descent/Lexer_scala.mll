@@ -1,7 +1,7 @@
 {
 (* Yoann Padioleau
  *
- * Copyright (C) 2021 Semgrep Inc.
+ * Copyright (C) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -172,13 +172,13 @@ let charNoDoubleQuote =          [^'"' '\\']
 let newline = ('\n' | "\r\n")
 
 let _charEscapeSeq = '\\' ['b''t''n''f''r''"''\'''\\']
-(* semgrep: we can use regexp in semgrep in strings and we want to
+(* lens: we can use regexp in lens in strings and we want to
  * support any escape characters there, e.g. eval("=~/.*dev\.corp/")
  *)
-let semgrepEscapeSeq = '\\' _
+let lensEscapeSeq = '\\' _
 
 let unicodeEscape = '\\' 'u'+ hexDigit hexDigit hexDigit hexDigit
-let escapeSeq = unicodeEscape | semgrepEscapeSeq
+let escapeSeq = unicodeEscape | lensEscapeSeq
 
 let stringElement = charNoDoubleQuoteOrNewline | escapeSeq
 let _multiLineChars = ('"'? '"'? charNoDoubleQuote)* '"'*
@@ -327,9 +327,9 @@ rule token = parse
   (* a lambda, found in sbt source *)
   | "\xce\xbb" { ID_LOWER (tok lexbuf, tokinfo lexbuf) }
 
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | "..."   { Flag_parsing.sgrep_guard (Ellipsis (tokinfo lexbuf)) }
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | "<..."  { Flag_parsing.sgrep_guard (LDots (tokinfo lexbuf)) }
   | "...>"  { Flag_parsing.sgrep_guard (RDots (tokinfo lexbuf)) }
 
@@ -343,7 +343,7 @@ rule token = parse
       let (tcolon, trest) = Tok.split_tok_at_bytepos 1 t in
       SymbolLiteral(tcolon, (s, trest))
     }
-  (* semgrep-ext: note that plainid above also allow $XXX for semgrep *)
+  (* lens-ext: note that plainid above also allow $XXX for lens *)
   | "'..."
      { let t = tokinfo lexbuf in
        let (tcolon, trest) = Tok.split_tok_at_bytepos 1 t in
@@ -427,7 +427,7 @@ rule token = parse
         | _          -> ID_LOWER (s, t)
     }
 
-  (* semgrep-ext: but this is also a valid Scala identifier *)
+  (* lens-ext: but this is also a valid Scala identifier *)
   | '$' ['A'-'Z']['A'-'Z''0'-'9''_']* as s
     { ID_UPPER (s, tokinfo lexbuf) }
   (* sgrep-ext: *)
@@ -521,7 +521,7 @@ and in_interpolated_double = parse
   | escapeSeq as s { StringLiteral (s, tokinfo lexbuf) }
   | [^'"''$''\\']+ as s { StringLiteral (s, tokinfo lexbuf) }
   | "${" { push_mode ST_IN_CODE; LBRACE (tokinfo lexbuf) }
-  (* for metavariables, we keep the $ sign, which we strip later if not in semgrep mode *)
+  (* for metavariables, we keep the $ sign, which we strip later if not in lens mode *)
   | ("$" metavar_id_after_dollar) as s { ID_DOLLAR (s, tokinfo lexbuf) }
   | "$" (id_after_dollar as s) { ID_DOLLAR (s, tokinfo lexbuf) }
   | "$$" { StringLiteral("$", tokinfo lexbuf) }
@@ -547,7 +547,7 @@ and in_interpolated_triple = parse
   | escapeSeq as s { StringLiteral (s, tokinfo lexbuf) }
   | [^'"''$''\\']+ as s { StringLiteral (s, tokinfo lexbuf) }
   | "${" { push_mode ST_IN_CODE; LBRACE (tokinfo lexbuf) }
-  (* for metavariables, we keep the $ sign, which we strip later if not in semgrep mode *)
+  (* for metavariables, we keep the $ sign, which we strip later if not in lens mode *)
   | ("$" metavar_id_after_dollar) as s { ID_DOLLAR (s, tokinfo lexbuf) }
   | "$" (id_after_dollar as s) { ID_DOLLAR (s, tokinfo lexbuf) }
   | "$$" { StringLiteral("$", tokinfo lexbuf) }

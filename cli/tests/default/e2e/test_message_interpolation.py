@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2025 Semgrep Inc.
+# Copyright (c) 2022-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,9 +11,9 @@
 # LICENSE for more details.
 #
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 
 @pytest.mark.kinda_slow
@@ -57,16 +57,16 @@ from semgrep.constants import OutputFormat
     ],
 )
 def test_message_interpolation(
-    run_semgrep_in_tmp: RunSemgrep, posix_snapshot, rule, target
+    run_lens_in_tmp: RunLens, posix_snapshot, rule, target
 ):
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(rule, target_name=target).stdout, "results.json"
+        run_lens_in_tmp(rule, target_name=target).stdout, "results.json"
     )
 
 
 @pytest.mark.slow
-def test_no_double_interpolation(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    stdout, _ = run_semgrep_in_tmp(
+def test_no_double_interpolation(run_lens_in_tmp: RunLens, posix_snapshot):
+    stdout, _ = run_lens_in_tmp(
         "rules/message_interpolation/interpolated_message.yaml",
         target_name="message_interpolation/target_with_metavariable.py",
         output_format=OutputFormat.JSON,  # Not the real output format; just disables JSON parsing

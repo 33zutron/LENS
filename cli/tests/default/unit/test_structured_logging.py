@@ -1,4 +1,4 @@
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 # SPDX-License-Identifier: LGPL-2.1-or-later
 import json
 import logging
@@ -9,34 +9,34 @@ from structlog.contextvars import bind_contextvars
 from structlog.contextvars import bound_contextvars
 from structlog.contextvars import get_contextvars
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.commands.wrapper import handle_command_errors
-from semgrep.constants import OutputFormat
-from semgrep.error import SemgrepError
-from semgrep.metrics import MetricsState
-from semgrep.output import OutputHandler
-from semgrep.output import OutputSettings
-from semgrep.state import get_state
-from semgrep.structured_logging import best_effort_events
-from semgrep.structured_logging import configure_json_logging
-from semgrep.structured_logging import HANDLER_NAME
-from semgrep.structured_logging import log
-from semgrep.structured_logging import log_phase
-from semgrep.terminal import Terminal
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.commands.wrapper import handle_command_errors
+from lens.constants import OutputFormat
+from lens.error import LensError
+from lens.metrics import MetricsState
+from lens.output import OutputHandler
+from lens.output import OutputSettings
+from lens.state import get_state
+from lens.structured_logging import best_effort_events
+from lens.structured_logging import configure_json_logging
+from lens.structured_logging import HANDLER_NAME
+from lens.structured_logging import log
+from lens.structured_logging import log_phase
+from lens.terminal import Terminal
 
 
 @pytest.fixture
 def log_file(tmp_path, monkeypatch):
     path = tmp_path / "events.jsonl"
-    monkeypatch.setenv("SEMGREP_LOG_JSON_FILE", str(path))
-    monkeypatch.setenv("SEMGREP_LOG_FILE", str(tmp_path / "text.log"))
+    monkeypatch.setenv("LENS_LOG_JSON_FILE", str(path))
+    monkeypatch.setenv("LENS_LOG_FILE", str(tmp_path / "text.log"))
     root = logging.getLogger()
     old_handlers = root.handlers[:]
     old_level = root.level
     root.handlers = []
-    with click.Context(click.Command("semgrep")):
+    with click.Context(click.Command("lens")):
         yield path
-    monkeypatch.delenv("SEMGREP_LOG_JSON_FILE", raising=False)
+    monkeypatch.delenv("LENS_LOG_JSON_FILE", raising=False)
     configure_json_logging(logging.INFO)
     for handler in root.handlers:
         handler.close()
@@ -48,7 +48,7 @@ def log_file(tmp_path, monkeypatch):
 def test_dual_output_preserves_records_across_reconfiguration(log_file, capsys):
     terminal = Terminal()
     terminal.configure(quiet=False)
-    logger = logging.getLogger("semgrep.test")
+    logger = logging.getLogger("lens.test")
     log.info("scan started", **{"file.path": "Example.py"})
     logger.info("first\nsecond")
     terminal.configure(quiet=False)
@@ -124,7 +124,7 @@ def test_unwritable_destination_and_serialization_failures_do_not_fail_scan(
     log.info("Valid record", count=0)
     assert json.loads(log_file.read_text())["message"] == "Valid record"
     configure_json_logging(logging.INFO, str(log_file / "not-a-directory"))
-    logging.getLogger("semgrep.test").info("Text output still works")
+    logging.getLogger("lens.test").info("Text output still works")
     assert not any(h.get_name() == HANDLER_NAME for h in logging.getLogger().handlers)
 
 
@@ -134,7 +134,7 @@ def test_existing_jsonl_is_appended_and_quiet_filters_logs(
 ):
     log_file.write_text('{"existing":true}\n')
     Terminal().configure(quiet=True)
-    logging.getLogger("semgrep.test").info("hidden")
+    logging.getLogger("lens.test").info("hidden")
     assert log_file.read_text() == '{"existing":true}\n'
     log.info("command completed", **{"exit.code": 0})
     assert (
@@ -142,7 +142,7 @@ def test_existing_jsonl_is_appended_and_quiet_filters_logs(
         == "command completed"
     )
     contents = log_file.read_text()
-    monkeypatch.delenv("SEMGREP_LOG_JSON_FILE")
+    monkeypatch.delenv("LENS_LOG_JSON_FILE")
     configure_json_logging(logging.INFO)
     log.error("disabled event", invalid=object())
     assert log_file.read_text() == contents
@@ -153,11 +153,11 @@ def test_existing_jsonl_is_appended_and_quiet_filters_logs(
 def test_typed_errors_are_available_with_json_results(log_file):
     get_state().terminal.configure(quiet=False)
     output = OutputHandler(OutputSettings(output_format=OutputFormat.JSON))
-    warning = SemgrepError(
+    warning = LensError(
         "Warning message", code=0, level=out.ErrorSeverity(out.Warning_())
     )
-    error = SemgrepError("Error message", code=2)
-    output.handle_semgrep_errors([warning, error, warning])
+    error = LensError("Error message", code=2)
+    output.handle_lens_errors([warning, error, warning])
     records = [json.loads(line) for line in log_file.read_text().splitlines()]
     typed = [
         record
@@ -184,7 +184,7 @@ def test_command_context_preserves_values_and_restores_scope(log_file, unexpecte
                 **{"file.path": "Src/Example.py", "rule.id": "MixedCase.Rule"},
             )
         log.info("scan completed", **{"scan.id": 13})
-        logging.getLogger("semgrep.test").warning("original diagnostic")
+        logging.getLogger("lens.test").warning("original diagnostic")
         if unexpected:
             raise ValueError("original failure")
         raise SystemExit(1)
@@ -253,8 +253,8 @@ def test_optional_metadata_failure_reports_warning_without_interrupting(log_file
 
 @pytest.mark.quick
 def test_error_event_preserves_rule_diagnostic_and_registered_source(log_file):
-    from semgrep.error import InvalidRuleSchemaError
-    from semgrep.error_location import Span
+    from lens.error import InvalidRuleSchemaError
+    from lens.error_location import Span
 
     source = "rules:\n  - id: Example.Rule\n    pattern: example()\n"
     error = InvalidRuleSchemaError(
@@ -265,7 +265,7 @@ def test_error_event_preserves_rule_diagnostic_and_registered_source(log_file):
     )
     configure_json_logging(logging.INFO)
     handler = OutputHandler(OutputSettings(output_format=OutputFormat.JSON))
-    handler.handle_semgrep_errors([error])
+    handler.handle_lens_errors([error])
 
     [record] = [json.loads(line) for line in log_file.read_text().splitlines()]
     assert record["message"] == "scan error"

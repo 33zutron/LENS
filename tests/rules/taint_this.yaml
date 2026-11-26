@@ -11,5 +11,5 @@ rules:
       - typescript
       - javascript
     message: |
-      Semgrep found a match
+      Lens found a match
     severity: WARNING

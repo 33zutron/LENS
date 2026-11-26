@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -31,7 +31,7 @@ module Prefilter_metrics = struct
   module RulesProcessed =
     (val Meter.make_int_counter
          @@ Ometrics.make_instrument_meta
-              ~name:"semgrep_file_prefilter_rules_processed"
+              ~name:"lens_file_prefilter_rules_processed"
               ~description:
                 "Number of rules checked on a given target with a prefilter"
               ~unit_:"{rule}" ())
@@ -39,7 +39,7 @@ module Prefilter_metrics = struct
   module RulesSkipped =
     (val Meter.make_int_counter
          @@ Ometrics.make_instrument_meta
-              ~name:"semgrep_file_prefilter_rules_skipped"
+              ~name:"lens_file_prefilter_rules_skipped"
               ~description:
                 "Number of rules skipped on a given target due to a prefilter"
               ~unit_:"{rule}" ())

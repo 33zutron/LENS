@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -18,14 +18,14 @@ module E = Core_error
 (* Prelude *)
 (*****************************************************************************)
 (* Functions accessible from the CLI via -dump_xxx to help debug
- * Semgrep. See Core_CLI.actions() and Arg_helpers.ml for more info.
+ * Lens. See Core_CLI.actions() and Arg_helpers.ml for more info.
  *)
 
 (*****************************************************************************)
 (* Helpers *)
 (*****************************************************************************)
 
-(* used for the Dump AST in semgrep.live *)
+(* used for the Dump AST in lens.live *)
 let json_of_v (v : OCaml.v) =
   let rec aux v =
     match v with
@@ -144,15 +144,15 @@ let prefilter_of_rules ~interfile file =
         |> List.map (fun r ->
             let pre_opt = Prefiltering.File.of_rule ~interfile r in
             let pre_atd_opt =
-              Option.map Prefiltering.File.to_semgrep_formula pre_opt
+              Option.map Prefiltering.File.to_lens_formula pre_opt
             in
             let id = r.Rule.id |> fst in
             {
-              Prefiltering.Semgrep_prefilter_t.rule_id = Rule_ID.to_string id;
+              Prefiltering.Lens_prefilter_t.rule_id = Rule_ID.to_string id;
               filter = pre_atd_opt;
             })
       in
-      let s = Prefiltering.Semgrep_prefilter_j.string_of_prefilters xs in
+      let s = Prefiltering.Lens_prefilter_j.string_of_prefilters xs in
       UCommon.pr s
   (* TODO: handle parse errors gracefully instead of silently ignoring *)
   | Error _ -> ()

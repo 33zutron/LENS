@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -21,7 +21,7 @@ type t
    (read-only) after [create] returns, it is safe to share across OCaml 5
    domains in parallel target-filtering code.
 
-   It also supports non-standard ignore files (e.g., .semgrepignore).
+   It also supports non-standard ignore files (e.g., .lensignore).
 *)
 
 val create :

@@ -38,7 +38,7 @@
           "category": "correctness",
           "license": "Commons Clause License Condition v1.0[LGPL-2.1-only]",
           "shortlink": "https://sg.run/Kl6n",
-          "source": "https://semgrep.dev/r/javascript.lang.correctness.useless-eqeq.eqeq-is-bad",
+          "source": "https://lens.dev/r/javascript.lang.correctness.useless-eqeq.eqeq-is-bad",
           "technology": [
             "javascript"
           ]
@@ -97,7 +97,7 @@
           "category": "correctness",
           "license": "Commons Clause License Condition v1.0[LGPL-2.1-only]",
           "shortlink": "https://sg.run/GeAp",
-          "source": "https://semgrep.dev/r/python.lang.correctness.useless-eqeq.useless-eqeq",
+          "source": "https://lens.dev/r/python.lang.correctness.useless-eqeq.useless-eqeq",
           "technology": [
             "python"
           ]

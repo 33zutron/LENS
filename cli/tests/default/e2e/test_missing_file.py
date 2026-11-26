@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2025 Semgrep Inc.
+# Copyright (c) 2022-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
 import pytest
 from tests.conftest import _clean_stdout
 from tests.conftest import skip_on_windows
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
 # Check that a missing explicit target results in the following:
@@ -24,8 +24,8 @@ from tests.fixtures import RunSemgrep
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 @skip_on_windows  # path is substring of JSON value
-def test_missing_file(run_semgrep_in_tmp: RunSemgrep, snapshot):
-    stdout, stderr = run_semgrep_in_tmp(
+def test_missing_file(run_lens_in_tmp: RunLens, snapshot):
+    stdout, stderr = run_lens_in_tmp(
         "rules/nosem.yaml", target_name="stupid-does-not-exist.p", assert_exit_code=2
     )
     snapshot.assert_match(stderr, "error.txt")

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2024 Semgrep Inc.
+# Copyright (c) 2023-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -25,7 +25,7 @@ from semdep.parsers.util import any_str
 from semdep.parsers.util import integer
 from semdep.parsers.util import pair
 from semdep.parsers.util import triple
-from semgrep.error import SemgrepError
+from lens.error import LensError
 
 
 @dataclass
@@ -148,7 +148,7 @@ def compare_maven_specifier(specifier: str, version: str) -> bool:
     )
     matched = specifier_regex.match(specifier)
     if not matched:
-        raise SemgrepError(
+        raise LensError(
             f"unknown package version comparison expression: {specifier}"
         )
     operator = matched.group("operator")
@@ -168,6 +168,6 @@ def compare_maven_specifier(specifier: str, version: str) -> bool:
     elif operator == ">":
         return cmp_maven_versions(parsed_version, specifier_version) > 0
     else:
-        raise SemgrepError(
+        raise LensError(
             f"unknown package version comparison expression: {specifier}"
         )

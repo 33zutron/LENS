@@ -1,6 +1,6 @@
 (* Iago Abal
  *
- * Copyright (C) 2021-2022 Semgrep Inc.
+ * Copyright (C) 2021-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -190,7 +190,7 @@ let get_nested_metavar_pattern_bindings get_nested_formula_matches env r mvar
                    * `mval_range` from `mval_file` and not from `env.file`! *)
                   let contents = Range.content_at_range mval_file mval_range in
                   (* TODO: find a way to not use tmp files! parse strings *)
-                  (* nosemgrep: forbid-tmp *)
+                  (* nolens: forbid-tmp *)
                   UTmp.with_temp_file ~contents ~suffix:".mvar-pattern"
                     (fun (file : Fpath.t) ->
                       let mast' =
@@ -265,7 +265,7 @@ let get_nested_metavar_pattern_bindings get_nested_formula_matches env r mvar
                         (Analyzer.to_string analyzer));
                   (* We re-parse the matched text as `analyzer`. *)
                   (* TODO: find a way to not use tmp files! parse strings *)
-                  (* nosemgrep: forbid-tmp *)
+                  (* nolens: forbid-tmp *)
                   UTmp.with_temp_file ~contents ~suffix:".mvar-pattern"
                     (fun file ->
                       let ast_and_errors_res =

@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/4965
+# https://github.com/returntocorp/lens/issues/4965
 
 def awesome
   something = if params[:thang]

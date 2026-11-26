@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,10 +10,10 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-(** Types for describing target files provided by pysemgrep.
+(** Types for describing target files provided by pylens.
 
-    See also semgrep_output_v1.atd which has a similar set of types used when
-    pysemgrep generates targets that have slightly less information (e.g.,
+    See also lens_output_v1.atd which has a similar set of types used when
+    pylens generates targets that have slightly less information (e.g.,
     these types have expanded information about the targets' locations). *)
 
 (*****************************************************************************)
@@ -47,7 +47,7 @@ type path = {
 (* Main type *)
 (*****************************************************************************)
 
-(*  A semgrep target comprising source code (or, for regex/generic, arbitrary
+(*  A lens target comprising source code (or, for regex/generic, arbitrary
     text data) to be executed. This contains all of the details needed to be
     able to determine how to scan a target, e.g.,
 
@@ -115,9 +115,9 @@ val mk_unfilterable_target : Analyzer.t -> Fpath.t -> t
 val mk_unfilterable_lang_target : Lang.t -> Fpath.t -> t
 
 (*****************************************************************************)
-(* Semgrep_output_v1.target -> Target.t *)
+(* Lens_output_v1.target -> Target.t *)
 (*****************************************************************************)
-val target_of_target : Semgrep_output_v1_t.target -> t
+val target_of_target : Lens_output_v1_t.target -> t
 
 (*****************************************************************************)
 (* Accessors *)
@@ -139,7 +139,7 @@ val origin : t -> Origin.t
 (*
    The set of all lang analyzers associated with targets.
    This is used to filter out rules that don't apply to any of the targets
-   we receive from pysemgrep.
+   we receive from pylens.
    The analyzers are flattened i.e. each of them contains at most one Lang.t
    (L (lang, []).
 *)

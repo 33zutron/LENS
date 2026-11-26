@@ -22,7 +22,7 @@
         "message": "useless comparison operation `a == a` or `a != a`",
         "metadata": {
           "shortlink": "https://sg.run/xyz1",
-          "source": "https://semgrep.dev/r/eqeq-bad"
+          "source": "https://lens.dev/r/eqeq-bad"
         },
         "severity": "ERROR",
         "validation_state": "NO_VALIDATOR"

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -24,7 +24,7 @@ and invalid_rule_kind =
   | MissingPositiveTermInAnd
   | InvalidNotInOr
   | IncompatibleRule of
-      Semver_.t (* this version of Semgrep *)
+      Semver_.t (* this version of Lens *)
       * (Semver_.t option (* minimum version supported by this rule *)
         * Semver_.t option (* maximum version *))
   | MissingPlugin of string (* error message *)

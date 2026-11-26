@@ -1,5 +1,5 @@
 running 4 rules from 1 config rules/eqeq.yaml_0
-No .semgrepignore found. Using default .semgrepignore rules. See the docs for the list of default ignores: https://semgrep.dev/docs/cli-usage/#ignore-files
+No .lensignore found. Using default .lensignore rules. See the docs for the list of default ignores: https://lens.dev/docs/cli-usage/#ignore-files
 Rules:
 - rules.assert-eqeq-is-ok
 - rules.eqeq-is-bad
@@ -18,7 +18,7 @@ Unable to ignore files ignored by git (targets/exclude_include is not a git dire
 Files skipped:
 ========================================
 
-  Always skipped by Semgrep:
+  Always skipped by Lens:
 
    • <none>
 
@@ -27,8 +27,8 @@ Files skipped:
 
    • <all files not listed by `git ls-files` were skipped>
 
-  Skipped by .semgrepignore:
-  - https://semgrep.dev/docs/ignoring-files-folders-code/#understand-semgrep-defaults
+  Skipped by .lensignore:
+  - https://lens.dev/docs/ignoring-files-folders-code/#understand-lens-defaults
 
    • <none>
 
@@ -52,7 +52,7 @@ Files skipped:
 
    • <none>
 
-  Partially analyzed due to parsing or internal Semgrep errors
+  Partially analyzed due to parsing or internal Lens errors
 
    • <none>
 
@@ -61,7 +61,7 @@ Files skipped:
 ┌──────────────┐
 │ Scan Summary │
 └──────────────┘
-Semgrep's file targeting is getting a revamp! This scan wouldn't see any changes. To learn about what will be different after version 1.116.0, visit https://semgrep.dev/docs/kb/semgrep-code/semgrepignore-ignored for the new specification.
+Lens's file targeting is getting a revamp! This scan wouldn't see any changes. To learn about what will be different after version 1.116.0, visit https://lens.dev/docs/kb/lens-code/lensignore-ignored for the new specification.
 
 ✅ Scan completed successfully.
  • Findings: 0 (0 blocking)

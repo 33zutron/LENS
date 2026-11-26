@@ -26,4 +26,4 @@ rules:
   metadata:
     category: performance
     technology:
-    - semgrep
+    - lens

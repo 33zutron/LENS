@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -29,8 +29,8 @@ def streamable_server(available_port):
     """
     # Start the streamable-http server, capturing output
     proc = subprocess.Popen(
-        ["semgrep", "mcp", "-t", "streamable-http", "--port", str(available_port)],
-        env={"SEMGREP_IS_HOSTED": "true", **os.environ},
+        ["lens", "mcp", "-t", "streamable-http", "--port", str(available_port)],
+        env={"LENS_IS_HOSTED": "true", **os.environ},
         stderr=subprocess.PIPE,
         stdout=subprocess.PIPE,
     )
@@ -43,7 +43,7 @@ def streamable_server(available_port):
 
 
 @pytest.mark.slow
-@pytest.mark.skip("flakey MCP test, see: semgrep-proprietary/pull/4985")
+@pytest.mark.skip("flakey MCP test, see: lens-proprietary/pull/4985")
 async def test_streamable_client_smoke(streamable_server):
     port, proc = streamable_server
     base_url = f"http://127.0.0.1:{port}"
@@ -59,7 +59,7 @@ async def test_streamable_client_smoke(streamable_server):
 
             # Scan code for security issues
             results = await session.call_tool(
-                "semgrep_scan_remote",
+                "lens_scan_remote",
                 {
                     "code_files": [
                         {
@@ -80,9 +80,9 @@ async def test_streamable_client_smoke(streamable_server):
 
 
 @pytest.mark.slow
-@pytest.mark.skip("flakey MCP test, see: semgrep-proprietary/pull/4985")
+@pytest.mark.skip("flakey MCP test, see: lens-proprietary/pull/4985")
 async def test_streamable_client_no_closed_resource_error(streamable_server):
-    """Test that connecting to semgrep mcp with streamable-http doesn't get a ClosedResourceError.
+    """Test that connecting to lens mcp with streamable-http doesn't get a ClosedResourceError.
 
     This test verifies that the FastMCP server is configured with stateless_http=False,
     which prevents ClosedResourceError when using streamable-http transport.
@@ -90,7 +90,7 @@ async def test_streamable_client_no_closed_resource_error(streamable_server):
     When stateless_http=True, the server will log ClosedResourceError even if client
     operations appear to succeed.
 
-    See OSS/cli/src/semgrep/commands/mcp.py:65-66 for context.
+    See OSS/cli/src/lens/commands/mcp.py:65-66 for context.
     """
     port, proc = streamable_server
     base_url = f"http://127.0.0.1:{port}"

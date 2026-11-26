@@ -1,5 +1,5 @@
-semgrep-core rule validation failed (InvalidYaml)
-[31m[22m[24msemgrep error[0m: Invalid rule schema
+lens-core rule validation failed (InvalidYaml)
+[31m[22m[24mlens error[0m: Invalid rule schema
   --> rules/syntax/bad15.yaml:2
 [94m[22m[24m2  | [0m  - id: too many
 [94m[22m[24m3  | [0m    message: Hi

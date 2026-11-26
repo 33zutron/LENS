@@ -224,9 +224,9 @@ let str_of_info x = Tok.content_of_tok x
 %token <Tok.t> T_YIELD T_FROM T_AWAIT
 %token <Tok.t> T_SUPER
 
-(* phpext: for hack and also for semgrep *)
+(* phpext: for hack and also for lens *)
 %token <Tok.t> T_ELLIPSIS "..."
-(* semgrep-ext: *)
+(* lens-ext: *)
 %token <Tok.t> LDots "<..." RDots "...>"
 %token <string * Tok.t> T_METAVAR
 
@@ -295,9 +295,9 @@ let str_of_info x = Tok.content_of_tok x
 (*************************************************************************)
 (* Rules type declaration *)
 (*************************************************************************)
-%start main semgrep_pattern
+%start main lens_pattern
 %type <Cst_php.toplevel list> main
-%type <Cst_php.any>           semgrep_pattern
+%type <Cst_php.any>           lens_pattern
 
 %%
 (*************************************************************************)
@@ -337,7 +337,7 @@ top_statement:
  | namespace_declaration      { [$1] }
  | namespace_use_declaration  { $1 }
 
-semgrep_pattern:
+lens_pattern:
  | expr                         EOF { Expr $1 }
  | top_statement                EOF { mk_Toplevel $1 }
  | top_statement top_statement+ EOF { Toplevels ($1 @ List.flatten $2) }
@@ -430,7 +430,7 @@ statement:
  | T_DECLARE  "(" listc(declare) ")" declare_statement
      { Declare($1,($2,$3,$4),$5) }
 
- (* semgrep-ext: *)
+ (* lens-ext: *)
  | "..." { Flag_parsing.sgrep_guard (ExprStmt (Ellipsis $1, fakeInfo ";")) }
 
 inner_statement:
@@ -612,17 +612,17 @@ parameter_bis:
      { let p = mk_param $2 in Left3 {p with p_variadic=Some $1; p_type=Some(HintVariadic ($1, None))} }
  | TAND "..." T_VARIABLE
      { let p = mk_param $3 in Left3 {p with p_ref=Some $1; p_variadic=Some $2; p_type=Some(HintVariadic ($2, None))} }
- (* varargs extension, and semgrep-ext: *)
+ (* varargs extension, and lens-ext: *)
  | "..."
      { Either_.Middle3 $1 }
 
-(* semgrep-ext: there are places where we expect a T_VARIABLE and we
+(* lens-ext: there are places where we expect a T_VARIABLE and we
  * also want to accept metavariables.
  *)
 %inline
 variable:
  | T_VARIABLE { $1 }
- (* semgrep-ext: *)
+ (* lens-ext: *)
  | T_METAVAR { $1 }
 
 
@@ -761,7 +761,7 @@ member_declaration:
  | T_USE class_name_list "{" trait_rule* "}"
      { UseTrait ($1, $2, Right ($3, $4, $5)) }
 
- (* semgrep-ext: *)
+ (* lens-ext: *)
  | "..." { Flag_parsing.sgrep_guard (DeclEllipsis $1) }
 
 enum_statement: class_constant_declaration ";"
@@ -1082,7 +1082,7 @@ call_expr:
  | call_expr "{" expr "}"   { HashGet($1, ($2, $3, $4)) }
  | call_expr "->" primary_expr { ObjGet($1, $2, $3) }
  | call_expr "->" "{" expr "}" { ObjGet($1,$2, (BraceIdent ($3, $4, $5))) }
- (* semgrep-ext: *)
+ (* lens-ext: *)
  | call_expr "->" "..."
     { Flag_parsing.sgrep_guard (ObjGet($1, $2, Ellipsis $3)) }
 
@@ -1132,7 +1132,7 @@ primary_expr:
   (* | T_STRING_VARNAME {  } *)
 
  | "(" expr_or_dots ")" { ParenExpr($1,$2,$3) }
- (* semgrep-ext: *)
+ (* lens-ext: *)
  | "<..." expr "...>" { Flag_parsing.sgrep_guard (DeepEllipsis ($1, $2, $3)) }
 
 
@@ -1173,7 +1173,7 @@ array_pair:
 arguments: "(" function_call_argument_list ")" { ($1, $2, $3) }
 
 (* TODO: we want ... in primary_expr, but it leads to many conflicts. *)
-(* semgrep-ext: *)
+(* lens-ext: *)
 %inline
 expr_or_dots:
  | expr  { $1 }
@@ -1334,7 +1334,7 @@ ident:
  | T_ENUM      { str_of_info $1, $1 }
  | T_TYPE      { str_of_info $1, $1 }
  | T_SUPER     { str_of_info $1, $1 }
- (* semgrep-ext: *)
+ (* lens-ext: *)
  | T_METAVAR   { $1 }
 
 (* ident used in encapsulation *)

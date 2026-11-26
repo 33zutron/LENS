@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -15,9 +15,9 @@ val of_matches :
   ?only_git_dirty:bool ->
   ?git_ref:string ->
   Core_runner.result ->
-  Semgrep_output_v1_t.cli_match list
+  Lens_output_v1_t.cli_match list
 (**  [of_matches ~only_git_dirty result] returns the list of cli matches from the
-     result of a semgrep run. If [only_git_dirty] is [true], only the matches
+     result of a lens run. If [only_git_dirty] is [true], only the matches
      that are in files + lines that are git dirty are returned. If [git_ref] is set,
      then we will filter out matches that have been changed since that ref.
   *)

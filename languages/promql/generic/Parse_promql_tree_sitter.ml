@@ -21,7 +21,7 @@ module G = AST_generic
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Promql parser using tree-sitter-lang/semgrep-promql and converting
+(* Promql parser using tree-sitter-lang/lens-promql and converting
  * directly to AST_generic.ml
  *
  * TODO:

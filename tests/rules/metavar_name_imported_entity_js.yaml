@@ -7,12 +7,12 @@ rules:
   pattern-either:
     - patterns:
       - pattern: $X(...)
-      - semgrep-internal-metavariable-name:
+      - lens-internal-metavariable-name:
           metavariable: $X
           fqn: foo3.bar3
     - patterns:
       - pattern: $X.bar(...)
-      - semgrep-internal-metavariable-name:
+      - lens-internal-metavariable-name:
           metavariable: $X
           fqns:
             - foo1

@@ -1,0 +1,39 @@
+; OCaml implementation of the 'lens scan' subcommand.
+;
+(library
+  (public_name lens.olens_cli_scan)
+  (name olens_cli_scan)
+  (wrapped false)
+  (libraries
+    base
+    cmdliner
+    logs
+    bos
+    collections
+    commons
+    parmap
+    parallelism
+
+    lens_core
+    lens_core_cli
+    lens_targeting
+
+    olens_networking
+    olens_core
+    olens_configuring
+    olens_reporting
+
+    ; ugly, should not depend when --dump/--validate/--test are deprecated
+    olens_cli_show
+    olens_cli_test
+    olens_cli_validate
+  )
+ (preprocess
+   (pps
+     ppx_profiling
+     ppx_deriving.show
+     ppx_deriving.eq
+     ppx_hash
+   )
+ )
+)

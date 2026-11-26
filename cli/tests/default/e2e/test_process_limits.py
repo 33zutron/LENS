@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -13,9 +13,9 @@
 import pytest
 from tests.conftest import mask_times
 from tests.conftest import skip_on_windows
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 
 # NOTE: We do NOT check the stack size (ulimit -s) ever, since with ocaml 5
@@ -24,8 +24,8 @@ from semgrep.constants import OutputFormat
 @pytest.mark.osemfail
 @pytest.mark.kinda_slow
 @skip_on_windows  # better backslash replacement logic
-def test_max_memory(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    stdout, stderr = run_semgrep_in_tmp(
+def test_max_memory(run_lens_in_tmp: RunLens, posix_snapshot):
+    stdout, stderr = run_lens_in_tmp(
         "rules/long.yaml",
         options=["--verbose", "--max-memory", "1"],
         target_name="equivalence",
@@ -37,11 +37,11 @@ def test_max_memory(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 
 @pytest.mark.slow
 @skip_on_windows  # better backslash replacement logic
-def test_timeout(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    # Check that semgrep-core timeouts are properly handled
+def test_timeout(run_lens_in_tmp: RunLens, posix_snapshot):
+    # Check that lens-core timeouts are properly handled
 
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             "rules/long.yaml",
             options=[],
             timeout=1,
@@ -55,8 +55,8 @@ def test_timeout(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 @pytest.mark.osemfail
 @pytest.mark.slow
 @skip_on_windows  # better backslash replacement logic
-def test_timeout_threshold(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results = run_semgrep_in_tmp(
+def test_timeout_threshold(run_lens_in_tmp: RunLens, posix_snapshot):
+    results = run_lens_in_tmp(
         "rules/multiple-long.yaml",
         options=["--verbose", "--timeout-threshold", "1"],
         timeout=1,
@@ -69,7 +69,7 @@ def test_timeout_threshold(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
     )
 
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             "rules/multiple-long.yaml",
             output_format=OutputFormat.TEXT,
             force_color=True,
@@ -82,7 +82,7 @@ def test_timeout_threshold(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
     )
 
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             "rules/multiple-long.yaml",
             output_format=OutputFormat.TEXT,
             force_color=True,
@@ -98,7 +98,7 @@ def test_timeout_threshold(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 @pytest.mark.osemfail
 @pytest.mark.slow
 @skip_on_windows  # better backslash replacement logic
-def test_spacegrep_timeout(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
+def test_spacegrep_timeout(run_lens_in_tmp: RunLens, posix_snapshot):
     # Check that spacegrep timeouts are handled gracefully.
     #
     # The pattern is designed to defeat any optimization that would
@@ -107,7 +107,7 @@ def test_spacegrep_timeout(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
     #
     pattern = "$A ... $B ... $C ... Frob ... Yoyodyne"
 
-    stdout, stderr = run_semgrep_in_tmp(
+    stdout, stderr = run_lens_in_tmp(
         config=None,
         target_name="spacegrep_timeout/gnu-lgplv2.txt",
         options=["--lang=generic", "--pattern", pattern],

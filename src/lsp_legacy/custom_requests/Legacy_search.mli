@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 val start_meth : string
-(** method to match on: semgrep/search *)
+(** method to match on: lens/search *)
 
 val mk_params :
   lang:Analyzer.t option ->
@@ -22,7 +22,7 @@ val mk_params :
   Jsonrpc.Structured.t
 
 val ongoing_meth : string
-(** method to match on: semgrep/searchOngoing *)
+(** method to match on: lens/searchOngoing *)
 
 val start_search :
   Legacy_session.t ->

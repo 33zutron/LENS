@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Brandon Wu
  *
- * Copyright (c) 2021-2024 Semgrep Inc.
+ * Copyright (c) 2021-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -24,7 +24,7 @@ module Log = Log_parser_cpp.Log
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* OCaml parser using tree-sitter-lang/semgrep-cpp and converting
+(* OCaml parser using tree-sitter-lang/lens-cpp and converting
  * to ../ast/ast_cpp.ml
  *
  * The resulting AST can then be converted to the generic AST by using
@@ -325,7 +325,7 @@ let make_onedecl ~v_name ~v_type ~v_init ~v_specs =
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-cpp/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-cpp/Boilerplate.ml *)
 
 (**
    Boilerplate to be used as a template when mapping the cpp CST
@@ -4700,7 +4700,7 @@ and map_seh_try_statement (env : env) ((v1, v2, v3) : CST.seh_try_statement) =
   in
   MsTry (v1, v2, v3)
 
-and map_semgrep_typed_metavar (env : env) ((v1, v2) : CST.semgrep_typed_metavar)
+and map_lens_typed_metavar (env : env) ((v1, v2) : CST.lens_typed_metavar)
     =
   let v1 = map_type_descriptor env v1 in
   let v2 = (* pattern \$[A-Z_][A-Z_0-9]* *) str env v2 in
@@ -4729,7 +4729,7 @@ and map_parenthesized_expression (env : env) (x : CST.parenthesized_expression)
           (v1, v2, v3))
   | `LPAR_semg_typed_meta_RPAR (v1, v2, v3) ->
       let v1 = (* "(" *) token env v1 in
-      let v2 = map_semgrep_typed_metavar env v2 in
+      let v2 = map_lens_typed_metavar env v2 in
       let v3 = (* ")" *) token env v3 in
       (v1, v2, v3)
 
@@ -4743,7 +4743,7 @@ and map_parenthesized_expression (env : env) (x : CST.parenthesized_expression)
         let v2 = token env v2 (* "," *) in
         let v3 = map_anon_choice_exp_55b4dba env v3 in
         Sequence (v1, v2, v3)
-    | `Semg_typed_meta x -> map_semgrep_typed_metavar env x
+    | `Semg_typed_meta x -> map_lens_typed_metavar env x
   in
 
   let v3 = token env v3 (* ")" *) in
@@ -5968,7 +5968,7 @@ let parse_expression_or_source_file str =
   match res.errors with
   | [] -> res
   | _ ->
-      let expr_str = "__SEMGREP_EXPRESSION " ^ str in
+      let expr_str = "__LENS_EXPRESSION " ^ str in
       Tree_sitter_cpp.Parse.string expr_str
 
 let parse_pattern str =

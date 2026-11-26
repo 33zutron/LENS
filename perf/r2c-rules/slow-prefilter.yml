@@ -34,7 +34,7 @@ rules:
         - kotlin
         - mongo
         - nosql
-      license: Copyright 2023 Semgrep, Inc.
+      license: Copyright 2023 Lens, Inc.
       vulnerability_class:
         - Improper Validation
     languages:
@@ -412,7 +412,7 @@ rules:
         - kotlin
         - mongo
         - nosql
-      license: Copyright 2023 Semgrep, Inc.
+      license: Copyright 2023 Lens, Inc.
       vulnerability_class:
         - Improper Validation
     languages:

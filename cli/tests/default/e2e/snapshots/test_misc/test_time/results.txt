@@ -14,7 +14,7 @@
   ============================[ summary ]============================
   Total time: x.xxxs Config time: x.xxxs Core time: x.xxxs
 
-  Semgrep-core time:
+  Lens-core time:
   Total CPU time: x.xxxs  File parse time: x.xxxs  Rule parse time: x.xxxs  Match time: x.xxxs
   Slowest x.xxx files
   [32m[22m[24mtargets/basic.py                                  [0m ( 36B):  x.xxxs (x.xxxs to parse)

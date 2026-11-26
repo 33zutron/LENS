@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2020 Semgrep Inc.
+ * Copyright (C) 2020 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -86,7 +86,7 @@ let rf_cache = SharedMemo.create ()
 let read_file_memoed = SharedMemo.make_with_state rf_cache UFile.read_file
 
 let () =
-  (* nosemgrep: forbid-tmp *)
+  (* nolens: forbid-tmp *)
   UTmp.register_temp_file_cleanup_hook (fun file ->
       SharedMemo.remove rf_cache file)
 

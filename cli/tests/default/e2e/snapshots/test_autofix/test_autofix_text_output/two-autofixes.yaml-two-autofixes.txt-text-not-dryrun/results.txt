@@ -15,7 +15,7 @@
 
    ❯❯❱ rules.autofix.remove-four
           ❰❰ Blocking ❱❱
-          If semgrep is not smart enough, the match of this rule will be out of range
+          If lens is not smart enough, the match of this rule will be out of range
 
            ▶▶┆ Autofix ▶ four
             3┆ three

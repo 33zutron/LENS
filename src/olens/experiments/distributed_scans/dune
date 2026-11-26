@@ -1,0 +1,13 @@
+(library
+  (public_name lens.olens_distributed_scan_stub)
+  (name olens_distributed_scan_stub)
+  (wrapped false)
+  (libraries
+    olens_core
+  )
+ (preprocess
+   (pps
+     ppx_deriving.show
+   )
+ )
+)

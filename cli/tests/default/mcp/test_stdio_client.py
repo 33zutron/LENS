@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -24,18 +24,18 @@ from pydantic import AnyUrl
 def mk_server_params(port: int):
     # Create server parameters for stdio connection
     return StdioServerParameters(
-        command="semgrep",  # Executable
+        command="lens",  # Executable
         args=["mcp", "--port", str(port)],  # Optional command line arguments
         env={
-            "USE_SEMGREP_RPC": "false",
-            "SEMGREP_IS_HOSTED": "true",
+            "USE_LENS_RPC": "false",
+            "LENS_IS_HOSTED": "true",
             **os.environ,
         },  # Optional environment variables
     )
 
 
 @pytest.mark.slow
-@pytest.mark.skip("flakey MCP test, see: semgrep-proprietary/pull/4985")
+@pytest.mark.skip("flakey MCP test, see: lens-proprietary/pull/4985")
 async def test_stdio_client(available_port):
     async with stdio_client(mk_server_params(available_port)) as (read, write):
         async with ClientSession(read, write) as session:
@@ -58,11 +58,11 @@ async def test_stdio_client(available_port):
 
             # Read a resource
             print("Reading resource")
-            content, _ = await session.read_resource(AnyUrl("semgrep://rule/schema"))
+            content, _ = await session.read_resource(AnyUrl("lens://rule/schema"))
 
             # Call a tool
             results = await session.call_tool(
-                "semgrep_scan_remote",
+                "lens_scan_remote",
                 {
                     "code_files": [
                         {

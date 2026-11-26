@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,13 +15,13 @@ import tempfile
 
 import pytest
 
-from semgrep.mcp.server import safe_join
+from lens.mcp.server import safe_join
 
 
 @pytest.mark.quick
 def test_safe_join_valid_paths():
     """Test safe_join with valid paths that should be allowed"""
-    base_dir = tempfile.mkdtemp(prefix="semgrep_scan_")
+    base_dir = tempfile.mkdtemp(prefix="lens_scan_")
 
     # Test basic path joining
     assert safe_join(base_dir, "file.txt") == os.path.realpath(
@@ -47,7 +47,7 @@ def test_safe_join_valid_paths():
 @pytest.mark.quick
 def test_safe_join_path_traversal_attempts():
     """Test safe_join blocks path traversal attempts"""
-    base_dir = tempfile.mkdtemp(prefix="semgrep_scan_")
+    base_dir = tempfile.mkdtemp(prefix="lens_scan_")
 
     # Test simple parent directory traversal
     with pytest.raises(ValueError, match="Untrusted path escapes the base directory!"):
@@ -69,7 +69,7 @@ def test_safe_join_path_traversal_attempts():
 @pytest.mark.quick
 def test_safe_join_edge_cases():
     """Test safe_join with edge cases"""
-    base_dir = tempfile.mkdtemp(prefix="semgrep_scan_")
+    base_dir = tempfile.mkdtemp(prefix="lens_scan_")
 
     # Test empty path
     assert safe_join(base_dir, "") == os.path.realpath(base_dir)
@@ -95,7 +95,7 @@ def test_safe_join_edge_cases():
 def test_safe_join_with_normalized_base():
     """Test safe_join handles base directory normalization correctly"""
     # Test with non-normalized base path
-    base_dir = tempfile.mkdtemp(prefix="semgrep_scan_")
+    base_dir = tempfile.mkdtemp(prefix="lens_scan_")
 
     # Should normalize the base path
     assert safe_join(base_dir, "file.txt") == os.path.realpath(

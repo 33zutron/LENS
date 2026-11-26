@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
 *)
 (*
    Various utilities used for testing and are not considered an extension
-   of Alcotest (e.g. because it depends on Semgrep-specific libraries).
+   of Alcotest (e.g. because it depends on Lens-specific libraries).
 *)
 
 let run what f =
@@ -20,10 +20,10 @@ let run what f =
   Common.protect ~finally:(fun () -> Printf.printf "done with %s.\n%!" what) f
 
 (*
-   Semgrep applies 'Unix.realpath' to some paths resulting in
+   Lens applies 'Unix.realpath' to some paths resulting in
    the temporary folder being rewritten to its physical path if it
    was a symlink (MacOS). Here, we mask all known temporary folder paths
-   in Semgrep test output.
+   in Lens test output.
 
    TODO: move this to Testo once it's ok with requiring ocaml >= 4.13
    (needed for Unix.realpath)

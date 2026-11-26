@@ -22,7 +22,7 @@ module R = Raw_tree
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Swift parser using tree-sitter-lang/semgrep-swift and converting
+(* Swift parser using tree-sitter-lang/lens-swift and converting
  * directly to AST_generic
  *)
 
@@ -87,7 +87,7 @@ let map_trailing_comma env v =
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-swift/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-swift/Boilerplate.ml *)
 
 let map_bitwise_binary_operator (env : env) (x : CST.bitwise_binary_operator) =
   match x with
@@ -1159,7 +1159,7 @@ and map_fn_call_lambda_arguments (env : env)
    * parenthesized arguments to a function call, they are the final arguments to
    * that function call. In this case, the labels are not provided even if the
    * function call would normally require them. *)
-  (* TODO make sure that Semgrep can find these arguments when looking for the
+  (* TODO make sure that Lens can find these arguments when looking for the
    * corresponding labeled argument. e.g. `foo(bar: { x in x + 1 })` is the same
    * as `foo { x in x + 1 }` and a search for `foo` called with a labeled `bar`
    * argument should probably find the latter as well as the former. *)
@@ -1320,7 +1320,7 @@ and map_dictionary_type (env : env) ((v1, v2, v3, v4, v5) : CST.dictionary_type)
   let _v3 = (* ":" *) token env v3 in
   let v4 = map_type_ env v4 in
   let v5 = (* "]" *) token env v5 in
-  (* Modeled after Semgrep treats map types in Go. In Swift, [Int: Int] is
+  (* Modeled after Lens treats map types in Go. In Swift, [Int: Int] is
    * equivalent to Dictionary<Int, Int>, so we'll just desugar to that. *)
   let dict_name = H2.name_of_id ("Dictionary", v1) in
   G.TyApply (G.TyN dict_name |> G.t, (v1, [ G.TA v2; G.TA v4 ], v5)) |> G.t
@@ -1444,7 +1444,7 @@ and map_expression (env : env) (x : CST.expression) : G.expr =
       let l = (* "<..." *) token env v1 in
       let e = map_expression env v2 in
       let str, r = (* "...>" *) map_custom_operator env v3 in
-      (* See https://github.com/returntocorp/ocaml-tree-sitter-semgrep/pull/343
+      (* See https://github.com/returntocorp/ocaml-tree-sitter-lens/pull/343
        * for information on why ...> is parsed as a custom operator.
        *
        * When this is handled, check that the custom operator actually is `...>`

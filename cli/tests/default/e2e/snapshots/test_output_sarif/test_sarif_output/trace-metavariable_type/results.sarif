@@ -11,7 +11,7 @@
       "results": [],
       "tool": {
         "driver": {
-          "name": "Semgrep OSS",
+          "name": "Lens OSS",
           "rules": [
             {
               "defaultConfiguration": {
@@ -31,7 +31,7 @@
                 "tags": []
               },
               "shortDescription": {
-                "text": "Semgrep Finding: rules.metavar-type"
+                "text": "Lens Finding: rules.metavar-type"
               }
             }
           ],

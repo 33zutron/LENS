@@ -11,7 +11,7 @@
 <div class="email-text" style="display: none;">
     <pre>{{ body }}</pre>
     <a href='{{ link }}'>{{ link_text }}</a> <!-- nosem: var-in-href -->
-    <a href = '{{ link }}' >{{ link_text }}</a> <!-- nosemgrep: var-in-href -->
+    <a href = '{{ link }}' >{{ link_text }}</a> <!-- nolens: var-in-href -->
     <a href = "{{ link }}" >{{ link_text }}</a>
     <a
         href = "{{ link }}" nosem="var-in-href"

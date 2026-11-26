@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2024 Semgrep Inc.
+   Copyright (c) 2021-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,11 +11,11 @@
    LICENSE for more details.
 *)
 (*
-   Exit semgrep-core cleanly with appropriate logging and error messages.
+   Exit lens-core cleanly with appropriate logging and error messages.
 *)
 
 (*
-   Exit statuses used when exiting semgrep explicitly.
+   Exit statuses used when exiting lens explicitly.
 *)
 type reason =
   | Success (* 0 *)
@@ -26,4 +26,4 @@ type reason =
 (*
    Call the 'exit' function with the appropriate exit code and logging.
 *)
-val exit_semgrep : reason -> 'a
+val exit_lens : reason -> 'a

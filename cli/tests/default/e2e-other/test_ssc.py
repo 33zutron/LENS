@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2025 Semgrep Inc.
+# Copyright (c) 2022-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -19,7 +19,7 @@ from typing import Dict
 import pytest
 from tests.conftest import RULES_PATH
 from tests.conftest import TARGETS_PATH
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 from semdep.package_restrictions import is_in_range
 from semdep.parsers.go_mod import parse_go_mod
@@ -29,9 +29,9 @@ from semdep.parsers.poetry import parse_poetry
 from semdep.parsers.requirements import parse_requirements
 from semdep.parsers.util import DependencyParser
 from semdep.parsers.yarn import parse_yarn
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Maven
-from semgrep.util import IS_WINDOWS
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import Maven
+from lens.util import IS_WINDOWS
 
 pytestmark = pytest.mark.kinda_slow
 
@@ -257,8 +257,8 @@ pytestmark = pytest.mark.kinda_slow
     ],
 )
 @pytest.mark.osemfail
-def test_ssc(run_semgrep_on_copied_files: RunSemgrep, snapshot, rule, target):
-    result = run_semgrep_on_copied_files(rule, target_name=target)
+def test_ssc(run_lens_on_copied_files: RunLens, snapshot, rule, target):
+    result = run_lens_on_copied_files(rule, target_name=target)
 
     snapshot.assert_match(
         result.as_snapshot(),
@@ -284,13 +284,13 @@ def test_ssc(run_semgrep_on_copied_files: RunSemgrep, snapshot, rule, target):
     ],
 )
 @pytest.mark.osemfail
-def test_ssc_logged_in(run_semgrep_on_copied_files: RunSemgrep, snapshot, rule, target):
+def test_ssc_logged_in(run_lens_on_copied_files: RunLens, snapshot, rule, target):
     """
     Same as test_ssc above, but with an app token set to enable output of fields
     that are only available to logged in users.
     """
-    result = run_semgrep_on_copied_files(
-        rule, target_name=target, env={"SEMGREP_APP_TOKEN": "fake_key"}
+    result = run_lens_on_copied_files(
+        rule, target_name=target, env={"LENS_APP_TOKEN": "fake_key"}
     )
 
     snapshot.assert_match(
@@ -382,12 +382,12 @@ def test_ssc_logged_in(run_semgrep_on_copied_files: RunSemgrep, snapshot, rule, 
 )
 @pytest.mark.osemfail
 def test_ssc__requirements_lockfiles(
-    run_semgrep_on_copied_files: RunSemgrep, snapshot, rule: str, target: str
+    run_lens_on_copied_files: RunLens, snapshot, rule: str, target: str
 ):
     """
     Separated out from test_ssc to avoid polluting with extra requirements lockfile tests
     """
-    result = run_semgrep_on_copied_files(rule, target_name=target)
+    result = run_lens_on_copied_files(rule, target_name=target)
 
     snapshot.assert_match(
         result.as_snapshot(),
@@ -431,12 +431,12 @@ def test_ssc__requirements_lockfiles(
 )
 @pytest.mark.requires_lockfileless_deps
 def test_ssc__lockfileless(
-    run_semgrep_on_copied_files: RunSemgrep, snapshot: Any, rule: str, target: str
+    run_lens_on_copied_files: RunLens, snapshot: Any, rule: str, target: str
 ):
     """
     Run end-to-end SSC tests with lockfileless resolution enabled.
     """
-    result = run_semgrep_on_copied_files(
+    result = run_lens_on_copied_files(
         rule, target_name=target, options=["--allow-local-builds"]
     )
 
@@ -449,14 +449,14 @@ def test_ssc__lockfileless(
 @pytest.mark.requires_lockfileless_deps
 @pytest.mark.parametrize("enabled", [False, True])
 def test_gradle_module_attribution_rollout(
-    run_semgrep_on_copied_files: RunSemgrep, enabled: bool
+    run_lens_on_copied_files: RunLens, enabled: bool
 ):
     """Opting in changes module finding paths and IDs; default retains the old ID."""
     target = "dependency_aware/gradle-multi-module-duplicate"
     options = ["--allow-local-builds"]
     if enabled:
         options.append("--x-gradle-module-attribution")
-    result = run_semgrep_on_copied_files(
+    result = run_lens_on_copied_files(
         "rules/dependency_aware/gradle-guava.yaml",
         target_name=target,
         options=options,
@@ -597,7 +597,7 @@ GRADLE_MODULE_REACHABLE_TARGETS = "targets/dependency_aware/"
 )
 @pytest.mark.requires_lockfileless_deps
 def test_ssc__gradle_module_reachable_attribution(
-    run_semgrep_on_copied_files: RunSemgrep,
+    run_lens_on_copied_files: RunLens,
     target: str,
     expected: list[tuple[str, bool, str, str]],
 ):
@@ -605,7 +605,7 @@ def test_ssc__gradle_module_reachable_attribution(
     With Gradle module attribution enabled, a reachable code match must only be
     paired with dependencies applicable to the module that contains the code.
     """
-    result = run_semgrep_on_copied_files(
+    result = run_lens_on_copied_files(
         GRADLE_GUAVA_RULE,
         target_name=f"dependency_aware/{target}",
         options=["--allow-local-builds", "--x-gradle-module-attribution"],
@@ -641,7 +641,7 @@ def test_ssc__gradle_module_reachable_attribution(
 )
 @pytest.mark.requires_lockfileless_deps
 def test_ssc__gradle_module_reachable_attribution_flag_off(
-    run_semgrep_on_copied_files: RunSemgrep,
+    run_lens_on_copied_files: RunLens,
     target: str,
     reachable_paths: list[str],
 ):
@@ -650,7 +650,7 @@ def test_ssc__gradle_module_reachable_attribution_flag_off(
     pairs with the single package-level Guava entry reported at the root
     manifest, and the finding IDs are unchanged from before module scoping.
     """
-    result = run_semgrep_on_copied_files(
+    result = run_lens_on_copied_files(
         GRADLE_GUAVA_RULE,
         target_name=f"dependency_aware/{target}",
         options=["--allow-local-builds"],
@@ -683,12 +683,12 @@ def test_ssc__gradle_module_reachable_attribution_flag_off(
 )
 @pytest.mark.requires_lockfileless_deps
 def test_ssc__setup_py_dynamic_resolution(
-    run_semgrep_on_copied_files: RunSemgrep, snapshot: Any, rule: str, target: str
+    run_lens_on_copied_files: RunLens, snapshot: Any, rule: str, target: str
 ):
     """
     Run end-to-end SSC tests for setup.py dynamic resolution
     """
-    result = run_semgrep_on_copied_files(
+    result = run_lens_on_copied_files(
         rule, target_name=target, options=["--allow-local-builds"]
     )
 
@@ -717,12 +717,12 @@ def test_ssc__setup_py_dynamic_resolution(
 )
 @pytest.mark.osemfail
 def test_ssc__pypi_package_name_lowercase(
-    run_semgrep_on_copied_files: RunSemgrep, snapshot, rule, target
+    run_lens_on_copied_files: RunLens, snapshot, rule, target
 ):
     """
     Pypi package names should be case insensitive
     """
-    result = run_semgrep_on_copied_files(rule, target_name=target)
+    result = run_lens_on_copied_files(rule, target_name=target)
 
     snapshot.assert_match(result.as_snapshot(), "results.txt")
 
@@ -745,7 +745,7 @@ def test_ssc__pypi_package_name_lowercase(
         ("1.1.1.1-SNAPSHOT", "< 1.1.1.1", True),
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 def test_maven_version_comparison(version, specifier, outcome):
     assert is_in_range(Ecosystem(Maven()), specifier, version) == outcome
@@ -839,7 +839,7 @@ LOCKFILE_NAME_TO_PARSER: Dict[str, DependencyParser] = {
 # With some minor edits, namely removing the "this isn't even a lockfile" tests
 # And removing some human written comments that would never appear in a real lockfile from some tests
 # They also include random lockfiles we want to make sure we parse predictably
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 def test_parsing(caplog, target: str, snapshot, lockfile_path_in_tmp):
     # Setup
@@ -894,17 +894,17 @@ def test_parsing(caplog, target: str, snapshot, lockfile_path_in_tmp):
 # Quite awkward. To test that we can handle a target whose toplevel parent
 # contains no lockfiles for the language in our rule, we need to _not_ pass in
 # a target that begins with "targets", as that dir contains every kind of lockfile
-# So we add the keyword arg to run_semgrep and manually do some cd-ing
+# So we add the keyword arg to run_lens and manually do some cd-ing
 @pytest.mark.osemfail
 def test_no_lockfiles(
-    run_semgrep: RunSemgrep, monkeypatch: pytest.MonkeyPatch, tmp_path: Path, snapshot
+    run_lens: RunLens, monkeypatch: pytest.MonkeyPatch, tmp_path: Path, snapshot
 ):
     (tmp_path / "targets").symlink_to(TARGETS_PATH.resolve())
     (tmp_path / "rules").symlink_to(RULES_PATH.resolve())
     monkeypatch.chdir(tmp_path / "targets" / "basic")
 
     snapshot.assert_match(
-        run_semgrep(
+        run_lens(
             "../../rules/dependency_aware/js-sca.yaml",
             target_name="stupid.js",
             assume_targets_dir=False,

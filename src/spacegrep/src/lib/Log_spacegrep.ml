@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,6 +10,6 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-let src = Logs.Src.create "semgrep.spacegrep"
+let src = Logs.Src.create "lens.spacegrep"
 
 module Log = (val Logs.src_log src : Logs.LOG)

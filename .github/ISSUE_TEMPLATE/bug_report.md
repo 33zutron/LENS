@@ -10,7 +10,7 @@ assignees: ""
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Steps to reproduce the behavior, ideally a link to https://semgrep.dev/playground (click "share" and make public to get a shortlink):
+Steps to reproduce the behavior, ideally a link to https://lens.dev/playground (click "share" and make public to get a shortlink):
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
@@ -20,12 +20,12 @@ If applicable, add screenshots to help explain your problem.
 
 **What is the priority of the bug to you?**
 
-- [ ] P0: blocking your adoption of Semgrep or workflow
+- [ ] P0: blocking your adoption of Lens or workflow
 - [ ] P1: important to fix or quite annoying
 - [ ] P2: regular bug that should get fixed
 
 **Environment**
-If not using semgrep.dev: are you running off docker, an official binary, a local build?
+If not using lens.dev: are you running off docker, an official binary, a local build?
 
 **Use case**
 What will fixing this bug enable for you?

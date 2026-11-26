@@ -1,0 +1,30 @@
+{
+  "grammars": [
+    {
+      "name": "cairo",
+      "scope": "source.cairo",
+      "path": "."
+    }
+  ],
+  "metadata": {
+    "version": "0.0.0",
+    "license": "LGPL-2.1",
+    "description": "Lens-extended cairo grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "Lens"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/lens/lens"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": false,
+    "node": false,
+    "python": false,
+    "rust": false,
+    "swift": false
+  }
+}

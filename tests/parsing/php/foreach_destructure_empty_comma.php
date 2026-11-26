@@ -1,5 +1,5 @@
 <?php
-//https://github.com/returntocorp/semgrep/issues/2648
+//https://github.com/returntocorp/lens/issues/2648
 /**
  * All data has been read, time to process the data and build
  * meaningful return values.

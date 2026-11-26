@@ -14,7 +14,7 @@ SCA findings adjustment: No SCA rules to adjust
 Files skipped:
 ========================================
 
-  Always skipped by Semgrep:
+  Always skipped by Lens:
 
    • <none>
 
@@ -23,8 +23,8 @@ Files skipped:
 
    • <all files not listed by `git ls-files` were skipped>
 
-  Skipped by .semgrepignore:
-  - https://semgrep.dev/docs/ignoring-files-folders-code/#understand-semgrep-defaults
+  Skipped by .lensignore:
+  - https://lens.dev/docs/ignoring-files-folders-code/#understand-lens-defaults
 
    • <none>
 
@@ -51,7 +51,7 @@ Files skipped:
    • targets/basic/nosem.js
    • targets/basic/nosem.py
    • targets/basic/regex-any-language.html
-   • targets/basic/regex-nosemgrep.txt
+   • targets/basic/regex-nolens.txt
    • targets/basic/regex-utf8.txt
    • targets/basic/regex.py
    • targets/basic/stupid.js
@@ -66,7 +66,7 @@ Files skipped:
 
    • <none>
 
-  Partially analyzed due to parsing or internal Semgrep errors
+  Partially analyzed due to parsing or internal Lens errors
 
    • <none>
 

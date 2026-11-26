@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019, 2020, 2024 Semgrep Inc.
+ * Copyright (C) 2019, 2020, 2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -539,7 +539,7 @@ and let_binding = function
           | G.EN (G.Id (_, idinfo)) ->
               (* less: abusing id_type? Do we asume id_info is populated
                * by further static analysis (naming/typing)? But the info
-               * is here, and this can be used in semgrep too to express
+               * is here, and this can be used in lens too to express
                * a form of TypedMetavar, so let's abuse it for now.
                *)
               idinfo.G.id_type := Some ty

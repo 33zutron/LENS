@@ -7,7 +7,7 @@ rules:
           types:
             - ifstream
             - mystream
-    message: Semgrep found a match
+    message: Lens found a match
     languages:
       - cpp
     severity: WARNING

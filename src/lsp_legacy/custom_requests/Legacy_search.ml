@@ -1,6 +1,6 @@
 (* Brandon Wu
  *
- * Copyright (C) 2019-2024 Semgrep, Inc.
+ * Copyright (C) 2019-2024 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -18,33 +18,33 @@ module R = Range
 open Lsp
 open Lsp.Types
 module Conv = Legacy_convert_utils
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 open Fpath_.Operators
 
-let start_meth = "semgrep/search"
-let ongoing_meth = "semgrep/searchOngoing"
+let start_meth = "lens/search"
+let ongoing_meth = "lens/searchOngoing"
 
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
 
-(* The main logic for the /semgrep/search LSP command, which is meant to be
+(* The main logic for the /lens/search LSP command, which is meant to be
    run on a manual search.
 
    This is a _streaming_ search, meaning that we service partial results. In
    particular, we choose to service results within the RPC_server loop as
    _one file per request_.
 
-   As such, we have two different commands: /semgrep/search, and /semgrep/searchOngoing.
+   As such, we have two different commands: /lens/search, and /lens/searchOngoing.
    Our protocol with them are as follows:
-   - when starting a search, the LS receives /semgrep/search and stores some
+   - when starting a search, the LS receives /lens/search and stores some
      information of what to do next in the `server` value
-   - the server then receives /semgrep/searchOngoing until either a new search
+   - the server then receives /lens/searchOngoing until either a new search
      is started, or the search is finished.
    - both searches will return the matches found in the next file in the queue
 
    Effectively, think of `Search.ml` as a pinata, which is consistently hit by
-   /semgrep/search and /semgrep/searchOngoing until it runs out of files to
+   /lens/search and /lens/searchOngoing until it runs out of files to
    search.
 
    TODO: Things that would be nice:
@@ -324,7 +324,7 @@ let get_relevant_rules ({ params = { patterns; fix; lang; _ }; _ } as env : env)
   *)
   let valid_analyzers =
     match langs_of_patterns with
-    | [] -> failwith "no patterns given to /semgrep/search"
+    | [] -> failwith "no patterns given to /lens/search"
     | analyzers :: _ ->
         let relevant_analyzers = get_relevant_analyzers env in
         List.filter
@@ -474,7 +474,7 @@ let json_of_matches
   `Assoc [ ("locations", `List json) ]
 
 (*****************************************************************************)
-(* Running Semgrep! *)
+(* Running Lens! *)
 (*****************************************************************************)
 
 let next_rules_and_file (session : Legacy_session.t) =
@@ -518,21 +518,21 @@ let rec search_single_target (session : Legacy_session.t) =
 (* Entry point *)
 (*****************************************************************************)
 
-(** on a semgrep/search request, get the pattern and (optional) language params.
+(** on a lens/search request, get the pattern and (optional) language params.
     We then try and parse the pattern in every language (or specified lang), and
     scan like normal, only returning the match ranges per file *)
 let start_search (session : Legacy_session.t) (id : Jsonrpc.Id.t)
     (params : Jsonrpc.Structured.t option) =
   match Request_params.of_jsonrpc_params params with
   | None ->
-      Logs.debug (fun m -> m "no params received in semgrep/search");
+      Logs.debug (fun m -> m "no params received in lens/search");
       (session, Legacy_lsp_.Reply.empty)
   | Some params -> (
       let env = mk_env session params in
       match get_relevant_rules env with
       | Error e ->
           Logs.warn (fun m ->
-              m "error parsing patterns for semgrep/search: %s"
+              m "error parsing patterns for lens/search: %s"
                 (Rule_error.string_of_error e));
           (session, Legacy_lsp_.Reply.empty)
       | Ok rules ->

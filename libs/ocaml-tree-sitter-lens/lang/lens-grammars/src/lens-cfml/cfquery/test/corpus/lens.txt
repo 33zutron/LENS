@@ -1,0 +1,50 @@
+=====================================
+Lens ellipsis in SELECT columns
+=====================================
+
+SELECT ... FROM users
+
+---
+
+(program
+  (query_keyword)
+  (lens_ellipsis)
+  (query_keyword)
+  (query_identifier))
+
+=====================================
+Lens ellipsis in WHERE clause
+=====================================
+
+SELECT * FROM users WHERE ...
+
+---
+
+(program
+  (query_keyword)
+  (query_star
+    (star))
+  (query_keyword)
+  (query_identifier)
+  (query_keyword)
+  (lens_ellipsis))
+
+=====================================
+Lens metavariable in hash expression
+=====================================
+
+SELECT * FROM $X WHERE id = #$ID#
+
+---
+
+(program
+  (query_keyword)
+  (query_star
+    (star))
+  (query_keyword)
+  (query_identifier)
+  (query_keyword)
+  (query_assignment_expression
+    (query_identifier)
+    (hash_expression
+      (identifier))))

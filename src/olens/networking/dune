@@ -1,0 +1,35 @@
+; This library should contain all the entry points to access the internet.
+(library
+  (public_name lens.olens_networking)
+  (name olens_networking)
+  (wrapped false)
+  (libraries
+    lwt
+    networking.http_mock_client
+    networking.http_helpers
+    lwt_platform
+    ocolor
+
+    commons
+
+    profiling
+    networking
+    telemetry
+
+    lens.core
+    lens.parsing
+
+    olens_configuring
+    olens_jsonnet
+  )
+ (preprocess
+   (pps
+     profiling.ppx
+     ppx_deriving.show
+     ppx_deriving.eq
+     ppx_hash
+     lwt_ppx
+     telemetry.ppx
+   )
+ )
+)

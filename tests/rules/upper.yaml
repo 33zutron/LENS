@@ -8,4 +8,4 @@ rules:
           - pattern: $VAR = $VALUE
           - metavariable-comparison:
                 metavariable: $VALUE
-                comparison: upper(str($VALUE)) == "SEMGREP"
+                comparison: upper(str($VALUE)) == "LENS"

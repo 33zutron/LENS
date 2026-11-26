@@ -20,7 +20,7 @@
  *
  * In theory, HCL is a general format (a bit like YAML or JSON) that could
  * be used not only for Terraform. In practice, only Terraform uses HCL
- * and all the semgrep rules people are writing are not about HCL
+ * and all the lens rules people are writing are not about HCL
  * but about Terraform, hence the focus on Terraform here.
  *
  * I tried to keep the names used in the original documentation for
@@ -117,7 +117,7 @@ and block_body = block_body_element list bracket
 and block_body_element =
   | Argument of argument
   | Block of block
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | BlockEllipsis of tok
 
 (*****************************************************************************)

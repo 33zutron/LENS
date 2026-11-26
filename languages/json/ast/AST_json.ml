@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (c) 2025 Semgrep Inc.
+ * Copyright (c) 2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ module JS = Ast_js
  * AST for JSON with location information.
  * There are many JSON parsers for OCaml (see below), but none of them
  * provide finer-grained token location which is useful for error reporting
- * and essential for Semgrep matching.
+ * and essential for Lens matching.
  *
  * Below we define actually 2 ASTs for JSON:
  *  - an AST that is just an alias for AST_js.expr because we (ab)use the

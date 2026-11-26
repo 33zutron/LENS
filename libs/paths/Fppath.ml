@@ -1,6 +1,6 @@
 (* Martin Jambon, Yoann Padioleau
  *
- * Copyright (C) 2024-2025 Semgrep Inc.
+ * Copyright (C) 2024-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,7 +19,7 @@
 *)
 
 (* For gitignore filtering, we need to operate on Ppath (see
- * the signature of Gitignore_filter.select()), but when semgrep
+ * the signature of Gitignore_filter.select()), but when lens
  * displays findings or errors, we want filenames derived from
  * the scanning roots, not the root of the project. This is why we need to
  * keep both the fpath and ppath for each target file as we walked
@@ -37,7 +37,7 @@ let rec walk_dirs ?(should_recurse = fun _ -> true) (dir : t) f =
   f dir.ppath;
   match CapFS.read_dir_entries dir.fpath with
   | exception e ->
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.warn (fun m ->
           m "Fppath.walk_dirs: read_dir_entries on %a failed: %s" Fpath.pp
             dir.fpath (Printexc.to_string e))
@@ -54,7 +54,7 @@ let rec walk_dirs ?(should_recurse = fun _ -> true) (dir : t) f =
                 (* Non-directory entry — nothing to recurse into. *)
                 ()
             | Error (code, _fun, info) ->
-                (* nosemgrep: no-logs-in-library *)
+                (* nolens: no-logs-in-library *)
                 Logs.warn (fun m ->
                     m "Fppath.walk_dirs: lstat %a: %s %s" Fpath.pp child.fpath
                       (Unix.error_message code) info))

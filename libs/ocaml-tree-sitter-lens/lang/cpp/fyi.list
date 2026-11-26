@@ -1,0 +1,10 @@
+# C
+lens-grammars/src/tree-sitter-c/LICENSE
+lens-grammars/src/tree-sitter-c/grammar.js
+
+# C++ extends C
+lens-grammars/src/tree-sitter-cpp/LICENSE
+lens-grammars/src/tree-sitter-cpp/grammar.js
+
+# lens extension to C++
+lens-grammars/src/lens-cpp/grammar.js

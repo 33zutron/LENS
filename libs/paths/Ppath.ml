@@ -1,6 +1,6 @@
 (* Martin Jambon
  *
- * Copyright (C) 2024-2025 Semgrep Inc.
+ * Copyright (C) 2024-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -51,7 +51,7 @@ type t = {
    *)
   segments : string list;
   (* The string representation of the ppath as used for matching file paths
-     with gitignore and semgrepignore implementation.
+     with gitignore and lensignore implementation.
      This path uses '/' as a separator regardless of the platform
      and starts with one. *)
   string : string;
@@ -65,7 +65,7 @@ let string_of_segments segments = String.concat "/" segments
 (*****************************************************************************)
 
 (* Fast access to the string representation is needed when matching a ppath
-   against many gitignore or semgrepignore patterns because they use regexps
+   against many gitignore or lensignore patterns because they use regexps
    on the string rather than working on string segments individually. *)
 let to_string_fast path = path.string
 

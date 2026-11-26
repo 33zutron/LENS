@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,18 +15,18 @@ from unittest.mock import patch
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Gomod
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Maven
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Npm
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Pypi
-from semgrep.subproject import from_resolved_dependencies
-from semgrep.symbol_analysis import _ecosystem_to_language
-from semgrep.symbol_analysis import build_subproject_file_mapping
-from semgrep.symbol_analysis import run_subproject_symbol_analysis
-from semgrep.symbol_analysis import run_symbol_analysis_for_files
-from semgrep.target_manager import TargetManager
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import Gomod
+from lens.lens_interfaces.lens_output_v1 import Maven
+from lens.lens_interfaces.lens_output_v1 import Npm
+from lens.lens_interfaces.lens_output_v1 import Pypi
+from lens.subproject import from_resolved_dependencies
+from lens.symbol_analysis import _ecosystem_to_language
+from lens.symbol_analysis import build_subproject_file_mapping
+from lens.symbol_analysis import run_subproject_symbol_analysis
+from lens.symbol_analysis import run_symbol_analysis_for_files
+from lens.target_manager import TargetManager
 
 
 def make_symbol_usage(fqn: list[str]) -> out.SymbolUsage:
@@ -439,7 +439,7 @@ class TestBuildSubprojectFileMapping:
 
 class TestRunSymbolAnalysisForFiles:
     @pytest.mark.quick
-    @patch("semgrep.symbol_analysis.run_symbol_analysis_rpc")
+    @patch("lens.symbol_analysis.run_symbol_analysis_rpc")
     def test_calls_rpc_with_correct_params(self, mock_rpc):
         """Should call RPC with proper SymbolAnalysisParams."""
         expected_result = out.SymbolAnalysis(value=[])
@@ -468,7 +468,7 @@ class TestRunSymbolAnalysisForFiles:
         assert result == expected_result
 
     @pytest.mark.quick
-    @patch("semgrep.symbol_analysis.run_symbol_analysis_rpc")
+    @patch("lens.symbol_analysis.run_symbol_analysis_rpc")
     def test_returns_none_when_rpc_fails(self, mock_rpc):
         """Should return None when RPC call fails."""
         mock_rpc.return_value = None
@@ -482,7 +482,7 @@ class TestRunSymbolAnalysisForFiles:
         assert result is None
 
     @pytest.mark.quick
-    @patch("semgrep.symbol_analysis.run_symbol_analysis_rpc")
+    @patch("lens.symbol_analysis.run_symbol_analysis_rpc")
     def test_returns_symbol_analysis_with_usages(self, mock_rpc):
         """Should return SymbolAnalysis with symbol usages."""
         symbol_usage = make_symbol_usage(["requests", "get"])
@@ -502,7 +502,7 @@ class TestRunSymbolAnalysisForFiles:
 
 class TestRunScaSymbolAnalysis:
     @pytest.mark.quick
-    @patch("semgrep.symbol_analysis.run_symbol_analysis_rpc")
+    @patch("lens.symbol_analysis.run_symbol_analysis_rpc")
     def test_returns_empty_analysis_when_no_subprojects(
         self, mock_rpc, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):
@@ -519,7 +519,7 @@ class TestRunScaSymbolAnalysis:
         mock_rpc.assert_not_called()
 
     @pytest.mark.quick
-    @patch("semgrep.symbol_analysis.run_symbol_analysis_rpc")
+    @patch("lens.symbol_analysis.run_symbol_analysis_rpc")
     def test_skips_unsupported_ecosystems(
         self, mock_rpc, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):
@@ -545,7 +545,7 @@ class TestRunScaSymbolAnalysis:
         mock_rpc.assert_not_called()
 
     @pytest.mark.quick
-    @patch("semgrep.symbol_analysis.run_symbol_analysis_rpc")
+    @patch("lens.symbol_analysis.run_symbol_analysis_rpc")
     def test_skips_subprojects_outside_scanning_roots(
         self, mock_rpc, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):
@@ -577,7 +577,7 @@ class TestRunScaSymbolAnalysis:
         mock_rpc.assert_not_called()
 
     @pytest.mark.quick
-    @patch("semgrep.symbol_analysis.run_symbol_analysis_rpc")
+    @patch("lens.symbol_analysis.run_symbol_analysis_rpc")
     def test_calls_rpc_for_subproject_with_files(
         self, mock_rpc, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):
@@ -608,7 +608,7 @@ class TestRunScaSymbolAnalysis:
         assert result[0].symbol_analysis.value[0].symbol.fqn == ["requests", "get"]
 
     @pytest.mark.quick
-    @patch("semgrep.symbol_analysis.run_symbol_analysis_rpc")
+    @patch("lens.symbol_analysis.run_symbol_analysis_rpc")
     def test_combines_results_from_multiple_subprojects(
         self, mock_rpc, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):
@@ -653,7 +653,7 @@ class TestRunScaSymbolAnalysis:
         assert ["flask", "Flask"] in fqns
 
     @pytest.mark.quick
-    @patch("semgrep.symbol_analysis.run_symbol_analysis_rpc")
+    @patch("lens.symbol_analysis.run_symbol_analysis_rpc")
     def test_handles_rpc_failure_gracefully(
         self, mock_rpc, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):
@@ -690,7 +690,7 @@ class TestRunScaSymbolAnalysis:
         assert result[0].symbol_analysis.value[0].symbol.fqn == ["requests", "get"]
 
     @pytest.mark.quick
-    @patch("semgrep.symbol_analysis.run_symbol_analysis_rpc")
+    @patch("lens.symbol_analysis.run_symbol_analysis_rpc")
     def test_npm_subproject_uses_ts_language(
         self, mock_rpc, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ):

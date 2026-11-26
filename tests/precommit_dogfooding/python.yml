@@ -20,13 +20,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.deserialization.avoid-pyyaml-load.avoid-pyyaml-load
+    source: https://lens.dev/r/python.lang.security.deserialization.avoid-pyyaml-load.avoid-pyyaml-load
     shortlink: https://sg.run/we9Y
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: ZqU5jZ
         version_id: kbTZ4W
-        url: https://semgrep.dev/playground/r/kbTZ4W/python.lang.security.deserialization.avoid-pyyaml-load.avoid-pyyaml-load
+        url: https://lens.dev/playground/r/kbTZ4W/python.lang.security.deserialization.avoid-pyyaml-load.avoid-pyyaml-load
   languages:
   - python
   message: Detected a possible YAML deserialization vulnerability. `yaml.unsafe_load`,
@@ -75,13 +75,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.deserialization.pickle.avoid-shelve
+    source: https://lens.dev/r/python.lang.security.deserialization.pickle.avoid-shelve
     shortlink: https://sg.run/dKkZ
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 8GUje2
         version_id: yeTbGQ
-        url: https://semgrep.dev/playground/r/yeTbGQ/python.lang.security.deserialization.pickle.avoid-shelve
+        url: https://lens.dev/playground/r/yeTbGQ/python.lang.security.deserialization.pickle.avoid-shelve
   languages:
   - python
   message: Avoid using `shelve`, which uses `pickle`, which is known to lead to code
@@ -110,13 +110,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.network.http-not-https-connection.http-not-https-connection
+    source: https://lens.dev/r/python.lang.security.audit.network.http-not-https-connection.http-not-https-connection
     shortlink: https://sg.run/N4Np
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: v8UnWQ
         version_id: RGTwvl
-        url: https://semgrep.dev/playground/r/RGTwvl/python.lang.security.audit.network.http-not-https-connection.http-not-https-connection
+        url: https://lens.dev/playground/r/RGTwvl/python.lang.security.audit.network.http-not-https-connection.http-not-https-connection
   languages:
   - python
   severity: ERROR
@@ -146,13 +146,13 @@ rules:
     impact: MEDIUM
     confidence: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.network.bind.avoid-bind-to-all-interfaces
+    source: https://lens.dev/r/python.lang.security.audit.network.bind.avoid-bind-to-all-interfaces
     shortlink: https://sg.run/rdln
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: OrU3og
         version_id: 5PTY5G
-        url: https://semgrep.dev/playground/r/5PTY5G/python.lang.security.audit.network.bind.avoid-bind-to-all-interfaces
+        url: https://lens.dev/playground/r/5PTY5G/python.lang.security.audit.network.bind.avoid-bind-to-all-interfaces
   languages:
   - python
   severity: INFO
@@ -204,13 +204,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.logging.logger-credential-leak.python-logger-credential-disclosure
+    source: https://lens.dev/r/python.lang.security.audit.logging.logger-credential-leak.python-logger-credential-disclosure
     shortlink: https://sg.run/ydNx
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: x8UnJk
         version_id: w8TvNW
-        url: https://semgrep.dev/playground/r/w8TvNW/python.lang.security.audit.logging.logger-credential-leak.python-logger-credential-disclosure
+        url: https://lens.dev/playground/r/w8TvNW/python.lang.security.audit.logging.logger-credential-leak.python-logger-credential-disclosure
 - id: python.flask.security.injection.path-traversal-open.path-traversal-open
   languages:
   - python
@@ -237,13 +237,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.injection.path-traversal-open.path-traversal-open
+    source: https://lens.dev/r/python.flask.security.injection.path-traversal-open.path-traversal-open
     shortlink: https://sg.run/PJRW
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: DbUpOQ
         version_id: rxT8xO
-        url: https://semgrep.dev/playground/r/rxT8xO/python.flask.security.injection.path-traversal-open.path-traversal-open
+        url: https://lens.dev/playground/r/rxT8xO/python.flask.security.injection.path-traversal-open.path-traversal-open
   pattern-either:
   - patterns:
     - pattern: open(...)
@@ -355,13 +355,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.authtkt-cookie-httponly-unsafe-default.pyramid-authtkt-cookie-httponly-unsafe-default
+    source: https://lens.dev/r/python.pyramid.audit.authtkt-cookie-httponly-unsafe-default.pyramid-authtkt-cookie-httponly-unsafe-default
     shortlink: https://sg.run/EprB
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: bwUXKB
         version_id: rxTglX
-        url: https://semgrep.dev/playground/r/rxTglX/python.pyramid.audit.authtkt-cookie-httponly-unsafe-default.pyramid-authtkt-cookie-httponly-unsafe-default
+        url: https://lens.dev/playground/r/rxTglX/python.pyramid.audit.authtkt-cookie-httponly-unsafe-default.pyramid-authtkt-cookie-httponly-unsafe-default
   languages:
   - python
   severity: WARNING
@@ -408,13 +408,13 @@ rules:
     likelihood: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.injection.nan-injection.nan-injection
+    source: https://lens.dev/r/python.flask.security.injection.nan-injection.nan-injection
     shortlink: https://sg.run/e598
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: WAUdj7
         version_id: 9lTnjK
-        url: https://semgrep.dev/playground/r/9lTnjK/python.flask.security.injection.nan-injection.nan-injection
+        url: https://lens.dev/playground/r/9lTnjK/python.flask.security.injection.nan-injection.nan-injection
 - id: python.lang.security.dangerous-os-exec.dangerous-os-exec
   mode: taint
   options:
@@ -554,7 +554,7 @@ rules:
     - A01:2017 - Injection
     - A03:2021 - Injection
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     asvs:
       section: 'V5: Validation, Sanitization and Encoding Verification Requirements'
       control_id: 5.3.8 OS Command Injection
@@ -571,13 +571,13 @@ rules:
     likelihood: MEDIUM
     impact: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.dangerous-os-exec.dangerous-os-exec
+    source: https://lens.dev/r/python.lang.security.dangerous-os-exec.dangerous-os-exec
     shortlink: https://sg.run/yL9x
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: qNUR13
         version_id: jQT9Or
-        url: https://semgrep.dev/playground/r/jQT9Or/python.lang.security.dangerous-os-exec.dangerous-os-exec
+        url: https://lens.dev/playground/r/jQT9Or/python.lang.security.dangerous-os-exec.dangerous-os-exec
   languages:
   - python
   severity: ERROR
@@ -641,7 +641,7 @@ rules:
     - 'CWE-78: Improper Neutralization of Special Elements used in an OS Command (''OS
       Command Injection'')'
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     confidence: HIGH
     cwe2022-top25: true
     cwe2021-top25: true
@@ -650,13 +650,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.command.subprocess-injection.subprocess-injection
+    source: https://lens.dev/r/python.django.security.injection.command.subprocess-injection.subprocess-injection
     shortlink: https://sg.run/49BE
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: EwUepx
         version_id: gET5bA
-        url: https://semgrep.dev/playground/r/gET5bA/python.django.security.injection.command.subprocess-injection.subprocess-injection
+        url: https://lens.dev/playground/r/gET5bA/python.django.security.injection.command.subprocess-injection.subprocess-injection
 - id: python.pyramid.audit.authtkt-cookie-secure-unsafe-value.pyramid-authtkt-cookie-secure-unsafe-value
   patterns:
   - pattern-either:
@@ -694,13 +694,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.authtkt-cookie-secure-unsafe-value.pyramid-authtkt-cookie-secure-unsafe-value
+    source: https://lens.dev/r/python.pyramid.audit.authtkt-cookie-secure-unsafe-value.pyramid-authtkt-cookie-secure-unsafe-value
     shortlink: https://sg.run/gjp5
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: x8UqAp
         version_id: qkT9YY
-        url: https://semgrep.dev/playground/r/qkT9YY/python.pyramid.audit.authtkt-cookie-secure-unsafe-value.pyramid-authtkt-cookie-secure-unsafe-value
+        url: https://lens.dev/playground/r/qkT9YY/python.pyramid.audit.authtkt-cookie-secure-unsafe-value.pyramid-authtkt-cookie-secure-unsafe-value
   languages:
   - python
   severity: WARNING
@@ -726,13 +726,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.code.user-exec.user-exec
+    source: https://lens.dev/r/python.django.security.injection.code.user-exec.user-exec
     shortlink: https://sg.run/5Q3X
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 0oU5AW
         version_id: LjTp1q
-        url: https://semgrep.dev/playground/r/LjTp1q/python.django.security.injection.code.user-exec.user-exec
+        url: https://lens.dev/playground/r/LjTp1q/python.django.security.injection.code.user-exec.user-exec
   patterns:
   - pattern-inside: |
       def $F(...):
@@ -897,7 +897,7 @@ rules:
     owasp:
     - A03:2021 - Injection
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     category: security
     technology:
     - python
@@ -907,13 +907,13 @@ rules:
     likelihood: HIGH
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.dangerous-testcapi-run-in-subinterp.dangerous-testcapi-run-in-subinterp
+    source: https://lens.dev/r/python.lang.security.dangerous-testcapi-run-in-subinterp.dangerous-testcapi-run-in-subinterp
     shortlink: https://sg.run/wLpY
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: GdUkxR
         version_id: bZT405
-        url: https://semgrep.dev/playground/r/bZT405/python.lang.security.dangerous-testcapi-run-in-subinterp.dangerous-testcapi-run-in-subinterp
+        url: https://lens.dev/playground/r/bZT405/python.lang.security.dangerous-testcapi-run-in-subinterp.dangerous-testcapi-run-in-subinterp
   severity: WARNING
   languages:
   - python
@@ -944,13 +944,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.injection.os-system-injection.os-system-injection
+    source: https://lens.dev/r/python.flask.security.injection.os-system-injection.os-system-injection
     shortlink: https://sg.run/4xzz
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: BYUN99
         version_id: yeTd6w
-        url: https://semgrep.dev/playground/r/yeTd6w/python.flask.security.injection.os-system-injection.os-system-injection
+        url: https://lens.dev/playground/r/yeTd6w/python.flask.security.injection.os-system-injection.os-system-injection
   pattern-either:
   - patterns:
     - pattern: os.system(...)
@@ -1020,13 +1020,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.sql.sql-injection-extra.sql-injection-using-extra-where
+    source: https://lens.dev/r/python.django.security.injection.sql.sql-injection-extra.sql-injection-using-extra-where
     shortlink: https://sg.run/0Ql5
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: zdUkx1
         version_id: K3TOp8
-        url: https://semgrep.dev/playground/r/K3TOp8/python.django.security.injection.sql.sql-injection-extra.sql-injection-using-extra-where
+        url: https://lens.dev/playground/r/K3TOp8/python.django.security.injection.sql.sql-injection-extra.sql-injection-using-extra-where
   languages:
   - python
   severity: WARNING
@@ -1354,13 +1354,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.set-cookie-samesite-unsafe-value.pyramid-set-cookie-samesite-unsafe-value
+    source: https://lens.dev/r/python.pyramid.audit.set-cookie-samesite-unsafe-value.pyramid-set-cookie-samesite-unsafe-value
     shortlink: https://sg.run/GXR6
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: EwUgpY
         version_id: 2KTAlP
-        url: https://semgrep.dev/playground/r/2KTAlP/python.pyramid.audit.set-cookie-samesite-unsafe-value.pyramid-set-cookie-samesite-unsafe-value
+        url: https://lens.dev/playground/r/2KTAlP/python.pyramid.audit.set-cookie-samesite-unsafe-value.pyramid-set-cookie-samesite-unsafe-value
   languages:
   - python
   severity: WARNING
@@ -1395,13 +1395,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.distributed.security.require-encryption
+    source: https://lens.dev/r/python.distributed.security.require-encryption
     shortlink: https://sg.run/AvQ2
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: YGURy0
         version_id: A8T1k6
-        url: https://semgrep.dev/playground/r/A8T1k6/python.distributed.security.require-encryption
+        url: https://lens.dev/playground/r/A8T1k6/python.distributed.security.require-encryption
   languages:
   - python
 - id: python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
@@ -1432,13 +1432,13 @@ rules:
     likelihood: LOW
     impact: LOW
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
+    source: https://lens.dev/r/python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
     shortlink: https://sg.run/yP1O
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: r6U2wE
         version_id: kbTrKW
-        url: https://semgrep.dev/playground/r/kbTrKW/python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
+        url: https://lens.dev/playground/r/kbTrKW/python.sqlalchemy.security.audit.avoid-sqlalchemy-text.avoid-sqlalchemy-text
   languages:
   - python
   severity: ERROR
@@ -1533,7 +1533,7 @@ rules:
     - A01:2017 - Injection
     - A03:2021 - Injection
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     asvs:
       section: 'V5: Validation, Sanitization and Encoding Verification Requirements'
       control_id: 5.3.8 OS Command Injection
@@ -1550,13 +1550,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.dangerous-spawn-process-tainted-env-args.dangerous-spawn-process-tainted-env-args
+    source: https://lens.dev/r/python.lang.security.audit.dangerous-spawn-process-tainted-env-args.dangerous-spawn-process-tainted-env-args
     shortlink: https://sg.run/Y3Ke
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: JDUz34
         version_id: X0TJPb
-        url: https://semgrep.dev/playground/r/X0TJPb/python.lang.security.audit.dangerous-spawn-process-tainted-env-args.dangerous-spawn-process-tainted-env-args
+        url: https://lens.dev/playground/r/X0TJPb/python.lang.security.audit.dangerous-spawn-process-tainted-env-args.dangerous-spawn-process-tainted-env-args
   languages:
   - python
   severity: ERROR
@@ -1637,7 +1637,7 @@ rules:
     - 'CWE-78: Improper Neutralization of Special Elements used in an OS Command (''OS
       Command Injection'')'
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     confidence: HIGH
     cwe2022-top25: true
     cwe2021-top25: true
@@ -1646,13 +1646,13 @@ rules:
     likelihood: HIGH
     impact: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.injection.subprocess-injection.subprocess-injection
+    source: https://lens.dev/r/python.flask.security.injection.subprocess-injection.subprocess-injection
     shortlink: https://sg.run/5gW3
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 8GU3qp
         version_id: kbTZ7j
-        url: https://semgrep.dev/playground/r/kbTZ7j/python.flask.security.injection.subprocess-injection.subprocess-injection
+        url: https://lens.dev/playground/r/kbTZ7j/python.flask.security.injection.subprocess-injection.subprocess-injection
 - id: python.flask.security.audit.app-run-param-config.avoid_app_run_with_bad_host
   message: Running flask app with host 0.0.0.0 could expose the server publicly.
   metadata:
@@ -1671,13 +1671,13 @@ rules:
     impact: MEDIUM
     confidence: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.audit.app-run-param-config.avoid_app_run_with_bad_host
+    source: https://lens.dev/r/python.flask.security.audit.app-run-param-config.avoid_app_run_with_bad_host
     shortlink: https://sg.run/eLby
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: L1Uy1n
         version_id: K3TOpE
-        url: https://semgrep.dev/playground/r/K3TOpE/python.flask.security.audit.app-run-param-config.avoid_app_run_with_bad_host
+        url: https://lens.dev/playground/r/K3TOpE/python.flask.security.audit.app-run-param-config.avoid_app_run_with_bad_host
   languages:
   - python
   severity: WARNING
@@ -1730,13 +1730,13 @@ rules:
     likelihood: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.nan-injection.nan-injection
+    source: https://lens.dev/r/python.django.security.nan-injection.nan-injection
     shortlink: https://sg.run/Og7L
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: DbUGvk
         version_id: BjTG9n
-        url: https://semgrep.dev/playground/r/BjTG9n/python.django.security.nan-injection.nan-injection
+        url: https://lens.dev/playground/r/BjTG9n/python.django.security.nan-injection.nan-injection
 - id: python.pyramid.audit.set-cookie-samesite-unsafe-default.pyramid-set-cookie-samesite-unsafe-default
   patterns:
   - pattern-either:
@@ -1777,13 +1777,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.set-cookie-samesite-unsafe-default.pyramid-set-cookie-samesite-unsafe-default
+    source: https://lens.dev/r/python.pyramid.audit.set-cookie-samesite-unsafe-default.pyramid-set-cookie-samesite-unsafe-default
     shortlink: https://sg.run/5AWj
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: nJUp80
         version_id: pZTqPw
-        url: https://semgrep.dev/playground/r/pZTqPw/python.pyramid.audit.set-cookie-samesite-unsafe-default.pyramid-set-cookie-samesite-unsafe-default
+        url: https://lens.dev/playground/r/pZTqPw/python.pyramid.audit.set-cookie-samesite-unsafe-default.pyramid-set-cookie-samesite-unsafe-default
   languages:
   - python
   severity: WARNING
@@ -1808,13 +1808,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.email.xss-send-mail-html-message.xss-send-mail-html-message
+    source: https://lens.dev/r/python.django.security.injection.email.xss-send-mail-html-message.xss-send-mail-html-message
     shortlink: https://sg.run/Avx8
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: lBU9Ll
         version_id: 44TYX2
-        url: https://semgrep.dev/playground/r/44TYX2/python.django.security.injection.email.xss-send-mail-html-message.xss-send-mail-html-message
+        url: https://lens.dev/playground/r/44TYX2/python.django.security.injection.email.xss-send-mail-html-message.xss-send-mail-html-message
   languages:
   - python
   severity: WARNING
@@ -2069,13 +2069,13 @@ rules:
     impact: MEDIUM
     likelihood: MEDIUM
     confidence: MEDIUM
-    source: https://semgrep.dev/r/python.flask.security.injection.tainted-url-host.tainted-url-host
+    source: https://lens.dev/r/python.flask.security.injection.tainted-url-host.tainted-url-host
     shortlink: https://sg.run/RXpK
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: ReU3Wb
         version_id: xyT34W
-        url: https://semgrep.dev/playground/r/xyT34W/python.flask.security.injection.tainted-url-host.tainted-url-host
+        url: https://lens.dev/playground/r/xyT34W/python.flask.security.injection.tainted-url-host.tainted-url-host
   mode: taint
   pattern-sinks:
   - patterns:
@@ -2153,13 +2153,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.weak-ssl-version.weak-ssl-version
+    source: https://lens.dev/r/python.lang.security.audit.weak-ssl-version.weak-ssl-version
     shortlink: https://sg.run/RoZO
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: KxUbNG
         version_id: pZTQ9w
-        url: https://semgrep.dev/playground/r/pZTQ9w/python.lang.security.audit.weak-ssl-version.weak-ssl-version
+        url: https://lens.dev/playground/r/pZTQ9w/python.lang.security.audit.weak-ssl-version.weak-ssl-version
   languages:
   - python
   severity: WARNING
@@ -2198,13 +2198,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.command.command-injection-os-system.command-injection-os-system
+    source: https://lens.dev/r/python.django.security.injection.command.command-injection-os-system.command-injection-os-system
     shortlink: https://sg.run/Gen2
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: KxUbp2
         version_id: 8KTLd4
-        url: https://semgrep.dev/playground/r/8KTLd4/python.django.security.injection.command.command-injection-os-system.command-injection-os-system
+        url: https://lens.dev/playground/r/8KTLd4/python.django.security.injection.command.command-injection-os-system.command-injection-os-system
   languages:
   - python
   severity: ERROR
@@ -2491,13 +2491,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.security.sqlalchemy-sql-injection.pyramid-sqlalchemy-sql-injection
+    source: https://lens.dev/r/python.pyramid.security.sqlalchemy-sql-injection.pyramid-sqlalchemy-sql-injection
     shortlink: https://sg.run/W7eE
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: QrUZ7l
         version_id: yeTQk2
-        url: https://semgrep.dev/playground/r/yeTQk2/python.pyramid.security.sqlalchemy-sql-injection.pyramid-sqlalchemy-sql-injection
+        url: https://lens.dev/playground/r/yeTQk2/python.pyramid.security.sqlalchemy-sql-injection.pyramid-sqlalchemy-sql-injection
   mode: taint
   pattern-sources:
   - patterns:
@@ -2556,13 +2556,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.audit.app-run-security-config.avoid_using_app_run_directly
+    source: https://lens.dev/r/python.flask.security.audit.app-run-security-config.avoid_using_app_run_directly
     shortlink: https://sg.run/vz5b
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 8GUjdX
         version_id: qkTK0D
-        url: https://semgrep.dev/playground/r/qkTK0D/python.flask.security.audit.app-run-security-config.avoid_using_app_run_directly
+        url: https://lens.dev/playground/r/qkTK0D/python.flask.security.audit.app-run-security-config.avoid_using_app_run_directly
   languages:
   - python
   severity: WARNING
@@ -2655,7 +2655,7 @@ rules:
     - A01:2017 - Injection
     - A03:2021 - Injection
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     asvs:
       section: 'V5: Validation, Sanitization and Encoding Verification Requirements'
       control_id: 5.3.8 OS Command Injection
@@ -2672,13 +2672,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.dangerous-os-exec-tainted-env-args.dangerous-os-exec-tainted-env-args
+    source: https://lens.dev/r/python.lang.security.audit.dangerous-os-exec-tainted-env-args.dangerous-os-exec-tainted-env-args
     shortlink: https://sg.run/qL6z
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 4bUEAY
         version_id: pZTQrY
-        url: https://semgrep.dev/playground/r/pZTQrY/python.lang.security.audit.dangerous-os-exec-tainted-env-args.dangerous-os-exec-tainted-env-args
+        url: https://lens.dev/playground/r/pZTQrY/python.lang.security.audit.dangerous-os-exec-tainted-env-args.dangerous-os-exec-tainted-env-args
   languages:
   - python
   severity: ERROR
@@ -2722,13 +2722,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.set-cookie-httponly-unsafe-default.pyramid-set-cookie-httponly-unsafe-default
+    source: https://lens.dev/r/python.pyramid.audit.set-cookie-httponly-unsafe-default.pyramid-set-cookie-httponly-unsafe-default
     shortlink: https://sg.run/P19v
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: d8UPQ7
         version_id: o5TWXe
-        url: https://semgrep.dev/playground/r/o5TWXe/python.pyramid.audit.set-cookie-httponly-unsafe-default.pyramid-set-cookie-httponly-unsafe-default
+        url: https://lens.dev/playground/r/o5TWXe/python.pyramid.audit.set-cookie-httponly-unsafe-default.pyramid-set-cookie-httponly-unsafe-default
   languages:
   - python
   severity: WARNING
@@ -2762,13 +2762,13 @@ rules:
     impact: MEDIUM
     likelihood: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.csv-writer-injection.csv-writer-injection
+    source: https://lens.dev/r/python.django.security.injection.csv-writer-injection.csv-writer-injection
     shortlink: https://sg.run/Pw9q
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 7KUK1y
         version_id: QkTQ4z
-        url: https://semgrep.dev/playground/r/QkTQ4z/python.django.security.injection.csv-writer-injection.csv-writer-injection
+        url: https://lens.dev/playground/r/QkTQ4z/python.django.security.injection.csv-writer-injection.csv-writer-injection
   mode: taint
   pattern-sinks:
   - patterns:
@@ -2825,13 +2825,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.jinja2.security.audit.autoescape-disabled-false.incorrect-autoescape-disabled
+    source: https://lens.dev/r/python.jinja2.security.audit.autoescape-disabled-false.incorrect-autoescape-disabled
     shortlink: https://sg.run/L2L7
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: QrU1Xg
         version_id: WrT2Or
-        url: https://semgrep.dev/playground/r/WrT2Or/python.jinja2.security.audit.autoescape-disabled-false.incorrect-autoescape-disabled
+        url: https://lens.dev/playground/r/WrT2Or/python.jinja2.security.audit.autoescape-disabled-false.incorrect-autoescape-disabled
   languages:
   - python
   severity: WARNING
@@ -2862,13 +2862,13 @@ rules:
     likelihood: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.injection.tainted-sql-string.tainted-sql-string
+    source: https://lens.dev/r/python.flask.security.injection.tainted-sql-string.tainted-sql-string
     shortlink: https://sg.run/JxZj
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: YGUDKQ
         version_id: w8T03J
-        url: https://semgrep.dev/playground/r/w8T03J/python.flask.security.injection.tainted-sql-string.tainted-sql-string
+        url: https://lens.dev/playground/r/w8T03J/python.flask.security.injection.tainted-sql-string.tainted-sql-string
   severity: ERROR
   languages:
   - python
@@ -2922,13 +2922,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insecure-hash-algorithm-md4.insecure-hash-algorithm-md4
+    source: https://lens.dev/r/python.pycryptodome.security.insecure-hash-algorithm-md4.insecure-hash-algorithm-md4
     shortlink: https://sg.run/Lve6
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: BYUJy4
         version_id: PkTnAP
-        url: https://semgrep.dev/playground/r/PkTnAP/python.pycryptodome.security.insecure-hash-algorithm-md4.insecure-hash-algorithm-md4
+        url: https://lens.dev/playground/r/PkTnAP/python.pycryptodome.security.insecure-hash-algorithm-md4.insecure-hash-algorithm-md4
   severity: WARNING
   languages:
   - python
@@ -3035,7 +3035,7 @@ rules:
     - https://stackoverflow.com/questions/3172470/actual-meaning-of-shell-true-in-subprocess
     - https://docs.python.org/3/library/subprocess.html
     - https://docs.python.org/3/library/shlex.html
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     category: security
     technology:
     - python
@@ -3047,13 +3047,13 @@ rules:
     likelihood: MEDIUM
     impact: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.dangerous-subprocess-use-tainted-env-args.dangerous-subprocess-use-tainted-env-args
+    source: https://lens.dev/r/python.lang.security.audit.dangerous-subprocess-use-tainted-env-args.dangerous-subprocess-use-tainted-env-args
     shortlink: https://sg.run/pLGg
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: AbUgrZ
         version_id: o5TQo9
-        url: https://semgrep.dev/playground/r/o5TQo9/python.lang.security.audit.dangerous-subprocess-use-tainted-env-args.dangerous-subprocess-use-tainted-env-args
+        url: https://lens.dev/playground/r/o5TQo9/python.lang.security.audit.dangerous-subprocess-use-tainted-env-args.dangerous-subprocess-use-tainted-env-args
   languages:
   - python
   severity: ERROR
@@ -3082,13 +3082,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.sql.sql-injection-rawsql.sql-injection-using-rawsql
+    source: https://lens.dev/r/python.django.security.injection.sql.sql-injection-rawsql.sql-injection-using-rawsql
     shortlink: https://sg.run/Kl4X
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: pKUOBp
         version_id: qkTK0J
-        url: https://semgrep.dev/playground/r/qkTK0J/python.django.security.injection.sql.sql-injection-rawsql.sql-injection-using-rawsql
+        url: https://lens.dev/playground/r/qkTK0J/python.django.security.injection.sql.sql-injection-rawsql.sql-injection-using-rawsql
   languages:
   - python
   severity: WARNING
@@ -3403,13 +3403,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.dangerous-system-call.dangerous-system-call
+    source: https://lens.dev/r/python.aws-lambda.security.dangerous-system-call.dangerous-system-call
     shortlink: https://sg.run/jDvN
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: QrUkg6
         version_id: NdTQlw
-        url: https://semgrep.dev/playground/r/NdTQlw/python.aws-lambda.security.dangerous-system-call.dangerous-system-call
+        url: https://lens.dev/playground/r/NdTQlw/python.aws-lambda.security.dangerous-system-call.dangerous-system-call
   languages:
   - python
   severity: ERROR
@@ -3448,13 +3448,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.audit.avoid-insecure-deserialization.avoid-insecure-deserialization
+    source: https://lens.dev/r/python.django.security.audit.avoid-insecure-deserialization.avoid-insecure-deserialization
     shortlink: https://sg.run/9oyr
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: OrU3e6
         version_id: BjTGwp
-        url: https://semgrep.dev/playground/r/BjTGwp/python.django.security.audit.avoid-insecure-deserialization.avoid-insecure-deserialization
+        url: https://lens.dev/playground/r/BjTGwp/python.django.security.audit.avoid-insecure-deserialization.avoid-insecure-deserialization
   message: Avoid using insecure deserialization library, backed by `pickle`, `_pickle`,
     `cpickle`, `dill`, `shelve`, or `yaml`, which are known to lead to remote code
     execution vulnerabilities.
@@ -3526,13 +3526,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.path-traversal.path-traversal-open.path-traversal-open
+    source: https://lens.dev/r/python.django.security.injection.path-traversal.path-traversal-open.path-traversal-open
     shortlink: https://sg.run/W8qg
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: oqUe7z
         version_id: RGTwXA
-        url: https://semgrep.dev/playground/r/RGTwXA/python.django.security.injection.path-traversal.path-traversal-open.path-traversal-open
+        url: https://lens.dev/playground/r/RGTwXA/python.django.security.injection.path-traversal.path-traversal-open.path-traversal-open
   languages:
   - python
   severity: WARNING
@@ -3972,13 +3972,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.code.user-eval.user-eval
+    source: https://lens.dev/r/python.django.security.injection.code.user-eval.user-eval
     shortlink: https://sg.run/PJDW
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: DbUpDQ
         version_id: ExTYJB
-        url: https://semgrep.dev/playground/r/ExTYJB/python.django.security.injection.code.user-eval.user-eval
+        url: https://lens.dev/playground/r/ExTYJB/python.django.security.injection.code.user-eval.user-eval
   patterns:
   - pattern-inside: |
       def $F(...):
@@ -4029,13 +4029,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.injection.ssrf-requests.ssrf-requests
+    source: https://lens.dev/r/python.flask.security.injection.ssrf-requests.ssrf-requests
     shortlink: https://sg.run/J9LW
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: WAUoRx
         version_id: zyT0e1
-        url: https://semgrep.dev/playground/r/zyT0e1/python.flask.security.injection.ssrf-requests.ssrf-requests
+        url: https://lens.dev/playground/r/zyT0e1/python.flask.security.injection.ssrf-requests.ssrf-requests
   pattern-either:
   - patterns:
     - pattern: requests.$FUNC(...)
@@ -4104,13 +4104,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.cryptography.security.mode-without-authentication.crypto-mode-without-authentication
+    source: https://lens.dev/r/python.cryptography.security.mode-without-authentication.crypto-mode-without-authentication
     shortlink: https://sg.run/N9JL
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: lBUpNZ
         version_id: RGTw5A
-        url: https://semgrep.dev/playground/r/RGTw5A/python.cryptography.security.mode-without-authentication.crypto-mode-without-authentication
+        url: https://lens.dev/playground/r/RGTw5A/python.cryptography.security.mode-without-authentication.crypto-mode-without-authentication
   patterns:
   - pattern-either:
     - patterns:
@@ -4249,7 +4249,7 @@ rules:
     - A03:2021 - Injection
     references:
     - https://bugs.python.org/issue43472
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     category: security
     technology:
     - python
@@ -4259,13 +4259,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.dangerous-subinterpreters-run-string.dangerous-subinterpreters-run-string
+    source: https://lens.dev/r/python.lang.security.dangerous-subinterpreters-run-string.dangerous-subinterpreters-run-string
     shortlink: https://sg.run/bPop
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: PeURWr
         version_id: 9lTnDy
-        url: https://semgrep.dev/playground/r/9lTnDy/python.lang.security.dangerous-subinterpreters-run-string.dangerous-subinterpreters-run-string
+        url: https://lens.dev/playground/r/9lTnDy/python.lang.security.dangerous-subinterpreters-run-string.dangerous-subinterpreters-run-string
   severity: WARNING
   languages:
   - python
@@ -4291,13 +4291,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.code.user-exec-format-string.user-exec-format-string
+    source: https://lens.dev/r/python.django.security.injection.code.user-exec-format-string.user-exec-format-string
     shortlink: https://sg.run/J9JW
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: WAUovx
         version_id: 7ZTYLz
-        url: https://semgrep.dev/playground/r/7ZTYLz/python.django.security.injection.code.user-exec-format-string.user-exec-format-string
+        url: https://lens.dev/playground/r/7ZTYLz/python.django.security.injection.code.user-exec-format-string.user-exec-format-string
   patterns:
   - pattern-inside: |
       def $F(...):
@@ -4529,13 +4529,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
+    source: https://lens.dev/r/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
     shortlink: https://sg.run/J92w
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: DbUpz2
         version_id: 6xT0p5
-        url: https://semgrep.dev/playground/r/6xT0p5/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
+        url: https://lens.dev/playground/r/6xT0p5/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true
   languages:
   - python
   severity: ERROR
@@ -4559,13 +4559,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.passwords.use-none-for-password-default.use-none-for-password-default
+    source: https://lens.dev/r/python.django.security.passwords.use-none-for-password-default.use-none-for-password-default
     shortlink: https://sg.run/zvBW
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: yyUn6Z
         version_id: qkTgLQ
-        url: https://semgrep.dev/playground/r/qkTgLQ/python.django.security.passwords.use-none-for-password-default.use-none-for-password-default
+        url: https://lens.dev/playground/r/qkTgLQ/python.django.security.passwords.use-none-for-password-default.use-none-for-password-default
   languages:
   - python
   severity: ERROR
@@ -4610,13 +4610,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pymongo.security.mongodb.mongo-client-bad-auth
+    source: https://lens.dev/r/python.pymongo.security.mongodb.mongo-client-bad-auth
     shortlink: https://sg.run/YXRd
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: d8UlOX
         version_id: BjTG2w
-        url: https://semgrep.dev/playground/r/BjTG2w/python.pymongo.security.mongodb.mongo-client-bad-auth
+        url: https://lens.dev/playground/r/BjTG2w/python.pymongo.security.mongodb.mongo-client-bad-auth
 - id: python.lang.security.dangerous-system-call.dangerous-system-call
   mode: taint
   options:
@@ -4759,7 +4759,7 @@ rules:
     - A01:2017 - Injection
     - A03:2021 - Injection
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     asvs:
       section: 'V5: Validation, Sanitization and Encoding Verification Requirements'
       control_id: 5.2.4 Dyanmic Code Execution Features
@@ -4776,13 +4776,13 @@ rules:
     likelihood: HIGH
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.dangerous-system-call.dangerous-system-call
+    source: https://lens.dev/r/python.lang.security.dangerous-system-call.dangerous-system-call
     shortlink: https://sg.run/k0W7
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 5rUoP1
         version_id: rxT8P4
-        url: https://semgrep.dev/playground/r/rxT8P4/python.lang.security.dangerous-system-call.dangerous-system-call
+        url: https://lens.dev/playground/r/rxT8P4/python.lang.security.dangerous-system-call.dangerous-system-call
   languages:
   - python
   severity: ERROR
@@ -4815,13 +4815,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.tainted-html-string.tainted-html-string
+    source: https://lens.dev/r/python.aws-lambda.security.tainted-html-string.tainted-html-string
     shortlink: https://sg.run/8zNy
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: JDUlwy
         version_id: nWTwKe
-        url: https://semgrep.dev/playground/r/nWTwKe/python.aws-lambda.security.tainted-html-string.tainted-html-string
+        url: https://lens.dev/playground/r/nWTwKe/python.aws-lambda.security.tainted-html-string.tainted-html-string
   mode: taint
   pattern-sources:
   - patterns:
@@ -4897,13 +4897,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.set-cookie-httponly-unsafe-value.pyramid-set-cookie-httponly-unsafe-value
+    source: https://lens.dev/r/python.pyramid.audit.set-cookie-httponly-unsafe-value.pyramid-set-cookie-httponly-unsafe-value
     shortlink: https://sg.run/JbqP
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: ZqU37W
         version_id: zyTXqy
-        url: https://semgrep.dev/playground/r/zyTXqy/python.pyramid.audit.set-cookie-httponly-unsafe-value.pyramid-set-cookie-httponly-unsafe-value
+        url: https://lens.dev/playground/r/zyTXqy/python.pyramid.audit.set-cookie-httponly-unsafe-value.pyramid-set-cookie-httponly-unsafe-value
   languages:
   - python
   severity: WARNING
@@ -4930,13 +4930,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.ssl-wrap-socket-is-deprecated.ssl-wrap-socket-is-deprecated
+    source: https://lens.dev/r/python.lang.security.audit.ssl-wrap-socket-is-deprecated.ssl-wrap-socket-is-deprecated
     shortlink: https://sg.run/PJOY
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: BYUN2e
         version_id: YDT8XN
-        url: https://semgrep.dev/playground/r/YDT8XN/python.lang.security.audit.ssl-wrap-socket-is-deprecated.ssl-wrap-socket-is-deprecated
+        url: https://lens.dev/playground/r/YDT8XN/python.lang.security.audit.ssl-wrap-socket-is-deprecated.ssl-wrap-socket-is-deprecated
   languages:
   - python
   severity: WARNING
@@ -4972,13 +4972,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
+    source: https://lens.dev/r/python.lang.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
     shortlink: https://sg.run/vYrY
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: PeU2e2
         version_id: O9TZoR
-        url: https://semgrep.dev/playground/r/O9TZoR/python.lang.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
+        url: https://lens.dev/playground/r/O9TZoR/python.lang.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
   severity: WARNING
   languages:
   - python
@@ -5003,13 +5003,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.open-redirect.open-redirect
+    source: https://lens.dev/r/python.django.security.injection.open-redirect.open-redirect
     shortlink: https://sg.run/Ave2
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: PeUZgr
         version_id: JdTZJ6
-        url: https://semgrep.dev/playground/r/JdTZJ6/python.django.security.injection.open-redirect.open-redirect
+        url: https://lens.dev/playground/r/JdTZJ6/python.django.security.injection.open-redirect.open-redirect
   languages:
   - python
   severity: WARNING
@@ -5588,13 +5588,13 @@ rules:
     impact: MEDIUM
     confidence: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.audit.debug-enabled.debug-enabled
+    source: https://lens.dev/r/python.flask.security.audit.debug-enabled.debug-enabled
     shortlink: https://sg.run/dKrd
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: gxU1bd
         version_id: qkTPK2
-        url: https://semgrep.dev/playground/r/qkTPK2/python.flask.security.audit.debug-enabled.debug-enabled
+        url: https://lens.dev/playground/r/qkTPK2/python.flask.security.audit.debug-enabled.debug-enabled
   severity: WARNING
   languages:
   - python
@@ -5633,13 +5633,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.csrf-origin-check-disabled-globally.pyramid-csrf-origin-check-disabled-globally
+    source: https://lens.dev/r/python.pyramid.audit.csrf-origin-check-disabled-globally.pyramid-csrf-origin-check-disabled-globally
     shortlink: https://sg.run/3GeW
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: eqU9Le
         version_id: YDTzqN
-        url: https://semgrep.dev/playground/r/YDTzqN/python.pyramid.audit.csrf-origin-check-disabled-globally.pyramid-csrf-origin-check-disabled-globally
+        url: https://lens.dev/playground/r/YDTzqN/python.pyramid.audit.csrf-origin-check-disabled-globally.pyramid-csrf-origin-check-disabled-globally
 - id: python.pyramid.security.direct-use-of-response.pyramid-direct-use-of-response
   message: Detected data rendered directly to the end user via 'Response'. This bypasses
     Pyramid's built-in cross-site scripting (XSS) defenses and could result in an
@@ -5664,13 +5664,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.security.direct-use-of-response.pyramid-direct-use-of-response
+    source: https://lens.dev/r/python.pyramid.security.direct-use-of-response.pyramid-direct-use-of-response
     shortlink: https://sg.run/DX8G
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: gxUeA8
         version_id: 9lTEQy
-        url: https://semgrep.dev/playground/r/9lTEQy/python.pyramid.security.direct-use-of-response.pyramid-direct-use-of-response
+        url: https://lens.dev/playground/r/9lTEQy/python.pyramid.security.direct-use-of-response.pyramid-direct-use-of-response
   languages:
   - python
   severity: ERROR
@@ -5735,13 +5735,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.authtkt-cookie-secure-unsafe-default.pyramid-authtkt-cookie-secure-unsafe-default
+    source: https://lens.dev/r/python.pyramid.audit.authtkt-cookie-secure-unsafe-default.pyramid-authtkt-cookie-secure-unsafe-default
     shortlink: https://sg.run/8WxQ
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: wdUKzn
         version_id: K3TONN
-        url: https://semgrep.dev/playground/r/K3TONN/python.pyramid.audit.authtkt-cookie-secure-unsafe-default.pyramid-authtkt-cookie-secure-unsafe-default
+        url: https://lens.dev/playground/r/K3TONN/python.pyramid.audit.authtkt-cookie-secure-unsafe-default.pyramid-authtkt-cookie-secure-unsafe-default
   languages:
   - python
   severity: WARNING
@@ -5767,13 +5767,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insecure-cipher-algorithm-rc2.insecure-cipher-algorithm-rc2
+    source: https://lens.dev/r/python.pycryptodome.security.insecure-cipher-algorithm-rc2.insecure-cipher-algorithm-rc2
     shortlink: https://sg.run/nAbY
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: GdUYlW
         version_id: gET59j
-        url: https://semgrep.dev/playground/r/gET59j/python.pycryptodome.security.insecure-cipher-algorithm-rc2.insecure-cipher-algorithm-rc2
+        url: https://lens.dev/playground/r/gET59j/python.pycryptodome.security.insecure-cipher-algorithm-rc2.insecure-cipher-algorithm-rc2
   severity: WARNING
   languages:
   - python
@@ -5805,13 +5805,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.ssrf.ssrf-injection-urllib.ssrf-injection-urllib
+    source: https://lens.dev/r/python.django.security.injection.ssrf.ssrf-injection-urllib.ssrf-injection-urllib
     shortlink: https://sg.run/6n2B
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 10UKDo
         version_id: 5PTYvx
-        url: https://semgrep.dev/playground/r/5PTYvx/python.django.security.injection.ssrf.ssrf-injection-urllib.ssrf-injection-urllib
+        url: https://lens.dev/playground/r/5PTYvx/python.django.security.injection.ssrf.ssrf-injection-urllib.ssrf-injection-urllib
   languages:
   - python
   severity: ERROR
@@ -6195,7 +6195,7 @@ rules:
     - https://stackoverflow.com/questions/3172470/actual-meaning-of-shell-true-in-subprocess
     - https://docs.python.org/3/library/subprocess.html
     - https://docs.python.org/3/library/shlex.html
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     category: security
     technology:
     - python
@@ -6207,13 +6207,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.dangerous-subprocess-use.dangerous-subprocess-use
+    source: https://lens.dev/r/python.lang.security.dangerous-subprocess-use.dangerous-subprocess-use
     shortlink: https://sg.run/NWxp
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: JDUz3R
         version_id: X0Tekk
-        url: https://semgrep.dev/playground/r/X0Tekk/python.lang.security.dangerous-subprocess-use.dangerous-subprocess-use
+        url: https://lens.dev/playground/r/X0Tekk/python.lang.security.dangerous-subprocess-use.dangerous-subprocess-use
   languages:
   - python
   severity: ERROR
@@ -6242,13 +6242,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.jwt.security.unverified-jwt-decode.unverified-jwt-decode
+    source: https://lens.dev/r/python.jwt.security.unverified-jwt-decode.unverified-jwt-decode
     shortlink: https://sg.run/6nyB
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 10UKjo
         version_id: A8TnR1
-        url: https://semgrep.dev/playground/r/A8TnR1/python.jwt.security.unverified-jwt-decode.unverified-jwt-decode
+        url: https://lens.dev/playground/r/A8TnR1/python.jwt.security.unverified-jwt-decode.unverified-jwt-decode
   fix-regex:
     regex: (verify\s*=\s*)False
     replacement: \1True
@@ -6396,7 +6396,7 @@ rules:
     owasp:
     - A03:2021 - Injection
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     category: security
     technology:
     - python
@@ -6406,13 +6406,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.dangerous-code-run.dangerous-interactive-code-run
+    source: https://lens.dev/r/python.lang.security.dangerous-code-run.dangerous-interactive-code-run
     shortlink: https://sg.run/9pRY
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: KxUKzx
         version_id: 2KT6WP
-        url: https://semgrep.dev/playground/r/2KT6WP/python.lang.security.dangerous-code-run.dangerous-interactive-code-run
+        url: https://lens.dev/playground/r/2KT6WP/python.lang.security.dangerous-code-run.dangerous-interactive-code-run
   severity: WARNING
   languages:
   - python
@@ -6439,13 +6439,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.injection.user-eval.eval-injection
+    source: https://lens.dev/r/python.flask.security.injection.user-eval.eval-injection
     shortlink: https://sg.run/5QpX
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 0oU54W
         version_id: O9TZyD
-        url: https://semgrep.dev/playground/r/O9TZyD/python.flask.security.injection.user-eval.eval-injection
+        url: https://lens.dev/playground/r/O9TZyD/python.flask.security.injection.user-eval.eval-injection
   pattern-either:
   - patterns:
     - pattern: eval(...)
@@ -6545,13 +6545,13 @@ rules:
     likelihood: HIGH
     impact: MEDIUM
     confidence: MEDIUM
-    source: https://semgrep.dev/r/python.aws-lambda.security.dangerous-asyncio-create-exec.dangerous-asyncio-create-exec
+    source: https://lens.dev/r/python.aws-lambda.security.dangerous-asyncio-create-exec.dangerous-asyncio-create-exec
     shortlink: https://sg.run/oyv0
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: EwUrX8
         version_id: 1QTXlr
-        url: https://semgrep.dev/playground/r/1QTXlr/python.aws-lambda.security.dangerous-asyncio-create-exec.dangerous-asyncio-create-exec
+        url: https://lens.dev/playground/r/1QTXlr/python.aws-lambda.security.dangerous-asyncio-create-exec.dangerous-asyncio-create-exec
   languages:
   - python
   severity: ERROR
@@ -6585,13 +6585,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.cryptography.security.insufficient-dsa-key-size.insufficient-dsa-key-size
+    source: https://lens.dev/r/python.cryptography.security.insufficient-dsa-key-size.insufficient-dsa-key-size
     shortlink: https://sg.run/5Qb0
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: KxUb0x
         version_id: JdTZd6
-        url: https://semgrep.dev/playground/r/JdTZd6/python.cryptography.security.insufficient-dsa-key-size.insufficient-dsa-key-size
+        url: https://lens.dev/playground/r/JdTZd6/python.cryptography.security.insufficient-dsa-key-size.insufficient-dsa-key-size
   languages:
   - python
   severity: WARNING
@@ -6652,13 +6652,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.sqlalchemy.security.sqlalchemy-sql-injection.sqlalchemy-sql-injection
+    source: https://lens.dev/r/python.sqlalchemy.security.sqlalchemy-sql-injection.sqlalchemy-sql-injection
     shortlink: https://sg.run/J3Xo
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: BYUBWo
         version_id: xyT9Lw
-        url: https://semgrep.dev/playground/r/xyT9Lw/python.sqlalchemy.security.sqlalchemy-sql-injection.sqlalchemy-sql-injection
+        url: https://lens.dev/playground/r/xyT9Lw/python.sqlalchemy.security.sqlalchemy-sql-injection.sqlalchemy-sql-injection
 - id: python.cryptography.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
   patterns:
   - pattern: cryptography.hazmat.primitives.hashes.$SHA(...)
@@ -6694,13 +6694,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.cryptography.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
+    source: https://lens.dev/r/python.cryptography.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
     shortlink: https://sg.run/J9Qy
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 0oU5dN
         version_id: DkToXW
-        url: https://semgrep.dev/playground/r/DkToXW/python.cryptography.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
+        url: https://lens.dev/playground/r/DkToXW/python.cryptography.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
   severity: WARNING
   languages:
   - python
@@ -6787,7 +6787,7 @@ rules:
     references:
     - https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.loop.subprocess_exec
     - https://docs.python.org/3/library/shlex.html
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     category: security
     technology:
     - python
@@ -6799,13 +6799,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.dangerous-asyncio-exec-tainted-env-args.dangerous-asyncio-exec-tainted-env-args
+    source: https://lens.dev/r/python.lang.security.audit.dangerous-asyncio-exec-tainted-env-args.dangerous-asyncio-exec-tainted-env-args
     shortlink: https://sg.run/Apjp
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 7KUE1E
         version_id: qkTKND
-        url: https://semgrep.dev/playground/r/qkTKND/python.lang.security.audit.dangerous-asyncio-exec-tainted-env-args.dangerous-asyncio-exec-tainted-env-args
+        url: https://lens.dev/playground/r/qkTKND/python.lang.security.audit.dangerous-asyncio-exec-tainted-env-args.dangerous-asyncio-exec-tainted-env-args
   languages:
   - python
   severity: ERROR
@@ -6834,13 +6834,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insecure-hash-algorithm.insecure-hash-algorithm-sha1
+    source: https://lens.dev/r/python.pycryptodome.security.insecure-hash-algorithm.insecure-hash-algorithm-sha1
     shortlink: https://sg.run/3ALr
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: ReUPO3
         version_id: 5PTYnG
-        url: https://semgrep.dev/playground/r/5PTYnG/python.pycryptodome.security.insecure-hash-algorithm.insecure-hash-algorithm-sha1
+        url: https://lens.dev/playground/r/5PTYnG/python.pycryptodome.security.insecure-hash-algorithm.insecure-hash-algorithm-sha1
   severity: WARNING
   languages:
   - python
@@ -6884,13 +6884,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.tainted-html-response.tainted-html-response
+    source: https://lens.dev/r/python.aws-lambda.security.tainted-html-response.tainted-html-response
     shortlink: https://sg.run/k9vP
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: ReUKrk
         version_id: ZRTyrw
-        url: https://semgrep.dev/playground/r/ZRTyrw/python.aws-lambda.security.tainted-html-response.tainted-html-response
+        url: https://lens.dev/playground/r/ZRTyrw/python.aws-lambda.security.tainted-html-response.tainted-html-response
   languages:
   - python
   severity: WARNING
@@ -6961,7 +6961,7 @@ rules:
     - A03:2021 - Injection
     references:
     - https://bugs.python.org/issue43472
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     category: security
     technology:
     - python
@@ -6971,13 +6971,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.dangerous-subinterpreters-run-string-tainted-env-args.dangerous-subinterpreters-run-string-tainted-env-args
+    source: https://lens.dev/r/python.lang.security.audit.dangerous-subinterpreters-run-string-tainted-env-args.dangerous-subinterpreters-run-string-tainted-env-args
     shortlink: https://sg.run/oLl9
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: GdUkxO
         version_id: 1QTXjj
-        url: https://semgrep.dev/playground/r/1QTXjj/python.lang.security.audit.dangerous-subinterpreters-run-string-tainted-env-args.dangerous-subinterpreters-run-string-tainted-env-args
+        url: https://lens.dev/playground/r/1QTXjj/python.lang.security.audit.dangerous-subinterpreters-run-string-tainted-env-args.dangerous-subinterpreters-run-string-tainted-env-args
   severity: WARNING
   languages:
   - python
@@ -7014,13 +7014,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.psycopg-sqli.psycopg-sqli
+    source: https://lens.dev/r/python.aws-lambda.security.psycopg-sqli.psycopg-sqli
     shortlink: https://sg.run/9L8r
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 4bUQG1
         version_id: xyT3oz
-        url: https://semgrep.dev/playground/r/xyT3oz/python.aws-lambda.security.psycopg-sqli.psycopg-sqli
+        url: https://lens.dev/playground/r/xyT3oz/python.aws-lambda.security.psycopg-sqli.psycopg-sqli
   pattern-sinks:
   - patterns:
     - pattern: $QUERY
@@ -7061,13 +7061,13 @@ rules:
     impact: MEDIUM
     confidence: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.jwt.security.jwt-hardcode.jwt-python-hardcoded-secret
+    source: https://lens.dev/r/python.jwt.security.jwt-hardcode.jwt-python-hardcoded-secret
     shortlink: https://sg.run/l2E9
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: X5U8P5
         version_id: GxTW2b
-        url: https://semgrep.dev/playground/r/GxTW2b/python.jwt.security.jwt-hardcode.jwt-python-hardcoded-secret
+        url: https://lens.dev/playground/r/GxTW2b/python.jwt.security.jwt-hardcode.jwt-python-hardcoded-secret
   patterns:
   - pattern: |
       jwt.encode($X, $SECRET, ...)
@@ -7112,13 +7112,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
+    source: https://lens.dev/r/python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
     shortlink: https://sg.run/ydYx
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: x8UnBk
         version_id: e1TA7A
-        url: https://semgrep.dev/playground/r/e1TA7A/python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
+        url: https://lens.dev/playground/r/e1TA7A/python.lang.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1
   severity: WARNING
   languages:
   - python
@@ -7146,13 +7146,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.audit.directly-returned-format-string.directly-returned-format-string
+    source: https://lens.dev/r/python.flask.security.audit.directly-returned-format-string.directly-returned-format-string
     shortlink: https://sg.run/Zv6o
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: QrUz49
         version_id: YDT839
-        url: https://semgrep.dev/playground/r/YDT839/python.flask.security.audit.directly-returned-format-string.directly-returned-format-string
+        url: https://lens.dev/playground/r/YDT839/python.flask.security.audit.directly-returned-format-string.directly-returned-format-string
   languages:
   - python
   severity: WARNING
@@ -7230,13 +7230,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.pymssql-sqli.pymssql-sqli
+    source: https://lens.dev/r/python.aws-lambda.security.pymssql-sqli.pymssql-sqli
     shortlink: https://sg.run/yXvP
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: PeUxO0
         version_id: O9TZYb
-        url: https://semgrep.dev/playground/r/O9TZYb/python.aws-lambda.security.pymssql-sqli.pymssql-sqli
+        url: https://lens.dev/playground/r/O9TZYb/python.aws-lambda.security.pymssql-sqli.pymssql-sqli
   pattern-sinks:
   - patterns:
     - pattern: $QUERY
@@ -7271,13 +7271,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.passwords.password-empty-string.password-empty-string
+    source: https://lens.dev/r/python.django.security.passwords.password-empty-string.password-empty-string
     shortlink: https://sg.run/oxnR
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 9AU1jW
         version_id: DkTeOP
-        url: https://semgrep.dev/playground/r/DkTeOP/python.django.security.passwords.password-empty-string.password-empty-string
+        url: https://lens.dev/playground/r/DkTeOP/python.django.security.passwords.password-empty-string.password-empty-string
   patterns:
   - pattern-either:
     - pattern: |
@@ -7322,13 +7322,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.csrf-origin-check-disabled.pyramid-csrf-origin-check-disabled
+    source: https://lens.dev/r/python.pyramid.audit.csrf-origin-check-disabled.pyramid-csrf-origin-check-disabled
     shortlink: https://sg.run/4RB9
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: v8UGpL
         version_id: 6xTAb5
-        url: https://semgrep.dev/playground/r/6xTAb5/python.pyramid.audit.csrf-origin-check-disabled.pyramid-csrf-origin-check-disabled
+        url: https://lens.dev/playground/r/6xTAb5/python.pyramid.audit.csrf-origin-check-disabled.pyramid-csrf-origin-check-disabled
   severity: WARNING
   languages:
   - python
@@ -7370,13 +7370,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.reflected-data-httpresponsebadrequest.reflected-data-httpresponsebadrequest
+    source: https://lens.dev/r/python.django.security.injection.reflected-data-httpresponsebadrequest.reflected-data-httpresponsebadrequest
     shortlink: https://sg.run/DoZP
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 5rUOX1
         version_id: DkTeOR
-        url: https://semgrep.dev/playground/r/DkTeOR/python.django.security.injection.reflected-data-httpresponsebadrequest.reflected-data-httpresponsebadrequest
+        url: https://lens.dev/playground/r/DkTeOR/python.django.security.injection.reflected-data-httpresponsebadrequest.reflected-data-httpresponsebadrequest
   languages:
   - python
   severity: WARNING
@@ -7660,13 +7660,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.set-cookie-secure-unsafe-value.pyramid-set-cookie-secure-unsafe-value
+    source: https://lens.dev/r/python.pyramid.audit.set-cookie-secure-unsafe-value.pyramid-set-cookie-secure-unsafe-value
     shortlink: https://sg.run/AzjB
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: L1UX2J
         version_id: jQTLkr
-        url: https://semgrep.dev/playground/r/jQTLkr/python.pyramid.audit.set-cookie-secure-unsafe-value.pyramid-set-cookie-secure-unsafe-value
+        url: https://lens.dev/playground/r/jQTLkr/python.pyramid.audit.set-cookie-secure-unsafe-value.pyramid-set-cookie-secure-unsafe-value
   languages:
   - python
   severity: WARNING
@@ -7704,13 +7704,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.cryptography.security.insufficient-ec-key-size.insufficient-ec-key-size
+    source: https://lens.dev/r/python.cryptography.security.insufficient-ec-key-size.insufficient-ec-key-size
     shortlink: https://sg.run/GeQq
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: qNUjZ3
         version_id: WrT5GP
-        url: https://semgrep.dev/playground/r/WrT5GP/python.cryptography.security.insufficient-ec-key-size.insufficient-ec-key-size
+        url: https://lens.dev/playground/r/WrT5GP/python.cryptography.security.insufficient-ec-key-size.insufficient-ec-key-size
   languages:
   - python
   severity: WARNING
@@ -7732,7 +7732,7 @@ rules:
     - https://crypto.stackexchange.com/questions/44151/how-does-the-flame-malware-take-advantage-of-md5-collision
     - https://pycryptodome.readthedocs.io/en/latest/src/hash/sha3_256.html
     - https://security.stackexchange.com/questions/211/how-to-securely-hash-passwords
-    - https://github.com/returntocorp/semgrep-rules/issues/1609
+    - https://github.com/returntocorp/lens-rules/issues/1609
     - https://docs.python.org/3/library/hashlib.html#hashlib.scrypt
     category: security
     technology:
@@ -7745,13 +7745,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.md5-used-as-password.md5-used-as-password
+    source: https://lens.dev/r/python.lang.security.audit.md5-used-as-password.md5-used-as-password
     shortlink: https://sg.run/5DwD
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 6JU1w1
         version_id: JdTZgr
-        url: https://semgrep.dev/playground/r/JdTZgr/python.lang.security.audit.md5-used-as-password.md5-used-as-password
+        url: https://lens.dev/playground/r/JdTZgr/python.lang.security.audit.md5-used-as-password.md5-used-as-password
   mode: taint
   pattern-sources:
   - patterns:
@@ -7791,13 +7791,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.mode-without-authentication.crypto-mode-without-authentication
+    source: https://lens.dev/r/python.pycryptodome.security.mode-without-authentication.crypto-mode-without-authentication
     shortlink: https://sg.run/k1K1
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: YGUw8w
         version_id: A8Tnb4
-        url: https://semgrep.dev/playground/r/A8Tnb4/python.pycryptodome.security.mode-without-authentication.crypto-mode-without-authentication
+        url: https://lens.dev/playground/r/A8Tnb4/python.pycryptodome.security.mode-without-authentication.crypto-mode-without-authentication
   patterns:
   - pattern-either:
     - patterns:
@@ -7840,13 +7840,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.reflected-data-httpresponse.reflected-data-httpresponse
+    source: https://lens.dev/r/python.django.security.injection.reflected-data-httpresponse.reflected-data-httpresponse
     shortlink: https://sg.run/BkvA
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: JDUydR
         version_id: BjTG9p
-        url: https://semgrep.dev/playground/r/BjTG9p/python.django.security.injection.reflected-data-httpresponse.reflected-data-httpresponse
+        url: https://lens.dev/playground/r/BjTG9p/python.django.security.injection.reflected-data-httpresponse.reflected-data-httpresponse
   languages:
   - python
   severity: WARNING
@@ -8110,13 +8110,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insecure-cipher-algorithm.insecure-cipher-algorithm-xor
+    source: https://lens.dev/r/python.pycryptodome.security.insecure-cipher-algorithm.insecure-cipher-algorithm-xor
     shortlink: https://sg.run/L0yr
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: PeUk5W
         version_id: 3ZTx98
-        url: https://semgrep.dev/playground/r/3ZTx98/python.pycryptodome.security.insecure-cipher-algorithm.insecure-cipher-algorithm-xor
+        url: https://lens.dev/playground/r/3ZTx98/python.pycryptodome.security.insecure-cipher-algorithm.insecure-cipher-algorithm-xor
   severity: WARNING
   languages:
   - python
@@ -8155,13 +8155,13 @@ rules:
     likelihood: HIGH
     impact: MEDIUM
     confidence: MEDIUM
-    source: https://semgrep.dev/r/python.aws-lambda.security.dangerous-spawn-process.dangerous-spawn-process
+    source: https://lens.dev/r/python.aws-lambda.security.dangerous-spawn-process.dangerous-spawn-process
     shortlink: https://sg.run/2AjL
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 8GUGBq
         version_id: rxT83W
-        url: https://semgrep.dev/playground/r/rxT83W/python.aws-lambda.security.dangerous-spawn-process.dangerous-spawn-process
+        url: https://lens.dev/playground/r/rxT83W/python.aws-lambda.security.dangerous-spawn-process.dangerous-spawn-process
   languages:
   - python
   severity: ERROR
@@ -8226,13 +8226,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.pymysql-sqli.pymysql-sqli
+    source: https://lens.dev/r/python.aws-lambda.security.pymysql-sqli.pymysql-sqli
     shortlink: https://sg.run/reve
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: JDUlel
         version_id: e1TAnn
-        url: https://semgrep.dev/playground/r/e1TAnn/python.aws-lambda.security.pymysql-sqli.pymysql-sqli
+        url: https://lens.dev/playground/r/e1TAnn/python.aws-lambda.security.pymysql-sqli.pymysql-sqli
   pattern-sinks:
   - patterns:
     - pattern: $QUERY
@@ -8273,13 +8273,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insecure-cipher-algorithm-blowfish.insecure-cipher-algorithm-blowfish
+    source: https://lens.dev/r/python.pycryptodome.security.insecure-cipher-algorithm-blowfish.insecure-cipher-algorithm-blowfish
     shortlink: https://sg.run/dlOE
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: JDUGnK
         version_id: LjTp6W
-        url: https://semgrep.dev/playground/r/LjTp6W/python.pycryptodome.security.insecure-cipher-algorithm-blowfish.insecure-cipher-algorithm-blowfish
+        url: https://lens.dev/playground/r/LjTp6W/python.pycryptodome.security.insecure-cipher-algorithm-blowfish.insecure-cipher-algorithm-blowfish
   severity: WARNING
   languages:
   - python
@@ -8319,13 +8319,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.authtkt-cookie-samesite.pyramid-authtkt-cookie-samesite
+    source: https://lens.dev/r/python.pyramid.audit.authtkt-cookie-samesite.pyramid-authtkt-cookie-samesite
     shortlink: https://sg.run/LYrY
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: kxUYjY
         version_id: 0bT6WO
-        url: https://semgrep.dev/playground/r/0bT6WO/python.pyramid.audit.authtkt-cookie-samesite.pyramid-authtkt-cookie-samesite
+        url: https://lens.dev/playground/r/0bT6WO/python.pyramid.audit.authtkt-cookie-samesite.pyramid-authtkt-cookie-samesite
   languages:
   - python
   severity: WARNING
@@ -8352,13 +8352,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.cryptography.security.insecure-cipher-algorithms-arc4.insecure-cipher-algorithm-arc4
+    source: https://lens.dev/r/python.cryptography.security.insecure-cipher-algorithms-arc4.insecure-cipher-algorithm-arc4
     shortlink: https://sg.run/xoZL
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: KxU8gK
         version_id: 8KTLp4
-        url: https://semgrep.dev/playground/r/8KTLp4/python.cryptography.security.insecure-cipher-algorithms-arc4.insecure-cipher-algorithm-arc4
+        url: https://lens.dev/playground/r/8KTLp4/python.cryptography.security.insecure-cipher-algorithms-arc4.insecure-cipher-algorithm-arc4
   severity: WARNING
   languages:
   - python
@@ -8389,13 +8389,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.boto3.security.hardcoded-token.hardcoded-token
+    source: https://lens.dev/r/python.boto3.security.hardcoded-token.hardcoded-token
     shortlink: https://sg.run/LwQ6
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 5rUOwK
         version_id: LjTpwq
-        url: https://semgrep.dev/playground/r/LjTpwq/python.boto3.security.hardcoded-token.hardcoded-token
+        url: https://lens.dev/playground/r/LjTpwq/python.boto3.security.hardcoded-token.hardcoded-token
   languages:
   - python
   severity: WARNING
@@ -8444,13 +8444,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.injection.user-exec.exec-injection
+    source: https://lens.dev/r/python.flask.security.injection.user-exec.exec-injection
     shortlink: https://sg.run/Ge42
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: KxUbl2
         version_id: e1TAxz
-        url: https://semgrep.dev/playground/r/e1TAxz/python.flask.security.injection.user-exec.exec-injection
+        url: https://lens.dev/playground/r/e1TAxz/python.flask.security.injection.user-exec.exec-injection
   pattern-either:
   - patterns:
     - pattern: exec(...)
@@ -8525,13 +8525,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insufficient-dsa-key-size.insufficient-dsa-key-size
+    source: https://lens.dev/r/python.pycryptodome.security.insufficient-dsa-key-size.insufficient-dsa-key-size
     shortlink: https://sg.run/4y8l
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: AbUWje
         version_id: GxTW9e
-        url: https://semgrep.dev/playground/r/GxTW9e/python.pycryptodome.security.insufficient-dsa-key-size.insufficient-dsa-key-size
+        url: https://lens.dev/playground/r/GxTW9e/python.pycryptodome.security.insufficient-dsa-key-size.insufficient-dsa-key-size
   languages:
   - python
   severity: WARNING
@@ -8558,13 +8558,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.cryptography.security.insecure-cipher-algorithms-blowfish.insecure-cipher-algorithm-blowfish
+    source: https://lens.dev/r/python.cryptography.security.insecure-cipher-algorithms-blowfish.insecure-cipher-algorithm-blowfish
     shortlink: https://sg.run/OdzL
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: qNULvO
         version_id: gET5wA
-        url: https://semgrep.dev/playground/r/gET5wA/python.cryptography.security.insecure-cipher-algorithms-blowfish.insecure-cipher-algorithm-blowfish
+        url: https://lens.dev/playground/r/gET5wA/python.cryptography.security.insecure-cipher-algorithms-blowfish.insecure-cipher-algorithm-blowfish
   severity: WARNING
   languages:
   - python
@@ -8595,13 +8595,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.cryptography.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
+    source: https://lens.dev/r/python.cryptography.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
     shortlink: https://sg.run/eY88
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: lBUopp
         version_id: 44TYn2
-        url: https://semgrep.dev/playground/r/44TYn2/python.cryptography.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
+        url: https://lens.dev/playground/r/44TYn2/python.cryptography.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
   severity: WARNING
   languages:
   - python
@@ -8627,13 +8627,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insecure-cipher-algorithm-des.insecure-cipher-algorithm-des
+    source: https://lens.dev/r/python.pycryptodome.security.insecure-cipher-algorithm-des.insecure-cipher-algorithm-des
     shortlink: https://sg.run/Z5bw
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 5rUr73
         version_id: 8KTLe6
-        url: https://semgrep.dev/playground/r/8KTLe6/python.pycryptodome.security.insecure-cipher-algorithm-des.insecure-cipher-algorithm-des
+        url: https://lens.dev/playground/r/8KTLe6/python.pycryptodome.security.insecure-cipher-algorithm-des.insecure-cipher-algorithm-des
   severity: WARNING
   languages:
   - python
@@ -8731,7 +8731,7 @@ rules:
     owasp:
     - A03:2021 - Injection
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     category: security
     technology:
     - python
@@ -8741,13 +8741,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.dangerous-code-run-tainted-env-args.dangerous-interactive-code-run-tainted-env-args
+    source: https://lens.dev/r/python.lang.security.audit.dangerous-code-run-tainted-env-args.dangerous-interactive-code-run-tainted-env-args
     shortlink: https://sg.run/0Bgv
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: QrUG72
         version_id: o5T5n1
-        url: https://semgrep.dev/playground/r/o5T5n1/python.lang.security.audit.dangerous-code-run-tainted-env-args.dangerous-interactive-code-run-tainted-env-args
+        url: https://lens.dev/playground/r/o5T5n1/python.lang.security.audit.dangerous-code-run-tainted-env-args.dangerous-interactive-code-run-tainted-env-args
   severity: WARNING
   languages:
   - python
@@ -8791,13 +8791,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.set-cookie-secure-unsafe-default.pyramid-set-cookie-secure-unsafe-default
+    source: https://lens.dev/r/python.pyramid.audit.set-cookie-secure-unsafe-default.pyramid-set-cookie-secure-unsafe-default
     shortlink: https://sg.run/RbrN
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 7KUr15
         version_id: X0ToWg
-        url: https://semgrep.dev/playground/r/X0ToWg/python.pyramid.audit.set-cookie-secure-unsafe-default.pyramid-set-cookie-secure-unsafe-default
+        url: https://lens.dev/playground/r/X0ToWg/python.pyramid.audit.set-cookie-secure-unsafe-default.pyramid-set-cookie-secure-unsafe-default
   languages:
   - python
   severity: WARNING
@@ -8831,13 +8831,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.cryptography.security.insufficient-rsa-key-size.insufficient-rsa-key-size
+    source: https://lens.dev/r/python.cryptography.security.insufficient-rsa-key-size.insufficient-rsa-key-size
     shortlink: https://sg.run/RoQq
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: lBU9jn
         version_id: GxTWQo
-        url: https://semgrep.dev/playground/r/GxTWQo/python.cryptography.security.insufficient-rsa-key-size.insufficient-rsa-key-size
+        url: https://lens.dev/playground/r/GxTWQo/python.cryptography.security.insufficient-rsa-key-size.insufficient-rsa-key-size
   languages:
   - python
   severity: WARNING
@@ -8872,13 +8872,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.mysql-sqli.mysql-sqli
+    source: https://lens.dev/r/python.aws-lambda.security.mysql-sqli.mysql-sqli
     shortlink: https://sg.run/1RjG
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 3qU3eE
         version_id: w8T0wb
-        url: https://semgrep.dev/playground/r/w8T0wb/python.aws-lambda.security.mysql-sqli.mysql-sqli
+        url: https://lens.dev/playground/r/w8T0wb/python.aws-lambda.security.mysql-sqli.mysql-sqli
   pattern-sinks:
   - patterns:
     - pattern: $QUERY
@@ -8922,13 +8922,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.cryptography.security.insecure-cipher-algorithms.insecure-cipher-algorithm-idea
+    source: https://lens.dev/r/python.cryptography.security.insecure-cipher-algorithms.insecure-cipher-algorithm-idea
     shortlink: https://sg.run/3xyK
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: BYUNPg
         version_id: QkTQbz
-        url: https://semgrep.dev/playground/r/QkTQbz/python.cryptography.security.insecure-cipher-algorithms.insecure-cipher-algorithm-idea
+        url: https://lens.dev/playground/r/QkTQbz/python.cryptography.security.insecure-cipher-algorithms.insecure-cipher-algorithm-idea
   severity: WARNING
   languages:
   - python
@@ -8961,13 +8961,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.insecure-hash-function.insecure-hash-function
+    source: https://lens.dev/r/python.lang.security.insecure-hash-function.insecure-hash-function
     shortlink: https://sg.run/rdBn
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: OrU30g
         version_id: vdT3WD
-        url: https://semgrep.dev/playground/r/vdT3WD/python.lang.security.insecure-hash-function.insecure-hash-function
+        url: https://lens.dev/playground/r/vdT3WD/python.lang.security.insecure-hash-function.insecure-hash-function
   languages:
   - python
   severity: WARNING
@@ -9020,13 +9020,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.tainted-pickle-deserialization.tainted-pickle-deserialization
+    source: https://lens.dev/r/python.aws-lambda.security.tainted-pickle-deserialization.tainted-pickle-deserialization
     shortlink: https://sg.run/JbjW
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: JDUDQg
         version_id: ExTYGB
-        url: https://semgrep.dev/playground/r/ExTYGB/python.aws-lambda.security.tainted-pickle-deserialization.tainted-pickle-deserialization
+        url: https://lens.dev/playground/r/ExTYGB/python.aws-lambda.security.tainted-pickle-deserialization.tainted-pickle-deserialization
   languages:
   - python
   severity: WARNING
@@ -9060,13 +9060,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insufficient-rsa-key-size.insufficient-rsa-key-size
+    source: https://lens.dev/r/python.pycryptodome.security.insufficient-rsa-key-size.insufficient-rsa-key-size
     shortlink: https://sg.run/PprY
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: BYUBWe
         version_id: RGTw1l
-        url: https://semgrep.dev/playground/r/RGTw1l/python.pycryptodome.security.insufficient-rsa-key-size.insufficient-rsa-key-size
+        url: https://lens.dev/playground/r/RGTw1l/python.pycryptodome.security.insufficient-rsa-key-size.insufficient-rsa-key-size
   languages:
   - python
   severity: WARNING
@@ -9092,13 +9092,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.insecure-file-permissions.insecure-file-permissions
+    source: https://lens.dev/r/python.lang.security.audit.insecure-file-permissions.insecure-file-permissions
     shortlink: https://sg.run/AXY4
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: zdUYqR
         version_id: ExTYkN
-        url: https://semgrep.dev/playground/r/ExTYkN/python.lang.security.audit.insecure-file-permissions.insecure-file-permissions
+        url: https://lens.dev/playground/r/ExTYkN/python.lang.security.audit.insecure-file-permissions.insecure-file-permissions
   message: These permissions `$BITS` are widely permissive and grant access to more
     people than may be necessary. A good default is `0o644` which gives read and write
     access to yourself and read access to everyone else.
@@ -9162,13 +9162,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.cryptography.security.insecure-cipher-mode-ecb.insecure-cipher-mode-ecb
+    source: https://lens.dev/r/python.cryptography.security.insecure-cipher-mode-ecb.insecure-cipher-mode-ecb
     shortlink: https://sg.run/4xr5
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: DbUp5g
         version_id: 3ZTxvB
-        url: https://semgrep.dev/playground/r/3ZTxvB/python.cryptography.security.insecure-cipher-mode-ecb.insecure-cipher-mode-ecb
+        url: https://lens.dev/playground/r/3ZTxvB/python.cryptography.security.insecure-cipher-mode-ecb.insecure-cipher-mode-ecb
   severity: WARNING
   languages:
   - python
@@ -9202,13 +9202,13 @@ rules:
     impact: MEDIUM
     likelihood: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.flask.security.injection.csv-writer-injection.csv-writer-injection
+    source: https://lens.dev/r/python.flask.security.injection.csv-writer-injection.csv-writer-injection
     shortlink: https://sg.run/JzqQ
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: L1UR2K
         version_id: 1QTXDj
-        url: https://semgrep.dev/playground/r/1QTXDj/python.flask.security.injection.csv-writer-injection.csv-writer-injection
+        url: https://lens.dev/playground/r/1QTXDj/python.flask.security.injection.csv-writer-injection.csv-writer-injection
   mode: taint
   pattern-sinks:
   - patterns:
@@ -9281,13 +9281,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.jinja2.security.audit.missing-autoescape-disabled.missing-autoescape-disabled
+    source: https://lens.dev/r/python.jinja2.security.audit.missing-autoescape-disabled.missing-autoescape-disabled
     shortlink: https://sg.run/8kY4
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 3qULRx
         version_id: PkTnYn
-        url: https://semgrep.dev/playground/r/PkTnYn/python.jinja2.security.audit.missing-autoescape-disabled.missing-autoescape-disabled
+        url: https://lens.dev/playground/r/PkTnYn/python.jinja2.security.audit.missing-autoescape-disabled.missing-autoescape-disabled
   languages:
   - python
   severity: WARNING
@@ -9314,13 +9314,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.jwt.security.jwt-none-alg.jwt-python-none-alg
+    source: https://lens.dev/r/python.jwt.security.jwt-none-alg.jwt-python-none-alg
     shortlink: https://sg.run/Yvp4
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: j2UvKw
         version_id: RGTwbW
-        url: https://semgrep.dev/playground/r/RGTwbW/python.jwt.security.jwt-none-alg.jwt-python-none-alg
+        url: https://lens.dev/playground/r/RGTwbW/python.jwt.security.jwt-none-alg.jwt-python-none-alg
   languages:
   - python
   severity: ERROR
@@ -9417,7 +9417,7 @@ rules:
     - A01:2017 - Injection
     - A03:2021 - Injection
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     asvs:
       section: 'V5: Validation, Sanitization and Encoding Verification Requirements'
       control_id: 5.2.4 Dyanmic Code Execution Features
@@ -9434,13 +9434,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.dangerous-system-call-tainted-env-args.dangerous-system-call-tainted-env-args
+    source: https://lens.dev/r/python.lang.security.audit.dangerous-system-call-tainted-env-args.dangerous-system-call-tainted-env-args
     shortlink: https://sg.run/XR2K
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: DbUR9g
         version_id: NdTQOg
-        url: https://semgrep.dev/playground/r/NdTQOg/python.lang.security.audit.dangerous-system-call-tainted-env-args.dangerous-system-call-tainted-env-args
+        url: https://lens.dev/playground/r/NdTQOg/python.lang.security.audit.dangerous-system-call-tainted-env-args.dangerous-system-call-tainted-env-args
   languages:
   - python
   severity: ERROR
@@ -9469,13 +9469,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.sql.sql-injection-using-db-cursor-execute.sql-injection-db-cursor-execute
+    source: https://lens.dev/r/python.django.security.injection.sql.sql-injection-using-db-cursor-execute.sql-injection-db-cursor-execute
     shortlink: https://sg.run/qx7y
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 2ZUbDL
         version_id: DkT4q8
-        url: https://semgrep.dev/playground/r/DkT4q8/python.django.security.injection.sql.sql-injection-using-db-cursor-execute.sql-injection-db-cursor-execute
+        url: https://lens.dev/playground/r/DkT4q8/python.django.security.injection.sql.sql-injection-using-db-cursor-execute.sql-injection-db-cursor-execute
   languages:
   - python
   severity: WARNING
@@ -9773,13 +9773,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.sql.sql-injection-using-raw.sql-injection-using-raw
+    source: https://lens.dev/r/python.django.security.injection.sql.sql-injection-using-raw.sql-injection-using-raw
     shortlink: https://sg.run/l2v9
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: X5U8v5
         version_id: YDT838
-        url: https://semgrep.dev/playground/r/YDT838/python.django.security.injection.sql.sql-injection-using-raw.sql-injection-using-raw
+        url: https://lens.dev/playground/r/YDT838/python.django.security.injection.sql.sql-injection-using-raw.sql-injection-using-raw
   languages:
   - python
   severity: WARNING
@@ -10083,13 +10083,13 @@ rules:
     likelihood: HIGH
     impact: MEDIUM
     confidence: MEDIUM
-    source: https://semgrep.dev/r/python.django.security.injection.raw-html-format.raw-html-format
+    source: https://lens.dev/r/python.django.security.injection.raw-html-format.raw-html-format
     shortlink: https://sg.run/oYj1
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 2ZUPER
         version_id: A8Tn65
-        url: https://semgrep.dev/playground/r/A8Tn65/python.django.security.injection.raw-html-format.raw-html-format
+        url: https://lens.dev/playground/r/A8Tn65/python.django.security.injection.raw-html-format.raw-html-format
   mode: taint
   pattern-sanitizers:
   - pattern: django.utils.html.escape(...)
@@ -10302,7 +10302,7 @@ rules:
     - A01:2017 - Injection
     - A03:2021 - Injection
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     asvs:
       section: 'V5: Validation, Sanitization and Encoding Verification Requirements'
       control_id: 5.3.8 OS Command Injection
@@ -10319,13 +10319,13 @@ rules:
     likelihood: MEDIUM
     impact: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.dangerous-spawn-process.dangerous-spawn-process
+    source: https://lens.dev/r/python.lang.security.dangerous-spawn-process.dangerous-spawn-process
     shortlink: https://sg.run/r8Zn
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: lBUJrn
         version_id: 1QTXg4
-        url: https://semgrep.dev/playground/r/1QTXg4/python.lang.security.dangerous-spawn-process.dangerous-spawn-process
+        url: https://lens.dev/playground/r/1QTXg4/python.lang.security.dangerous-spawn-process.dangerous-spawn-process
   languages:
   - python
   severity: ERROR
@@ -10354,13 +10354,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insecure-hash-algorithm-md5.insecure-hash-algorithm-md5
+    source: https://lens.dev/r/python.pycryptodome.security.insecure-hash-algorithm-md5.insecure-hash-algorithm-md5
     shortlink: https://sg.run/85JN
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: DbUXwo
         version_id: JdTZ7r
-        url: https://semgrep.dev/playground/r/JdTZ7r/python.pycryptodome.security.insecure-hash-algorithm-md5.insecure-hash-algorithm-md5
+        url: https://lens.dev/playground/r/JdTZ7r/python.pycryptodome.security.insecure-hash-algorithm-md5.insecure-hash-algorithm-md5
   severity: WARNING
   languages:
   - python
@@ -10392,13 +10392,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insecure-hash-algorithm-md2.insecure-hash-algorithm-md2
+    source: https://lens.dev/r/python.pycryptodome.security.insecure-hash-algorithm-md2.insecure-hash-algorithm-md2
     shortlink: https://sg.run/7JP2
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: AbU0Ex
         version_id: 44TYvr
-        url: https://semgrep.dev/playground/r/44TYvr/python.pycryptodome.security.insecure-hash-algorithm-md2.insecure-hash-algorithm-md2
+        url: https://lens.dev/playground/r/44TYvr/python.pycryptodome.security.insecure-hash-algorithm-md2.insecure-hash-algorithm-md2
   severity: WARNING
   languages:
   - python
@@ -10451,13 +10451,13 @@ rules:
     likelihood: HIGH
     impact: MEDIUM
     confidence: MEDIUM
-    source: https://semgrep.dev/r/python.aws-lambda.security.dangerous-asyncio-shell.dangerous-asyncio-shell
+    source: https://lens.dev/r/python.aws-lambda.security.dangerous-asyncio-shell.dangerous-asyncio-shell
     shortlink: https://sg.run/p9vZ
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: L1UEl7
         version_id: yeTdjl
-        url: https://semgrep.dev/playground/r/yeTdjl/python.aws-lambda.security.dangerous-asyncio-shell.dangerous-asyncio-shell
+        url: https://lens.dev/playground/r/yeTdjl/python.aws-lambda.security.dangerous-asyncio-shell.dangerous-asyncio-shell
   languages:
   - python
   severity: ERROR
@@ -10541,7 +10541,7 @@ rules:
     references:
     - https://docs.python.org/3/library/asyncio-subprocess.html
     - https://docs.python.org/3/library/shlex.html
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     category: security
     technology:
     - python
@@ -10553,13 +10553,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.dangerous-asyncio-shell-tainted-env-args.dangerous-asyncio-shell-tainted-env-args
+    source: https://lens.dev/r/python.lang.security.audit.dangerous-asyncio-shell-tainted-env-args.dangerous-asyncio-shell-tainted-env-args
     shortlink: https://sg.run/Dx8Y
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 8GU5q3
         version_id: YDT8o9
-        url: https://semgrep.dev/playground/r/YDT8o9/python.lang.security.audit.dangerous-asyncio-shell-tainted-env-args.dangerous-asyncio-shell-tainted-env-args
+        url: https://lens.dev/playground/r/YDT8o9/python.lang.security.audit.dangerous-asyncio-shell-tainted-env-args.dangerous-asyncio-shell-tainted-env-args
   languages:
   - python
   severity: ERROR
@@ -10591,13 +10591,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.unverified-ssl-context.unverified-ssl-context
+    source: https://lens.dev/r/python.lang.security.unverified-ssl-context.unverified-ssl-context
     shortlink: https://sg.run/N4lp
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: v8UnkQ
         version_id: bZTJeE
-        url: https://semgrep.dev/playground/r/bZTJeE/python.lang.security.unverified-ssl-context.unverified-ssl-context
+        url: https://lens.dev/playground/r/bZTJeE/python.lang.security.unverified-ssl-context.unverified-ssl-context
   severity: ERROR
   languages:
   - python
@@ -10630,13 +10630,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.tainted-sql-string.tainted-sql-string
+    source: https://lens.dev/r/python.aws-lambda.security.tainted-sql-string.tainted-sql-string
     shortlink: https://sg.run/wXvA
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: AbU3LX
         version_id: 7ZTY2z
-        url: https://semgrep.dev/playground/r/7ZTY2z/python.aws-lambda.security.tainted-sql-string.tainted-sql-string
+        url: https://lens.dev/playground/r/7ZTY2z/python.aws-lambda.security.tainted-sql-string.tainted-sql-string
   mode: taint
   pattern-sinks:
   - patterns:
@@ -10682,13 +10682,13 @@ rules:
     likelihood: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.dynamodb-filter-injection.dynamodb-filter-injection
+    source: https://lens.dev/r/python.aws-lambda.security.dynamodb-filter-injection.dynamodb-filter-injection
     shortlink: https://sg.run/jjrl
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: KxUJ2B
         version_id: kbTZXl
-        url: https://semgrep.dev/playground/r/kbTZXl/python.aws-lambda.security.dynamodb-filter-injection.dynamodb-filter-injection
+        url: https://lens.dev/playground/r/kbTZXl/python.aws-lambda.security.dynamodb-filter-injection.dynamodb-filter-injection
   message: Detected DynamoDB query filter that is tainted by `$EVENT` object. This
     could lead to NoSQL injection if the variable is user-controlled and not properly
     sanitized. Explicitly assign query params instead of passing data from `$EVENT`
@@ -10745,13 +10745,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pycryptodome.security.insecure-cipher-algorithm-rc4.insecure-cipher-algorithm-rc4
+    source: https://lens.dev/r/python.pycryptodome.security.insecure-cipher-algorithm-rc4.insecure-cipher-algorithm-rc4
     shortlink: https://sg.run/Eo6N
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: ReUnEB
         version_id: QkTQKP
-        url: https://semgrep.dev/playground/r/QkTQKP/python.pycryptodome.security.insecure-cipher-algorithm-rc4.insecure-cipher-algorithm-rc4
+        url: https://lens.dev/playground/r/QkTQKP/python.pycryptodome.security.insecure-cipher-algorithm-rc4.insecure-cipher-algorithm-rc4
   severity: WARNING
   languages:
   - python
@@ -10778,13 +10778,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.deserialization.avoid-unsafe-ruamel.avoid-unsafe-ruamel
+    source: https://lens.dev/r/python.lang.security.deserialization.avoid-unsafe-ruamel.avoid-unsafe-ruamel
     shortlink: https://sg.run/x1rz
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: nJUzqK
         version_id: w8T0QN
-        url: https://semgrep.dev/playground/r/w8T0QN/python.lang.security.deserialization.avoid-unsafe-ruamel.avoid-unsafe-ruamel
+        url: https://lens.dev/playground/r/w8T0QN/python.lang.security.deserialization.avoid-unsafe-ruamel.avoid-unsafe-ruamel
   languages:
   - python
   message: Avoid using unsafe `ruamel.yaml.YAML()`. `ruamel.yaml.YAML` can create
@@ -10843,13 +10843,13 @@ rules:
     likelihood: HIGH
     impact: MEDIUM
     confidence: MEDIUM
-    source: https://semgrep.dev/r/python.aws-lambda.security.dangerous-asyncio-exec.dangerous-asyncio-exec
+    source: https://lens.dev/r/python.aws-lambda.security.dangerous-asyncio-exec.dangerous-asyncio-exec
     shortlink: https://sg.run/z14d
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 7KUxXg
         version_id: 9lTnB2
-        url: https://semgrep.dev/playground/r/9lTnB2/python.aws-lambda.security.dangerous-asyncio-exec.dangerous-asyncio-exec
+        url: https://lens.dev/playground/r/9lTnB2/python.aws-lambda.security.dangerous-asyncio-exec.dangerous-asyncio-exec
   languages:
   - python
   severity: ERROR
@@ -10887,13 +10887,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.security.csrf-check-disabled-globally.pyramid-csrf-check-disabled-globally
+    source: https://lens.dev/r/python.pyramid.security.csrf-check-disabled-globally.pyramid-csrf-check-disabled-globally
     shortlink: https://sg.run/Bx2R
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 8GUKqP
         version_id: 1QT084
-        url: https://semgrep.dev/playground/r/1QT084/python.pyramid.security.csrf-check-disabled-globally.pyramid-csrf-check-disabled-globally
+        url: https://lens.dev/playground/r/1QT084/python.pyramid.security.csrf-check-disabled-globally.pyramid-csrf-check-disabled-globally
 - id: python.django.security.injection.email.xss-html-email-body.xss-html-email-body
   message: Found request data in an EmailMessage that is set to use HTML. This is
     dangerous because HTML emails are susceptible to XSS. An attacker could inject
@@ -10915,13 +10915,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.email.xss-html-email-body.xss-html-email-body
+    source: https://lens.dev/r/python.django.security.injection.email.xss-html-email-body.xss-html-email-body
     shortlink: https://sg.run/RoBe
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: qNUj02
         version_id: 3ZTxoB
-        url: https://semgrep.dev/playground/r/3ZTxoB/python.django.security.injection.email.xss-html-email-body.xss-html-email-body
+        url: https://lens.dev/playground/r/3ZTxoB/python.django.security.injection.email.xss-html-email-body.xss-html-email-body
   languages:
   - python
   severity: WARNING
@@ -11142,13 +11142,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.pyramid.audit.authtkt-cookie-httponly-unsafe-value.pyramid-authtkt-cookie-httponly-unsafe-value
+    source: https://lens.dev/r/python.pyramid.audit.authtkt-cookie-httponly-unsafe-value.pyramid-authtkt-cookie-httponly-unsafe-value
     shortlink: https://sg.run/7DgQ
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: NbUq9e
         version_id: WrT6rb
-        url: https://semgrep.dev/playground/r/WrT6rb/python.pyramid.audit.authtkt-cookie-httponly-unsafe-value.pyramid-authtkt-cookie-httponly-unsafe-value
+        url: https://lens.dev/playground/r/WrT6rb/python.pyramid.audit.authtkt-cookie-httponly-unsafe-value.pyramid-authtkt-cookie-httponly-unsafe-value
   languages:
   - python
   severity: WARNING
@@ -11182,13 +11182,13 @@ rules:
     likelihood: MEDIUM
     impact: MEDIUM
     confidence: MEDIUM
-    source: https://semgrep.dev/r/python.flask.security.injection.raw-html-concat.raw-html-format
+    source: https://lens.dev/r/python.flask.security.injection.raw-html-concat.raw-html-format
     shortlink: https://sg.run/Pb7e
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: GdUrJv
         version_id: bZT4Gb
-        url: https://semgrep.dev/playground/r/bZT4Gb/python.flask.security.injection.raw-html-concat.raw-html-format
+        url: https://lens.dev/playground/r/bZT4Gb/python.flask.security.injection.raw-html-concat.raw-html-format
   mode: taint
   pattern-sanitizers:
   - pattern: jinja2.escape(...)
@@ -11246,13 +11246,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.code.user-eval-format-string.user-eval-format-string
+    source: https://lens.dev/r/python.django.security.injection.code.user-eval-format-string.user-eval-format-string
     shortlink: https://sg.run/4x2z
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: BYUNw9
         version_id: nWTwBe
-        url: https://semgrep.dev/playground/r/nWTwBe/python.django.security.injection.code.user-eval-format-string.user-eval-format-string
+        url: https://lens.dev/playground/r/nWTwBe/python.django.security.injection.code.user-eval-format-string.user-eval-format-string
   patterns:
   - pattern-inside: |
       def $F(...):
@@ -11396,13 +11396,13 @@ rules:
     likelihood: MEDIUM
     impact: MEDIUM
     confidence: MEDIUM
-    source: https://semgrep.dev/r/python.aws-lambda.security.tainted-code-exec.tainted-code-exec
+    source: https://lens.dev/r/python.aws-lambda.security.tainted-code-exec.tainted-code-exec
     shortlink: https://sg.run/Ng7y
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: GdUDJP
         version_id: d6TbZB
-        url: https://semgrep.dev/playground/r/d6TbZB/python.aws-lambda.security.tainted-code-exec.tainted-code-exec
+        url: https://lens.dev/playground/r/d6TbZB/python.aws-lambda.security.tainted-code-exec.tainted-code-exec
   languages:
   - python
   severity: WARNING
@@ -11431,13 +11431,13 @@ rules:
     impact: HIGH
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.ssrf.ssrf-injection-requests.ssrf-injection-requests
+    source: https://lens.dev/r/python.django.security.injection.ssrf.ssrf-injection-requests.ssrf-injection-requests
     shortlink: https://sg.run/YvY4
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: j2UvEw
         version_id: JdTZJ2
-        url: https://semgrep.dev/playground/r/JdTZJ2/python.django.security.injection.ssrf.ssrf-injection-requests.ssrf-injection-requests
+        url: https://lens.dev/playground/r/JdTZJ2/python.django.security.injection.ssrf.ssrf-injection-requests.ssrf-injection-requests
   languages:
   - python
   severity: ERROR
@@ -11741,7 +11741,7 @@ rules:
     owasp:
     - A03:2021 - Injection
     references:
-    - https://semgrep.dev/docs/cheat-sheets/python-command-injection/
+    - https://lens.dev/docs/cheat-sheets/python-command-injection/
     category: security
     technology:
     - python
@@ -11751,13 +11751,13 @@ rules:
     likelihood: MEDIUM
     impact: HIGH
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.dangerous-testcapi-run-in-subinterp-tainted-env-args.dangerous-testcapi-run-in-subinterp-tainted-env-args
+    source: https://lens.dev/r/python.lang.security.audit.dangerous-testcapi-run-in-subinterp-tainted-env-args.dangerous-testcapi-run-in-subinterp-tainted-env-args
     shortlink: https://sg.run/1DLw
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 0oUK7N
         version_id: w8T02J
-        url: https://semgrep.dev/playground/r/w8T02J/python.lang.security.audit.dangerous-testcapi-run-in-subinterp-tainted-env-args.dangerous-testcapi-run-in-subinterp-tainted-env-args
+        url: https://lens.dev/playground/r/w8T02J/python.lang.security.audit.dangerous-testcapi-run-in-subinterp-tainted-env-args.dangerous-testcapi-run-in-subinterp-tainted-env-args
   severity: WARNING
   languages:
   - python
@@ -11794,13 +11794,13 @@ rules:
     likelihood: HIGH
     impact: MEDIUM
     confidence: MEDIUM
-    source: https://semgrep.dev/r/python.aws-lambda.security.dangerous-subprocess-use.dangerous-subprocess-use
+    source: https://lens.dev/r/python.aws-lambda.security.dangerous-subprocess-use.dangerous-subprocess-use
     shortlink: https://sg.run/XZ7B
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: gxUyn1
         version_id: bZT4v2
-        url: https://semgrep.dev/playground/r/bZT4v2/python.aws-lambda.security.dangerous-subprocess-use.dangerous-subprocess-use
+        url: https://lens.dev/playground/r/bZT4v2/python.aws-lambda.security.dangerous-subprocess-use.dangerous-subprocess-use
   languages:
   - python
   severity: ERROR
@@ -11850,13 +11850,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.request-data-fileresponse.request-data-fileresponse
+    source: https://lens.dev/r/python.django.security.injection.request-data-fileresponse.request-data-fileresponse
     shortlink: https://sg.run/W862
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: GdU7QR
         version_id: WrT6R8
-        url: https://semgrep.dev/playground/r/WrT6R8/python.django.security.injection.request-data-fileresponse.request-data-fileresponse
+        url: https://lens.dev/playground/r/WrT6R8/python.django.security.injection.request-data-fileresponse.request-data-fileresponse
   languages:
   - python
   severity: WARNING
@@ -11939,13 +11939,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.django.security.injection.request-data-write.request-data-write
+    source: https://lens.dev/r/python.django.security.injection.request-data-write.request-data-write
     shortlink: https://sg.run/0Q6j
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: ReUg5z
         version_id: 0bT64G
-        url: https://semgrep.dev/playground/r/0bT64G/python.django.security.injection.request-data-write.request-data-write
+        url: https://lens.dev/playground/r/0bT64G/python.django.security.injection.request-data-write.request-data-write
   languages:
   - python
   severity: WARNING
@@ -12154,13 +12154,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.network.disabled-cert-validation.disabled-cert-validation
+    source: https://lens.dev/r/python.lang.security.audit.network.disabled-cert-validation.disabled-cert-validation
     shortlink: https://sg.run/b7yp
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: eqU87k
         version_id: GxTWwe
-        url: https://semgrep.dev/playground/r/GxTWwe/python.lang.security.audit.network.disabled-cert-validation.disabled-cert-validation
+        url: https://lens.dev/playground/r/GxTWwe/python.lang.security.audit.network.disabled-cert-validation.disabled-cert-validation
   languages:
   - python
   severity: ERROR
@@ -12194,13 +12194,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.aws-lambda.security.sqlalchemy-sqli.sqlalchemy-sqli
+    source: https://lens.dev/r/python.aws-lambda.security.sqlalchemy-sqli.sqlalchemy-sqli
     shortlink: https://sg.run/b48W
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 5rUy3N
         version_id: vdT3Pq
-        url: https://semgrep.dev/playground/r/vdT3Pq/python.aws-lambda.security.sqlalchemy-sqli.sqlalchemy-sqli
+        url: https://lens.dev/playground/r/vdT3Pq/python.aws-lambda.security.sqlalchemy-sqli.sqlalchemy-sqli
   pattern-sinks:
   - patterns:
     - pattern: $QUERY
@@ -12237,13 +12237,13 @@ rules:
     impact: MEDIUM
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.use-defused-xml.use-defused-xml
+    source: https://lens.dev/r/python.lang.security.use-defused-xml.use-defused-xml
     shortlink: https://sg.run/kX47
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: d8UjRx
         version_id: nWTwqD
-        url: https://semgrep.dev/playground/r/nWTwqD/python.lang.security.use-defused-xml.use-defused-xml
+        url: https://lens.dev/playground/r/nWTwqD/python.lang.security.use-defused-xml.use-defused-xml
   message: The Python documentation recommends using `defusedxml` instead of `xml`
     because the native Python `xml` library is vulnerable to XML External Entity (XXE)
     attacks. These attacks can leak confidential data and "XML bombs" can cause denial
@@ -12304,13 +12304,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.insecure-transport.requests.request-session-http-in-with-context.request-session-http-in-with-context
+    source: https://lens.dev/r/python.lang.security.audit.insecure-transport.requests.request-session-http-in-with-context.request-session-http-in-with-context
     shortlink: https://sg.run/Bk5W
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: lBU9BZ
         version_id: zyTgNb
-        url: https://semgrep.dev/playground/r/zyTgNb/python.lang.security.audit.insecure-transport.requests.request-session-http-in-with-context.request-session-http-in-with-context
+        url: https://lens.dev/playground/r/zyTgNb/python.lang.security.audit.insecure-transport.requests.request-session-http-in-with-context.request-session-http-in-with-context
   languages:
   - python
   severity: INFO
@@ -12366,13 +12366,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.insecure-transport.requests.request-session-with-http.request-session-with-http
+    source: https://lens.dev/r/python.lang.security.audit.insecure-transport.requests.request-session-with-http.request-session-with-http
     shortlink: https://sg.run/DoBY
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: YGURXw
         version_id: pZTgen
-        url: https://semgrep.dev/playground/r/pZTgen/python.lang.security.audit.insecure-transport.requests.request-session-with-http.request-session-with-http
+        url: https://lens.dev/playground/r/pZTgen/python.lang.security.audit.insecure-transport.requests.request-session-with-http.request-session-with-http
 - id: python.lang.security.audit.insecure-transport.requests.request-with-http.request-with-http
   fix-regex:
     regex: '[Hh][Tt][Tt][Pp]://'
@@ -12403,13 +12403,13 @@ rules:
     impact: LOW
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.security.audit.insecure-transport.requests.request-with-http.request-with-http
+    source: https://lens.dev/r/python.lang.security.audit.insecure-transport.requests.request-with-http.request-with-http
     shortlink: https://sg.run/W8J4
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: 6JUjpG
         version_id: 2KTN5R
-        url: https://semgrep.dev/playground/r/2KTN5R/python.lang.security.audit.insecure-transport.requests.request-with-http.request-with-http
+        url: https://lens.dev/playground/r/2KTN5R/python.lang.security.audit.insecure-transport.requests.request-with-http.request-with-http
   languages:
   - python
   severity: INFO
@@ -12460,10 +12460,10 @@ rules:
     confidence: MEDIUM
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
     owasp: A6:2017 misconfiguration
-    source: https://semgrep.dev/r/python.cryptography.security.empty-aes-key.empty-aes-key
+    source: https://lens.dev/r/python.cryptography.security.empty-aes-key.empty-aes-key
     shortlink: https://sg.run/zQ9G
-    semgrep.dev:
+    lens.dev:
       rule:
         rule_id: OrUADK
         version_id: zyTOjq
-        url: https://semgrep.dev/playground/r/zyTOjq/python.cryptography.security.empty-aes-key.empty-aes-key
+        url: https://lens.dev/playground/r/zyTOjq/python.cryptography.security.empty-aes-key.empty-aes-key

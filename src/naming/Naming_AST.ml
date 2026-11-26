@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Iago Abal
  *
- * Copyright (C) 2020-2022 Semgrep Inc.
+ * Copyright (C) 2020-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -27,7 +27,7 @@ let error_report = false
 (* The goal of this module is to resolve names, a.k.a naming or
  * scope resolution, and to do it in a generic way on the generic AST.
  * update: this module is also (ab)used to propagate type information
- * used in semgrep for matching typed metavariables.
+ * used in lens for matching typed metavariables.
  *
  * In a compiler you often have those phases:
  *  - lexing
@@ -72,7 +72,7 @@ let error_report = false
  *    useful for complex global analysis (or at least semi-global as in
  *    OCaml where you still need to open many .cmi when you locally type a .ml)
  *    such as typing where we want to resolve every use of a global.
- *    For semgrep, where we might for quite some time restrict ourselves to
+ *    For lens, where we might for quite some time restrict ourselves to
  *    local analysis, maybe the ref implementation technique is good enough.
  *  - implement a resolve_xxx.ml for each language instead of doing it
  *    on the generic AST. That is what I was doing previously, which
@@ -668,7 +668,7 @@ let resolution_visitor =
            *
            * Note that this causes problems with Python rule/test:
            *
-           *     semgrep-rules/python/flask/correctness/same-handler-name.yaml
+           *     lens-rules/python/flask/correctness/same-handler-name.yaml
            *
            * This rule tries to match two different functions using the same
            * meta-variable. This works when the function names are not resolved,
@@ -677,7 +677,7 @@ let resolution_visitor =
            * Function-name resolution is useful for interprocedural analysis,
            * feature that was requested by JS/TS users, see:
            *
-           *     https://github.com/semgrep/semgrep/issues/2787.
+           *     https://github.com/lens/lens/issues/2787.
            *)
           | Lang.Js
           | Lang.Ts ->
@@ -691,7 +691,7 @@ let resolution_visitor =
                * even when the import statement comes after...
                * This broke the following test:
                *
-               *     semgrep-rules/python/django/security/audit/raw-query.py
+               *     lens-rules/python/django/security/audit/raw-query.py
                *
                * For now we add function names also to the "imported" scope...
                * but do we need a special scope for imported functions?
@@ -858,7 +858,7 @@ let resolution_visitor =
       | OtherPat _
       (* This interacts badly with implicit JS/TS declarations. It causes
          * `foo` in `function f({ foo }) { ... }` to be resolved as a global
-         * variable, which in turn affects semgrep-rule _react-props-in-state_.
+         * variable, which in turn affects lens-rule _react-props-in-state_.
          * This when-clause achieves the previous behavior of leaving `foo`
          * unresolved. *)
       (* TODO: We should fix the AST of JS/TS so those `f({foo})` patterns do
@@ -926,7 +926,7 @@ let resolution_visitor =
       (* TODO now that we do use a classic recursive-with-env visitor,
          * refactor so this isn't needed. *)
       (* TODO: false positive *)
-      (* nosemgrep: no-ref-declarations-at-top-scope *)
+      (* nolens: no-ref-declarations-at-top-scope *)
       let recurse = ref true in
       (match x.e with
       (* Go: This is `x := E`, a single-variable short variable declaration.

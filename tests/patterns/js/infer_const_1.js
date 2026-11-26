@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/554
+// https://github.com/returntocorp/lens/issues/554
 
 //ERROR:
 var foo = 'sensitive_var=test1';

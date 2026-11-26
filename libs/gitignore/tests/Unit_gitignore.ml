@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -226,7 +226,7 @@ let single_level_filter gitignore_source =
     Gitignore_level_index.of_parsed_patterns ~level_kind:"test"
       ~source_name:"test" patterns
   in
-  let project_root = Fpath.v (Filename.temp_dir "semgrep_gitignore_test_" "") in
+  let project_root = Fpath.v (Filename.temp_dir "lens_gitignore_test_" "") in
   Gitignore_filter.create ~higher_priority_levels:[ level ] ~project_root ()
 
 (* Verify that indexed matching agrees with the naive PCRE-only matcher

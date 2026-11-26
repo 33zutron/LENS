@@ -2,8 +2,8 @@
 #
 # Check that Mac users installed a version of Bash more recent than 2007.
 #
-# This is for the maintenance scripts used to build and test semgrep.
-# It's not required for running semgrep.
+# This is for the maintenance scripts used to build and test lens.
+# It's not required for running lens.
 #
 set -eu -o pipefail
 

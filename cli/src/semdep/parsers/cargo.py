@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,10 +15,10 @@ from typing import Generator
 from typing import List
 from typing import Optional
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep import telemetry
-from semgrep.semgrep_interfaces.semgrep_output_v1 import FoundDependency
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Fpath
+import lens.lens_interfaces.lens_output_v1 as out
+from lens import telemetry
+from lens.lens_interfaces.lens_output_v1 import FoundDependency
+from lens.lens_interfaces.lens_output_v1 import Fpath
 
 
 @telemetry.trace(telemetry.TraceOwner.SSC)

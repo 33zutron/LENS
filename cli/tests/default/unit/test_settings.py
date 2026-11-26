@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -10,14 +10,14 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
 # LICENSE for more details.
 #
-# Testing src/semgrep/settings.py
+# Testing src/lens/settings.py
 import uuid
 
 import pytest
 from ruamel.yaml import YAML
 
-from semgrep.settings import generate_anonymous_user_id
-from semgrep.settings import Settings
+from lens.settings import generate_anonymous_user_id
+from lens.settings import Settings
 
 yaml = YAML()
 
@@ -25,14 +25,14 @@ yaml = YAML()
 @pytest.fixture
 def settings_path(tmp_path, monkeypatch):
     path = tmp_path / "settings.yml"
-    monkeypatch.setenv("SEMGREP_SETTINGS_FILE", str(path))
+    monkeypatch.setenv("LENS_SETTINGS_FILE", str(path))
     return path
 
 
 @pytest.mark.quick
 def test_env_sourced_token_is_not_persisted(settings_path, monkeypatch):
     env_token = "env-token-abc"
-    monkeypatch.setenv("SEMGREP_APP_TOKEN", env_token)
+    monkeypatch.setenv("LENS_APP_TOKEN", env_token)
 
     Settings()
 
@@ -55,7 +55,7 @@ def test_login_persisted_token_survives_env_set_run(settings_path, monkeypatch):
             fd,
         )
 
-    monkeypatch.setenv("SEMGREP_APP_TOKEN", "a-different-env-token")
+    monkeypatch.setenv("LENS_APP_TOKEN", "a-different-env-token")
     Settings()
 
     on_disk = yaml.load(settings_path.read_text())
@@ -64,7 +64,7 @@ def test_login_persisted_token_survives_env_set_run(settings_path, monkeypatch):
 
 @pytest.mark.quick
 def test_no_token_means_no_api_token_persisted(settings_path, monkeypatch):
-    monkeypatch.delenv("SEMGREP_APP_TOKEN", raising=False)
+    monkeypatch.delenv("LENS_APP_TOKEN", raising=False)
 
     Settings()
 

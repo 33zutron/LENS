@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 (* This function should be used mostly in testing code to quickly get a list
- * of targets for a certain language. For real semgrep targeting, use the
+ * of targets for a certain language. For real lens targeting, use the
  * Core_targeting module.
  *)
 let get_target_fpaths (root : Fpath.t) (lang : Lang.t) : Fpath.t list =

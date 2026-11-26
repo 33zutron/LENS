@@ -5,7 +5,7 @@ rules:
       - pattern: tainted
     pattern-sinks:
       - pattern: sink(...)
-    message: Semgrep found a match
+    message: Lens found a match
     languages:
       - python
     severity: WARNING

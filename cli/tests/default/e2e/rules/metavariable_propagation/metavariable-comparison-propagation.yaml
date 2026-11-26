@@ -10,6 +10,6 @@ rules:
           metavariable: "$INT"
           comparison: "$INT > 1"
     message: |
-      Semgrep found a match $INT
+      Lens found a match $INT
     severity: WARNING
     languages: [python]

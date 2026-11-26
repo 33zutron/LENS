@@ -13841,7 +13841,7 @@
       ],
       "Method Chaining": [
         {
-          "code": "use std::process::Command;\n\nfn main() -> io::Result<()> {\n    // ERROR: match\n    let proc = Command::new(\"semgrep-core\")\n        .args([\"-l\", \"rust\"])\n        .args([\"-rules\", \"test.yaml\"])\n        .output()\n        .expect(\"failed to execute process\");\n\n    Ok(())\n}\n",
+          "code": "use std::process::Command;\n\nfn main() -> io::Result<()> {\n    // ERROR: match\n    let proc = Command::new(\"lens-core\")\n        .args([\"-l\", \"rust\"])\n        .args([\"-rules\", \"test.yaml\"])\n        .output()\n        .expect(\"failed to execute process\");\n\n    Ok(())\n}\n",
           "code_path": "rust/dots_method_chaining.rs",
           "highlights": [
             {

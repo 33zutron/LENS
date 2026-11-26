@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2021-2022 Semgrep Inc.
+ * Copyright (C) 2021-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@ open Xpattern_matcher
 module Log = Log_engine.Log
 
 let lexing_pos_to_loc (file : Fpath.t) (x : Lexing.position) str =
-  (* almost like Spacegrep.Semgrep.semgrep_pos() *)
+  (* almost like Spacegrep.Lens.lens_pos() *)
   let line = x.Lexing.pos_lnum in
   let bytepos = x.Lexing.pos_cnum in
   (* bugfix: not +1 here, Parse_info.column is 0-based.

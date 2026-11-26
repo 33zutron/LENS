@@ -1,0 +1,3 @@
+lens-grammars/src/tree-sitter-clojure/COPYING.txt
+lens-grammars/src/tree-sitter-clojure/grammar.js
+lens-grammars/src/lens-clojure/grammar.js

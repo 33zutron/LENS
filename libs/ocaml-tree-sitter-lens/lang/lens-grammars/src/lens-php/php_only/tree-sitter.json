@@ -1,0 +1,26 @@
+{
+  "grammars": [
+    {
+      "name": "php_only",
+      "scope": "source.php",
+      "path": "."
+    }
+  ],
+  "metadata": {
+    "version": "0.0.0-7d07b41",
+    "license": "GPL",
+    "description": "Lens-extended PHP-only grammar for tree-sitter",
+    "authors": [{ "name": "Lens" }],
+    "links": {
+      "repository": "https://github.com/lens/ocaml-tree-sitter-lens"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": false,
+    "node": false,
+    "python": false,
+    "rust": false,
+    "swift": false
+  }
+}

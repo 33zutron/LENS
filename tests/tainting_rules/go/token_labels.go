@@ -1,4 +1,4 @@
-// See https://github.com/returntocorp/semgrep/issues/6355 if this breaks.
+// See https://github.com/returntocorp/lens/issues/6355 if this breaks.
 // We shouldn't produce a finding because the label should prevent the match. 
 
 func foo() {

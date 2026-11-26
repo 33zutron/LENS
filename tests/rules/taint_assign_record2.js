@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/5040
+// https://github.com/returntocorp/lens/issues/5040
 
 function test1(input) {
     const param = input.body.param

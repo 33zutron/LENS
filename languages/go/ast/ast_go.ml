@@ -350,7 +350,7 @@ type top_decl =
 
 (* old: used to be a record with package, imports, and then decls but
  * tree-sitter-go is more flexible and so I put package and imports in
- * top_decl above. Note that this also makes things easier for semgrep
+ * top_decl above. Note that this also makes things easier for lens
  * by allowing to have a pattern with just a package declaration for example.
  *)
 type program = top_decl list [@@deriving show { with_path = false }]

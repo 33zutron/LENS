@@ -8,7 +8,7 @@
           "toolExecutionNotifications": [
             {
               "descriptor": {
-                "id": "SemgrepError"
+                "id": "LensError"
               },
               "level": "error",
               "message": {
@@ -21,7 +21,7 @@
       "results": [],
       "tool": {
         "driver": {
-          "name": "Semgrep OSS",
+          "name": "Lens OSS",
           "rules": [],
           "semanticVersion": "<MASKED>"
         }

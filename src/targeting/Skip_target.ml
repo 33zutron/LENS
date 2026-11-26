@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -15,7 +15,7 @@
 *)
 open Common
 open Fpath_.Operators
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 module Log = Log_targeting.Log
 
 (****************************************************************************)
@@ -38,7 +38,7 @@ module Log = Log_targeting.Log
   unusual to have large import blocks at the top, resulting in a very low
   whitespace fraction. This should not affect very many Java files, so for
   now it is ok that we leave it. The consequence of reducing the frequency
-  is that Semgrep would likely take longer as it scans more costly minified
+  is that Lens would likely take longer as it scans more costly minified
   files. TODO we might want to do some benchmarking and change this default
 *)
 (* coupling: this number is iuncluded in Scan_CLI.ml's docs *)
@@ -169,7 +169,7 @@ let exclude_big_files max_target_bytes paths =
    Filter out folders and files that don't have sufficient access permissions.
 
    For Git projects, we only filter on regular files since folders are not
-   returned to us by 'git ls-files'. This is why semgrep won't report folders
+   returned to us by 'git ls-files'. This is why lens won't report folders
    with insufficient permissions for Git projects.
 
    For other projects, we scan the file tree ourselves and need to check

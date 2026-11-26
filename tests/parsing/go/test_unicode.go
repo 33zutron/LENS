@@ -1,4 +1,4 @@
-// from https://github.com/returntocorp/semgrep/issues/4725
+// from https://github.com/returntocorp/lens/issues/4725
 package generated
 
 func (ec *executionContext) field_Mutation_createAccount_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {

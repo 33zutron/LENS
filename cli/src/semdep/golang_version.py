@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024 Semgrep Inc.
+# Copyright (c) 2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@ from typing import List
 from typing import Optional
 from typing import Union
 
-from semgrep.error import SemgrepError
+from lens.error import LensError
 
 
 @dataclass
@@ -338,7 +338,7 @@ def compare_golang_specifier(specifier: str, version: str) -> bool:
     )
     matched = specifier_regex.match(specifier)
     if not matched:
-        raise SemgrepError(
+        raise LensError(
             f"unknown package version comparison expression: {specifier}"
         )
     operator = matched.group("operator")
@@ -360,6 +360,6 @@ def compare_golang_specifier(specifier: str, version: str) -> bool:
     elif operator == ">":
         return cmp_golang_versions(parsed_version, specifier_version) > 0
     else:
-        raise SemgrepError(
+        raise LensError(
             f"unknown package version comparison expression: {specifier}"
         )

@@ -1,0 +1,44 @@
+; Various definitions used throughout olens, the OCaml reimplementation
+; of the original Python lens.
+;
+; Eventually, this will be merged with the /core library from lens-core
+
+(library
+  (public_name lens.olens_core)
+  (name olens_core)
+  (wrapped false)
+  (libraries
+    base
+    collections
+
+    cmdliner
+    uri
+    uuidm
+    lwt ; for Project_metadata.ml
+
+    commons
+
+    lens_core
+    lens.core_scan
+  )
+ (preprocess
+   (pps
+     ppx_profiling
+     ppx_deriving.show
+     ppx_deriving.eq
+     ppx_hash
+     ppx_inline_test
+     ppx_assert
+   )
+ )
+)
+
+; this is just used in Metrics_.ml
+(rule
+ (targets lens_metrics_j.ml lens_metrics_j.mli)
+ (deps    lens_metrics.atd)
+ (action  (run atdgen -j %{deps})))
+(rule
+ (targets lens_metrics_t.ml lens_metrics_t.mli)
+ (deps    lens_metrics.atd)
+ (action  (run atdgen -t %{deps})))

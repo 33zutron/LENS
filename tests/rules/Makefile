@@ -1,5 +1,5 @@
 
-# We convert the .jsonnet in .yaml here, even though semgrep-core
+# We convert the .jsonnet in .yaml here, even though lens-core
 # knows how to do that by itself, to avoid to add a jsonnet dependency
 # in CI.
 JSONNET_TESTS=\
@@ -13,7 +13,7 @@ JSONNET_TESTS=\
 
 all: $(JSONNET_TESTS:.jsonnet=.yaml)
 
-%.json: %.jsonnet lib_semgrep.jsonnet
+%.json: %.jsonnet lib_lens.jsonnet
 	jsonnet $< > $@
 
 # this requires json-yaml of https://github.com/sjmulder/json-yaml

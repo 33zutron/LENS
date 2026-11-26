@@ -1,6 +1,6 @@
 (* Nat Mote
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
  * LICENSE for more details.
  *)
 
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 
 let key = Alcotest.testable Core_json_output.pp_key ( = )
 let key_not_equal = Alcotest.testable Core_json_output.pp_key ( <> )
@@ -25,7 +25,7 @@ let make_core_match ?(check_id = "fake-rule-id") ?annotated_rule_id
     JSON.(
       Object
         [
-          ( "semgrep.dev",
+          ( "lens.dev",
             Object
               [
                 ("src", String src);

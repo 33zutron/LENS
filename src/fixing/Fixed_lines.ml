@@ -1,6 +1,6 @@
 (* Brandon Wu
  *
- * Copyright (C) 2023 Semgrep Inc.
+ * Copyright (C) 2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -18,8 +18,8 @@
 (*****************************************************************************)
 (* We need this module because ???
  *
- * pad: I think this helped in moving autofix management from pysemgrep
- * to partially semgrep-core.
+ * pad: I think this helped in moving autofix management from pylens
+ * to partially lens-core.
  *)
 
 (*****************************************************************************)
@@ -65,7 +65,7 @@ let make_fixed_lines_of_string env file_contents (edit : Textedit.t) =
       ~data:((edit.start, edit.end_) :: previous_edits);
     match lines with
     (* If we are deleting whole line(s) only, we omit fixed_lines. This is odd
-     * behavior, but it matches pysemgrep and is exercised by e2e tests. *)
+     * behavior, but it matches pylens and is exercised by e2e tests. *)
     | [ "" ] -> None
     | _ -> Some lines
 

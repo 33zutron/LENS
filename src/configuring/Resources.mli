@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 (*
-   Gather and print system resources available to semgrep.
+   Gather and print system resources available to lens.
 *)
 
 type t = {
@@ -25,8 +25,8 @@ val resources : t
 
 val show : unit -> string
 (** Text output showing resources (CPU, memory, ...) for the
-    'semgrep show resources' subcommand. *)
+    'lens show resources' subcommand. *)
 
 val to_json : unit -> string
 (** JSON output showing resources (CPU, memory, ...) for the
-    'semgrep show resources --json' subcommand. *)
+    'lens show resources --json' subcommand. *)

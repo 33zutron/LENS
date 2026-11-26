@@ -1,16 +1,16 @@
 // Cron to verify that the release is still working (at least in dry-mode),
-// and that the Semgrep Homebrew formula still work.
+// and that the Lens Homebrew formula still work.
 
-local semgrep = import 'libs/semgrep.libsonnet';
+local lens = import 'libs/lens.libsonnet';
 local release_homebrew = import 'release-homebrew.jsonnet';
 
-// Job to check whether Semgrep can still be built for Homebrew
+// Job to check whether Lens can still be built for Homebrew
 // (https://brew.sh/).
 //
-// Note that the Semgrep Homebrew "formula" is not stored in this repo but at
-// https://github.com/Homebrew/homebrew-core/blob/master/Formula/s/semgrep.rb
+// Note that the Lens Homebrew "formula" is not stored in this repo but at
+// https://github.com/Homebrew/homebrew-core/blob/master/Formula/s/lens.rb
 // The main goal of this workflow is to just check whether the current
-// semgrep.rb is compatible with the current version of Semgrep.
+// lens.rb is compatible with the current version of Lens.
 //
 // This job is used to test the Homebrew build against `develop`
 
@@ -24,14 +24,14 @@ local env = {
 };
 
 // This is called from nightly.jsonnet
-// The Semgrep formula is bumped by Homebrew's automations, however
+// The Lens formula is bumped by Homebrew's automations, however
 // we also want to double check that the formula still builds with
 // the 'develop' branch. This serves two purposes:
 //  - verifies that our changes in develop don't break brew
 //  - gives us time before release to fix these issues and adjust our
 //    Homebrew formula if needed.
 local brew_build_job = {
-  name: 'Build Semgrep via Brew from HEAD',
+  name: 'Build Lens via Brew from HEAD',
   'runs-on': 'macos-latest',
   steps: [
     {
@@ -46,12 +46,12 @@ local brew_build_job = {
     {
       // See https://github.com/Homebrew/brew/issues/1742 for context on the
       // brew link step.
-      run: 'brew install --yes semgrep --HEAD --debug || brew link --overwrite semgrep',
+      run: 'brew install --yes lens --HEAD --debug || brew link --overwrite lens',
       env: env,
     },
     {
       name: 'Check installed correctly',
-      run: 'brew test semgrep --HEAD',
+      run: 'brew test lens --HEAD',
       env: env,
     },
   ],
@@ -73,7 +73,7 @@ local brew_build_job = {
   },
   jobs: {
     'brew-build': brew_build_job,
-    'notify-failure': semgrep.slack.notify_failure_job(
+    'notify-failure': lens.slack.notify_failure_job(
       'The nightly cron failed on ${{ github.sha }}. See https://github.com/${{github.repository}}/actions/runs/${{github.run_id}} for more information.'
     ) + { needs: ['brew-build'] },
   },

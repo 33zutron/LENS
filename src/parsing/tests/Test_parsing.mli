@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2020-2025 Semgrep Inc.
+   Copyright (c) 2020-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -18,7 +18,7 @@
  *
  * This function is called by the -parsing_stat command-line action.
  * Here is an example of use:
- *   $ semgrep-core -lang ocaml -parsing_stats tests/ocaml/ -json
+ *   $ lens-core -lang ocaml -parsing_stats tests/ocaml/ -json
  *   {"total":111,"bad":0,"percent_correct":100.0}
  *)
 val parsing_stats :

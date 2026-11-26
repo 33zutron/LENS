@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -22,16 +22,16 @@ from typing import Optional
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.error import SemgrepError
-from semgrep.rpc import _describe_exit
-from semgrep.rpc import _diagnose_death
-from semgrep.rpc import _read_packet
-from semgrep.rpc import _StderrTail
-from semgrep.rpc import rpc_call
-from semgrep.rpc import RpcSession
-from semgrep.rpc import STDERR_TAIL_BYTES
-from semgrep.rpc_call import get_targets
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.error import LensError
+from lens.rpc import _describe_exit
+from lens.rpc import _diagnose_death
+from lens.rpc import _read_packet
+from lens.rpc import _StderrTail
+from lens.rpc import rpc_call
+from lens.rpc import RpcSession
+from lens.rpc import STDERR_TAIL_BYTES
+from lens.rpc_call import get_targets
 
 
 ##############################################################################
@@ -98,7 +98,7 @@ class _FakePopen:
     def wait(self, timeout: Optional[float] = None) -> int:
         if self._wait_raises:
             self._wait_raises = False  # a subsequent wait (post-kill) succeeds
-            raise subprocess.TimeoutExpired(cmd="semgrep-core", timeout=timeout or 0.0)
+            raise subprocess.TimeoutExpired(cmd="lens-core", timeout=timeout or 0.0)
         self.returncode = self._wait_result
         return self._wait_result
 
@@ -115,7 +115,7 @@ def _packet(function_return: out.FunctionReturn) -> bytes:
 
 
 def _patch_rpc_call(monkeypatch, fake: _FakePopen) -> None:
-    # Replace only the `subprocess` name inside semgrep.rpc (not the global
+    # Replace only the `subprocess` name inside lens.rpc (not the global
     # subprocess module), so Popen returns our fake while subprocess.run used
     # elsewhere (e.g. get_state) keeps working.
     shim = types.SimpleNamespace(
@@ -124,10 +124,10 @@ def _patch_rpc_call(monkeypatch, fake: _FakePopen) -> None:
         DEVNULL=subprocess.DEVNULL,
         TimeoutExpired=subprocess.TimeoutExpired,
     )
-    monkeypatch.setattr("semgrep.rpc.subprocess", shim)
-    monkeypatch.setattr("semgrep.rpc._cmd", lambda: ["semgrep-core"])
+    monkeypatch.setattr("lens.rpc.subprocess", shim)
+    monkeypatch.setattr("lens.rpc._cmd", lambda: ["lens-core"])
     monkeypatch.setattr(
-        "semgrep.rpc._wrap_call_with_trace_context",
+        "lens.rpc._wrap_call_with_trace_context",
         lambda call: out.RpcCall(call=call, parent_span_id=None),
     )
 
@@ -142,10 +142,10 @@ _CALL = out.FunctionCall(out.CallContributions())
 class TestGetTargets:
     @pytest.mark.quick
     def test_raises_on_rpc_failure(self, monkeypatch):
-        """When rpc_call returns None (semgrep-core crash/failure),
-        get_targets should raise SemgrepError instead of silently
+        """When rpc_call returns None (lens-core crash/failure),
+        get_targets should raise LensError instead of silently
         returning an empty result."""
-        monkeypatch.setattr("semgrep.rpc_call.rpc_call", lambda *args, **kwargs: None)
+        monkeypatch.setattr("lens.rpc_call.rpc_call", lambda *args, **kwargs: None)
 
         scanning_roots = out.ScanningRoots(
             root_paths=[],
@@ -153,7 +153,7 @@ class TestGetTargets:
                 exclude=[],
                 max_target_bytes=0,
                 respect_gitignore=True,
-                respect_semgrepignore_files=True,
+                respect_lensignore_files=True,
                 always_select_explicit_targets=False,
                 explicit_targets=[],
                 force_novcs_project=False,
@@ -162,7 +162,7 @@ class TestGetTargets:
             ),
         )
 
-        with pytest.raises(SemgrepError, match="Failed to obtain target files"):
+        with pytest.raises(LensError, match="Failed to obtain target files"):
             get_targets(scanning_roots)
 
 
@@ -214,13 +214,13 @@ class TestReadPacket:
     def test_eof_is_silent(self, caplog):
         """An empty readline (EOF) returns None and logs NOTHING -- not even the
         VERBOSE line the pre-fix code emitted. The caller diagnoses instead."""
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         assert _read_packet(io.BytesIO(b"")) is None
         assert not caplog.records
 
     @pytest.mark.quick
     def test_malformed_header_logs_protocol_error(self, caplog):
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         assert _read_packet(io.BytesIO(b"not-a-number\n")) is None
         errors = _errors(caplog)
         assert any("protocol error" in m for m in errors)
@@ -230,7 +230,7 @@ class TestReadPacket:
     def test_non_utf8_header_is_protocol_error_not_crash(self, caplog):
         """Non-UTF-8 garbage on stdout must produce the protocol error, not a
         propagating UnicodeDecodeError."""
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         assert _read_packet(io.BytesIO(b"\xff\xfe\n")) is None
         assert any("protocol error" in m for m in _errors(caplog))
 
@@ -238,7 +238,7 @@ class TestReadPacket:
     def test_blank_header_line_reads_nicely(self, caplog):
         """A non-empty but whitespace-only line (e.g. a stray newline) should
         read as 'a blank line', not the awkward "got ''"."""
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         assert _read_packet(io.BytesIO(b"\n")) is None
         errors = _errors(caplog)
         assert any("a blank line" in m for m in errors)
@@ -295,7 +295,7 @@ class TestStderrTail:
 class TestDiagnoseDeath:
     @pytest.mark.quick
     def test_reports_signal_and_stderr(self, caplog):
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         tail = _StderrTail(io.BytesIO(b"Fatal error: an ocaml backtrace here\n"))
         _diagnose_death(-9, tail)
         errors = _errors(caplog)
@@ -305,7 +305,7 @@ class TestDiagnoseDeath:
 
     @pytest.mark.quick
     def test_no_stderr_still_reports(self, caplog):
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         _diagnose_death(-11, None)
         errors = _errors(caplog)
         assert len(errors) == 1
@@ -321,7 +321,7 @@ class TestRpcCallFinally:
     ):
         """Regression: a signal-killed subprocess yields a signal-named error,
         and the old misleading 'Expected a number' text is gone."""
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         fake = _FakePopen(stdout=b"", stderr=b"boom\n", wait_result=-9)
         _patch_rpc_call(monkeypatch, fake)
 
@@ -334,7 +334,7 @@ class TestRpcCallFinally:
     def test_error_response_is_not_diagnosed_as_death(self, monkeypatch, caplog):
         """A well-formed RetError means the subprocess responded -- it must not
         be misdiagnosed as a death in the finally block."""
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         fake = _FakePopen(
             stdout=_packet(out.FunctionReturn(out.RetError("boom"))), wait_result=0
         )
@@ -349,7 +349,7 @@ class TestRpcCallFinally:
     def test_timeout_kill_is_not_framed_as_signal_death(self, monkeypatch, caplog):
         """When we time out and kill the child, say so -- do not report the
         self-inflicted SIGKILL as an external death."""
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         fake = _FakePopen(stdout=b"", wait_raises=True)
         _patch_rpc_call(monkeypatch, fake)
 
@@ -363,10 +363,10 @@ class TestRpcCallFinally:
     def test_stderr_not_surfaced_in_default_mode(self, monkeypatch, caplog):
         """In default (non-debug) mode the signal is named but the subprocess
         stderr must NOT be copied into the log (it can carry customer data)."""
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         fake = _FakePopen(stdout=b"", stderr=b"SENSITIVE_STDERR\n", wait_result=-9)
         _patch_rpc_call(monkeypatch, fake)
-        monkeypatch.setattr("semgrep.rpc._stderr_capture_enabled", lambda: False)
+        monkeypatch.setattr("lens.rpc._stderr_capture_enabled", lambda: False)
 
         assert rpc_call(_CALL, out.RetContributions) is None
         errors = _errors(caplog)
@@ -378,7 +378,7 @@ class TestRpcCallFinally:
         """If the child dies before reading its request, the write's
         BrokenPipeError must become None + a diagnostic, not a propagating
         exception."""
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         fake = _FakePopen(stdin_broken=True, wait_result=-9)
         _patch_rpc_call(monkeypatch, fake)
 
@@ -397,7 +397,7 @@ class TestRpcSessionCall:
 
     @pytest.mark.quick
     def test_dead_server_diagnoses_and_skips_write(self, caplog):
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         fake = _FakePopen(poll_results=[-11])
         session = self._session(fake)
 
@@ -410,9 +410,9 @@ class TestRpcSessionCall:
 
     @pytest.mark.quick
     def test_eof_read_on_dead_server_is_diagnosed(self, monkeypatch, caplog):
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         monkeypatch.setattr(
-            "semgrep.rpc._wrap_call_with_trace_context",
+            "lens.rpc._wrap_call_with_trace_context",
             lambda call: out.RpcCall(call=call, parent_span_id=None),
         )
         # Alive at the write guard; then EOF read and the bounded wait reaps it.
@@ -424,9 +424,9 @@ class TestRpcSessionCall:
 
     @pytest.mark.quick
     def test_protocol_error_while_alive_is_not_a_death(self, monkeypatch, caplog):
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         monkeypatch.setattr(
-            "semgrep.rpc._wrap_call_with_trace_context",
+            "lens.rpc._wrap_call_with_trace_context",
             lambda call: out.RpcCall(call=call, parent_span_id=None),
         )
         # Alive throughout; stdout has non-packet data (a protocol violation).
@@ -446,7 +446,7 @@ class TestRpcSessionCall:
     @pytest.mark.quick
     def test_dead_server_diagnosed_only_once(self, caplog):
         """Repeated calls to a dead session log one error, not one per call."""
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         fake = _FakePopen(poll_results=[-11])
         session = self._session(fake)
 
@@ -455,7 +455,7 @@ class TestRpcSessionCall:
         assert len([m for m in _errors(caplog) if "RPC subprocess failed" in m]) == 1
 
 
-# A stand-in semgrep-core: read the request, flood stderr with `argv[1]` bytes of
+# A stand-in lens-core: read the request, flood stderr with `argv[1]` bytes of
 # filler plus an END_MARKER, then die by SIGSEGV without responding. Exercises the
 # real stderr PIPE + drain thread, not an in-memory BytesIO.
 _STDERR_CRASH_STUB = (
@@ -473,20 +473,20 @@ class TestStderrCaptureIntegration:
 
     def _patch(self, monkeypatch, filler: int) -> None:
         # stderr capture is gated on debug logging, so enable it.
-        monkeypatch.setattr("semgrep.rpc._stderr_capture_enabled", lambda: True)
+        monkeypatch.setattr("lens.rpc._stderr_capture_enabled", lambda: True)
         # Real subprocess.Popen; only the command and trace wrapper are stubbed.
         monkeypatch.setattr(
-            "semgrep.rpc._cmd",
+            "lens.rpc._cmd",
             lambda: [sys.executable, "-c", _STDERR_CRASH_STUB, str(filler)],
         )
         monkeypatch.setattr(
-            "semgrep.rpc._wrap_call_with_trace_context",
+            "lens.rpc._wrap_call_with_trace_context",
             lambda call: out.RpcCall(call=call, parent_span_id=None),
         )
 
     @pytest.mark.kinda_slow
     def test_captures_stderr_from_a_real_crashing_subprocess(self, monkeypatch, caplog):
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         self._patch(monkeypatch, filler=0)
         assert rpc_call(_CALL, out.RetContributions) is None
         errors = _errors(caplog)
@@ -500,7 +500,7 @@ class TestStderrCaptureIntegration:
         the pipe buffer while we block on stdout must not deadlock, and the
         captured tail stays bounded. Without the thread this would hang (guarded
         by the timeout)."""
-        caplog.set_level(logging.DEBUG, logger="semgrep.rpc")
+        caplog.set_level(logging.DEBUG, logger="lens.rpc")
         self._patch(monkeypatch, filler=300_000)  # well over any OS pipe buffer
         assert rpc_call(_CALL, out.RetContributions) is None
         errors = _errors(caplog)

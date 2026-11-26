@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2022 Semgrep Inc.
+ * Copyright (C) 2019-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -23,20 +23,20 @@ module RP = Core_result
 module RM = Range_with_metavars
 module E = Core_error
 module ME = Matching_explanation
-module OutJ = Semgrep_output_v1_j
+module OutJ = Lens_output_v1_j
 module Log = Log_engine.Log
 open Match_env
 
 (* Debugging flags.
- * Note that semgrep-core -matching_explanations can also be useful to debug.
+ * Note that lens-core -matching_explanations can also be useful to debug.
  *)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let debug_matches = ref false
 
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* The core engine of Semgrep.
+(* The core engine of Lens.
  *
  * This module implements the boolean composition of patterns.
  * See Match_patterns.ml for the code to handle a single pattern and
@@ -67,7 +67,7 @@ let debug_matches = ref false
  *  - ...
  *
  * FUTURE WORK:
- * update: TODO move in DeepSemgrep
+ * update: TODO move in DeepLens
  * Right now we just analyze one file at a time. Later we could
  * maybe take a list of files and do some global analysis for:
  *     * caller/callee in different files
@@ -83,7 +83,7 @@ let debug_matches = ref false
  *    todo_second_pass if for example is_children returned a Maybe.
  *    Then in 2nd pass just process the files that were marked as todo.
  *  - use LSP, so don't even need 2 pass and can even work when passing
- *    a single file or subdir to semgrep
+ *    a single file or subdir to lens
  *
  * Note that we opted here for simple patterns with simple extensions
  * to the grammar (metavar, ellipsis) with simple (but powerful) logic
@@ -115,7 +115,7 @@ let xpatterns_in_formula (e : R.formula) : (Xpattern.t * bool) list =
   !res
 
 let partition_xpatterns xs =
-  let semgrep = ref [] in
+  let lens = ref [] in
   let spacegrep = ref [] in
   let aliengrep = ref [] in
   let regexp = ref [] in
@@ -123,7 +123,7 @@ let partition_xpatterns xs =
   |> List.iter (fun (xpat, inside) ->
       let { XP.pid; pstr = str, _; pat } = xpat in
       match pat with
-      | XP.Sem (x, _lang) -> Stack_.push (x, inside, pid, str) semgrep
+      | XP.Sem (x, _lang) -> Stack_.push (x, inside, pid, str) lens
       | XP.Spacegrep x -> Stack_.push (x, pid, str) spacegrep
       | XP.Aliengrep x -> Stack_.push (x, pid, str) aliengrep
       | XP.Regexp x ->
@@ -133,7 +133,7 @@ let partition_xpatterns xs =
               pid,
               str )
             regexp);
-  (List.rev !semgrep, List.rev !spacegrep, List.rev !aliengrep, List.rev !regexp)
+  (List.rev !lens, List.rev !spacegrep, List.rev !aliengrep, List.rev !regexp)
 
 let group_matches_per_pattern_id (xs : Core_match.t list) : id_to_match_results
     =
@@ -215,12 +215,12 @@ let (mini_rule_of_pattern :
   }
 
 (*****************************************************************************)
-(* Debugging semgrep *)
+(* Debugging lens *)
 (*****************************************************************************)
 
-let debug_semgrep config mini_rules file lang ast =
+let debug_lens config mini_rules file lang ast =
   (* process one mini rule at a time *)
-  Log.debug (fun m -> m "DEBUG SEMGREP MODE!");
+  Log.debug (fun m -> m "DEBUG LENS MODE!");
   mini_rules
   |> List.concat_map (fun mr ->
       Log.debug (fun m ->
@@ -248,7 +248,7 @@ let debug_semgrep config mini_rules file lang ast =
       res)
 
 (*****************************************************************************)
-(* Evaluating Semgrep patterns *)
+(* Evaluating Lens patterns *)
 (*****************************************************************************)
 
 let matches_of_patterns ~has_as_metavariable ?mvar_context ?range_filter rule
@@ -280,7 +280,7 @@ let matches_of_patterns ~has_as_metavariable ?mvar_context ?range_filter rule
 
             if !debug_matches then
               (* debugging path *)
-              debug_semgrep config mini_rules internal_path_to_content lang ast
+              debug_lens config mini_rules internal_path_to_content lang ast
             else
               (* regular path *)
               Match_patterns.check
@@ -480,7 +480,7 @@ let apply_focus_on_ranges (env : env) (focus_mvars_list : R.focus_mv_list list)
           failwith "Cannot have an empty `focus-metavariables`"
       | _, _ ->
           failwith
-            "Semgrep currently does not support multiple `focus-metavariable` \
+            "Lens currently does not support multiple `focus-metavariable` \
              statements with multiple metavariables under a single `patterns`."
     in
     let rec intersect_ranges_list (l : RM.t list list) : RM.t list =
@@ -543,7 +543,7 @@ let matches_of_xpatterns ~has_as_metavariable ~mvar_context rule
         : Xtarget.t) =
     xtarget
   in
-  (* Right now you can only mix semgrep/regexps and spacegrep/regexps, but
+  (* Right now you can only mix lens/regexps and spacegrep/regexps, but
    * in theory we could mix all of them together. This is why below
    * I don't match over analyzer and instead assume we could have multiple
    * kinds of patterns at the same time.
@@ -680,7 +680,7 @@ let hook_pro_entropy_analysis :
     (mode:Rule.entropy_analysis_mode -> string -> bool) option Hook.t =
   Hook.create None
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let hook_pro_metavariable_name :
     (Lang.t -> G.expr -> Rule.metavar_cond_name -> bool) option ref =
   ref None
@@ -784,11 +784,11 @@ let rec filter_ranges (env : env) (xs : (RM.t * MV.bindings list) list)
       | R.CondAnalysis (mvar, CondEntropyV2 mode) -> (
           match Hook.get hook_pro_entropy_analysis with
           | None ->
-              (* TODO - nice UX handling of this for pysemgrep - tell the user
+              (* TODO - nice UX handling of this for pylens - tell the user
                  that they ran a rule in OSS w/o Pro hook and so their rule
                  didn't do anything
               *)
-              (* nosemgrep: no-logs-in-library *)
+              (* nolens: no-logs-in-library *)
               Logs.err (fun m ->
                   m
                     "EntropyV2 rule encountered without loading proprietary \
@@ -875,7 +875,7 @@ and evaluate_formula env opt_context
       *  - bind closer metavariable-regexp with the relevant pattern
       *  - propagate metavariables when intersecting ranges
       *  - distribute filter_range in intersect_range?
-      * See https://github.com/semgrep/semgrep/issues/2664
+      * See https://github.com/lens/lens/issues/2664
   *)
   let ranges, filter_expls =
     fold_with_expls
@@ -1003,7 +1003,7 @@ and evaluate_formula_kind env opt_context (kind : Rule.formula_kind) =
   | R.And (t, conj) -> (
       (* we now treat pattern: and pattern-inside: differently. We first
           * process the pattern: and then the pattern-inside.
-          * This fixed only one mismatch in semgrep-rules.
+          * This fixed only one mismatch in lens-rules.
           *
           * old: the old code was simpler ... but incorrect.
           *  (match pos with

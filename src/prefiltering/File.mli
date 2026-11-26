@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -75,8 +75,8 @@ val to_formula : t -> predicate Formula.t
 val of_formula : predicate Formula.t -> t
 (** [of_formula formula] creates a prefilter from a [formula]. *)
 
-val to_semgrep_formula : t -> Semgrep_prefilter_t.formula
-(** [to_semgrep_formula prefilter] converts [prefilter] to the external
+val to_lens_formula : t -> Lens_prefilter_t.formula
+(** [to_lens_formula prefilter] converts [prefilter] to the external
     ATD representation for serialization and external tools. *)
 
 (** {2 Internal functions} *)

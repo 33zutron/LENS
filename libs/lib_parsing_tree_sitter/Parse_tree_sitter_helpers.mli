@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2020-2024 Semgrep Inc.
+   Copyright (c) 2020-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -53,7 +53,7 @@ val wrap_parser :
    Extras are little trees with their own root and type. Some of
    them are ordinary comments and should be discarded. Others may be
    comments with special syntax that is worth parsing and somehow
-   scanning with semgrep. There are also extras such as heredoc
+   scanning with lens. There are also extras such as heredoc
    templates that start on the line after the opening marker and
    after any other heredoc body (whose opening markers come first on
    a line with multiple opening markers). Matching heredoc openings

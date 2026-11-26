@@ -1,6 +1,6 @@
 (* Nat Mote
  *
- * Copyright (C) 2019-2022 Semgrep Inc.
+ * Copyright (C) 2019-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -70,7 +70,7 @@ let overlaps_with_an_interval (intervals : t list) (e1 : t) =
    small enough in practice since N is the number of edits to make in one
    file. If it turns out this isn't good enough, we'll have to use a more
    elaborate algorithm. The problem is that we have to apply the fixes
-   in the order in which they're discovered by semgrep rules rather than
+   in the order in which they're discovered by lens rules rather than
    than in the order in which they appear in the file.
 *)
 let remove_overlapping_edits edits =

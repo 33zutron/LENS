@@ -10,10 +10,10 @@
 _ts_oss_root=$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 if [ "$(basename "$_ts_oss_root")" = "OSS" ]; then
   _ts_workspace=$(dirname "$_ts_oss_root")
-  _ts_relpath=OSS/libs/ocaml-tree-sitter-semgrep/core/tree-sitter-out
+  _ts_relpath=OSS/libs/ocaml-tree-sitter-lens/core/tree-sitter-out
 else
   _ts_workspace=$_ts_oss_root
-  _ts_relpath=libs/ocaml-tree-sitter-semgrep/core/tree-sitter-out
+  _ts_relpath=libs/ocaml-tree-sitter-lens/core/tree-sitter-out
 fi
 
 export TREESITTER_OUT="$_ts_workspace/_build/default/$_ts_relpath"

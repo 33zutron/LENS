@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/3316
+# https://github.com/returntocorp/lens/issues/3316
 def test2(user_input)
   a = "foo"
   #ERROR:

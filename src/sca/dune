@@ -1,19 +1,19 @@
 ; Library defining mostly SCA_dependency.ml and a few related modules.
 ;
 ; Note that many of the modules in this directory are just alias to
-; SCA types defined now in semgrep_output_v1.atd as those types are used
-; for RPC calls or passed by pysemgrep to semgrep-core via -targets or
-; are part of the Semgrep CLI output.
+; SCA types defined now in lens_output_v1.atd as those types are used
+; for RPC calls or passed by pylens to lens-core via -targets or
+; are part of the Lens CLI output.
 ;
 ; The actual SCA code is split in many dirs and files
-;  - semgrep_interfaces/semgrep_output_v1.atd (lockfile/manifest/ecosystem/...)
+;  - lens_interfaces/lens_output_v1.atd (lockfile/manifest/ecosystem/...)
 ;  - OSS/rule/{SCA_version.ml,SCA_pattern.ml}
 ;  - src/sca/core/{Dependency_source_xtarget.ml, Subproject.ml, ...}
 ;  - src/sca/scan/{SCA_targeting.ml, SCA_scan.ml, ...}
 
 (library
- (public_name semgrep.sca)
- (name semgrep_core_sca)
+ (public_name lens.sca)
+ (name lens_core_sca)
  (wrapped false)
  (libraries
    base64
@@ -22,8 +22,8 @@
    ; in libs/
    commons
    ; in src/
-   ; We should not depend on any other semgrep libs
-   semgrep.rule ; for semgrep_output_v1.atd core types like 'ecosystem'
+   ; We should not depend on any other lens libs
+   lens.rule ; for lens_output_v1.atd core types like 'ecosystem'
  )
  (preprocess
    (pps

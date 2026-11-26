@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2024 Semgrep Inc.
+# Copyright (c) 2021-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -16,9 +16,9 @@ from textwrap import dedent
 
 import pytest
 
-from semgrep.config_resolver import Config
-from semgrep.metrics import Metrics
-from semgrep.metrics import MetricsState
+from lens.config_resolver import Config
+from lens.metrics import Metrics
+from lens.metrics import MetricsState
 
 
 @pytest.fixture(autouse=True)
@@ -127,7 +127,7 @@ def test_send(metrics, mocker) -> None:
 
     # verify that network is blocked
     with pytest.raises(NetworkBlockedInTests):
-        _ = requests.get("https://semgrep.dev", timeout=2)
+        _ = requests.get("https://lens.dev", timeout=2)
 
     metrics.configure(MetricsState.ON)
     metrics.send()

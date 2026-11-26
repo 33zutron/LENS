@@ -25,7 +25,7 @@ module Loc = Tree_sitter_run.Loc
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* OCaml parser using tree-sitter-lang/semgrep-hcl and converting
+(* OCaml parser using tree-sitter-lang/lens-hcl and converting
  * to the generic AST directly.
  *
  * See https://www.terraform.io/docs/language/ for more information
@@ -67,7 +67,7 @@ let parse_number_literal (s, t) =
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-cpp/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-cpp/Boilerplate.ml *)
 
 (**
    Boilerplate to be used as a template when mapping the hcl CST
@@ -183,7 +183,7 @@ let map_identifier (env : env) (x : CST.identifier) : ident =
   match x with
   | `Tok_choice_pat_3e8fcfc_rep_choice_pat_71519dc tok ->
       (* tok_choice_pat_3e8fcfc_rep_choice_pat_71519dc *) str env tok
-  | `Semg_meta tok -> (* semgrep_metavariable *) str env tok
+  | `Semg_meta tok -> (* lens_metavariable *) str env tok
 
 let map_string_lit (env : env) ((v1, v2, v3) : CST.string_lit) :
     string wrap bracket =
@@ -737,7 +737,7 @@ let map_config_file (env : env) (x : CST.config_file) : any =
               E x)
       | None -> Pr [])
   | `Semg_exp (v1, v2) ->
-      let _v1 = (* "__SEMGREP_EXPRESSION" *) token env v1 in
+      let _v1 = (* "__LENS_EXPRESSION" *) token env v1 in
       let v2 = map_expression env v2 in
       E v2
 
@@ -758,8 +758,8 @@ let parse_expression_or_source_file str =
   match res.errors with
   | [] -> res
   | _ ->
-      (* classic semgrep parsing hack (see semgrep-hcl/grammar.js) *)
-      let expr_str = "__SEMGREP_EXPRESSION " ^ str in
+      (* classic lens parsing hack (see lens-hcl/grammar.js) *)
+      let expr_str = "__LENS_EXPRESSION " ^ str in
       Tree_sitter_hcl.Parse.string expr_str
 
 let parse_pattern str =

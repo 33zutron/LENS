@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -45,7 +45,7 @@ let in_pattern env =
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-move-on-aptos/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-move-on-aptos/Boilerplate.ml *)
 
 (**
    Boilerplate to be used as a template when mapping the move_on_aptos CST
@@ -876,7 +876,7 @@ and map_attribute_list (env : env) tok
   (* Parse attributes as expressions first. Then, transform them into attributes.
      This is because
       1. expr's are more expressive;
-      2. move supports nested attributes while semgrep doesn't;
+      2. move supports nested attributes while lens doesn't;
       3. attributes have limited variants.
      Top-level attributes are treated as attributes. Nested attributes are placed
       in arguments.
@@ -2645,13 +2645,13 @@ let map_address_block (env : env) ((v1, v2, v3, v4, v5) : CST.address_block) =
       G.Block (lb, modules, rb) |> G.s )
   |> G.s
 
-let map_semgrep_expression (env : env) (x : CST.semgrep_expression) =
+let map_lens_expression (env : env) (x : CST.lens_expression) =
   G.E
     (match x with
     | `Expr x -> map_expr env x
     | `Let_expr (v1, v2, v3, v4) -> map_let_expr env (v1, v2, v3, v4))
 
-let map_semgrep_statement (env : env) (xs : CST.semgrep_statement) =
+let map_lens_statement (env : env) (xs : CST.lens_statement) =
   let stmts =
     xs
     |> List.map (fun x ->
@@ -2675,8 +2675,8 @@ let map_source_file (env : env) (x : CST.source_file) =
             | `Module x -> map_module_ env attrs None x
             | `Script x -> map_script env attrs x
             | `Addr_blk x -> map_address_block env x))
-  | `Semg_exp x -> map_semgrep_expression env x
-  | `Semg_stmt x -> map_semgrep_statement env x
+  | `Semg_exp x -> map_lens_expression env x
+  | `Semg_stmt x -> map_lens_statement env x
   | `Semg_part (v1, v2, v3) -> (
       let modifiers = List.map (map_module_member_modifier env) v2 in
       let attrs =

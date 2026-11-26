@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -81,11 +81,11 @@ val get_resource_attrs :
     the "service" itself, that is immutable once the service/program starts.
     This data is usually useful for grouping large sets of
     logs/traces/errors/metrics and discovering or investigating other macro
-    trends about Semgrep. Example: Service Version, OCaml runtime version,
+    trends about Lens. Example: Service Version, OCaml runtime version,
     telemetry sdk version. See module commentary for more info
 
     Other data besides what's passed in as flags to this function may be
-    gathered from the environment such as Semgrep's version number.
+    gathered from the environment such as Lens's version number.
 
     [engine] is the engine we are using, e.g. "oss" or "pro"
 

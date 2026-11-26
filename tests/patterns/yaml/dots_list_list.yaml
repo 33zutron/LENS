@@ -4,7 +4,7 @@ rules:
   - language: yaml 
   - also_my_pattern: something
 message: |
-  Semgrep found a match
+  Lens found a match
 language: yaml
 severity: WARNING
 

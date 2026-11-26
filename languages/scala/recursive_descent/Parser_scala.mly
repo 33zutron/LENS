@@ -25,7 +25,7 @@
  * them).
  *
  * src: this was converted from scala.ebnf (itself derived from the official
- * grammar) by semgrep -ebnf_to_menhir, and adapted to conform to what
+ * grammar) by lens -ebnf_to_menhir, and adapted to conform to what
  * menhir can do (hence the use of macros like list_sep, seq2, etc.).
  *
  * TODO: Most of the rules are commented because the grammar as-is has
@@ -177,7 +177,7 @@
 (*-----------------------------------------*)
 (* extra tokens: *)
 (*-----------------------------------------*)
-(* semgrep-ext: *)
+(* lens-ext: *)
 %token <Tok.t> Ellipsis "..."
 %token <Tok.t> LDots "<..." RDots "...>"
 

@@ -1,12 +1,12 @@
 (library
- (public_name semgrep.analyzing.tests)
- (name semgrep_analyzing_tests)
+ (public_name lens.analyzing.tests)
+ (name lens_analyzing_tests)
  (wrapped false)
  (libraries
    commons
    pfff-lang_GENERIC-naming
-   semgrep.il
-   semgrep.printing
+   lens.il
+   lens.printing
    pfff_lang_GENERIC_analyze
  )
  (preprocess

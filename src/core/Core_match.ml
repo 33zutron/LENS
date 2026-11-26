@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2023 Semgrep Inc.
+ * Copyright (C) 2019-2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -16,13 +16,13 @@
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Type to represent a semgrep "match" (a.k.a. finding).
+(* Type to represent a lens "match" (a.k.a. finding).
  *
  * Note that the "core" matches are translated at some point in
- * Semgrep_output_v1.core_match, then processed in pysemgrep (or osemgrep)
- * and translated again in Semgrep_output_v1.cli_match, and
- * translated even further by pysemgrep (or osemgrep) ci in
- * Semgrep_output_v1.finding.
+ * Lens_output_v1.core_match, then processed in pylens (or olens)
+ * and translated again in Lens_output_v1.cli_match, and
+ * translated even further by pylens (or olens) ci in
+ * Lens_output_v1.finding.
  * LATER: it would be good to remove some intermediate types.
  *
  * old: used to be called Pattern_match.t, and before that Match_result.t
@@ -60,7 +60,7 @@ type t = {
   (* rule (or mini rule) responsible for the pattern match found *)
   rule_id : rule_id; [@equal fun a b -> a.id = b.id]
   (* Indicates whether this match was produced during a run
-   * of Semgrep PRO. This will be overrided later by the Pro engine, on any
+   * of Lens PRO. This will be overrided later by the Pro engine, on any
    * matches which are produced from a Pro run.
    * TODO? do we want to consider the same match but with different engine
    * as separate matches? or better make them equal for dedup purpose?

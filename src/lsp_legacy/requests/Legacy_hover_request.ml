@@ -1,6 +1,6 @@
 (* Brandon Wu
  *
- * Copyright (C) 2019-2023 Semgrep, Inc.
+ * Copyright (C) 2019-2023 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -18,7 +18,7 @@ open Legacy_rpc_server
 module CN = Client_notification
 module CR = Client_request
 module Conv = Legacy_convert_utils
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 
 (*****************************************************************************)
 (* Entry point *)

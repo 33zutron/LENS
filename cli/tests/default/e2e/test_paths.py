@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,18 +14,18 @@ import json
 
 import pytest
 from tests.conftest import skip_on_windows
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
-# Regression test for https://github.com/semgrep/semgrep/issues/11560
+# Regression test for https://github.com/lens/lens/issues/11560
 # When a single file is passed as a scanning root, rule paths.include
 # filtering should still work. Before the fix, the ppath was set to just
 # the filename (e.g. "/included.js") instead of the full project-relative
 # path, so the "included/" pattern in the directory-included rule's
 # paths.include never matched.
 @pytest.mark.kinda_slow
-def test_paths_single_file_target(run_semgrep_in_tmp: RunSemgrep):
-    result = run_semgrep_in_tmp(
+def test_paths_single_file_target(run_lens_in_tmp: RunLens):
+    result = run_lens_in_tmp(
         "rules/paths.yaml",
         target_name="exclude_include/included/included.js",
     )
@@ -38,19 +38,19 @@ def test_paths_single_file_target(run_semgrep_in_tmp: RunSemgrep):
 
 
 # Test in-rule path filtering: paths.include, paths.exclude.
-# The patterns now obey the Semgrepignore/Gitignore spec.
+# The patterns now obey the Lensignore/Gitignore spec.
 #
 @pytest.mark.kinda_slow
-def test_paths(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
+def test_paths(run_lens_in_tmp: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp("rules/paths.yaml", target_name="exclude_include").stdout,
+        run_lens_in_tmp("rules/paths.yaml", target_name="exclude_include").stdout,
         "results.json",
     )
 
 
 # Skip on Windows: this test makes pytest hang indefinitely on Windows
-# since PR https://github.com/semgrep/semgrep-proprietary/pull/3859
-# Behaves fine when run as a standalone semgrep or osemgrep command.
+# since PR https://github.com/lens/lens-proprietary/pull/3859
+# Behaves fine when run as a standalone lens or olens command.
 #
 # This happens because we log a warning about ambiguous rule exclude paths, and
 # for some reason that message is too long and causes pytest to hang on windows
@@ -58,9 +58,9 @@ def test_paths(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 # knows, we just won't run this on Windows.
 @skip_on_windows
 @pytest.mark.kinda_slow
-def test_paths_warnings(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
+def test_paths_warnings(run_lens_in_tmp: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             "rules/paths_warnings.yaml", target_name="exclude_include"
         ).stdout,
         "results.json",

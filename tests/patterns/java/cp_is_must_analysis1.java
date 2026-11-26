@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/7199
+// https://github.com/returntocorp/lens/issues/7199
 class A {
     
     public void method(boolean condition){

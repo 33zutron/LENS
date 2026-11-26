@@ -1,4 +1,4 @@
-(* Copyright 2026 Semgrep Inc. *)
+(* Copyright 2026 Lens Inc. *)
 
 (** Generic implementation for caching values via Marshal, either on disk or
     in memory.

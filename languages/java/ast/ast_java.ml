@@ -13,7 +13,7 @@
  *
  * Extended by Yoann Padioleau to support more recent versions of Java.
  * Copyright (C) 2011 Facebook
- * Copyright (C) 2020-2024 Semgrep Inc.
+ * Copyright (C) 2020-2024 Lens Inc.
  *)
 
 (*****************************************************************************)
@@ -499,7 +499,7 @@ type partial =
 [@@deriving show { with_path = false }]
 
 type any =
-  (* useful one for semgrep *)
+  (* useful one for lens *)
   | AExpr of expr
   | AStmt of stmt
   | AStmts of stmt list
@@ -552,7 +552,7 @@ let tok_of_name_or_class_type (x : name_or_class_type) : Tok.t =
 (* Parsing helpers *)
 (*****************************************************************************)
 (* those types and functions are used in parser_java.mly but also now in
- * semgrep/.../Parse_java_tree_sitter.ml
+ * lens/.../Parse_java_tree_sitter.ml
  *)
 
 type var_decl_id = IdentDecl of ident | ArrayDecl of var_decl_id

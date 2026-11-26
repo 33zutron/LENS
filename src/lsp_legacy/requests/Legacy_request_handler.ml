@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) 2019-2023 Semgrep, Inc.
+ * Copyright (C) 2019-2023 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -118,14 +118,14 @@ let on_request (type r) server (req_id : Id.t) (request : r CR.t) :
            check in Reply.later and skip the handler when already logged in. *)
         let reply =
           Reply.later (fun send ->
-              let settings = Semgrep_settings.load () in
+              let settings = Lens_settings.load () in
               match settings.api_token with
               | Some token -> (
-                  match%lwt Semgrep_login.verify_token_async token with
+                  match%lwt Lens_login.verify_token_async token with
                   | `Valid ->
                       send
                         (Legacy_lsp_.notify_show_message ~kind:MessageType.Info
-                           "Already logged in to Semgrep Code")
+                           "Already logged in to Lens Code")
                   | _ ->
                       let _session, handler_reply =
                         handle_custom_request server.session req_id meth params

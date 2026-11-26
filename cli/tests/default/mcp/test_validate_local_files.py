@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -20,11 +20,11 @@ from mcp.types import ListRootsResult
 from mcp.types import Root
 from pydantic import FileUrl
 
-from semgrep.mcp.server import CodePath
-from semgrep.mcp.server import McpError
-from semgrep.mcp.server import validate_local_files
-from semgrep.mcp.utilities.utils import ALLOW_SCAN_OUTSIDE_WORKSPACE_ENV_VAR
-from semgrep.mcp.utilities.utils import get_workspace_dir
+from lens.mcp.server import CodePath
+from lens.mcp.server import McpError
+from lens.mcp.server import validate_local_files
+from lens.mcp.utilities.utils import ALLOW_SCAN_OUTSIDE_WORKSPACE_ENV_VAR
+from lens.mcp.utilities.utils import get_workspace_dir
 
 
 @pytest.fixture

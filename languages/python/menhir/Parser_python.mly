@@ -48,7 +48,7 @@ let to_list = function
   | Single e -> [e]
   | Tup l -> l
 
-(* this is important for semgrep, to get the right range (and for autofix) *)
+(* this is important for lens, to get the right range (and for autofix) *)
 let rewrap_paren l e r =
   match e with
   | Tuple (CompList (_, xs, _), Load) ->
@@ -719,7 +719,7 @@ atom_and_trailers:
            * other) access are treated as tuple elements, even when one or more
            * of them are slices. Unfortunately, the current Python AST cannot
            * represent a slice as a top level expression, and neither can
-           * Semgrep's generic AST. So, for now, let's continue representing
+           * Lens's generic AST. So, for now, let's continue representing
            * sequences containing a slice as we were before, but for sequences
            * that only contain ordinary expressions let's convert to a tuple.
            *
@@ -759,7 +759,7 @@ type_for_lsif:
      unimportant warning, as this doesn't affect normal Python parsing.
 
      We need this because our normal Python type parser does not understand function
-     types. However, `semgrep-proprietary` needs to use it to parse type hover info,
+     types. However, `lens-proprietary` needs to use it to parse type hover info,
      which may contain function types. So we need to be able to interpret it.
    *)
   | parameters SUB GT expr EOF { Arrow ($1, $4) }

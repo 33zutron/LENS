@@ -19,7 +19,7 @@ jobs:
           fi
           # On pull_request, checkout's HEAD is GitHub's merge commit, so
           # HEAD^ is the tip of the base branch.
-          changed=$(git diff --no-renames --name-only HEAD^ HEAD -- ':(top,glob)languages/*/tree-sitter/semgrep-*/lib/scanner.*' ':(top,glob)languages/*/tree-sitter/semgrep-*/lib/tree_sitter/**' ':(top,glob)libs/ocaml-tree-sitter-semgrep/lang/semgrep-grammars/src/semgrep-ruby/src/scanner.c' ':(top,glob)libs/ocaml-tree-sitter-semgrep/scripts/test_scanner_memory_safety.py' ':(top,glob).github/workflows/scanner-memory-safety.yml' ':(top,glob).github/workflows/scanner-memory-safety.jsonnet')
+          changed=$(git diff --no-renames --name-only HEAD^ HEAD -- ':(top,glob)languages/*/tree-sitter/lens-*/lib/scanner.*' ':(top,glob)languages/*/tree-sitter/lens-*/lib/tree_sitter/**' ':(top,glob)libs/ocaml-tree-sitter-lens/lang/lens-grammars/src/lens-ruby/src/scanner.c' ':(top,glob)libs/ocaml-tree-sitter-lens/scripts/test_scanner_memory_safety.py' ':(top,glob).github/workflows/scanner-memory-safety.yml' ':(top,glob).github/workflows/scanner-memory-safety.jsonnet')
           if [ -n "$changed" ]; then
             printf 'Scanner files changed:\n%s\n' "$changed"
             echo "scanners=true" >> "$GITHUB_OUTPUT"
@@ -35,7 +35,7 @@ jobs:
           version: 0.13.4
       - if: steps.changes.outputs.scanners == 'true'
         name: Run scanners under AddressSanitizer
-        run: uv run --project cli --locked pytest -v libs/ocaml-tree-sitter-semgrep/scripts/test_scanner_memory_safety.py
+        run: uv run --project cli --locked pytest -v libs/ocaml-tree-sitter-lens/scripts/test_scanner_memory_safety.py
         working-directory: .
     timeout-minutes: 15
 name: Scanner memory safety

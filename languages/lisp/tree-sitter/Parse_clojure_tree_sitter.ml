@@ -22,7 +22,7 @@ module H = Parse_tree_sitter_helpers
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Clojure parser using tree-sitter-lang/semgrep-clojure and converting
+(* Clojure parser using tree-sitter-lang/lens-clojure and converting
  * directly to AST_generic.ml
  * (we could convert to ../ast/ast_lisp.ml but seems simpler to
  * go directly to the generic AST given ast_lisp.ml is really small).
@@ -39,7 +39,7 @@ let token (env : env) (tok : Tree_sitter_run.Token.t) = R.Token (H.str env tok)
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-clojure/.../Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-clojure/.../Boilerplate.ml *)
 
 let map_tok_dquot_rep_pat_0d044a8_rep_bslash_pat_5058f1a_rep_pat_0d044a8_dquot
     (env : env)

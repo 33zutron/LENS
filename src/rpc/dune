@@ -1,6 +1,6 @@
 (library
- (public_name semgrep.rpc)
- (name semgrep_rpc)
+ (public_name lens.rpc)
+ (name lens_rpc)
  (wrapped false)
  (libraries
     str
@@ -16,16 +16,16 @@
     cohttp-lwt-unix
 
     ; internal deps in src/
-    semgrep.core
-    semgrep.core_scan
-    semgrep.metachecking
-    semgrep.parsing
-    semgrep.parsing.tests ; Test_parsing.parsing_stats
-    semgrep.analyzing.tests ; Test_analyze_generic.actions
-    semgrep.osemgrep_reporting
-    semgrep.osemgrep_networking
-    semgrep.osemgrep_core
-    semgrep.osemgrep_cli_show
+    lens.core
+    lens.core_scan
+    lens.metachecking
+    lens.parsing
+    lens.parsing.tests ; Test_parsing.parsing_stats
+    lens.analyzing.tests ; Test_analyze_generic.actions
+    lens.olens_reporting
+    lens.olens_networking
+    lens.olens_core
+    lens.olens_cli_show
     networking.proxy
  )
  (preprocess (pps telemetry.ppx))

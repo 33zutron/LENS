@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024 Semgrep Inc.
+   Copyright (c) 2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -19,7 +19,7 @@ type stat = {
   type_ : File_type.file_type;
 }
 [@@deriving yojson]
-(** [stat] is like Linux's [stat], but more specific to Semgrep *)
+(** [stat] is like Linux's [stat], but more specific to Lens *)
 
 type annotated_target = {
   internal_path : string;

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2026 Semgrep Inc., All rights reserved.
+   Copyright (c) 2026 Lens Inc., All rights reserved.
 *)
 open Common
 open Fpath_.Operators
@@ -27,7 +27,7 @@ let setup ?(mode = On_disk) () =
   | In_memory -> Ok Memory_backed
   | On_disk -> (
       try
-        let dir = Filename.temp_dir "semgrep-" "" |> Fpath.v in
+        let dir = Filename.temp_dir "lens-" "" |> Fpath.v in
         Ok (Disk_backed dir)
       with
       | Sys_error msg -> Result.error ("Could not create disk cache: " ^ msg))
@@ -38,22 +38,22 @@ let cleanup (t : t) : unit =
   | Disk_backed dir -> (
       (* Remove remaining files, then the directory itself. *)
       (try
-         (* nosemgrep: forbid-fs *)
+         (* nolens: forbid-fs *)
          Sys.readdir !!dir
          |> Array.iter (fun name ->
              let path = !!(dir / name) in
              try Sys.remove path with
              | Sys_error err ->
-                 (* nosemgrep: no-logs-in-library *)
+                 (* nolens: no-logs-in-library *)
                  Logs.warn (fun m ->
                      m "Disk_cache: can't remove %s: %s" path err))
        with
       | Sys_error err ->
-          (* nosemgrep: no-logs-in-library *)
+          (* nolens: no-logs-in-library *)
           Logs.warn (fun m -> m "Disk_cache: can't readdir %s: %s" !!dir err));
       try Sys.rmdir !!dir with
       | Sys_error err ->
-          (* nosemgrep: no-logs-in-library *)
+          (* nolens: no-logs-in-library *)
           Logs.warn (fun m -> m "Disk_cache: can't rmdir %s: %s" !!dir err))
 
 let to_exn : error -> exn = function

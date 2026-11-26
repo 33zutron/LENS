@@ -1,6 +1,6 @@
 (library
- (public_name semgrep.naming.tests)
- (name semgrep_naming_tests)
+ (public_name lens.naming.tests)
+ (name lens_naming_tests)
  (wrapped false)
  (libraries
    commons

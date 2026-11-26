@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,8 +10,8 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-(* deprecated: this is used by Semgrep.dump_v_format to expose the AST to
- * Semgrep playground!
+(* deprecated: this is used by Lens.dump_v_format to expose the AST to
+ * Lens playground!
  * Use AST_generic.show_any instead.
  *)
 open Fpath_.Operators

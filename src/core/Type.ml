@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2022, 2023 Semgrep Inc.
+ * Copyright (C) 2022, 2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -37,7 +37,7 @@ module G = AST_generic
  * These types are polymorphic to support the Pro Engine, which represents
  * resolved names differently.
  *
- * history: this used to be in semgrep-pro but was simpler to move it in
+ * history: this used to be in lens-pro but was simpler to move it in
  * OSS because ???
  *)
 
@@ -79,7 +79,7 @@ and 'resolved t =
   | N of 'resolved name * (* alt names *) G.alternate_name list
   (* e.g. for unresolved types in core libraries
    * TODO? generalize and have just NotYetHandled of G.type_?
-   * so at least we are as good as regular Semgrep for typing?
+   * so at least we are as good as regular Lens for typing?
    *)
   | UnresolvedName of string * 'resolved type_argument list
   | Builtin of builtin_type

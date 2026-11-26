@@ -43,42 +43,42 @@ def deactivate(oldenv: dict):
     os.environ = oldenv  # noqa
 
 
-def run_semgrep_version(
+def run_lens_version(
     venv_builder: Optional[venv.EnvBuilder] = None,
-    semgrep_version: str = "local",
-    semgrep_local_path: Optional[Path] = None,
+    lens_version: str = "local",
+    lens_local_path: Optional[Path] = None,
     script_arguments: Optional[list] = None,
 ):
-    if semgrep_version == "local" and not semgrep_local_path:
+    if lens_version == "local" and not lens_local_path:
         raise ValueError(
-            f"Parameter 'path' needs a value when run with version='local'. 'path' is currently '{semgrep_local_path}'"
+            f"Parameter 'path' needs a value when run with version='local'. 'path' is currently '{lens_local_path}'"
         )
 
     if not script_arguments:
         script_arguments = None
 
-    venv_path = Path(f"semgrep-{semgrep_version}")
+    venv_path = Path(f"lens-{lens_version}")
     logger.info(f"Creating virtual environment at {str(venv_path.absolute())}")
     venv_builder.create(venv_path.absolute())
 
     # TODO use with the 'with' context
     oldenv = activate(venv_path.absolute())
 
-    if semgrep_version == "local":
-        logger.info(f"Installing semgrep from {semgrep_local_path.absolute()}")
-        subprocess.run(["pip", "install", semgrep_local_path])
-    elif semgrep_version == "latest":
-        logger.info(f"Installing latest semgrep")
-        subprocess.run(["pip", "install", "--upgrade", "semgrep"])
+    if lens_version == "local":
+        logger.info(f"Installing lens from {lens_local_path.absolute()}")
+        subprocess.run(["pip", "install", lens_local_path])
+    elif lens_version == "latest":
+        logger.info(f"Installing latest lens")
+        subprocess.run(["pip", "install", "--upgrade", "lens"])
     else:
-        logger.info(f"Installing semgrep=={semgrep_version}")
-        subprocess.run(["pip", "install", f"semgrep=={semgrep_version}"])
+        logger.info(f"Installing lens=={lens_version}")
+        subprocess.run(["pip", "install", f"lens=={lens_version}"])
 
-    r = subprocess.run(["semgrep", "--version"], stdout=subprocess.PIPE)
-    real_semgrep_version = r.stdout.decode("utf-8")
-    logger.info(f"Using semgrep version {real_semgrep_version}")
+    r = subprocess.run(["lens", "--version"], stdout=subprocess.PIPE)
+    real_lens_version = r.stdout.decode("utf-8")
+    logger.info(f"Using lens version {real_lens_version}")
 
-    subprocess.run(["./run-benchmarks"] + script_arguments)  # nosemgrep
+    subprocess.run(["./run-benchmarks"] + script_arguments)  # nolens
 
     deactivate(oldenv)
 
@@ -97,12 +97,12 @@ if __name__ == "__main__":
         clear=True,
         with_pip=True,
     )
-    run_semgrep_version(
-        venv_builder=builder, semgrep_version=args.against, script_arguments=remaining
+    run_lens_version(
+        venv_builder=builder, lens_version=args.against, script_arguments=remaining
     )
-    run_semgrep_version(
+    run_lens_version(
         venv_builder=builder,
-        semgrep_version="local",
-        semgrep_local_path=Path(args.local),
+        lens_version="local",
+        lens_local_path=Path(args.local),
         script_arguments=remaining,
     )

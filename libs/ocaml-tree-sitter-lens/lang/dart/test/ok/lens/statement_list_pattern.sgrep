@@ -1,0 +1,4 @@
+__LENS_EXPRESSION
+$V = get();
+...
+eval($V);

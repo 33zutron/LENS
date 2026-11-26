@@ -1,6 +1,6 @@
 (* Iago Abal
  *
- * Copyright (C) 2020-2022 Semgrep Inc.
+ * Copyright (C) 2020-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -36,7 +36,7 @@ type var = string * G.sid
 
 type env = {
   lang : Lang.t option;
-  (* basic constant propagation of literals for semgrep *)
+  (* basic constant propagation of literals for lens *)
   constants : (var, G.svalue) Base.Hashtbl.t;
   (* TODO: this is actually used only in Constant_propagation.ml, but
    * put here so we can reuse the same env in Constant_propagation.ml

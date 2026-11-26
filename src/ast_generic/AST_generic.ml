@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@
 (* Prelude *)
 (*****************************************************************************)
 (* A generic AST, to factorize similar analysis in different programming
- * languages (e.g., naming, semantic code highlighting, semgrep matching).
+ * languages (e.g., naming, semantic code highlighting, lens matching).
  *
  * !!!If you modify this file, please adjust the 'version' variable below!!!
  *
@@ -97,7 +97,7 @@
  *       we use one attribute type (no class_attribute vs func_attribute etc.)
  *
  * Note that this generic AST has become gradually more and more a
- * generic CST, to fix issues in autofix in Semgrep.
+ * generic CST, to fix issues in autofix in Lens.
  * TODO? it may be time to rename this file CST_generic.ml (or to remove
  * all the tokens so we're back to be an AST).
  *
@@ -144,7 +144,7 @@
  *    update: prefer todo_kind to those other_xxx types now.
  *    Same for keyword_attributes.
  *  - each expression or statement must have at least one token in it
- *    so that semgrep can track a location (e.g., 'Return of expr option'
+ *    so that lens can track a location (e.g., 'Return of expr option'
  *    is not enough because with no expr, there is no location information
  *    for this return, so it must be 'Return of tok * expr option' instead)
  *  - each expression or statement should ideally have enough tokens in it
@@ -173,9 +173,9 @@
  * form on disk (e.g., in src/parsing/Parsing_with_cache.ml) and reading back
  * old version of this AST can lead to segfaults in OCaml.
  * Note that the number below could be independent of the versioning scheme of
- * Semgrep; we don't have to update version below for each version of
- * Semgrep, just when we actually modify the generic AST. However it's
- * convenient to correspond mostly to Semgrep versions. So version below
+ * Lens; we don't have to update version below for each version of
+ * Lens, just when we actually modify the generic AST. However it's
+ * convenient to correspond mostly to Lens versions. So version below
  * can jump from "1.12.1" to "1.20.0" and that's fine.
  *)
 let version = "1.103.0"
@@ -188,7 +188,7 @@ let version = "1.103.0"
  *     in debugging statements (very convenient in OCaml given the absence
  *     of type classes and a generic 'show' function as in Haskell)
  *  - 'deriving eq' to compare AST constructs, which is
- *     mostly used in Semgrep for metavariable content comparison, so
+ *     mostly used in Lens for metavariable content comparison, so
  *     that when one use a pattern like '$X == $X', we make sure the
  *     AST constructs on the lhs and rhs of '==' contains the same code.
  *     We actually perform equality "modulo" token location, that is we don't
@@ -202,7 +202,7 @@ let version = "1.103.0"
  * - 'deriving visitors' to generator visitor and mapper boilerplate code
  *    automatically
  * - 'deriving sexp' because the Type.t type uses `alternate_name`, and itself
- *    derives sexp because it is used by semgrep-pro's SIG.type_.
+ *    derives sexp because it is used by lens-pro's SIG.type_.
  *    Since Type.t only uses `alternate_name`, we only need to derive sexp for
  *    that and related types, and not others like expr, stmt
  *)
@@ -259,7 +259,7 @@ type ast_float =
 (* Token (leaf) *)
 (*****************************************************************************)
 (* Tok.t_always_equal is the same type as Tok.t but provides special equal and
- * hash functions that are more convenient in Semgrep matching context.
+ * hash functions that are more convenient in Lens matching context.
  * See Matching_generic.equal_ast_bound_code() and Metavariable.equal_mvalue()
  * for more information.
  *)
@@ -291,7 +291,7 @@ type sc = tok [@@deriving show, eq, ord, hash, sexp]
  * ASTs I started to use also some Todo constructs, so I switched to a
  * more general todo_kind in the generic AST too. Anyway, we were
  * not doing anything with the precise information. If something
- * is important and require some semantic equivalence in semgrep, then
+ * is important and require some semantic equivalence in lens, then
  * we should support the construct directly, not via an other_xxx.
  *)
 type todo_kind = string wrap [@@deriving show, eq, ord, hash, sexp]
@@ -365,7 +365,7 @@ and resolved_name_kind =
    * todo: this is currently used also for fields, but we should use another
    * constructor.
    * Note that it's tempting to add a depth parameter to EnclosedVar, but
-   * that would prevent semgrep to work because whatever the depth you are,
+   * that would prevent lens to work because whatever the depth you are,
    * if you reference the same entity, this entity must have the same
    * resolved_name (sid and resolved_name_kind).
    *)
@@ -383,7 +383,7 @@ and resolved_name_kind =
   (* used for C *)
   | Macro
   | EnumConstant
-  (* This is for deep semgrep.
+  (* This is for deep lens.
    *
    * GlobalName (canonical_name, alternate_names)
    *
@@ -653,7 +653,7 @@ and id_info = {
   id_resolved_alternatives : resolved_name list ref;
   (* variable tagger (naming) *)
   (* sgrep: in OCaml we also use that to store the type of
-   * a typed entity, which can be interpreted as a TypedMetavar in semgrep.
+   * a typed entity, which can be interpreted as a TypedMetavar in lens.
    * alt: have an explicity type_ field in entity.
    * NOTE on 'equal': We do not need `id_type`, 'id_resolved' is all we
    *   need to determine whether two ids are the same. The same id should not
@@ -684,7 +684,7 @@ and id_info = {
    * the same identifier can now have different flags. In fact we did not really
    * have to compare 'id_flags' anyways. *)
   id_flags : id_flags ref; [@hash.ignore] [@equal fun _a _b -> true]
-  (* this is used by Naming_SAST in semgrep-pro *)
+  (* this is used by Naming_SAST in lens-pro *)
   id_info_id : id_info_id;
       [@hash.ignore] [@equal fun _a _b -> true] [@printer pp_hidden]
 }
@@ -717,7 +717,7 @@ and expr = {
    * }
    *
    * is x == 0. this field is used for implementing when/ pattern-when
-   * (now part of comparison), a feature to add path sensitivity to semgrep.
+   * (now part of comparison), a feature to add path sensitivity to lens.
    *
    * making facts opaque here to prevent slowing down tests that prints
    * expressions for debugging purposes.
@@ -776,8 +776,8 @@ and expr_kind =
      However, only the following fragment kinds are legitimate:
      - literal fragment
      - inserted expression
-     - semgrep ellipsis (...)
-     - semgrep metavariable ($X and $...X)
+     - lens ellipsis (...)
+     - lens metavariable ($X and $...X)
   *)
   | RegexpTemplate of expr bracket (* // *) * string wrap option (* modifiers *)
   (* 'type_' below is usually a TyN or TyArray (or TyExpr).
@@ -940,7 +940,7 @@ and literal =
 (* The type of an unknown constant. *)
 and const_type = Cbool | Cint | Cstr | Cany
 
-(* semantic value: set by the svalue propagation algorithm and used in semgrep
+(* semantic value: set by the svalue propagation algorithm and used in lens
  *
  * Note that we can't track a constant and a symbolic expression at the same
  * time. If this becomes a problem then we may want to have separate analyses
@@ -1170,7 +1170,7 @@ and concat_string_kind =
    *)
   | SequenceConcat (* Python/C *)
   (* Python requires the special f"" syntax to use interpolated strings,
-   * and some semgrep users may want to explicitely match only f-strings,
+   * and some lens users may want to explicitely match only f-strings,
    * which is why we record this information here.
    * update: also use for interpolated Scala strings
    * update: add string argument to support arbitary string interpolaters in scala
@@ -1178,7 +1178,7 @@ and concat_string_kind =
   | FString of string
   (* Javascript uses a special syntax called tagged template literals, e.g.,
    * foo`template string = ${id}`. We must use a different representation
-   * for foo(`template string = ${id}`) because some semgrep users want
+   * for foo(`template string = ${id}`) because some lens users want
    * to find one and not the other.
    * In both case it will be inside Call (Apply (ConcatString  ... but then
    * the kind will differ.
@@ -1256,14 +1256,14 @@ and argument =
  * had a meaningful effect on performance. (and because it had tricky
  * interactions with const-prop and sym-prop, see #4670, and PA-1920/PR-#6179)
  * Finally, Bloom-filter's code was removed in 1.22.0, and paradoxically, that
- * made Semgrep noticeably faster (an average of 1.35x on a set of 9 repos) on
+ * made Lens noticeably faster (an average of 1.35x on a set of 9 repos) on
  * our stress-test-monorepo benchmark. *)
 and stmt = {
   s : stmt_kind; [@hash.ignore]
   (* todo? we could store a range: (tok * tok) to delimit the range of a stmt
    * which would allow us to remove some of the extra 'tok' in stmt_kind.
    * Indeed, the main use of those 'tok' is to accurately report a match range
-   * in semgrep.
+   * in lens.
    *)
   (* used to quickly get the range of a statement *)
   mutable s_range : (Tok.location * Tok.location) option;
@@ -1489,7 +1489,7 @@ and other_stmt_operator =
 (*****************************************************************************)
 (* This is quite similar to expr. A few constructs in expr have
  * equivalent here prefixed with Pat (e.g., PaLiteral, PatId). We could
- * maybe factorize with expr, and this may help semgrep, but I think it's
+ * maybe factorize with expr, and this may help lens, but I think it's
  * cleaner to have a separate type because the scoping rules for a pattern and
  * an expr are quite different and not any expr is allowed here.
  *)
@@ -1546,7 +1546,7 @@ and type_kind =
   | TyN of name
   (* covers list, hashtbl, etc.
    * note: the type_ should always be a TyN, so really it's a TyNameApply
-   * but it's simpler to not repeat TyN to factorize code in semgrep regarding
+   * but it's simpler to not repeat TyN to factorize code in lens regarding
    * aliasing.
    * TODO: merge with TyN now that qualified_info has type_arguments?
    *)
@@ -1738,7 +1738,7 @@ and definition_kind =
    *)
   | VarDef of variable_definition
   (* FieldDefColon can be used only inside a record (in a FieldStmt).
-   * This used to be merged with VarDef, but in semgrep we don't want
+   * This used to be merged with VarDef, but in lens we don't want
    * a VarDef to match a field definition for certain languages
    * (e.g., JS, OCaml), and we definitely don't want the
    * vardef_to_assign equivalence to be used on FieldDefColon.
@@ -1748,9 +1748,9 @@ and definition_kind =
    *
    * Note that we could have used a FieldVar in the field type instead
    * of this FieldDef here, which would be more precise, but
-   * this complicates things in semgrep where it's convenient to have
+   * this complicates things in lens where it's convenient to have
    * a uniform FieldStmt(DefStmt) that covers field and methods
-   * (see m_list__m_field in semgrep).
+   * (see m_list__m_field in lens).
    * Note that FieldDefColon where vinit is a Lambda instead be converted
    * in a FuncDef!
    *)
@@ -1828,9 +1828,9 @@ and function_definition = {
   fbody : function_body;
 }
 
-(* We don't really care about the function_kind in semgrep, but who
+(* We don't really care about the function_kind in lens, but who
  * knows, maybe one day we will. We care about the token in the
- * function_kind wrap in fkind though for semgrep for accurate range.
+ * function_kind wrap in fkind though for lens for accurate range.
  *)
 and function_kind =
   | Function
@@ -1985,7 +1985,7 @@ and or_type_element =
  *
  * old: there used to be a FieldVar and FieldMethod similar to
  * VarDef and FuncDef but they are now converted into a FieldStmt(DefStmt).
- * This simplifies semgrep so that a function pattern can match
+ * This simplifies lens so that a function pattern can match
  * toplevel functions, nested functions, and methods.
  * Note that for FieldVar, we sometimes converts it to a FieldDefColon
  * (which is very similar to a VarDef) because some people don't want a VarDef
@@ -2150,7 +2150,7 @@ and import_from_kind =
 (* item (a.k.a toplevel element, toplevel decl) is now equal to stmt.
  * Indeed, many languages allow nested functions, nested class definitions,
  * and even nested imports, so it is just simpler to merge item with stmt.
- * This simplifies semgrep too.
+ * This simplifies lens too.
  * TODO? make it an alias to stmt_or_def_or_dir instead?
  *)
 and item = stmt
@@ -2159,7 +2159,7 @@ and program = item list
 (*****************************************************************************)
 (* Partial *)
 (*****************************************************************************)
-(* sgrep: this is only used by semgrep *)
+(* sgrep: this is only used by lens *)
 and partial =
   (* partial defs. The fbody or cbody in definition will be empty. *)
   | PartialDef of definition
@@ -2188,11 +2188,11 @@ and partial =
 
 (* mentioned in many OtherXxx so must be part of the mutually recursive type *)
 and any =
-  (* main patterns used for semgrep *)
+  (* main patterns used for lens *)
   | E of expr
   | S of stmt
   | Ss of stmt list
-  (* also used for semgrep *)
+  (* also used for lens *)
   | T of type_
   | P of pattern
   | At of attribute
@@ -2320,12 +2320,12 @@ let p x = x
 (* Ident and names *)
 (* ------------------------------------------------------------------------- *)
 
-(* For Naming_SAST.ml in semgrep-pro.
+(* For Naming_SAST.ml in lens-pro.
  * This can be reseted to 0 before parsing each file, or not. It does
  * not matter as the couple (filename, id_info_id) is unique.
 
    TODO: don't use a global counter so that we get reproducible parsing results
-   Please initialize fresh counters for each semgrep session and in particular
+   Please initialize fresh counters for each lens session and in particular
    for each test so that we don't have to mask these IDs in test snapshots.
 *)
 let id_info_id = IdInfoId.mk
@@ -2553,7 +2553,7 @@ let case_of_pat_and_stmt ?tok (pat, stmt) =
 (*****************************************************************************)
 
 (* In JS one can do 'var {x,y} = foo();'. We used to transpile that
- * in multiple vars, but in semgrep one may want to match over those patterns.
+ * in multiple vars, but in lens one may want to match over those patterns.
  * However those multivars do not fit well with the (entity * definition_kind)
  * model we currently use, so for now we need this ugly hack of converting
  * the statement above in
@@ -2566,7 +2566,7 @@ let case_of_pat_and_stmt ?tok (pat, stmt) =
 let special_multivardef_pattern = "!MultiVarDef!"
 
 (*****************************************************************************)
-(* Semgrep hacks *)
+(* Lens hacks *)
 (*****************************************************************************)
 
 (* coupling: Metavariable.is_metavar_name *)

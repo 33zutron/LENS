@@ -19,7 +19,7 @@
         "engine_kind": "OSS",
         "fingerprint": "0x42",
         "lines": "requires login",
-        "message": "Semgrep found a print call",
+        "message": "Lens found a print call",
         "metadata": {},
         "severity": "WARNING",
         "validation_state": "NO_VALIDATOR"

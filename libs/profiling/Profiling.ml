@@ -35,16 +35,16 @@ type prof = ProfAll | ProfNone | ProfSome of string list
 (* Globals *)
 (*****************************************************************************)
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let profile = ref ProfNone
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let report_at_exit = ref false
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let report_gc_stats = ref false
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let show_trace_profile = ref false
 
 let check_profile category =

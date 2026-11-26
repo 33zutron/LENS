@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
 #
 import pytest
 
-from semgrep.commands.ci import _filter_app_ignored_matches
+from lens.commands.ci import _filter_app_ignored_matches
 
 
 class LinearMembershipForbiddenList(list[str]):

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -149,7 +149,7 @@ let test_concurrent_map_async_exception () =
          domain and kept trying work *)
       (* assume that the rest of the exceptions are the same :shrug: *)
       let exns =
-        (* nosemgrep: no-list-filter-map *)
+        (* nolens: no-list-filter-map *)
         List.filter_map
           (function
             | Error e -> Some e

@@ -7,7 +7,7 @@
 #
 # Homebrew is a git-based package manager widely used on MacOS.
 # This dockerfile is meant for those of us who are on call and need to figure
-# certain things about the Semgrep release for Homebrew.
+# certain things about the Lens release for Homebrew.
 #
 # This file is excluded from hadolint checks due to too many irrelevant
 # findings.

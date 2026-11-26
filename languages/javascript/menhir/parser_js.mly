@@ -70,7 +70,7 @@ let attr_opt kw x =
   | Some x -> [attr (kw, x)]
 
 (* ugly *)
-let anon_semgrep_lambda = "!anon_semgrep_lambda!"
+let anon_lens_lambda = "!anon_lens_lambda!"
 
 let fix_sgrep_module_item xs =
   match xs with
@@ -79,7 +79,7 @@ let fix_sgrep_module_item xs =
   * This is why we intercept this case by returning instead an Expr pattern.
   *)
   | [DefStmt ({name = {str = s; _}; _}, FuncDef def)]
-    when s = anon_semgrep_lambda ->
+    when s = anon_lens_lambda ->
       Expr (Fun (def, None))
   | [ExprStmt (e, sc) as x] ->
       if Tok.is_fake sc
@@ -121,7 +121,7 @@ let mk_def ?(attrs=None) (idopt, defkind) =
   (* TODO: fun default_opt -> ... *)
   let name =
     match idopt with
-    | None -> Flag_parsing.sgrep_guard (fake_id anon_semgrep_lambda (Tok.unsafe_fake_tok ""))
+    | None -> Flag_parsing.sgrep_guard (fake_id anon_lens_lambda (Tok.unsafe_fake_tok ""))
     | Some id -> id
   in
   match attrs with
@@ -231,13 +231,13 @@ let mk_Encaps opt (t1, xs, _t2) =
  T_QUESTDOT "?."
  T_PLING "?"
  T_ARROW "->"
- (* regular JS token and also semgrep: *)
+ (* regular JS token and also lens: *)
  T_DOTS "..."
  T_BACKQUOTE
  T_DOLLARCURLY
  (* decorators: https://tc39.es/proposal-decorators/ *)
  T_AT "@"
- (* semgrep: *)
+ (* lens: *)
  LDots RDots
 
 
@@ -281,10 +281,10 @@ let mk_Encaps opt (t1, xs, _t2) =
 (* fresh_token: the opening '(' of the parameters preceding an '->' *)
 %token <Tok.t> T_LPAREN_ARROW
 
-(* fresh_token: the opening '(' of the parameters of a method in semgrep *)
-%token <Tok.t> T_LPAREN_METHOD_SEMGREP
-(* fresh_token: the first '{' in a semgrep pattern for objects *)
-%token <Tok.t> T_LCURLY_SEMGREP
+(* fresh_token: the opening '(' of the parameters of a method in lens *)
+%token <Tok.t> T_LPAREN_METHOD_LENS
+(* fresh_token: the first '{' in a lens pattern for objects *)
+%token <Tok.t> T_LCURLY_LENS
 
 (*************************************************************************)
 (* Priorities *)
@@ -415,9 +415,9 @@ property_name2:
 (*************************************************************************)
 
 sgrep_spatch_pattern:
- (* copy-paste of object_literal rule but with T_LCURLY_SEMGREP *)
- | T_LCURLY_SEMGREP "}"    { Expr (Obj ($1, [], $2)) }
- | T_LCURLY_SEMGREP listc(property_name_and_value) ","? "}"
+ (* copy-paste of object_literal rule but with T_LCURLY_LENS *)
+ | T_LCURLY_LENS "}"    { Expr (Obj ($1, [], $2)) }
+ | T_LCURLY_LENS listc(property_name_and_value) ","? "}"
      { Expr (Obj ($1, $2, $4)) }
 
   | (* decorators, no body *)
@@ -463,10 +463,10 @@ sgrep_spatch_pattern:
 
 
   | (* TODO decorators ioption(T_ASYNC) ioption(method_get_set_star)
-    * but need also to modify parsing hack for T_LPAREN_METHOD_SEMGREP
+    * but need also to modify parsing hack for T_LPAREN_METHOD_LENS
     *)
     T_ID
-    T_LPAREN_METHOD_SEMGREP formal_parameter_list_opt ")" annotation?
+    T_LPAREN_METHOD_LENS formal_parameter_list_opt ")" annotation?
     "{" function_body "}" EOF
    {
      let sig_ = (None, ($2, $3, $4), $5) in

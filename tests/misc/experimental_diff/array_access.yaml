@@ -1,4 +1,4 @@
-# Run this against semgmrep/perf/bench/semgrep-app/input/semgrep-app with
+# Run this against semgmrep/perf/bench/lens-app/input/lens-app with
 # and without --optimizations all to see the difference
 rules:
 - id: array-access

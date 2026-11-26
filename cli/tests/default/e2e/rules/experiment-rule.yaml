@@ -4,7 +4,7 @@ rules:
     - generic
   message: Detected a .py file. This likely indicates py is in use.
   metadata:
-    license: Semgrep Registry License
+    license: Lens Registry License
   paths:
     include:
       - "*.py"

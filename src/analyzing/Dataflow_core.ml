@@ -133,7 +133,7 @@ module Make (F : Flow) = struct
 
   let (display_mapping : F.flow -> 'env mapping -> ('env -> string) -> unit) =
    fun flow mapping env_to_str ->
-    (* nosemgrep: no-print-in-semgrep *)
+    (* nolens: no-print-in-lens *)
     UCommon.pr (mapping_to_str flow env_to_str mapping)
 
   let fixpoint_worker ~timeout eq_env mapping trans flow succs workset =
@@ -144,7 +144,7 @@ module Make (F : Flow) = struct
         (* 'Time_limit.set_timeout' cannot be nested and we want to make sure that
          * fixpoint computations run for a limited amount of time. *)
         let t1 = Sys.time () in
-        if i > Limits_semgrep.dataflow_FIXPOINT_MIN_ITERS && t1 -. t0 >= timeout
+        if i > Limits_lens.dataflow_FIXPOINT_MIN_ITERS && t1 -. t0 >= timeout
         then (mapping, `Timeout)
         else
           let ni = NodeiSet.choose work in

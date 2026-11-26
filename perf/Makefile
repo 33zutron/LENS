@@ -1,21 +1,21 @@
 #
-# Run semgrep benchmarks.
+# Run lens benchmarks.
 # See './run-benchmarks --help' for options.
 #
 
-DOCKER_IMG = returntocorp/semgrep:develop
+DOCKER_IMG = returntocorp/lens:develop
 
-# Run whichever version of semgrep is available locally.
+# Run whichever version of lens is available locally.
 .PHONY: run
 run:
 	@set -e; \
-	if ! semgrep --version > /dev/null; then \
-	  echo "Missing 'semgrep' executable. Consider using 'make docker'."; \
+	if ! lens --version > /dev/null; then \
+	  echo "Missing 'lens' executable. Consider using 'make docker'."; \
 	  exit 1; \
 	fi
 	./run-benchmarks
 
-# Use the latest semgrep build published on DockerHub.
+# Use the latest lens build published on DockerHub.
 .PHONY: docker
 docker:
 	docker pull $(DOCKER_IMG)

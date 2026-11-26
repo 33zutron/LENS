@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -14,9 +14,9 @@
  * auto-generated, rather than this file to debug ASTs.
  *
  * We keep Meta_AST.ml mainly because we use it to generate the JSON
- * from the OCaml.v type of the generic AST in Semgrep.
- * TODO: we don't display ASTs anymore in the Semgrep playground,
- * and semgrep --dump-ast is deprecated, so we should remove this file.
+ * from the OCaml.v type of the generic AST in Lens.
+ * TODO: we don't display ASTs anymore in the Lens playground,
+ * and lens --dump-ast is deprecated, so we should remove this file.
  * Morever in case we need JSON from ASTs we can use ast_generic_v1.atd
  * instead.
  *)

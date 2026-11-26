@@ -19,9 +19,9 @@ jobs:
           GIT_CONFIG_COUNT: "1"
           GIT_CONFIG_KEY_0: maintenance.auto
           GIT_CONFIG_VALUE_0: "false"
-        uses: semgrep/setup-ocaml@a739c5405d73c42ef15a9dc995efc0f87396cc36
+        uses: lens/setup-ocaml@a739c5405d73c42ef15a9dc995efc0f87396cc36
         with:
-          cache-prefix: v8-semgrep-${{ hashFiles('opam-lockfiles/*.locked', '*.opam', 'dev/required.opam', 'libs/ocaml-tree-sitter-semgrep/core/tree-sitter.opam', 'cli/src/semgrep/semgrep_interfaces/semgrep-interfaces.opam', 'OSS/opam-lockfiles/*.locked', 'OSS/*.opam', 'OSS/dev/required.opam', 'OSS/libs/ocaml-tree-sitter-semgrep/core/tree-sitter.opam', 'OSS/cli/src/semgrep/semgrep_interfaces/semgrep-interfaces.opam') }}
+          cache-prefix: v8-lens-${{ hashFiles('opam-lockfiles/*.locked', '*.opam', 'dev/required.opam', 'libs/ocaml-tree-sitter-lens/core/tree-sitter.opam', 'cli/src/lens/lens_interfaces/lens-interfaces.opam', 'OSS/opam-lockfiles/*.locked', 'OSS/*.opam', 'OSS/dev/required.opam', 'OSS/libs/ocaml-tree-sitter-lens/core/tree-sitter.opam', 'OSS/cli/src/lens/lens_interfaces/lens-interfaces.opam') }}
           ocaml-compiler: ocaml-variants.5.4.0+options,ocaml-option-flambda
           opam-pin: false
           opam-repositories: |
@@ -29,14 +29,14 @@ jobs:
           save-opam-post-run: true
       - name: Install dependencies
         run: opam exec -- make install-deps
-      - name: Build semgrep-core
+      - name: Build lens-core
         run: opam exec -- make
-      - name: Test semgrep-core
+      - name: Test lens-core
         run: opam exec -- make test
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: semgrep-core-x86-artifact
-          path: bin/semgrep-core
+          name: lens-core-x86-artifact
+          path: bin/lens-core
 name: build-test-core-x86
 on:
   workflow_call: null

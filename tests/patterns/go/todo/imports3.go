@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/3484
+// https://github.com/returntocorp/lens/issues/3484
 
 // these should match:
 

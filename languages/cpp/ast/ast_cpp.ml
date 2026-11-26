@@ -33,7 +33,7 @@
  * extensions (see kenccext:). Then, it was extended to deal with
  * a few C++0x (see c++0x:) and C++11 extensions (see c++11:).
  * Finally it was converted back to an AST (actually half AST, half CST)
- * for semgrep and to be the target of tree-sitter-cpp.
+ * for lens and to be the target of tree-sitter-cpp.
  *
  * gcc introduced StatementExpr which made 'expr' and 'stmt' mutually
  * recursive. It also added NestedFunc for even more mutual recursivity.
@@ -1081,7 +1081,7 @@ type program = toplevel list [@@deriving show]
 (* Any *)
 (*****************************************************************************)
 type any =
-  (* for semgrep *)
+  (* for lens *)
   | Expr of expr
   | Stmt of stmt
   | Stmts of stmt list

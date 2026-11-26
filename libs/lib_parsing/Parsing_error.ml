@@ -23,15 +23,15 @@ module Log = Log_lib_parsing.Log
  * building an AST, etc.).
  *
  * The exns in this module can be used in the different parsers in
- * Semgrep (especially in the ocamllex/menhir-based parsers).
+ * Lens (especially in the ocamllex/menhir-based parsers).
  *
- * Note that those exns can be converted in Semgrep_error_code.error with
+ * Note that those exns can be converted in Lens_error_code.error with
  * Core_error.exn_to_error()
  * coupling: Core_error.exn_to_error()
  *
  * related code:
- *  - Semgrep_output_v1.core_error_kind
- *  - Semgrep_error_code.ml
+ *  - Lens_output_v1.core_error_kind
+ *  - Lens_error_code.ml
  *)
 
 (*****************************************************************************)
@@ -61,7 +61,7 @@ let lexical_error msg lexbuf =
   let info = Tok.tok_of_lexbuf lexbuf in
   if !Flag_parsing.exn_when_lexical_error then raise (Lexical_error (msg, info))
   else if Hook.get Flag_parsing.verbose_lexing then
-    (* nosemgrep: no-logs-in-library *)
+    (* nolens: no-logs-in-library *)
     Logs.err (fun m -> m "LEXER: %s" msg)
 
 (****************************************************************************)

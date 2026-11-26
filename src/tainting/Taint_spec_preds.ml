@@ -1,6 +1,6 @@
 (* Iago Abal
  *
- * Copyright (C) 2025 Semgrep Inc., All rights reserved
+ * Copyright (C) 2025 Lens Inc., All rights reserved
  *)
 open Common
 
@@ -52,8 +52,8 @@ type t = {
 
         Propagators allow to specify how taint propagates through side effects.
 
-        Note that we tried to solve this with a hack in semgrep/semgrep#5150
-        but it caused a bunch of FPs in semgrep-rules. The hack was essentially
+        Note that we tried to solve this with a hack in lens/lens#5150
+        but it caused a bunch of FPs in lens-rules. The hack was essentially
         to assume that in `x.f(y)` taint always propagated from `y` to `x`.
 
         The typical FP was a call that incorrectly tainted an object or module,

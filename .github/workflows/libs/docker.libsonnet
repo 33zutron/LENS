@@ -52,7 +52,7 @@ local validate(
   script,
   needs,
   checkout_steps=actions.checkout(),
-  image='semgrep',
+  image='lens',
       ) =
   {
     'runs-on': 'ubuntu-latest',
@@ -62,7 +62,7 @@ local validate(
              {
                name: 'Test %s image' % job,
                env: {
-                 IMAGEID: 'semgrep/%s@${{ needs.%s.outputs.digest }}' % [image, job],
+                 IMAGEID: 'lens/%s@${{ needs.%s.outputs.digest }}' % [image, job],
                },
                // only test amd64 for now. I suspect this is fine for now
                run: '%s "$IMAGEID" linux/amd64' % script,
@@ -108,7 +108,7 @@ local pull_and_run_image_steps(image, target_dir=null, output_dir=null, env='') 
 
 local build_steps(
   description='',  // User-friendly name to appear in the GitHub Actions step name
-  target,  // Target docker layer (i.e. build, semgrep-cli, etc.)
+  target,  // Target docker layer (i.e. build, lens-cli, etc.)
   prefix='',  // prefix for image tags
   suffix='',  // suffix for image tags
   file='Dockerfile',
@@ -229,7 +229,7 @@ local build_steps(
 
 local job(
   description='',  // User-friendly name to appear in the GitHub Actions
-  target,  // Target docker layer (i.e. build, semgrep-cli, etc.)
+  target,  // Target docker layer (i.e. build, lens-cli, etc.)
   prefix='',  // prefix for image tags
   suffix='',  // suffix for image tags
   artifact_name=null,  // name of artifact to copy from docker image

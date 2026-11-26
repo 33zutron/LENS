@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2024 Semgrep Inc.
+# Copyright (c) 2021-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -12,15 +12,15 @@
 #
 from pathlib import Path
 
-DASHBOARD_URL = "https://dashboard.semgrep.dev"
-STATS_URL = "https://stats.semgrep.dev"
-SEMGREP_URL = "https://semgrep.dev"
-BPS_ENDPOINT = "semgrep.perf.bps"
-LPS_ENDPOINT = "semgrep.perf.lps"
+DASHBOARD_URL = "https://dashboard.lens.dev"
+STATS_URL = "https://stats.lens.dev"
+LENS_URL = "https://lens.dev"
+BPS_ENDPOINT = "lens.perf.bps"
+LPS_ENDPOINT = "lens.perf.lps"
 
 STD = "std"
 
-SEMGREP_USER_AGENT = "Semgrep/0.0.0-benchmark"
+LENS_USER_AGENT = "Lens/0.0.0-benchmark"
 RULE_CONFIG_CACHE_DIR = Path("bench/rules_cache")
 PREP_FILE_TEMPLATE = """#! /bin/sh
 #
@@ -30,7 +30,7 @@ PREP_FILE_TEMPLATE = """#! /bin/sh
 # target_dir: input/socket.io
 #
 # See ../r2c-rules for centralized copy of the rule
-# Uses sh because bash is not installed within the semgrep docker container.
+# Uses sh because bash is not installed within the lens docker container.
 #
 set -eu
 

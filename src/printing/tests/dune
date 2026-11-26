@@ -1,11 +1,11 @@
 (library
- (public_name semgrep.printing.tests)
- (name semgrep_printing_tests)
+ (public_name lens.printing.tests)
+ (name lens_printing_tests)
  (wrapped false)
  (libraries
    commons
-   semgrep.parsing
-   semgrep.printing
+   lens.parsing
+   lens.printing
  )
  (preprocess (pps ppx_deriving.show ppx_profiling))
 )

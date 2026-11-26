@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -19,7 +19,7 @@ let t = Testo.create
 (* Unit tests *)
 (*****************************************************************************)
 
-(* ran from the root of the semgrep repository *)
+(* ran from the root of the lens repository *)
 let tests_path = Fpath.v "tests"
 let tests_path_typing = tests_path / "typing"
 

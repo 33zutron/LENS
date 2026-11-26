@@ -46,8 +46,8 @@
  • Targets scanned: 0
  • Parsed lines: an unknown percentage
  • Scan skipped:
-   ◦ Files matching .semgrepignore patterns: 1
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+   ◦ Files matching .lensignore patterns: 1
+ • For a detailed list of skipped files and lines, run lens with the --verbose flag
 Ran 1 rule on 0 files: 0 findings.
 
 === end of stderr - plain

@@ -493,7 +493,7 @@ rule st_in_scripting = parse
     (* PHP 8 attributes *)
     | "#[" { TOATTR (tokinfo lexbuf) }
 
-    (* semgrep-ext: or var args extension *)
+    (* lens-ext: or var args extension *)
     | "..." { T_ELLIPSIS(tokinfo lexbuf) }
     (* facebook-ext: short lambdas *)
     | "==>" { T_DOUBLE_ARROW(tokinfo lexbuf) }

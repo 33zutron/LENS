@@ -4,7 +4,7 @@
 # in that same order. Some autofixes cannot be applied due to earlier
 # autofixes.
 #
-# TODO: fix pysemgrep and/or osemgrep so that the order in which the
+# TODO: fix pylens and/or olens so that the order in which the
 # fixes are applied is consistent with what's reported in both text
 # and JSON formats.
 #

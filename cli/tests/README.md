@@ -1,4 +1,4 @@
-# semgrep tests
+# lens tests
 
 ## Usage
 
@@ -18,7 +18,7 @@ This is the only directory that counts for test coverage.
 
 End-to-end tests use committed output snapshots as a sanity check
 that cover code on all layers from CLI parsing
-down to semgrep-core's AST manipulation.
+down to lens-core's AST manipulation.
 
 These tests verify that basic usage of specific features
 don't change their behavior from the user's point of view;
@@ -31,7 +31,7 @@ and if it seems sensible, just update the snapshots with `make regenerate-tests`
 ### `qa/`
 
 QA tests are automated quality assurance scenarios,
-such as running Semgrep on various real life repositories.
+such as running Lens on various real life repositories.
 
 These need to run only when doing QA for releases,
 and can be run with `make qa` instead of `make test`.
@@ -41,11 +41,11 @@ it.
 ### `performance/`
 
 This directory is for benchmarking tests
-that ensure that Semgrep runs fast enough.
+that ensure that Lens runs fast enough.
 Right now this is used only to test the performance
 of semdep parsers.
 
-See also ../perf for semgrep-core benchmarking tests.
+See also ../perf for lens-core benchmarking tests.
 
 ## Fixtures
 
@@ -61,12 +61,12 @@ Some common ones we use are:
   to make temporary changes to the environment
 - [`tmp_path`](https://docs.pytest.org/en/latest/tmpdir.html),
   to get a temporary workspace in the filesystem
-- [`run_semgrep_in_tmp`](#run_semgrep_in_tmp),
-  to easily run the `semgrep` command line tool
+- [`run_lens_in_tmp`](#run_lens_in_tmp),
+  to easily run the `lens` command line tool
 
-### `run_semgrep_in_tmp`
+### `run_lens_in_tmp`
 
-This function runs `semgrep` for you via the CLI,
+This function runs `lens` for you via the CLI,
 raises a `subprocess.CalledProcessError` if it fails,
 and returns the results as a pretty-formatted JSON string.
 
@@ -75,30 +75,30 @@ with `e2e/targets` and `e2e/rules` available at `./targets` and `./rules`, respe
 
 When calling this, you specify the `--config` value as the first parameter:
 
-`run_semgrep_in_tmp("r2c/python")`
+`run_lens_in_tmp("r2c/python")`
 
 It runs on the files in `e2e/targets/basic/` by default,
 but you can change that to another directory next to that one:
 
-`run_semgrep_in_tmp("r2c/python", target="equivalence")`
+`run_lens_in_tmp("r2c/python", target="equivalence")`
 
 The return value is the JSON output from stdout,
 but you can ask for stderr to be merged into the returned string:
 
-`run_semgrep_in_tmp("r2c/python", stderr=True)`
+`run_lens_in_tmp("r2c/python", stderr=True)`
 
 You can add any additional CLI flag you'd like like so:
 
-`run_semgrep_in_tmp("r2c/python", options=["--exclude", "*.py"])`
+`run_lens_in_tmp("r2c/python", options=["--exclude", "*.py"])`
 
-To call semgrep without the `--json` flag:
+To call lens without the `--json` flag:
 
-`run_semgrep_in_tmp("r2c/python", output_format=OutputFormat.TEXT)`
+`run_lens_in_tmp("r2c/python", output_format=OutputFormat.TEXT)`
 
-To call semgrep with the `--junit-xml` flag:
+To call lens with the `--junit-xml` flag:
 
-`run_semgrep_in_tmp("r2c/python", output_format=OutputFormat.JUNIT_XML)`
+`run_lens_in_tmp("r2c/python", output_format=OutputFormat.JUNIT_XML)`
 
-To call semgrep with the `--sarif` flag instead of `--json`:
+To call lens with the `--sarif` flag instead of `--json`:
 
-`run_semgrep_in_tmp("r2c/python", output_format=OutputFormat.SARIF)`
+`run_lens_in_tmp("r2c/python", output_format=OutputFormat.SARIF)`

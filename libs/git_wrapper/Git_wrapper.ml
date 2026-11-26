@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2023 Semgrep Inc.
+ * Copyright (C) 2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ module Log = Log_git_wrapper.Log
  *
  * alternatives:
  *  - use https://github.com/fxfactorial/ocaml-libgit2, but
- *    pysemgrep uses 'git' directly so easier for now to just imitate.
+ *    pylens uses 'git' directly so easier for now to just imitate.
  *    Morever we need services like 'git ls-files' and this
  *    does not seem to be supported by libgit.
  *  - use https://github.com/mirage/ocaml-git, which implements
@@ -289,7 +289,7 @@ let blobs_by_commit ~(find_tree : hash -> tree option)
     List.fold_left (fun acc (_, result) -> acc + result.missing) 0 results
   in
   if missing > 0 then
-    (* nosemgrep: no-logs-in-library *)
+    (* nolens: no-logs-in-library *)
     Logs.warn (fun m ->
         m
           "%d git object(s) referenced by history were missing from the object \
@@ -310,7 +310,7 @@ let command (args : Cmd.args) : (string, string) result =
   | Ok (str, (_, `Exited 0)) -> Ok str
   | Ok _
   | Error (`Msg _) ->
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.warn (fun m ->
           m
             {|Command failed.
@@ -319,7 +319,7 @@ Failed to run %s. Possible reasons:
 - the git binary is not available
 - the current working directory is not a git repository
 - the baseline commit is not a parent of the current commit
-  (if you are running through semgrep-app, check if you are setting `SEMGREP_BRANCH` or `SEMGREP_BASELINE_COMMIT` properly)
+  (if you are running through lens-app, check if you are setting `LENS_BRANCH` or `LENS_BASELINE_COMMIT` properly)
 - the current working directory is not marked as safe
   (fix with `git config --global --add safe.directory $(pwd)`)
 
@@ -499,7 +499,7 @@ let run_with_worktree ~commit ?branch f =
   let rand_dir () =
     let rand = Stdlib.Random.State.make_self_init () in
     let uuid = Uuidm.v4_gen rand () in
-    let dir_name = "semgrep_git_worktree_" ^ Uuidm.to_string uuid in
+    let dir_name = "lens_git_worktree_" ^ Uuidm.to_string uuid in
     let dir = UTmp.get_temp_dir_name () / dir_name in
     Unix.mkdir !!dir 0o777;
     dir
@@ -728,14 +728,14 @@ let project_url ?cwd () : string option =
   | Error _ ->
       (* TODO(dinosaure): this line is pretty weak due to the [".com"] (what
          happens when the domain is [".io"]?). We probably should handle that by a
-         new environment variable. I just copied what [pysemgrep] does.
+         new environment variable. I just copied what [pylens] does.
          [git ls-remote --get-url] is also enough and if we can not get such
          information, that's fine - the metadata is used only [Metrics_] actually.
       *)
       UFile.find_first_match_with_whole_line (Fpath.v ".git/config") ".com"
 
-(* coupling: with semgrep_output_v1.atd contribution type, but
- * duplicated here to avoid depending on semgrep-specific code from libs/
+(* coupling: with lens_output_v1.atd contribution type, but
+ * duplicated here to avoid depending on lens-specific code from libs/
  * alt: move logs() below to Parse_contribution.ml which would avoid some
  * duplication or pass the format string as a parameter and handle the
  * parsing in the caller
@@ -750,7 +750,7 @@ type contribution = {
 [@@deriving show]
 
 (* old: was using some --pretty=format:{commit_hash: %H ... to generate
- * directly some JSON that semgrep_output_v1.atd contributions type could read,
+ * directly some JSON that lens_output_v1.atd contributions type could read,
  * but this was not dealing correctly with special chars (e.g., an
  * backslash char in the author) so better to not abuse JSON and use
  * the special null byte char to separate fields.
@@ -769,7 +769,7 @@ let parse_git_log_format_line (line : string) : contribution option =
           commit_author_email;
         }
   | _else_ ->
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.warn (fun m -> m "wrong git log line: %s" line);
       None
 
@@ -815,7 +815,7 @@ let logs ?cwd ?since () : contribution list =
       |> List.filter (fun f -> not (String.trim f = ""))
       |> List.filter_map parse_git_log_format_line
   | _ ->
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.warn (fun m -> m "running %s failed" (Cmd.show cmd));
       []
 

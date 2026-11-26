@@ -40,25 +40,25 @@ open Common
  *
  * but regexps can't do that[1].
  *
- * The alternative is then to use more precise tools such as Semgrep,
- * but adding support for a new language in Semgrep can be tedious.
+ * The alternative is then to use more precise tools such as Lens,
+ * but adding support for a new language in Lens can be tedious.
  *
  * Moreover, in my experience matching AST against AST lacks
- * flexibility sometimes. For instance many people want to use Semgrep to
- * find a method foo and so do "semgrep -e 'foo(...)'" but
+ * flexibility sometimes. For instance many people want to use Lens to
+ * find a method foo and so do "lens -e 'foo(...)'" but
  * because the matching is done at the AST level, 'foo(...)' is
  * parsed as a function call, not a method call, and so it will
  * not work. But people expect it to work because it works
- * with regexps. So Semgrep for PHP currently forces people to write this
+ * with regexps. So Lens for PHP currently forces people to write this
  * pattern instead '$V->foo(...)'.
  * In the same way, a pattern like '1' was originally matching
  * only expressions, but was not matching static constants because
  * again it was a different AST constructor. Actually many
- * of the extensions and bugfixes in Semgrep/PHP have been related to this
+ * of the extensions and bugfixes in Lens/PHP have been related to this
  * lack of flexibility because the AST was too precise.
  *
  * Enter Ast_fuzzy, a way to factorize most of the needs of
- * Semgrep over different programming languages,
+ * Lens over different programming languages,
  * while being more flexible in some ways than having a precise AST.
  * It fills a niche between regexps and very-precise ASTs.
  *
@@ -148,6 +148,6 @@ and trees = tree list [@@deriving show]
 (*****************************************************************************)
 
 (* unused now because we use ast_fuzzy mainly for parsing hacks, not
- * anymore for sgrep/semgrep.
+ * anymore for sgrep/lens.
  *)
 let is_metavar s = s =~ "^\\$.*"

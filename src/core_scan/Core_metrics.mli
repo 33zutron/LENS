@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -17,6 +17,6 @@ val meter_scan_inputs :
   valid_rules:Rule.t list ->
   targets:Target.t list ->
   errors:Core_error.t list ->
-  skipped:Semgrep_output_v1_t.skipped_target list ->
+  skipped:Lens_output_v1_t.skipped_target list ->
   unit
 (** [meter_scan_inputs] records various metrics about our scan inputs*)

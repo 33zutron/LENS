@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 (*
-   External parsers (referenced here as "plugins") registered in semgrep-pro.
+   External parsers (referenced here as "plugins") registered in lens-pro.
 *)
 
 type pattern_parser =
@@ -26,14 +26,14 @@ module type T = sig
      one that is available by default. *)
   val is_optional : bool
 
-  (* Register parsing functions for a language (called in semgrep-pro) *)
+  (* Register parsing functions for a language (called in lens-pro) *)
   val register_parsers :
     parse_pattern:pattern_parser -> parse_target:target_file_parser -> unit
 
   (* Whether the plugin was registered. *)
   val is_available : unit -> bool
 
-  (* Parse a Semgrep pattern or a target.
+  (* Parse a Lens pattern or a target.
      Raise the 'Missing_plugin' exception if no parser was registered. *)
   val parse_pattern : pattern_parser
   val parse_target : target_file_parser

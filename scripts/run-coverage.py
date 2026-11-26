@@ -32,11 +32,11 @@ def report_summary_for_file_stat(file: str) -> str:
     raise Exception("")
 
 
-metrics_URL = "https://dashboard.semgrep.dev/api/metric"
+metrics_URL = "https://dashboard.lens.dev/api/metric"
 
 
 def add_metric(category: str, value: str) -> None:
-    path = f"semgrep.core.{category}.coverage.matching.pct"
+    path = f"lens.core.{category}.coverage.matching.pct"
     cmd = f"curl -X POST {metrics_URL}/{path} -d '{value}' 2> /dev/null"
     out = os.popen(cmd).read()  # nosem
     patt = re.compile(".*successfully recorded")

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,9 +14,9 @@ from collections import defaultdict
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.dependency_path import DependencyParentIndex
-from semgrep.dependency_path import MAX_DEPENDENCY_PATHS
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.dependency_path import DependencyParentIndex
+from lens.dependency_path import MAX_DEPENDENCY_PATHS
 
 NPM = out.Ecosystem(out.Npm())
 

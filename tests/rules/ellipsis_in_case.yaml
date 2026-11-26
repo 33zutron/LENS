@@ -3,7 +3,7 @@ rules:
     languages:
       - go
     severity: ERROR
-    message: Semgrep found a match
+    message: Lens found a match
     pattern: |-
       switch $_ {
         case 0, ...: ...

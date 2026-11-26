@@ -1,2 +1,2 @@
 # ruleid:lower
-lower_test_var = "SEMGREP"
+lower_test_var = "LENS"

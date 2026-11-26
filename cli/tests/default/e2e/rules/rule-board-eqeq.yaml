@@ -5,5 +5,5 @@ rules:
     severity: ERROR
     pattern: $X == $X
     metadata:
-      semgrep.policy:
+      lens.policy:
         slug: "rule-board-block"

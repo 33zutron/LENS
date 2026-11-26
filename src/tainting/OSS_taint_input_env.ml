@@ -1,6 +1,6 @@
 (* Iago Abal
  *
- * Copyright (C) 2022-2024 Semgrep Inc.
+ * Copyright (C) 2022-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -147,7 +147,7 @@ let mk_file_env =
   in
   fun taint_inst ast ->
     (* TODO: false positive *)
-    (* nosemgrep: no-ref-declarations-at-top-scope *)
+    (* nolens: no-ref-declarations-at-top-scope *)
     let env = ref (Lval_env.empty, Effects.empty) in
     visitor#visit_program (taint_inst, env) ast;
     !env

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -73,7 +73,7 @@ let to_formula (prefilter : t) : predicate Formula.t = prefilter.formula
 let of_formula (formula : predicate Formula.t) : t =
   { formula; generated = false }
 
-let to_semgrep_formula (prefilter : t) : Semgrep_prefilter_t.formula =
+let to_lens_formula (prefilter : t) : Lens_prefilter_t.formula =
   (* Convert to the existing prefilter format for serialization *)
   let rec convert_formula = function
     | Formula.And xs -> (

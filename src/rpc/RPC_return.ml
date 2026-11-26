@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,7 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 
 (*****************************************************************************)
 (* The answer to the call from Python *)
@@ -67,7 +67,7 @@ let sarif_format (rules : Out.fpath) (ctx : Out.format_context) ~is_pro
    * logs; only failures are visible.
    *)
   if not (List_.null invalid_rules) then
-    (* nosemgrep: no-logs-in-library *)
+    (* nolens: no-logs-in-library *)
     Logs.warn (fun m ->
         m "skipping %d invalid rules in SARIF RPC" (List.length invalid_rules));
   let hrules = Rule.hrules_of_rules rules in
@@ -111,20 +111,20 @@ let validate ~par_conf ~num_jobs (path : Out.fpath) : Out.core_error option =
 (*****************************************************************************)
 (* Hooks for handlers defined in Pro_RPC_return.ml *)
 (*****************************************************************************)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let hook_resolve_dependencies = ref None
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let hook_dump_rule_partitions = ref None
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let hook_transitive_reachability_analyzer = ref None
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let hook_match_subprojects = ref None
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let hook_run_symbol_analysis = ref None
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let hook_scan = ref None

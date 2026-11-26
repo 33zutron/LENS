@@ -1,7 +1,7 @@
 {
     "metavars": {
-        "$X": "SEMGREP"
+        "$X": "LENS"
     },
     "language": "python",
-    "code": "lower(str($X)) == \"semgrep\""
+    "code": "lower(str($X)) == \"lens\""
 }

@@ -9,7 +9,7 @@
   "profiling_results": [],
   "results": [
     {
-      "check_id": "rules.autofix.python-typing-osemgrep",
+      "check_id": "rules.autofix.python-typing-olens",
       "end": {
         "col": 24,
         "line": 2,
@@ -33,7 +33,7 @@
       }
     },
     {
-      "check_id": "rules.autofix.python-typing-osemgrep",
+      "check_id": "rules.autofix.python-typing-olens",
       "end": {
         "col": 24,
         "line": 3,

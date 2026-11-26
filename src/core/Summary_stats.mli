@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -14,13 +14,13 @@
 
 type 'key time = { key : 'key; time : float } [@@deriving show]
 
-val to_file_time : Fpath.t time -> Semgrep_output_v1_t.file_time
+val to_file_time : Fpath.t time -> Lens_output_v1_t.file_time
 
 val to_file_rule_time :
-  (Fpath.t * Rule_ID.t) time -> Semgrep_output_v1_t.file_rule_time
+  (Fpath.t * Rule_ID.t) time -> Lens_output_v1_t.file_rule_time
 
 val to_def_rule_time :
-  (Fpath.t * Pos.t * Rule_ID.t) time -> Semgrep_output_v1_t.def_rule_time
+  (Fpath.t * Pos.t * Rule_ID.t) time -> Lens_output_v1_t.def_rule_time
 
 type 'key stats = {
   count : int;
@@ -57,8 +57,8 @@ module type S = sig
   val to_output_v1 :
     to_out_time:(key time -> 'out_time) ->
     key stats ->
-    Semgrep_output_v1_t.summary_stats
-    * Semgrep_output_v1_t.very_slow_stats
+    Lens_output_v1_t.summary_stats
+    * Lens_output_v1_t.very_slow_stats
     * 'out_time list
 end
 

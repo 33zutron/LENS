@@ -1,7 +1,7 @@
 # coupling: if you add a check in this file, please add it first in
-# the semgrep-proprietary repo !!!!
+# the lens-proprietary repo !!!!
 #
-# Semgrep pre-commit configuration.
+# Lens pre-commit configuration.
 # See https://pre-commit.com/ for more information.
 # Once pre-commit is installed, you can run it locally with `pre-commit run --all`.
 # In case of troubles, try reset your cache with `pre-commit clean`
@@ -15,10 +15,10 @@
 default_language_version:
   python: python3.11
 
-# languages/.*/semgrep-.* : vendored grammars, must stay untouched (see scripts/check-vendored-ots)
-# libs/ocaml-tree-sitter-semgrep/{lang,core}: generated/upstream grammars + core
+# languages/.*/lens-.* : vendored grammars, must stay untouched (see scripts/check-vendored-ots)
+# libs/ocaml-tree-sitter-lens/{lang,core}: generated/upstream grammars + core
 # OCaml (historical indent); scripts/ follow the same hooks as the rest of OSS.
-exclude: "^tests|^cli/tests/default/e2e.*/(targets|snapshots|rules/syntax)|^cli/tests/performance/targets_perf_sca|^cli/src/(semgrep|semdep)/external|^cli/bin|\\binvalid\\b|^libs/ocaml-tree-sitter-semgrep/(lang|core)/|^libs/testo|^libs/pcre2|^cli/src/semgrep/semgrep_interfaces|languages/.*/semgrep-.*|tests/semgrep-rules|^cli/src/semgrep/semgrep_interfaces"
+exclude: "^tests|^cli/tests/default/e2e.*/(targets|snapshots|rules/syntax)|^cli/tests/performance/targets_perf_sca|^cli/src/(lens|semdep)/external|^cli/bin|\\binvalid\\b|^libs/ocaml-tree-sitter-lens/(lang|core)/|^libs/testo|^libs/pcre2|^cli/src/lens/lens_interfaces|languages/.*/lens-.*|tests/lens-rules|^cli/src/lens/lens_interfaces"
 
 default_stages: [commit]
 
@@ -52,8 +52,8 @@ repos:
       - id: detect-private-key
       - id: end-of-file-fixer
         # Exclude generated files.
-        # coupling: apply the same exclusions in semgrep-proprietary
-        exclude: "^\\.github/workflows/.+|semgrep\\.opam|opam-lockfiles/.+|.gitmodules|.dockerignore$"
+        # coupling: apply the same exclusions in lens-proprietary
+        exclude: "^\\.github/workflows/.+|lens\\.opam|opam-lockfiles/.+|.gitmodules|.dockerignore$"
       - id: fix-byte-order-marker
       - id: fix-encoding-pragma
         args: [--remove]
@@ -79,7 +79,7 @@ repos:
           - --remove-duplicate-keys
           - --remove-all-unused-imports
           - --ignore-init-module-imports
-          - --exclude=/cli/src/semgrep/output_from_core.py
+          - --exclude=/cli/src/lens/output_from_core.py
 
   # Black is a Python code formatter
   # Note that you need at least pre-commit 3.2.0 to use black
@@ -88,7 +88,7 @@ repos:
     rev: 23.10.1 # PLEASE DO NOT CHANGE [see NOTE "Python"]
     hooks:
       - id: black
-        args: [--exclude=/cli/src/semgrep/output_from_core.py]
+        args: [--exclude=/cli/src/lens/output_from_core.py]
 
   - repo: https://github.com/asottile/reorder_python_imports
     rev: v3.12.0 # PLEASE DO NOT CHANGE [see NOTE "Python"]
@@ -100,7 +100,7 @@ repos:
     rev: v1.7.1 # PLEASE DO NOT CHANGE [see NOTE "Python"]
     hooks:
       - id: mypy
-        exclude: ^cli/tests/.+$|^setup.py$|^cli/src/semdep/external/packaging/.*$|^cli/src/semgrep/console_scripts/.*$|^cli/src/semdep/external/parsy/.*$|^cli/scripts/.*$|^scripts/.+$|^perf/.+$|^js/language_server/targets/.+$|^.github/workflows/libs/bump-uses.py$|^libs/ocaml-tree-sitter-semgrep/scripts/test_.*\.py$
+        exclude: ^cli/tests/.+$|^setup.py$|^cli/src/semdep/external/packaging/.*$|^cli/src/lens/console_scripts/.*$|^cli/src/semdep/external/parsy/.*$|^cli/scripts/.*$|^scripts/.+$|^perf/.+$|^js/language_server/targets/.+$|^.github/workflows/libs/bump-uses.py$|^libs/ocaml-tree-sitter-lens/scripts/test_.*\.py$
         args: [--config, mypy.ini, --show-error-codes, --scripts-are-modules, --python-version, "3.11"]
         additional_dependencies: &mypy-deps
           # versions must be manually synced:
@@ -177,7 +177,7 @@ repos:
   # patterns derived from git submodules. This causes errors in
   # the Pro-to-OSS sync job because Pro also generates this file
   # but does so correctly. Maybe it's a caching bug. Compare
-  # with the pre-commit config in semgrep-proprietary.
+  # with the pre-commit config in lens-proprietary.
   #
   #- repo: local
   #  hooks:
@@ -232,19 +232,19 @@ repos:
         pass_filenames: false
 
   # ----------------------------------------------------------
-  # Dogfood! running semgrep in pre-commit!
+  # Dogfood! running lens in pre-commit!
   # ----------------------------------------------------------
-  - repo: https://github.com/semgrep/pre-commit
+  - repo: https://github.com/lens/pre-commit
     rev: v1.93.0
     hooks:
-      - id: semgrep
-        name: Semgrep Jsonnet
+      - id: lens
+        name: Lens Jsonnet
         # This uses the Python "hook" in .pre-commit-hooks.yaml and setup.py.
         # alt: use 'repo: local', and 'language: docker', which can use
         # the very latest docker image, which is nice, but is far slower.
         language: python
 
-        # Note that both the .semgrepignore file and the --exclude option
+        # Note that both the .lensignore file and the --exclude option
         # do nothing because the target files are passed
         # explicitly on the command line by pre-commit!!!
         # TODO: remove once file targeting is revamped and supports
@@ -253,21 +253,21 @@ repos:
         # TODO: we could also set 'pass_filenames: false', see
         # https://stackoverflow.com/questions/57199833/run-pre-commit-com-hook-once-not-for-every-file-if-a-matched-file-is-detected
 
-        #coupling: 'make check' and the SEMGREP_ARGS variable.
+        #coupling: 'make check' and the LENS_ARGS variable.
         args: [
-            # use osemgrep!
+            # use olens!
             "--experimental",
             # use jsonnet!
             "--config",
-            "semgrep.jsonnet",
+            "lens.jsonnet",
             # classic flag to use in CI or pre-commit, return error code if findings
             "--error",
             # Quiet or not quiet? Debug or not debug?
-            # Pre-commit can call multiple times semgrep in
+            # Pre-commit can call multiple times lens in
             # one run if there are many files in a PR (or in CI where
             # it runs on all the files in a repo).  In that case I
             # think pre-commit splits the list of files in multiple
-            # batches and run one semgrep per batch. This is why it's
+            # batches and run one lens per batch. This is why it's
             # important to use --quiet otherwise you can have the same
             # banner repeated many times in the output in case of errors.
             # It's a much bigger problem though to not see the error messages.
@@ -287,41 +287,41 @@ repos:
           ]
   # Dogfooding .pre-commit-hooks.yml and setup.py
   # Use a fixed version of p/python and p/bandit to not get new findings
-  # We run `semgrep ci` for our main rulesets
-  - repo: https://github.com/semgrep/pre-commit
+  # We run `lens ci` for our main rulesets
+  - repo: https://github.com/lens/pre-commit
     rev: v1.171.0
     hooks:
-      - id: semgrep
-        name: Semgrep Python
+      - id: lens
+        name: Lens Python
         types: [python]
         exclude: "^cli/tests/.+$|^scripts/.+$|^cli/setup.py$"
         args: ["--config", "tests/precommit_dogfooding/python.yml", "--error"]
-      - id: semgrep
-        name: Semgrep Bandit
+      - id: lens
+        name: Lens Bandit
         types: [python]
         exclude: "^cli/tests/.+$|^scripts/.+$|^cli/setup.py$"
         args: ["--config", "tests/precommit_dogfooding/bandit.yml", "--error"]
 
-  # Run Semgrep Docker images. Only used in CI since it's slower for local developmemt.
-  # To run locally use `pre-commit run --hook-stage manual semgrep-docker-develop`
-  - repo: https://github.com/semgrep/pre-commit
+  # Run Lens Docker images. Only used in CI since it's slower for local developmemt.
+  # To run locally use `pre-commit run --hook-stage manual lens-docker-develop`
+  - repo: https://github.com/lens/pre-commit
     # Note that the 'rev:' below is the revision to use to clone the URL
     # above and to fetch its .pre-commit-hooks.yaml file. It does not always
-    # mean which version of semgrep to use for the hook itself.
+    # mean which version of lens to use for the hook itself.
     # For example in .pre-commit-hooks.yaml if you use an entry with
     # the 'language: docker_image', the 'entry:' field will then specify
     # which version to use. In the case below, we're actually running
-    # returntocorp/semgrep:develop if you look at .pre-commit-hooks.yaml
+    # returntocorp/lens:develop if you look at .pre-commit-hooks.yaml
     rev: v1.171.0
     hooks:
-      - id: semgrep-docker-develop
-        name: Semgrep Develop Python
+      - id: lens-docker-develop
+        name: Lens Develop Python
         types: [python]
         exclude: "^cli/tests/.+$|^scripts/.+$|^cli/setup.py$"
         args: ["--config", "tests/precommit_dogfooding/python.yml", "--error"]
         stages: [manual]
-      - id: semgrep-docker-develop
-        name: Semgrep Develop Bandit
+      - id: lens-docker-develop
+        name: Lens Develop Bandit
         types: [python]
         exclude: "^cli/tests/.+$|^scripts/.+$|^cli/setup.py$"
         args: ["--config", "tests/precommit_dogfooding/bandit.yml", "--error"]

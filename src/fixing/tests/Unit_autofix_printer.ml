@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ let t = Testo.create
 
 (* Test suite for the autofix printers.
  *
- * This runs Semgrep to get a pattern match, then renders the fix. However, it
+ * This runs Lens to get a pattern match, then renders the fix. However, it
  * feeds in fake strings for the target and fix pattern contents, so that we can
  * test which parts were lifted from the original source and which parts were
  * printed from scratch. This functionality is a key part of the autofix

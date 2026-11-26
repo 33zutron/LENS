@@ -1,8 +1,8 @@
 [tool.towncrier]
     directory = "../../changelog.d"
     filename = "../../CHANGELOG.md"
-    name = "semgrep"
-    title_format = "## [{version}](https://github.com/semgrep/semgrep/releases/tag/v{version}) - {project_date}"
+    name = "lens"
+    title_format = "## [{version}](https://github.com/lens/lens/releases/tag/v{version}) - {project_date}"
     start_string = "<!-- insertion point -->\n"
     underlines = ["", ""]
     [[tool.towncrier.type]]

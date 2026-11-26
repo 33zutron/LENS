@@ -1,0 +1,392 @@
+========================
+Ellipsis as statement
+========================
+
+__LENS_STATEMENT ...
+
+---
+
+(compilation_unit
+  (lens_statement
+    (lens_ellipsis)))
+
+========================
+Metavariable as statement
+========================
+
+__LENS_STATEMENT $X
+
+---
+
+(compilation_unit
+  (lens_statement
+    (lens_metavariable)))
+
+========================
+Val definition with metavariable
+========================
+
+__LENS_STATEMENT val $X = $Y
+
+---
+
+(compilation_unit
+  (lens_statement
+    (val_definition
+      (identifier)
+      (lens_metavariable))))
+
+========================
+Val definition with type annotation
+========================
+
+__LENS_STATEMENT val $X: $T = $Y
+
+---
+
+(compilation_unit
+  (lens_statement
+    (val_definition
+      (identifier)
+      (type_identifier)
+      (lens_metavariable))))
+
+========================
+Var definition with metavariable
+========================
+
+__LENS_STATEMENT var $X = $Y
+
+---
+
+(compilation_unit
+  (lens_statement
+    (var_definition
+      (identifier)
+      (lens_metavariable))))
+
+========================
+Ellipsis between statements in block
+========================
+
+__LENS_STATEMENT
+{
+  setup()
+  ...
+  execute()
+}
+
+---
+
+(compilation_unit
+  (lens_statement
+    (block
+      (call_expression
+        (identifier)
+        (arguments))
+      (lens_ellipsis)
+      (call_expression
+        (identifier)
+        (arguments)))))
+
+========================
+Ellipsis at start of block
+========================
+
+__LENS_STATEMENT
+{
+  ...
+  foo($X)
+}
+
+---
+
+(compilation_unit
+  (lens_statement
+    (block
+      (lens_ellipsis)
+      (call_expression
+        (identifier)
+        (arguments
+          (lens_metavariable))))))
+
+========================
+Ellipsis at end of block
+========================
+
+__LENS_STATEMENT
+{
+  foo($X)
+  ...
+}
+
+---
+
+(compilation_unit
+  (lens_statement
+    (block
+      (call_expression
+        (identifier)
+        (arguments
+          (lens_metavariable)))
+      (lens_ellipsis))))
+
+========================
+If with metavariable condition and ellipsis body
+========================
+
+__LENS_STATEMENT if ($COND) { ... }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (if_expression
+      (parenthesized_expression
+        (lens_metavariable))
+      (block
+        (lens_ellipsis)))))
+
+========================
+If-else with metavariables
+========================
+
+__LENS_STATEMENT if ($COND) $THEN else $ELSE
+
+---
+
+(compilation_unit
+  (lens_statement
+    (if_expression
+      (parenthesized_expression
+        (lens_metavariable))
+      (lens_metavariable)
+      (lens_metavariable))))
+
+========================
+While with metavariable and ellipsis body
+========================
+
+__LENS_STATEMENT while ($COND) { ... }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (while_expression
+      (parenthesized_expression
+        (lens_metavariable))
+      (block
+        (lens_ellipsis)))))
+
+========================
+For loop with ellipsis body
+========================
+
+__LENS_STATEMENT for ($X <- $COLL) { ... }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (for_expression
+      (enumerators
+        (enumerator
+          (identifier)
+          (lens_metavariable)))
+      (block
+        (lens_ellipsis)))))
+
+========================
+For-yield with metavariable and guard
+========================
+
+__LENS_STATEMENT for ($X <- $COLL if $COND) yield $RESULT
+
+---
+
+(compilation_unit
+  (lens_statement
+    (for_expression
+      (enumerators
+        (enumerator
+          (identifier)
+          (lens_metavariable)
+          (guard
+            (lens_metavariable))))
+      (lens_metavariable))))
+
+========================
+Try-catch with ellipsis body
+========================
+
+__LENS_STATEMENT try { ... } catch { case $E => $HANDLER }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (try_expression
+      (block
+        (lens_ellipsis))
+      (catch_clause
+        (case_block
+          (case_clause
+            (identifier)
+            (lens_metavariable)))))))
+
+========================
+Try-finally with ellipsis
+========================
+
+__LENS_STATEMENT try { $BODY } finally { ... }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (try_expression
+      (block
+        (lens_metavariable))
+      (finally_clause
+        (block
+          (lens_ellipsis))))))
+
+========================
+Function definition with ellipsis in parameters
+========================
+
+__LENS_STATEMENT def foo(...): $T = $BODY
+
+---
+
+(compilation_unit
+  (lens_statement
+    (function_definition
+      (identifier)
+      (parameters
+        (parameter
+          (lens_ellipsis)))
+      (type_identifier)
+      (lens_metavariable))))
+
+========================
+Function definition with metavariable body
+========================
+
+__LENS_STATEMENT def $METHOD($X: $T): $R = $BODY
+
+---
+
+(compilation_unit
+  (lens_statement
+    (function_definition
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type_identifier)))
+      (type_identifier)
+      (lens_metavariable))))
+
+========================
+Function definition with ellipsis body
+========================
+
+__LENS_STATEMENT def foo($X: Int): Int = { ... }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (function_definition
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type_identifier)))
+      (type_identifier)
+      (block
+        (lens_ellipsis)))))
+
+========================
+Import with metavariable
+========================
+
+__LENS_STATEMENT import $PKG._
+
+---
+
+(compilation_unit
+  (lens_statement
+    (import_declaration
+      (identifier)
+      (namespace_wildcard))))
+
+========================
+Match expression as statement with ellipsis
+========================
+
+__LENS_STATEMENT $X match { case $A => $B; ... }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (match_expression
+      (lens_metavariable)
+      (case_block
+        (case_clause
+          (identifier)
+          (lens_metavariable)
+          (lens_ellipsis))))))
+
+========================
+Throw statement
+========================
+
+__LENS_STATEMENT throw new $EXC($MSG)
+
+---
+
+(compilation_unit
+  (lens_statement
+    (throw_expression
+      (instance_expression
+        (type_identifier)
+        (arguments
+          (lens_metavariable))))))
+
+========================
+Return statement with metavariable
+========================
+
+__LENS_STATEMENT return $X
+
+---
+
+(compilation_unit
+  (lens_statement
+    (return_expression
+      (lens_metavariable))))
+
+========================
+Multiple statements with ellipsis between
+========================
+
+foo($X)
+...
+bar($Y)
+
+---
+
+(compilation_unit
+  (call_expression
+    (identifier)
+    (arguments
+      (lens_metavariable)))
+  (lens_ellipsis)
+  (call_expression
+    (identifier)
+    (arguments
+      (lens_metavariable))))

@@ -1,0 +1,334 @@
+========================
+Class definition with metavariable name
+========================
+
+__LENS_STATEMENT class $NAME { ... }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (class_definition
+      (identifier)
+      (template_body
+        (lens_ellipsis)))))
+
+========================
+Class definition extending metavariable
+========================
+
+__LENS_STATEMENT class $NAME extends $BASE { ... }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (class_definition
+      (identifier)
+      (extends_clause
+        (type_identifier))
+      (template_body
+        (lens_ellipsis)))))
+
+========================
+Class with ellipsis in body
+========================
+
+__LENS_STATEMENT class Foo {
+  val x = 1
+  ...
+  def bar(): Unit = ()
+}
+
+---
+
+(compilation_unit
+  (lens_statement
+    (class_definition
+      (identifier)
+      (template_body
+        (val_definition
+          (identifier)
+          (integer_literal))
+        (lens_ellipsis)
+        (function_definition
+          (identifier)
+          (parameters)
+          (type_identifier)
+          (unit))))))
+
+========================
+Case class with metavariable fields
+========================
+
+__LENS_STATEMENT case class $NAME($FIELD: $TYPE)
+
+---
+
+(compilation_unit
+  (lens_statement
+    (class_definition
+      (identifier)
+      (class_parameters
+        (class_parameter
+          (identifier)
+          (type_identifier))))))
+
+========================
+Case class with ellipsis in parameters
+========================
+
+__LENS_STATEMENT case class Foo(..., $EXTRA: $T)
+
+---
+
+(compilation_unit
+  (lens_statement
+    (class_definition
+      (identifier)
+      (class_parameters
+        (class_parameter
+          (lens_ellipsis))
+        (class_parameter
+          (identifier)
+          (type_identifier))))))
+
+========================
+Object definition with metavariable name
+========================
+
+__LENS_STATEMENT object $OBJ { ... }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (object_definition
+      (identifier)
+      (template_body
+        (lens_ellipsis)))))
+
+========================
+Trait definition with metavariable name
+========================
+
+__LENS_STATEMENT trait $T { ... }
+
+---
+
+(compilation_unit
+  (lens_statement
+    (trait_definition
+      (identifier)
+      (template_body
+        (lens_ellipsis)))))
+
+========================
+Trait with ellipsis and method
+========================
+
+__LENS_STATEMENT trait $T {
+  ...
+  def $METHOD($X: $TYPE): $RET
+}
+
+---
+
+(compilation_unit
+  (lens_statement
+    (trait_definition
+      (identifier)
+      (template_body
+        (lens_ellipsis)
+        (function_declaration
+          (identifier)
+          (parameters
+            (parameter
+              (identifier)
+              (type_identifier)))
+          (type_identifier))))))
+
+========================
+Function definition with metavariable name
+========================
+
+__LENS_STATEMENT def $METHOD($X: $T): $R = $BODY
+
+---
+
+(compilation_unit
+  (lens_statement
+    (function_definition
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type_identifier)))
+      (type_identifier)
+      (lens_metavariable))))
+
+========================
+Function definition with ellipsis parameters
+========================
+
+__LENS_STATEMENT def foo(...): $T = $BODY
+
+---
+
+(compilation_unit
+  (lens_statement
+    (function_definition
+      (identifier)
+      (parameters
+        (parameter
+          (lens_ellipsis)))
+      (type_identifier)
+      (lens_metavariable))))
+
+========================
+Function definition with ellipsis body
+========================
+
+__LENS_STATEMENT def foo($X: Int): Int = {
+  ...
+}
+
+---
+
+(compilation_unit
+  (lens_statement
+    (function_definition
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type_identifier)))
+      (type_identifier)
+      (block
+        (lens_ellipsis)))))
+
+========================
+Function definition with mixed parameters
+========================
+
+__LENS_STATEMENT def $M($X: $T, ..., $Y: $S): $R = $BODY
+
+---
+
+(compilation_unit
+  (lens_statement
+    (function_definition
+      (identifier)
+      (parameters
+        (parameter
+          (identifier)
+          (type_identifier))
+        (parameter
+          (lens_ellipsis))
+        (parameter
+          (identifier)
+          (type_identifier)))
+      (type_identifier)
+      (lens_metavariable))))
+
+========================
+Val definition with complex pattern
+========================
+
+__LENS_STATEMENT val ($A, $B) = $PAIR
+
+---
+
+(compilation_unit
+  (lens_statement
+    (val_definition
+      (tuple_pattern
+        (identifier)
+        (identifier))
+      (lens_metavariable))))
+
+========================
+Val definition with case class destructure
+========================
+
+__LENS_STATEMENT val Point($X, $Y) = $P
+
+---
+
+(compilation_unit
+  (lens_statement
+    (val_definition
+      (case_class_pattern
+        (type_identifier)
+        (identifier)
+        (identifier))
+      (lens_metavariable))))
+
+========================
+Class body member declaration with ellipsis
+========================
+
+__LENS_MEMBER_DECL
+def $METHOD(...): $T
+
+---
+
+(compilation_unit
+  (lens_member_decl
+    (function_declaration
+      (identifier)
+      (parameters
+        (parameter
+          (lens_ellipsis)))
+      (type_identifier))))
+
+========================
+Class body val declaration with ellipsis
+========================
+
+__LENS_MEMBER_DECL
+val $FIELD: $T
+
+---
+
+(compilation_unit
+  (lens_member_decl
+    (val_declaration
+      (identifier)
+      (type_identifier))))
+
+========================
+Extension definition with metavariable
+========================
+
+__LENS_STATEMENT extension ($X: $T) def $METHOD(): $R = $BODY
+
+---
+
+(compilation_unit
+  (lens_statement
+    (extension_definition
+      (parameters
+        (parameter
+          (identifier)
+          (type_identifier)))
+      (function_definition
+        (identifier)
+        (parameters)
+        (type_identifier)
+        (lens_metavariable)))))
+
+========================
+Given definition with metavariable
+========================
+
+__LENS_STATEMENT given $NAME: $T = $BODY
+
+---
+
+(compilation_unit
+  (lens_statement
+    (given_definition
+      (identifier)
+      (type_identifier)
+      (lens_metavariable))))

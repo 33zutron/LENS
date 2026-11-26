@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (c) 2023 Semgrep Imc.
+ * Copyright (c) 2023 Lens Imc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -22,7 +22,7 @@ module R = Raw_tree
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Protobuf parser using tree-sitter-lang/semgrep-proto and converting
+(* Protobuf parser using tree-sitter-lang/lens-proto and converting
  * directly to AST_generic
  *
  *)
@@ -39,7 +39,7 @@ let _fb = Tok.unsafe_fake_bracket
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-proto/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-proto/Boilerplate.ml *)
 (**
    Boilerplate to be used as a template when mapping the proto CST
    to another type of tree.

@@ -1,5 +1,5 @@
 rules:
-- id: href-semgrep-app
+- id: href-lens-app
   mode: taint
   pattern-sources:
     - pattern: rule

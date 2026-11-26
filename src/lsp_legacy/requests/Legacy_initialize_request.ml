@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) 2019-2023 Semgrep, Inc.
+ * Copyright (C) 2019-2023 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -20,7 +20,7 @@ open Legacy_rpc_server
 module CN = Client_notification
 module CR = Client_request
 module Conv = Legacy_convert_utils
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 
 (*****************************************************************************)
 (* Server *)
@@ -54,7 +54,7 @@ let initialize_server server
     in
     { res with do_hover; pro_intrafile }
   in
-  (* Semgrep scanning roots *)
+  (* Lens scanning roots *)
   let workspace_folders =
     match (workspaceFolders, rootUri) with
     | Some (Some folders), _ -> Conv.workspace_folders_to_paths folders
@@ -73,7 +73,7 @@ let initialize_server server
           "intellij"
     | _ -> false
   in
-  (* We're using preemptive threads here as when semgrep scans run, they don't utilize Lwt at all,
+  (* We're using preemptive threads here as when lens scans run, they don't utilize Lwt at all,
       and so block the Lwt scheduler, meaning it cannot properly respond to requests until
       a scan is finished. With preemptive threads, the threads are guaranteed to run concurrently.
      This means we can process IO while a scan is running. *)
@@ -122,7 +122,7 @@ let on_request server (params : InitializeParams.t) =
     InitializeResult.
       {
         capabilities = server.session.capabilities;
-        serverInfo = Some { name = "Semgrep"; version = Some Version.version };
+        serverInfo = Some { name = "Lens"; version = Some Version.version };
       }
   in
   let server = initialize_server server params in

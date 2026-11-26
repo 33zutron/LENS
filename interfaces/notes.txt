@@ -1,7 +1,7 @@
 The goal of this directory is to gather all the "interfaces" used
-by the different semgrep components:
- - the semgrep-core program
- - the pysemgrep CLI
+by the different lens components:
+ - the lens-core program
+ - the pylens CLI
 
 We're using atdgen to specify the types of most of those interfaces.
 See https://github.com/ahrefs/atd for more information on atdgen.

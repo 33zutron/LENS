@@ -1,7 +1,7 @@
 (* Colleen Dai
  * Yoann Padioleau
  *
- * Copyright (c) 2021, 2022 Semgrep Inc.
+ * Copyright (c) 2021, 2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -24,7 +24,7 @@ module H2 = AST_generic_helpers
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Kotlin parser using tree-sitter-lang/semgrep-kotlin and converting
+(* Kotlin parser using tree-sitter-lang/lens-kotlin and converting
  * directly to AST_generic.ml
  *
  *)
@@ -92,7 +92,7 @@ let fake_name_for_partial_class_decl = "@@@PARTIAL_CLASS_DECLARATION"
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-kotlin/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-kotlin/Boilerplate.ml *)
 
 let visibility_modifier (env : env) (x : CST.visibility_modifier) =
   match x with
@@ -2553,8 +2553,8 @@ and string_literal (env : env) (v1, v2, v3) : expr =
          Instead, we interpret it as a string literal containing a metavariable,
          which allows the existing literal metavariable machinery to run.
 
-         This does not affect Semgrep's expressive power, because a string containing
-         an interpolated identifier `X` can also be expressed in a Semgrep pattern via
+         This does not affect Lens's expressive power, because a string containing
+         an interpolated identifier `X` can also be expressed in a Lens pattern via
          `"{X}"`.
       *)
       let s1, t1 =
@@ -3137,7 +3137,7 @@ let parse_expression_or_source_file str =
   match res.errors with
   | [] -> res
   | _ ->
-      let expr_str = "__SEMGREP_EXPRESSION " ^ str in
+      let expr_str = "__LENS_EXPRESSION " ^ str in
       Tree_sitter_kotlin.Parse.string expr_str
 
 let parse_pattern str =

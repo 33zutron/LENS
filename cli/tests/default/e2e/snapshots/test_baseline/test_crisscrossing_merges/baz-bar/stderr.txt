@@ -55,5 +55,5 @@ Creating git worktree from 'bar' to scan baseline.
  • Targets scanned: 2
  • Parsed lines: ~100.0%
  • Scan was limited to files changed since baseline commit.
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+ • For a detailed list of skipped files and lines, run lens with the --verbose flag
 Ran 1 rule on 2 files: 13 findings.

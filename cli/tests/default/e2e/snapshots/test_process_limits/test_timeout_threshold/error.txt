@@ -13,14 +13,14 @@ Rules:
 SCA findings adjustment: No SCA rules to adjust
 [31m[22m[24mWarning: 1 timeout error(s) in targets/equivalence/open_redirect.py when running
 the following rules: [rules.forcetimeout]
-Semgrep stopped running rules on targets/equivalence/open_redirect.py after 1
+Lens stopped running rules on targets/equivalence/open_redirect.py after 1
 timeout error(s). See `--timeout-threshold` for more info.[0m
 
 ========================================
 Files skipped:
 ========================================
 
-  [1m[24mAlways skipped by Semgrep:[0m
+  [1m[24mAlways skipped by Lens:[0m
 
    • <none>
 
@@ -29,8 +29,8 @@ Files skipped:
 
    • <all files not listed by `git ls-files` were skipped>
 
-  [1m[24mSkipped by .semgrepignore:[0m
-  [1m[24m- https://semgrep.dev/docs/ignoring-files-folders-code/#understand-semgrep-defaults[0m
+  [1m[24mSkipped by .lensignore:[0m
+  [1m[24m- https://lens.dev/docs/ignoring-files-folders-code/#understand-lens-defaults[0m
 
    • <none>
 
@@ -51,7 +51,7 @@ Files skipped:
 
    • <none>
 
-  [1m[24mPartially analyzed due to parsing or internal Semgrep errors[0m
+  [1m[24mPartially analyzed due to parsing or internal Lens errors[0m
 
    • [36m[22m[24mtargets/equivalence/open_redirect.py (1 rule failed to run)[0m
 

@@ -219,7 +219,7 @@ let no_cycles_in_svalue (id_info : G.id_info) svalue =
               (* Following `id_svalue`s can explode in pathological cases,
                * see 'tests/rules/sym_prop_explosion.js', so we need to
                * set a bound. *)
-              if !i < Limits_semgrep.svalue_prop_MAX_VISIT_SYM_IN_CYCLE_CHECK
+              if !i < Limits_lens.svalue_prop_MAX_VISIT_SYM_IN_CYCLE_CHECK
               then (
                 incr i;
                 self#visit_expr env e)
@@ -329,7 +329,7 @@ let update_env_with env var sval =
   | G.NotCst -> VarMap.remove (IL.str_of_name var) env
   | __else__ -> VarMap.add (IL.str_of_name var) sval env
 
-(* Semgrep Pro *)
+(* Lens Pro *)
 let transfer_of_assume (assume : bool) (cond : IL.exp_kind)
     (inp : G.svalue Var_env.t) : G.svalue Var_env.t =
   match Hook.get hook_transfer_of_assume with
@@ -502,7 +502,7 @@ and fixpoint_with_env lang enter_env fun_cfg =
   | None ->
       let flow = fun_cfg.cfg in
       let mapping, timeout =
-        DataflowX.fixpoint ~timeout:Limits_semgrep.svalue_prop_FIXPOINT_TIMEOUT
+        DataflowX.fixpoint ~timeout:Limits_lens.svalue_prop_FIXPOINT_TIMEOUT
           ~eq_env:(Var_env.eq_env Eval.eq)
           ~init:(DataflowX.new_node_array flow (Var_env.empty_inout ()))
           ~trans:(transfer ~lang ~enter_env ~fun_cfg)

@@ -1,7 +1,7 @@
 (* Yoann Padioleau
  *
  * Copyright (C) 2011 Facebook
- * Copyright (C) 2019-2023 Semgrep Inc.
+ * Copyright (C) 2019-2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,7 +19,7 @@ module MR = Mini_rule
 module PM = Core_match
 module PvC = Pattern_vs_code
 module MV = Metavariable
-module Flag = Flag_semgrep
+module Flag = Flag_lens
 module Options = Rule_options_t
 module MG = Matching_generic
 module Log = Log_matching.Log
@@ -29,7 +29,7 @@ let profile_mini_rules = false
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Main matching engine behind semgrep. This module implements mainly
+(* Main matching engine behind lens. This module implements mainly
  * the expr/stmt/... visitor, while generic_vs_generic does the matching.
  *)
 
@@ -571,7 +571,7 @@ let check ~hook ?(has_as_metavariable = false) ?mvar_context
                *)
               !stmts_rules
               |> List.iter (fun (pattern, rule) ->
-                  Profiling.measure "Semgrep_generic.kstmts" (fun () ->
+                  Profiling.measure "Lens_generic.kstmts" (fun () ->
                       let matches_with_env =
                         match_sts_sts rule pattern x m_env
                       in
@@ -670,7 +670,7 @@ let check ~hook ?(has_as_metavariable = false) ?mvar_context
           *)
               !stmts_rules
               |> List.iter (fun (pattern, rule) ->
-                  Profiling.measure "Semgrep_generic.kfields" (fun () ->
+                  Profiling.measure "Lens_generic.kfields" (fun () ->
                       let x = List.map (fun (F x) -> x) x in
                       let matches_with_env =
                         match_sts_sts rule pattern x m_env
@@ -753,11 +753,11 @@ let check ~hook ?(has_as_metavariable = false) ?mvar_context
     let uniq_matches =
       !matches |> List.rev
       (* TODO: optimize uniq_by? Too slow? Use a hash?
-       * Note that this may not be enough for Semgrep.ml. Indeed, we can have
+       * Note that this may not be enough for Lens.ml. Indeed, we can have
        * different mini-rules matching the same code with the same metavar,
-       * but in Semgrep.ml they get agglomerated under the same rule id, in
+       * but in Lens.ml they get agglomerated under the same rule id, in
        * which case we want to dedup them.
-       * old: this uniq_by was introducing regressions in semgrep!
+       * old: this uniq_by was introducing regressions in lens!
        * See tests/rules/regression_uniq_or_ellipsis.go but it's fixed now.
        *)
       |> PM.uniq

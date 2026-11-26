@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -22,9 +22,9 @@ from typing import Set
 from typing import Tuple
 from typing import Union
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.matchers.base import SubprojectMatcher
-from semgrep.types import Target
+from lens.types import Target
 
 
 @dataclass(frozen=True)

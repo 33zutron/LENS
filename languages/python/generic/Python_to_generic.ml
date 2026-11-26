@@ -28,7 +28,7 @@ module H = AST_generic_helpers
  *  - intercept Call to eval and transform in special Eval?
  *  - call to (list stmt) should be converted to list_stmt
  *    to avoid intermediates Block
- *    (should use embedded-Semgrep-rule idea of rcoh!)
+ *    (should use embedded-Lens-rule idea of rcoh!)
  *  - transform more Assign in VarDef, e.g., also local variables
  *    (but take care if same var defined first in different branch,
  *     which one should be a VarDef?)
@@ -50,7 +50,7 @@ module H = AST_generic_helpers
  * we check whether this x was previously declared. If not, then
  * it's probably a VarDef.
  *
- * Note that it does not really matter for semgrep, which anyway has some
+ * Note that it does not really matter for lens, which anyway has some
  * vardef_to_assign magic. However, this is useful for codegraph to
  * correctly detect all global entities.
  *)
@@ -154,7 +154,7 @@ let rec expr env (x : expr) =
   | Literal l -> G.L (literal env l) |> G.e
   | EncodedStr (v1, pre) ->
       let v1 = wrap string v1 in
-      (* bugfix: do not reuse the same tok! otherwise in semgrep
+      (* bugfix: do not reuse the same tok! otherwise in lens
        * if a metavar is bound to an encoded string (e.g., r'foo'), and
        * the metavar is used in the message, r'foo' will be displayed
        * three times.
@@ -244,7 +244,7 @@ let rec expr env (x : expr) =
           v
           |> List.for_all (function
             | KeyVal _
-            (* semgrep-ext: ... should not count *)
+            (* lens-ext: ... should not count *)
             | Key (Ellipsis _) ->
                 true
             | _ -> false)
@@ -808,9 +808,9 @@ and stmt_aux env x =
           | G.Cast (t, _, { e = G.N (G.Id (id, idinfo)); _ }) ->
               to_vardef id idinfo (Some t)
           (* x = ... at toplevel. This one is guarded by assign_to_vardef
-           * because it causes regressions in semgrep, probably because
+           * because it causes regressions in lens, probably because
            * we do the translation for the target but not for the pattern.
-           * So, this is disabled in semgrep (and enabled in codegraph).
+           * So, this is disabled in lens (and enabled in codegraph).
            *)
           | G.N (G.Id (id, idinfo))
             when env.context =*= InSourceToplevel && env.assign_to_vardef ->
@@ -820,10 +820,10 @@ and stmt_aux env x =
                 to_vardef id idinfo None)
               else default_res
           (* TODO: We should turn more Assign in G.VarDef!
-           * Is it bad for semgrep to turn all those Assign in VarDef?
+           * Is it bad for lens to turn all those Assign in VarDef?
            * In theory no because we have some magic equivalences to
            * convert some Vardef back in Assign in Pattern_vs_code anyway.
-           * In practice this leads to regressions in semgrep-rules, probably
+           * In practice this leads to regressions in lens-rules, probably
            * because we transform them in the target but not in the pattern
            *)
           | _ -> default_res)
@@ -953,7 +953,7 @@ and ident_and_id_info env x =
 and import_from_kind _env (ident, asopt) = H.mk_import_from_kind ident asopt
 
 (* try avoid using that function as it may introduce
- * intermediate Block that could prevent some semgrep matching
+ * intermediate Block that could prevent some lens matching
  *)
 and stmt env x = G.stmt1 (stmt_aux env x)
 

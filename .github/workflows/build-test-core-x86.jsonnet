@@ -1,19 +1,19 @@
-// This workflow builds and test semgrep-core. It also generates an artifact
+// This workflow builds and test lens-core. It also generates an artifact
 // which is used in many other workflows such as tests.jsonnet or
 
 local actions = import 'libs/actions.libsonnet';
 local gha = import 'libs/gha.libsonnet';
-local semgrep = import 'libs/semgrep.libsonnet';
+local lens = import 'libs/lens.libsonnet';
 
 // exported for other workflows
-local artifact_name = 'semgrep-core-x86-artifact';
+local artifact_name = 'lens-core-x86-artifact';
 
 // This container has opam already installed, as well as an opam switch
 // already created, and a big set of packages already installed. Thus,
-// the 'make install-deps-for-semgrep-core' below is very fast and
+// the 'make install-deps-for-lens-core' below is very fast and
 // almost a noop.
 // TODO: switch to setup-ocaml@v2 + GHA cache
-local container = semgrep.containers.ocaml_alpine;
+local container = lens.containers.ocaml_alpine;
 
 // ----------------------------------------------------------------------------
 // The job
@@ -21,9 +21,9 @@ local container = semgrep.containers.ocaml_alpine;
 local job =
   container.job(
     actions.checkout_with_submodules() +
-    semgrep.build_test_steps() +
+    lens.build_test_steps() +
     [
-      actions.upload_artifact_step(artifact_name, 'bin/semgrep-core'),
+      actions.upload_artifact_step(artifact_name, 'bin/lens-core'),
     ]
   );
 

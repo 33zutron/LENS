@@ -1,0 +1,199 @@
+/*
+  lens-dockerfile
+
+  Extends the standard dockerfile grammar with lens pattern constructs.
+*/
+
+const base_grammar = require('tree-sitter-dockerfile/grammar');
+
+module.exports = grammar(base_grammar, {
+  name: 'dockerfile',
+
+  conflicts: ($, previous) => previous.concat([
+  ]),
+
+  rules: {
+    _instruction: ($, previous) => choice(
+      $.lens_ellipsis,
+      $.lens_metavariable,
+      previous
+    ),
+
+    // overrides the original definition
+    json_string_array: ($) =>
+      seq(
+        "[",
+        optional(
+          seq($._array_element, repeat(seq(",", $._array_element)))
+        ),
+        "]"
+      ),
+
+    _array_element: ($) => choice(
+      $.json_string,
+      $.lens_ellipsis,
+      $.lens_metavariable
+    ),
+
+    // redefinition
+    arg_instruction: ($, previous) => seq(
+      alias(/[aA][rR][gG]/, "ARG"),
+      field(
+        "name",
+        alias(
+          choice(
+            $.lens_metavariable,
+            /[a-zA-Z0-9_]+/
+          ),
+          $.unquoted_string
+        )
+      ),
+      optional(
+        seq(
+          token.immediate("="),
+          field(
+            "default",
+            choice(
+              $.double_quoted_string,
+              $.single_quoted_string,
+              $.unquoted_string
+            )
+          )
+        )
+      )
+    ),
+
+    // override
+    label_pair: ($, previous) => choice(
+      $.lens_ellipsis,
+      seq(
+        field(
+          "key",
+          choice(
+            $.lens_metavariable,
+            alias(/[-a-zA-Z0-9\._]+/, $.unquoted_string),
+            $.double_quoted_string,
+            $.single_quoted_string
+          )
+        ),
+        token.immediate("="),
+        field(
+          "value",
+          choice(
+            $.double_quoted_string,
+            $.single_quoted_string,
+            $.unquoted_string
+          ))
+      )
+    ),
+
+    // TODO: find a way to support metavariables as env keys.
+    env_pair: ($, previous) => choice(
+      $.lens_ellipsis,
+      previous
+    ),
+
+    expose_port: ($, previous) => choice(
+      $.lens_ellipsis,
+      seq($.expansion, choice("/tcp", "/udp")),
+      previous
+    ),
+
+    // override
+    healthcheck_instruction: ($) =>
+      seq(
+        alias(/[hH][eE][aA][lL][tT][hH][cC][hH][eE][cC][kK]/, "HEALTHCHECK"),
+        choice(
+          $.lens_metavariable,
+          // To support `HEALTHCHECK ...`
+          $.lens_ellipsis,
+          "NONE",
+          // lens ellipsis here to support `HEALTHCHECK ... CMD echo bar`
+          seq(repeat(choice($.lens_ellipsis, $.param)), $.cmd_instruction)
+        )
+      ),
+
+    shell_command: ($, previous) => choice(
+      $.lens_ellipsis,
+      previous
+    ),
+
+    /*
+      Metavariable syntax vs. ARG expansions:
+
+      - in a lens pattern, $FOO is always a metavariable.
+      - in a lens pattern, ${FOO} is always an arg expansion.
+      - in a lens pattern, $FOO in a position where a metavariable
+        is not allowed results in an error.
+
+     TODO: support metavariables and ellipses in a bunch of places
+    */
+    lens_metavariable: $ => /\$[A-Z_][A-Z_0-9]*/,
+    lens_ellipsis: $ => '...',
+
+    /*
+      TODO: more syntax ellipsis (e) or metavariables (mv):
+
+      mv: done
+      FROM extras:$CODE_VERSION       # metavariable (pattern only)
+      FROM extras:${CODE_VERSION}     # parameter from ARG
+
+      mv: done
+      LABEL $NAME=$VAL
+
+      e: done
+      LABEL ... multi.label1="value1" ...
+
+      mv: done
+      MAINTAINER bob
+
+      mv: done
+      EXPOSE 80/tcp 80/udp
+      EXPOSE $PORT_PROTO
+
+      e: done
+      EXPOSE ...
+
+      mv: (tricky)
+      ENV $MY_NAME=$VAL
+      ENV $MY_NAME $VAL
+
+      mv: done
+      ENV MY_NAME=$VAL
+
+      e: done
+      ENV ... MY_NAME="John Doe" ...
+
+      e, mv: done
+      ADD a b /somedir/
+      COPY a b /somedir/
+
+      e, mv: done
+      ADD --chown=55:mygroup a b /somedir/
+      COPY --chown=55:mygroup a b /somedir/
+
+      e, mv: done
+      VOLUME /var/log /var/db
+
+      mv: done
+      USER patrick
+      USER patrick:star
+
+      mv: done
+      WORKDIR /a
+
+      mv: done
+      ARG pat
+      ARG buildno=42
+
+      mv: done
+      STOPSIGNAL SIGUSR1
+      STOPSIGNAL $SIGNAL
+
+      mv: done
+      HEALTHCHECK --interval=5m --timeout=3s CMD echo
+      HEALTHCHECK NONE
+      HEALTHCHECK $X
+    */
+  }
+});

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2024 Semgrep Inc.
+   Copyright (c) 2022-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -15,7 +15,7 @@ val render_fix : Core_match.t -> Textedit.t option
 
 (* Produce the fixes for the list of matches. Currently used for tests but
  * also in the Pre_post_core_scan.Autofix_processor now that we handle
- * autofix mostly in semgrep-core.
+ * autofix mostly in lens-core.
  *)
 val produce_autofixes :
   Core_result.processed_match list -> Core_result.processed_match list
@@ -29,6 +29,6 @@ val produce_autofix : Core_result.processed_match -> Core_result.processed_match
 *)
 val apply_fixes_to_file_exn : Fpath.t -> Textedit.t list -> string
 
-(* for use by osemgrep *)
+(* for use by olens *)
 val apply_fixes_of_core_matches :
-  ?dryrun:bool -> Semgrep_output_v1_t.core_match list -> unit
+  ?dryrun:bool -> Lens_output_v1_t.core_match list -> unit

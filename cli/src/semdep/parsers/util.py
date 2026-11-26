@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2025 Semgrep Inc.
+# Copyright (c) 2023-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -42,7 +42,7 @@ from typing import TypeVar
 
 from ruamel.yaml import YAMLError
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.external.parsy import alt
 from semdep.external.parsy import fail
 from semdep.external.parsy import line_info
@@ -51,14 +51,14 @@ from semdep.external.parsy import Parser
 from semdep.external.parsy import regex
 from semdep.external.parsy import string
 from semdep.external.parsy import success
-from semgrep.semgrep_interfaces.semgrep_output_v1 import DependencyChild
-from semgrep.semgrep_interfaces.semgrep_output_v1 import DependencyParserError
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Direct
-from semgrep.semgrep_interfaces.semgrep_output_v1 import FoundDependency
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ScaParserName
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Transitive
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Unknown
-from semgrep.verbose_logging import getLogger
+from lens.lens_interfaces.lens_output_v1 import DependencyChild
+from lens.lens_interfaces.lens_output_v1 import DependencyParserError
+from lens.lens_interfaces.lens_output_v1 import Direct
+from lens.lens_interfaces.lens_output_v1 import FoundDependency
+from lens.lens_interfaces.lens_output_v1 import ScaParserName
+from lens.lens_interfaces.lens_output_v1 import Transitive
+from lens.lens_interfaces.lens_output_v1 import Unknown
+from lens.verbose_logging import getLogger
 
 
 logger = getLogger(__name__)
@@ -348,7 +348,7 @@ def parse_dependency_file(
             out.Fpath(file_to_parse.path.name), file_to_parse.parser_name, str(e)
         )
     except RecursionError:
-        reason = "Python recursion depth exceeded, try again with SEMGREP_PYTHON_RECURSION_LIMIT_INCREASE set higher than 500"
+        reason = "Python recursion depth exceeded, try again with LENS_PYTHON_RECURSION_LIMIT_INCREASE set higher than 500"
         return failure(
             out.Fpath(str(file_to_parse.path)), file_to_parse.parser_name, reason
         )

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2025 Semgrep Inc.
+# Copyright (c) 2021-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -10,8 +10,8 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
 # LICENSE for more details.
 #
-# Tests for 'semgrep --test' (accessible also now via 'osemgrep test').
-# See https://semgrep.dev/docs/writing-rules/testing-rules/ for more info.
+# Tests for 'lens --test' (accessible also now via 'olens test').
+# See https://lens.dev/docs/writing-rules/testing-rules/ for more info.
 #
 # See also test_fixtest.py for the autofix "fixtest" tests.
 #
@@ -23,23 +23,23 @@
 #  - test do detect correctly annotations in different languages, using
 #    different style of comments
 #  - test to take a single directory and iterate over. This is actually
-#    the main use case for --test and what we use in semgrep-rules/. However,
-#    is a bit harder to test here given how run_semgrep_in_tmp() was
+#    the main use case for --test and what we use in lens-rules/. However,
+#    is a bit harder to test here given how run_lens_in_tmp() was
 #    designed with always a 'config' and a 'target_name' parameter
 #    (and the fact that the e2e rules and targets are in different dirs)
-#    (maybe we could write this test in Testo instead and for osemgrep-only
+#    (maybe we could write this test in Testo instead and for olens-only
 #    once we removed test.py)
 import pytest
 from tests.conftest import skip_on_windows
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 
 # It should report the passed checks in the JSON output
 @pytest.mark.kinda_slow
-def test_cli_test_basic(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _ = run_semgrep_in_tmp(
+def test_cli_test_basic(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _ = run_lens_in_tmp(
         "rules/basic.yaml",
         options=["--test"],
         target_name="test_test/basic.py",
@@ -54,11 +54,11 @@ def test_cli_test_basic(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 
 # It should accept a directory as a target and rules in a different dir.
 # TODO: this actually does not really test the ability to iterate over
-# a directory (ability heavily used in semgrep-rules/scripts/run-test.sh)
+# a directory (ability heavily used in lens-rules/scripts/run-test.sh)
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_cli_test_directory(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _ = run_semgrep_in_tmp(
+def test_cli_test_directory(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _ = run_lens_in_tmp(
         "rules/test_test/directory/",
         options=["--test"],
         target_name="test_test/directory/",
@@ -77,8 +77,8 @@ def test_cli_test_directory(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 @pytest.mark.slow
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replacement logic
-def test_timeout(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _ = run_semgrep_in_tmp(
+def test_timeout(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _ = run_lens_in_tmp(
         "rules/test_test/rule_that_timeout.yaml",
         options=["--test"],
         target_name="test_test/long.py",
@@ -98,8 +98,8 @@ def test_timeout(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 # directories so in theory we could).
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_cli_test_yaml_language(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _ = run_semgrep_in_tmp(
+def test_cli_test_yaml_language(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _ = run_lens_in_tmp(
         "rules/test_test/yaml_language/",
         options=["--test"],
         target_name="test_test/yaml_language/",
@@ -115,8 +115,8 @@ def test_cli_test_yaml_language(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 # (e.g., this.that.rule.yaml)
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_cli_test_suffixes(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _ = run_semgrep_in_tmp(
+def test_cli_test_suffixes(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _ = run_lens_in_tmp(
         "rules/test_test/suffixes/",
         options=["--test"],
         target_name="test_test/suffixes/",
@@ -131,8 +131,8 @@ def test_cli_test_suffixes(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 # It should support multiple annotations per line in a test file as
 # in '#ruleid: rule1, rule2'
 @pytest.mark.kinda_slow
-def test_cli_test_multiple_annotations(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _ = run_semgrep_in_tmp(
+def test_cli_test_multiple_annotations(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _ = run_lens_in_tmp(
         "rules/test_test/overlapping_rules.yaml",
         options=["--test"],
         target_name="test_test/multiple_annotations.py",
@@ -148,8 +148,8 @@ def test_cli_test_multiple_annotations(run_semgrep_in_tmp: RunSemgrep, posix_sna
 # It should ignore the 'paths:' 'include:' directive in the rule so it
 # can be applied on a test file with a filename not satisfying the 'include:'.
 @pytest.mark.kinda_slow
-def test_cli_test_ignore_rule_paths(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _ = run_semgrep_in_tmp(
+def test_cli_test_ignore_rule_paths(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _ = run_lens_in_tmp(
         "rules/test_test/rule_with_paths_include_bar_xml.yaml",
         options=["--test"],
         target_name="test_test/foo.xml",
@@ -166,8 +166,8 @@ def test_cli_test_ignore_rule_paths(run_semgrep_in_tmp: RunSemgrep, posix_snapsh
 # TODO: actually we're masking the <matches> in results.json, because
 # of the use of realpath for the filenames, so this test is incomplete.
 @pytest.mark.kinda_slow
-def test_cli_todook_filtering(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    results, _ = run_semgrep_in_tmp(
+def test_cli_todook_filtering(run_lens_in_tmp: RunLens, posix_snapshot):
+    results, _ = run_lens_in_tmp(
         "rules/basic.yaml",
         options=["--test"],
         target_name="test_test/todook.py",

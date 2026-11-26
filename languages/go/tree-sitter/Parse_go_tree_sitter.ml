@@ -24,7 +24,7 @@ module H = Parse_tree_sitter_helpers
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Go parser using tree-sitter-lang/semgrep-go and converting
+(* Go parser using tree-sitter-lang/lens-go and converting
  * to ../ast/ast_go.ml
  *
  * The resulting AST can then be converted to the generic AST by using
@@ -51,7 +51,7 @@ let trailing_comma env v =
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-go/.../Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-go/.../Boilerplate.ml *)
 
 (**
    Boilerplate to be used as a template when mapping the go CST

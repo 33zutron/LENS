@@ -1,10 +1,10 @@
 #! /usr/bin/env bash
 #
-# Create a release branch for semgrep
+# Create a release branch for lens
 #
-# This script relies on the SEMGREP_RELEASE_NEXT_VERSION env variable being set.
+# This script relies on the LENS_RELEASE_NEXT_VERSION env variable being set.
 # This script is usually called by 'make release', which is itself called by
-# .github/workflows/start-release.jsonnet which sets SEMGREP_RELEASE_NEXT_VERSION.
+# .github/workflows/start-release.jsonnet which sets LENS_RELEASE_NEXT_VERSION.
 
 case "$(uname -s)" in
 Linux)
@@ -30,7 +30,7 @@ error() {
 }
 
 update_init_py() {
-  target=cli/src/semgrep/__init__.py
+  target=cli/src/lens/__init__.py
   targets+=" $target"
   echo "Updating $target"
   sed_in_place 's/__VERSION__ = ".*"/__VERSION__ = "'"$release"'"/g' "$target"
@@ -55,7 +55,7 @@ update_setup_py() {
   targets+=" $target"
   echo "Updating $target"
   sed_in_place \
-    's/^    install_requires=\["semgrep==.*"\],$/    install_requires=["semgrep=='"$release"'"],/g' \
+    's/^    install_requires=\["lens==.*"\],$/    install_requires=["lens=='"$release"'"],/g' \
     "$target"
   sed_in_place \
     's/^    version=".*",$/    version="'"$release"'",/g' \
@@ -83,7 +83,7 @@ update_uv_lock() {
   )
   numstat_output=$(git diff --numstat -- "$target")
   IFS=$'\t' read -r added_lines removed_lines _ <<<"$numstat_output"
-  # Expect only the Semgrep version line to change.
+  # Expect only the Lens version line to change.
   if [ "$added_lines" != "1" ] || [ "$removed_lines" != "1" ]; then
     printf '%s\n' "$numstat_output" >&2
     git diff "$target" >&2
@@ -95,11 +95,11 @@ EOF
 }
 
 update_interfaces_version() {
-  target=cli/src/semgrep/semgrep_interfaces/.semgrep-version
+  target=cli/src/lens/lens_interfaces/.lens-version
   targets+=" $target"
   echo "Updating $target"
   sed_in_place \
-      's/^Tracking Semgrep version is v.*.$/Tracking Semgrep version is v'"$release"'./g' \
+      's/^Tracking Lens version is v.*.$/Tracking Lens version is v'"$release"'./g' \
       "$target"
   git add "$target"
 }
@@ -117,7 +117,7 @@ bump() {
   update_interfaces_version
 }
 
-release="${SEMGREP_RELEASE_NEXT_VERSION}"
+release="${LENS_RELEASE_NEXT_VERSION}"
 
 case "$release" in
 *.*.*) ;;
@@ -129,7 +129,7 @@ case "$release" in
   ;;
 esac
 
-rel_branch="${SEMGREP_RELEASE_BRANCH}"
+rel_branch="${LENS_RELEASE_BRANCH}"
 cur_branch=$(git branch --show-current)
 
 if [[ "$cur_branch" = "$rel_branch" ]]; then
@@ -145,7 +145,7 @@ fi
 
 bump
 
-if git status -s | grep -vq 'cli/src/semgrep/__init__.py\|cli/setup.py\|setup.py\|src/core/Version.ml\|../scripts/run-pro-benchmarks.sh\|cli/pyproject.toml\|cli/uv.lock\|cli/src/semgrep/semgrep_interfaces/\.semgrep-version'; then
+if git status -s | grep -vq 'cli/src/lens/__init__.py\|cli/setup.py\|setup.py\|src/core/Version.ml\|../scripts/run-pro-benchmarks.sh\|cli/pyproject.toml\|cli/uv.lock\|cli/src/lens/lens_interfaces/\.lens-version'; then
   error <<EOF
 The release branch contains unexpected changes, cancelling release.
 EOF

@@ -1,5 +1,5 @@
 running 1 rules from 1 config rules/nosem.yaml_0
-No .semgrepignore found. Using default .semgrepignore rules. See the docs for the list of default ignores: https://semgrep.dev/docs/cli-usage/#ignore-files
+No .lensignore found. Using default .lensignore rules. See the docs for the list of default ignores: https://lens.dev/docs/cli-usage/#ignore-files
 Rules:
 - rules.test-nosem
 
@@ -14,7 +14,7 @@ Rules:
 Files skipped:
 ========================================
 
-  Always skipped by Semgrep:
+  Always skipped by Lens:
 
    • <none>
 
@@ -23,8 +23,8 @@ Files skipped:
 
    • <all files not listed by `git ls-files` were skipped>
 
-  Skipped by .semgrepignore:
-  - https://semgrep.dev/docs/ignoring-files-folders-code/#understand-semgrep-defaults
+  Skipped by .lensignore:
+  - https://lens.dev/docs/ignoring-files-folders-code/#understand-lens-defaults
 
    • <none>
 
@@ -57,7 +57,7 @@ Files skipped:
 
    • <none>
 
-  Partially analyzed due to parsing or internal Semgrep errors
+  Partially analyzed due to parsing or internal Lens errors
 
    • <none>
 

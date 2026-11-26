@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -45,7 +45,7 @@ let is_ignored_line = function
       true
   | str -> String.starts_with ~prefix:"#" str
 
-(* semgrep-legacy (deprecated)
+(* lens-legacy (deprecated)
 
    Try to parse a line of input as a ':include' instruction
 *)
@@ -171,9 +171,9 @@ let parse_line ~anchor source_name source_kind line_number line_contents =
     in
     Some { selector = { loc; matcher }; absolute_pattern; is_negated }
 
-(* semgrep-legacy *)
-let get_include_path ~orig_semgrepignore_path relative_include_path =
-  let base_dir = Fpath.parent orig_semgrepignore_path in
+(* lens-legacy *)
+let get_include_path ~orig_lensignore_path relative_include_path =
+  let base_dir = Fpath.parent orig_lensignore_path in
   (* Preserve the original path components as much as possible to avoid
      possible confusion later *)
   Fpath.(base_dir // relative_include_path)
@@ -183,12 +183,12 @@ let get_include_path ~orig_semgrepignore_path relative_include_path =
    The included file 'foo/bar' must be in pure Gitignore syntax and
    may not contain ':include' directives.
 *)
-let rec expand_includes ~orig_semgrepignore_path lines =
+let rec expand_includes ~orig_lensignore_path lines =
   let expand_line line =
     match parse_maybe_include_line line with
     | Some relative_include_path ->
         let include_path =
-          get_include_path ~orig_semgrepignore_path relative_include_path
+          get_include_path ~orig_lensignore_path relative_include_path
         in
         if UFile.is_reg ~follow_symlinks:true include_path then
           include_path |> UFile.read_file |> read_lines_from_string
@@ -206,8 +206,8 @@ and from_lines ~allow_include ~anchor ~name ~source_kind ~source_path lines =
     (* Don't allow ':include' when reading exclusion patterns from the
        command line (or not from a file in general) *)
     match source_path with
-    | Some orig_semgrepignore_path when allow_include ->
-        if allow_include then expand_includes ~orig_semgrepignore_path lines
+    | Some orig_lensignore_path when allow_include ->
+        if allow_include then expand_includes ~orig_lensignore_path lines
         else lines
     | Some _
     | None ->
@@ -235,7 +235,7 @@ and from_string ~anchor ~name ~source_kind str =
 and from_file ~anchor ~format ~source_kind path =
   path |> UFile.read_file
   |> from_string_gen
-       ~allow_include:(format = Legacy_semgrepignore)
+       ~allow_include:(format = Legacy_lensignore)
        ~anchor ~name:(Fpath.to_string path) ~source_path:(Some path)
        ~source_kind
 [@@profiling]

@@ -8,7 +8,7 @@ rules:
         @$VAR
         def $F(...):
             ...
-  message: Semgrep found a match for a decorator
+  message: Lens found a match for a decorator
   languages:
     - python
   severity: WARNING

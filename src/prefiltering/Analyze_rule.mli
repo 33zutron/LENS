@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
 (** Low-level prefilter generation logic.
 
     This module contains the core analysis algorithms for extracting prefilter
-    conditions from Semgrep rules. It is not intended for general use; if
+    conditions from Lens rules. It is not intended for general use; if
     you're trying to use a prefilter go through [File] (or the modules in Pro's
     prefiltering library) instead.
 

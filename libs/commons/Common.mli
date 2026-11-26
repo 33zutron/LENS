@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -121,7 +121,7 @@ val finalize : (unit -> 'a) -> (unit -> unit) -> 'a
 val protect : finally:(unit -> unit) -> (unit -> 'a) -> 'a
 (* Same as 'Fun.protect' but it will not raise 'Finally_raised', if 'finally'
  * raises any exception then that same exception is what 'protect' will raise.
- * This can easily happen in Semgrep due to the asynchronous
+ * This can easily happen in Lens due to the asynchronous
  * 'Time_limit.Timeout' exception raised when there is a timeout. Having to
  * deal with 'Finally_raised' just makes things more complicated.
  *)

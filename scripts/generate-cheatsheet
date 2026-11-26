@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 #
-# Wrapper for generating the cheatsheets from the semgrep repo.
+# Wrapper for generating the cheatsheets from the lens repo.
 #
 set -euo pipefail
 
@@ -11,10 +11,10 @@ output=$(pwd)/cheatsheet.json
 if [[ $# -gt 0 ]]; then
   cat >&2 <<EOF
 Usage: $0
-Must run from the semgrep git repository.
+Must run from the lens git repository.
 
-Generate a json file $(basename "$output") containing semgrep examples to
-be shown on the semgrep website, for each language supported by semgrep.
+Generate a json file $(basename "$output") containing lens examples to
+be shown on the lens website, for each language supported by lens.
 
 These files are read from $input, which is also where regression tests
 for each language are located. For information on how to populate the
@@ -31,6 +31,6 @@ fi
     --output-file "$output"
   cat <<EOF
 Created $output.
-Copy that file to the semgrep-app repo: /frontend/src/assets/cheatsheet.json
+Copy that file to the lens-app repo: /frontend/src/assets/cheatsheet.json
 EOF
 )

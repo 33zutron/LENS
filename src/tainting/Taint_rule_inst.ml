@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Iago Abal
  *
- * Copyright (C) 2019-2025 Semgrep Inc.
+ * Copyright (C) 2019-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -43,7 +43,7 @@ type file_timeout_stats =
 (* components of a taint rule that are immutable and sharable. *)
 type file = {
   lang : Lang.t;
-  path : Fpath.t;  (** File under analysis, for Deep Semgrep. *)
+  path : Fpath.t;  (** File under analysis, for Deep Lens. *)
 }
 
 type 'muts t = {
@@ -123,7 +123,7 @@ let check_timeouts_and_warn ~interfile file (timeouts : file_timeout_stats) :
           stats.num_rules
           (Rule_ID.to_string stats.first_rule)
       in
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.warn (fun m -> m "%s" msg);
-      let err = E.mk_error ~msg ~loc Semgrep_output_v1_t.FixpointTimeout in
+      let err = E.mk_error ~msg ~loc Lens_output_v1_t.FixpointTimeout in
       errors_acc |> E.ErrorSet.add err)

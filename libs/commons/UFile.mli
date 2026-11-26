@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -100,13 +100,13 @@ val find_first_match_with_whole_line :
     by the given [split] character (defaults to ['\n']) and tries to return the
     {b first} full element which contains the given [term].
 
-    For instance, you can search the first line which contains ["semgrep"]:
+    For instance, you can search the first line which contains ["lens"]:
 
     {[
-      find_first_match_with_whole_line my_file "semgrep"
+      find_first_match_with_whole_line my_file "lens"
     ]}
 
-    It will returns the first {b full} line which contains the ["semgrep"]
+    It will returns the first {b full} line which contains the ["lens"]
     occurrence. *)
 
 (*****************************************************************************)

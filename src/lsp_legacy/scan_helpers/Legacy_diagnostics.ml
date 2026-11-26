@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
 open Lsp
 open Types
 module Conv = Legacy_convert_utils
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 
 let diagnostic_of_match is_intellij (m : OutJ.cli_match) =
   let severity = Conv.convert_severity m.extra.severity in
@@ -21,7 +21,7 @@ let diagnostic_of_match is_intellij (m : OutJ.cli_match) =
   let check_id_str = Rule_ID.to_string m.check_id in
   let message =
     if String.equal message "" then
-      Printf.sprintf "Semgrep found: %s" check_id_str
+      Printf.sprintf "Lens found: %s" check_id_str
     else message
   in
   let code = `String check_id_str in
@@ -39,7 +39,7 @@ let diagnostic_of_match is_intellij (m : OutJ.cli_match) =
     (* IntelliJ doesn't display code descriptions:/ so we must insert them here *)
     | Some s when is_intellij ->
         message
-        ^ Printf.sprintf "\nSemgrep(<a href=\"%s\">%s</a>)" s check_id_str
+        ^ Printf.sprintf "\nLens(<a href=\"%s\">%s</a>)" s check_id_str
     | _ -> message
   in
   let codeDescription =
@@ -52,7 +52,7 @@ let diagnostic_of_match is_intellij (m : OutJ.cli_match) =
         (* NOTE: we can't use `MarkupContent until LSP 3.18 is supported on the
            client side, and it appears Lsp doesn't use the capability for us, so
            we need that logic manually once we can use it. *)
-      ~code ~severity ~source:"Semgrep" ~message:(`String message)
+      ~code ~severity ~source:"Lens" ~message:(`String message)
   in
   match codeDescription with
   | None -> diagnostic ()

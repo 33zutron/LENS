@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,7 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-type kind = Semgrep_output_v1_j.manifest_kind =
+type kind = Lens_output_v1_j.manifest_kind =
   (* A Pip Requirements.in in file, which follows the format of requirements.txt
    * https://pip.pypa.io/en/stable/reference/requirements-file-format/ *)
   | RequirementsIn
@@ -76,14 +76,14 @@ type kind = Semgrep_output_v1_j.manifest_kind =
   | ModuleBazel
 [@@deriving eq, ord, show]
 
-type t = Semgrep_output_v1_t.manifest = { kind : kind; path : Fpath.t }
+type t = Lens_output_v1_t.manifest = { kind : kind; path : Fpath.t }
 [@@deriving ord, show]
 (** A manifest file to be used during matching. See also
     {!Dependency_source_xtarget.manifest}, which also has the contents. *)
 
 val mk_manifest : kind -> Fpath.t -> t
 
-val kind_to_ecosystem_opt : kind -> Semgrep_output_v1_j.ecosystem option
+val kind_to_ecosystem_opt : kind -> Lens_output_v1_j.ecosystem option
 (** Maps a manifest kind to its corresponding package ecosystem.
 
     A manifest (e.g. pyproject.toml, package.json) belongs to a specific
@@ -96,6 +96,6 @@ val kind_to_ecosystem_opt : kind -> Semgrep_output_v1_j.ecosystem option
 (* Try to infer the kind of a manifest based on its file name (e.g.,
  * package.json -> Npm). Will raise Failure for unknown manifest filename.
  * coupling: Match_subprojects.ml
- * This is used just by `semgrep show dump-lockfile` right now.
+ * This is used just by `lens show dump-lockfile` right now.
  *)
 val kind_of_filename_exn : Fpath.t -> kind

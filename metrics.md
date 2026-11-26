@@ -1,9 +1,9 @@
-# Semgrep metrics
+# Lens metrics
 
-Semgrep CLI may collect aggregate metrics to help improve the product. This document describes:
+Lens CLI may collect aggregate metrics to help improve the product. This document describes:
 
 - [the principles that guide our data-collection decisions](#principles)
-- [how to change when Semgrep sends metrics](#automatic-collection-opt-in-and-opt-out)
+- [how to change when Lens sends metrics](#automatic-collection-opt-in-and-opt-out)
 - [what data is not collected](#data-not-collected)
 - [what data is collected](#data-collected-as-metrics)
 
@@ -18,35 +18,35 @@ These principles inform our decisions around data collection:
 ## Automatic collection, opt-in, and opt-out
 
 ```sh
-$ semgrep --config=myrule.yaml  # → no metrics (loading rules from local file)
-$ semgrep --config=p/python     # → metrics enabled (fetching Registry)
-$ semgrep login && semgrep ci   # → metrics enabled (logged in to semgrep.dev)
-$ semgrep install-semgrep-pro   # → metrics enabled (requires being logged in)
+$ lens --config=myrule.yaml  # → no metrics (loading rules from local file)
+$ lens --config=p/python     # → metrics enabled (fetching Registry)
+$ lens login && lens ci   # → metrics enabled (logged in to lens.dev)
+$ lens install-lens-pro   # → metrics enabled (requires being logged in)
 ```
 
-Semgrep does **not** enable metrics when running with only local configuration files or command-line search patterns.
+Lens does **not** enable metrics when running with only local configuration files or command-line search patterns.
 
-Semgrep does enable metrics if rules are loaded from the [Semgrep Registry](https://semgrep.dev/r).
+Lens does enable metrics if rules are loaded from the [Lens Registry](https://lens.dev/r).
 This helps maintainers improve the correctness and performance of registry rules.
 
 Metrics may also be configured to be sent on every run, or never sent.
 
-To configure metrics, pass the `--metrics` option to Semgrep:
+To configure metrics, pass the `--metrics` option to Lens:
 
-- `--metrics auto`: (default) metrics are sent whenever rules are pulled from the [Semgrep Registry](https://semgrep.dev/r) or the user is logged in.
-- `--metrics on`: metrics are sent on every Semgrep run
+- `--metrics auto`: (default) metrics are sent whenever rules are pulled from the [Lens Registry](https://lens.dev/r) or the user is logged in.
+- `--metrics on`: metrics are sent on every Lens run
 - `--metrics off`: metrics are never sent
 
-Alternatively, set the `SEMGREP_SEND_METRICS` environment variable to `auto`, `on`, or `off`.
+Alternatively, set the `LENS_SEND_METRICS` environment variable to `auto`, `on`, or `off`.
 
-Note that certain Semgrep integrators turn on metrics for every run.
-For example, [GitLab's Semgrep SAST analyzer](https://gitlab.com/gitlab-org/security-products/analyzers/semgrep) uses `--metrics on` by default.
+Note that certain Lens integrators turn on metrics for every run.
+For example, [GitLab's Lens SAST analyzer](https://gitlab.com/gitlab-org/security-products/analyzers/lens) uses `--metrics on` by default.
 
 ## Data NOT collected
 
 ### Data NOT collected ever
 
-We strive to balance our desire to collect data for improving Semgrep
+We strive to balance our desire to collect data for improving Lens
 with our users' need for privacy and security.
 After all, we are a security tool!
 The following never leave your environment and are not sent or shared with anyone.
@@ -60,35 +60,35 @@ The following data will never leave your environment as part of metrics.
 
 - Filenames
 - Git commit hashes, timestamps, messages, authors
-- User-identifiable data about Semgrep’s findings in your code, including finding messages
+- User-identifiable data about Lens’s findings in your code, including finding messages
 
-This data will be sent to Semgrep AppSec Platform only if you explicitly request it,
-such as with `semgrep login && semgrep ci` to connect with Semgrep AppSec Platform.
+This data will be sent to Lens AppSec Platform only if you explicitly request it,
+such as with `lens login && lens ci` to connect with Lens AppSec Platform.
 Even in that case, your source code and private rules will never be sent.
 
 ## Data collected as metrics
 
-Semgrep CLI collects data to improve the user experience.
+Lens CLI collects data to improve the user experience.
 Five types of data are collected:
 
 ### Environmental
 
-Environmental data provide contextual data about Semgrep CLI’s runtime environment, as well as information that helps debug any issues users may be facing; e.g.
+Environmental data provide contextual data about Lens CLI’s runtime environment, as well as information that helps debug any issues users may be facing; e.g.
 
 - How long the command took to run
-- The version of Semgrep CLI
+- The version of Lens CLI
 - An [anonymous user ID](#anonymous-user-id) that identifies the machine
 - IP address that triggers a run
 - Value of the CI environment variable, if set
-- How the Semgrep CLI was installed (`pip`, `homebrew`, `docker`, or `unknown`), detected heuristically from the install path and environment variables
+- How the Lens CLI was installed (`pip`, `homebrew`, `docker`, or `unknown`), detected heuristically from the install path and environment variables
 - Pseudoanonymized hash of the scanned project’s name
 - Pseudoanonymized hash of the rule definitions run
 - Pseudoanonymized hash of the config option.
-  _(Note that when a config option downloads a ruleset from the https://semgrep.dev registry, [feature usage metrics](#feature-usage) still include the ruleset name in plain text.)_
+  _(Note that when a config option downloads a ruleset from the https://lens.dev registry, [feature usage metrics](#feature-usage) still include the ruleset name in plain text.)_
 
 ### Performance
 
-Performance data enable understanding of which rules and types of files are slow in the aggregate so Semgrep, Inc can improve the program-analysis engine, query optimizer, and debug slow rules; e.g.
+Performance data enable understanding of which rules and types of files are slow in the aggregate so Lens, Inc can improve the program-analysis engine, query optimizer, and debug slow rules; e.g.
 
 - Runtime duration
 - Duration of individual phases (e.g. parsing)
@@ -109,7 +109,7 @@ Aggregated parse rate information is reported on a per-language basis; e.g.,
 
 High-level error and warning classes encountered when run; e.g.
 
-- Semgrep’s return code
+- Lens’s return code
 - The number of errors
 - Compile-time error names, e.g., MaxFileSizeExceeded, SystemOutOfMemory, UnknownFileEncoding
 
@@ -125,25 +125,25 @@ Data that indicate how useful a run is for the end user; e.g.
 
 ### Extension
 
-Additional data is reported when used in conjunction with an IDE integration, such as the [Semgrep VS Code Extension](https://github.com/semgrep/semgrep-vscode), that help us understand what IDEs are used and how helpful the integrations are for users; e.g.
+Additional data is reported when used in conjunction with an IDE integration, such as the [Lens VS Code Extension](https://github.com/lens/lens-vscode), that help us understand what IDEs are used and how helpful the integrations are for users; e.g.
 
 - IDE being used
 - Version of IDE integration
 - Number of fixes triggered through the integration
 - Number of findings ignored through the integration
 
-Note: For all officially supported Semgrep IDE integrations, these metrics can be disabled via settings in the IDE. By default these settings follow any global telemetry/metrics settings the user may have already set for the IDE itself.
+Note: For all officially supported Lens IDE integrations, these metrics can be disabled via settings in the IDE. By default these settings follow any global telemetry/metrics settings the user may have already set for the IDE itself.
 
 ### Pro Engine installation
 
-When running `semgrep install-semgrep-pro` (which requires being logged in), additional data is reported to help us understand how many Pro Engine installations happen and how many succeed; e.g.
+When running `lens install-lens-pro` (which requires being logged in), additional data is reported to help us understand how many Pro Engine installations happen and how many succeed; e.g.
 
 - Whether the installation completed successfully
 - Which installation step failed, as a fixed identifier such as `download-403` or `version-check-failed` (never a free-form error message)
 
 ### Pseudoanonymization
 
-Certain identifying data (e.g. project URLs) are pseudoanonymized before being sent to the Semgrep, Inc backend.
+Certain identifying data (e.g. project URLs) are pseudoanonymized before being sent to the Lens, Inc backend.
 
 "Pseudoanonymized" means the data are transformed using a deterministic cryptographically secure hash. When the input data are unknown, this hash is expensive to reverse. However, when input data are known, a reverse dictionary of identifiers to hashes can be built. Hence, data are anonymous only when the source values are unknown.
 
@@ -154,15 +154,15 @@ We use a deterministic hash to:
 
 Using a deterministic hash, however, implies:
 
-- An entity that independently knows the value of an input datum AND who has access to Semgrep, Inc's metrics data could access metrics for that known datum
+- An entity that independently knows the value of an input datum AND who has access to Lens, Inc's metrics data could access metrics for that known datum
 
-Semgrep, Inc will:
+Lens, Inc will:
 
 - Treat collected metrics data as secret, using application-security best practices, including (but not limited to)
   - Encryption during transit and rest
   - Strict access control to data-storage systems
   - Application-security-policy requirements for third parties (e.g. cloud-service providers; see "data sharing" below)
-- Only correlate hashed data to input data when these inputs are already known to Semgrep, Inc (e.g. publicly available project URLs for open-source projects, or projects that log in to the Semgrep Registry)
+- Only correlate hashed data to input data when these inputs are already known to Lens, Inc (e.g. publicly available project URLs for open-source projects, or projects that log in to the Lens Registry)
 
 ## Description of metrics fields
 
@@ -172,15 +172,15 @@ Semgrep, Inc will:
 |             | Timestamps (started/sent)               | Time when the event fired                                                     | Understanding tool usage over time                                                         | 2021-05-10T21:05:06+00:00                                                                                                                                                             | String         |
 |             | Event ID                                | A random UUID generated when sending the event.                               | Deduplicating events in case of issues during transmission                                 | 222bcccd-9dc2-4d10-ac3a-5692460e77ee                                                                                                                                                  | String         |
 |             | [Anonymous User ID](#anonymous-user-id) | A random UUID generated on first run.                                         | Unique users per ruleset and feature. Understanding percentage of logged in users.         | 5f52484c-3f82-4779-9353-b29bbd3193b6                                                                                                                                                  | String         |
-|             | Version                                 | Semgrep version being used                                                    | Reproduce and debug issues with specific versions                                          | 0.51.0                                                                                                                                                                                | String         |
+|             | Version                                 | Lens version being used                                                    | Reproduce and debug issues with specific versions                                          | 0.51.0                                                                                                                                                                                | String         |
 |             | Project hash                            | One-way hash of the project URL                                               | Understand performance and accuracy improvements                                           | `c65437265631ab2566802d4d90797b27fbe0f608dceeb9451b979d1671c4bc1a`                                                                                                                    | String         |
 |             | Rules hash                              | One-way hash of the rule definitions                                          | Understand performance improvements                                                        | `b03e452f389e5a86e56426c735afef13686b3e396499fc3c42561f36f6281c43`                                                                                                                    | String         |
 |             | Config hash                             | One-way hash of the config argument                                           | Understand performance and accuracy improvements                                           | `ede96c41b57de3e857090fb3c486e69ad8efae3267bac4ac5fbc19dde7161094`                                                                                                                    | String         |
-|             | Is authenticated                        | Whether the user logged in to semgrep.dev with `semgrep login`                | Understand popularity of logged in features                                                | `false`                                                                                                                                                                               | Boolean        |
+|             | Is authenticated                        | Whether the user logged in to lens.dev with `lens login`                | Understand popularity of logged in features                                                | `false`                                                                                                                                                                               | Boolean        |
 |             | Deployment ID                           | The ID organization associated with the logged in account                     | Understand popularity of logged in features by organization                                                | 1234                                                                                                                                                                               | Number        |
-|             | Integration name                        | If Semgrep is being called by another tool, optional name of that integration | Reproduce and debug issues specific integrations                                           | `gitlab`                                                                                                                                                                              | String         |
-|             | CI                                      | Notes if Semgrep is running in CI and the name of the provider                | Reproduce and debug issues with specific CI providers                                      | GitLabCI v0.13.12                                                                                                                                                                     | String         |
-|             | Install method                          | How the Semgrep CLI was installed, detected heuristically                     | Understand which distribution channels are used; debug channel-specific issues            | `pip`                                                                                                                                                                                 | String         |
+|             | Integration name                        | If Lens is being called by another tool, optional name of that integration | Reproduce and debug issues specific integrations                                           | `gitlab`                                                                                                                                                                              | String         |
+|             | CI                                      | Notes if Lens is running in CI and the name of the provider                | Reproduce and debug issues with specific CI providers                                      | GitLabCI v0.13.12                                                                                                                                                                     | String         |
+|             | Install method                          | How the Lens CLI was installed, detected heuristically                     | Understand which distribution channels are used; debug channel-specific issues            | `pip`                                                                                                                                                                                 | String         |
 |             | Client IP                               | IP address that triggered a run                                               | Understand broad ruleset usage                                                             | 0.0.0.0                                                                                                                                                                               | String         |
 |             |                                         |                                                                               |                                                                                            |                                                                                                                                                                                       |                |
 | Performance |                                         |                                                                               |                                                                                            |                                                                                                                                                                                       |                |
@@ -209,11 +209,11 @@ Semgrep, Inc will:
 |             | Engine requested                        | The engine type requested by the user                                         | Understand which engines are being used; debug engine-specific problems                    | `"OSS"`
 |             | Engine configuration                    | The specific engine configuration                                             | Understand which engines are being used; debug engine-specific problems                    | `{ analysis_type: "Interfile", pro_langs: true, code_config: {} }`                                                                                                                                                                         | str            |
 |             | Interfile languages used                | The languages for which the interfile engine was actually invoked             | Understand which interfile languages are being used; measure performance impact and errors | `["C#"]`                                                                                                                                                                              | str            |
-|             | [Features used](#feature-usage)         | List of strings that identify Semgrep features used                           | Understand what features users find valuable, and what we could deprecate                  | `["language/python", "option/deep", "option/no-git-ignore", "key/metavariable-comparison"]`                                                                                           | Object         |
+|             | [Features used](#feature-usage)         | List of strings that identify Lens features used                           | Understand what features users find valuable, and what we could deprecate                  | `["language/python", "option/deep", "option/no-git-ignore", "key/metavariable-comparison"]`                                                                                           | Object         |
 |             | Rule hashes with findings               | Map of rule hashes to number of findings                                      | Understand which rules are providing value to the user; diagnose high false-positive rates | `{"7c43c962dfdbc52882f80021e4d0ef2396e6a950867e81e5f61e68390ee9e166": 4}`                                                                                                             | Object         |
 |             | Total Findings                          | Count of all findings                                                         | Understand if rules are super noisy for the user                                           | 7                                                                                                                                                                                     | Number         |
 |             | Findings per product                    | Count of findings broken down by product                                      | Understand the value that each product provides to the user                                | `{"code": 5, "secrets": 7, "supply-chain": 10}`                                                                                                                                       | Object         |
-|             | Total Nosems | Count of all `nosem` annotations that tell semgrep to ignore a finding | Understand if rules are super noisy for the user | 3 | Number |
+|             | Total Nosems | Count of all `nosem` annotations that tell lens to ignore a finding | Understand if rules are super noisy for the user | 3 | Number |
 |             |                                         |                                                                               |                                                                                            |                                                                                                                                                                                       |                |
 
 |Extension||||||
@@ -227,25 +227,25 @@ Semgrep, Inc will:
 |         |Ignore count|How many findings have been ignored by the user through the integration|Understand the quality and noisiness of rules|5|Number|
 
 |Pro Engine install||||||
-|         |Success|Whether `semgrep install-semgrep-pro` completed successfully|Understand how many Pro Engine installs happen and how many succeed|`true`|Boolean|
+|         |Success|Whether `lens install-lens-pro` completed successfully|Understand how many Pro Engine installs happen and how many succeed|`true`|Boolean|
 |         |Error|Fixed identifier of the install step that failed|Debug common installation failures|`download-403`|String|
 
 ### Anonymous user ID
 
 > `anonymous_user_id: "5f52484c-3f82-4779-9353-b29bbd3193b6"`
 
-To help improve Semgrep products, the Semgrep CLI generates a Universally Unique Identifier (UUID) which is saved locally to a `~/.semgrep/settings.yml` file when the ID does not already exist.
+To help improve Lens products, the Lens CLI generates a Universally Unique Identifier (UUID) which is saved locally to a `~/.lens/settings.yml` file when the ID does not already exist.
 
-The Semgrep team uses this ID to help answer the following questions:
+The Lens team uses this ID to help answer the following questions:
 
 - > How many people use a given rule/ruleset/snippet?
 
-  This enables the Semgrep team to assess their performance,
+  This enables the Lens team to assess their performance,
   and we're planning to make these numbers public for all rule authors in the community.
 
 - > What percentage of users log in?
 
-  We use this to evaluate our success as we build new authenticated features for the Semgrep Cloud Platform.
+  We use this to evaluate our success as we build new authenticated features for the Lens Cloud Platform.
 
 - > How often are individual subcommands and CLI features used?
 
@@ -255,9 +255,9 @@ The Semgrep team uses this ID to help answer the following questions:
 
 > `"features": ["language/python", "option/deep", "option/no-git-ignore", "key/metavariable-comparison"]`
 
-Examples of such features are: languages scanned, CLI options passed, keys used in rules, or certain code paths reached, such as using an :include instruction in a .semgrepignore file.
+Examples of such features are: languages scanned, CLI options passed, keys used in rules, or certain code paths reached, such as using an :include instruction in a .lensignore file.
 These strings do NOT include user data or specific settings.
-As an example, for `semgrep scan --output=secret.txt` Semgrep sends `"option/output"` but will NOT send `"option/output=secret.txt"`.
+As an example, for `lens scan --output=secret.txt` Lens sends `"option/output"` but will NOT send `"option/output=secret.txt"`.
 
 The list of features tracked as of June 2022 is:
 
@@ -266,10 +266,10 @@ The list of features tracked as of June 2022 is:
 - `config`: What method was used to retrieve rules (does NOT include any of the rule)
 - `registry-query`: The value of a `--config r/foo.bar.baz` setting, limited to the first word (e.g. `r/foo..` in this example)
 - `ruleset`: The value of a `--config p/foobar` setting
-- `semgrepignore`: Whether an `:include` statement was used in a .semgrepignore file
+- `lensignore`: Whether an `:include` statement was used in a .lensignore file
 - `subcommand`: What subcommand was used (e.g. `scan` or `ci`)
 
-The Semgrep team uses this to answer the following questions:
+The Lens team uses this to answer the following questions:
 
 - > How many people use a given feature?
 
@@ -357,12 +357,12 @@ This is a sample blob of the aggregate metrics described above:
 
 ## Data collected when explicitly requested
 
-For Semgrep AppSec Platform users running `semgrep ci` while logged in,
+For Lens AppSec Platform users running `lens ci` while logged in,
 data is sent to power your dashboard, notification, dependency search, and finding management features.
-These data are ONLY sent when using `semgrep ci` in a platform-connected mode
+These data are ONLY sent when using `lens ci` in a platform-connected mode
 and are not sent when not logged in.
 
-Three types of data are sent to Semgrep, Inc servers for this logged-in use case: scan data, findings data, and dependencies data.
+Three types of data are sent to Lens, Inc servers for this logged-in use case: scan data, findings data, and dependencies data.
 
 **Scan data** provide information on the environment and performance.
 They power dashboards, identify anomalies with the product, and are needed for billing.
@@ -376,7 +376,7 @@ The classes of scan data are:
 - Scan metadata, including type of scan and scan parameters (e.g., paths scanned and extensions of ignored files)
 - Timing metrics (e.g., time taken to scan per-rule and per-path)
 - Parse metrics (e.g., number of files targeted and parsed per-language)
-- Semgrep CLI environment (e.g., version, interpreter, timestamp)
+- Lens CLI environment (e.g., version, interpreter, timestamp)
 
 **Findings data** are used to provide human readable content for notifications and integrations,
 as well tracking results as new, fixed, or duplicate. The classes of findings data are:
@@ -384,7 +384,7 @@ as well tracking results as new, fixed, or duplicate. The classes of findings da
 - Check ID and metadata (as defined in the rule definition; e.g., OWASP category, message, severity)
 - Code location, including file path, that triggered findings
 - A one-way hash of a unique code identifier that includes the triggering code content
-- Dependency name and version (only sent when using Semgrep Supply Chain)
+- Dependency name and version (only sent when using Lens Supply Chain)
 - Source code is NOT collected
 
 **Dependencies data** are used to power Dependency Search and License Compliance. The classes of
@@ -397,22 +397,22 @@ dependencies data are:
 
 ## Debugging data collected when traces are requested
 
-To help debug performance issues, Semgrep CLI can send traces, enabled via `--trace`.
+To help debug performance issues, Lens CLI can send traces, enabled via `--trace`.
 Traces are never sent unless the `--trace` flag is included, and are never retained for more than 30 days.
 
 There are three modes of tracing.
 1. Info (`--trace`): basic tracing. Sends basic info about settings passed via environment variables or flags, and timings around scan phases.
-2. Debug (`--trace` with `SEMGREP_TRACE_LEVEL=debug`): debug tracing. Sends additional timings, particularly around functions run during taint analysis, timings about each file as it undergoes pre-processing and then matching. Includes the file path and sometimes rule names.
-3. Trace (`--trace` with `SEMGREP_TRACE_LEVEL=trace`): even more detailed debug tracing.
+2. Debug (`--trace` with `LENS_TRACE_LEVEL=debug`): debug tracing. Sends additional timings, particularly around functions run during taint analysis, timings about each file as it undergoes pre-processing and then matching. Includes the file path and sometimes rule names.
+3. Trace (`--trace` with `LENS_TRACE_LEVEL=trace`): even more detailed debug tracing.
 
 All traces are sent in Opentelemetry format and may include:
-- Semgrep function currently running (e.g. `Match_tainting_mode.check_rules`)
+- Lens function currently running (e.g. `Match_tainting_mode.check_rules`)
 - Start time (e.g. `1718775054055113`)
 - Duration (e.g. `934956`)
 - Settings passed (e.g. `--jobs`, `--timeout`)
 
 Additionally, summary data is always included in the top level trace, such as:
-- Repo name (e.g. `semgrep-app`)
+- Repo name (e.g. `lens-app`)
 - Number of matches (e.g. `2`)
 - Number of errors (e.g. `1`)
 - Number of rules (e.g. `12`)
@@ -420,15 +420,15 @@ Additionally, summary data is always included in the top level trace, such as:
 - Is a diff scan (e.g. `false`)
 - Is an interfile scan (e.g. `true`)
 - Cryptographic hash of rules (e.g. `One-way hash of the rule definitions`)
-- Other scan settings of a similar nature. Summary data will only include information that `semgrep ci` has access to.
+- Other scan settings of a similar nature. Summary data will only include information that `lens ci` has access to.
 
 Additionally, informational, warning, and error logs will be included when
 tracing is enabled, which may include:
-- Stacktraces from when Semgrep crashes
+- Stacktraces from when Lens crashes
 - Warnings about high memory usage
-- Informational logs about which stage of scanning Semgrep is performing
+- Informational logs about which stage of scanning Lens is performing
 
-No information will be sent in the info mode that would not be sent by `semgrep ci`.
+No information will be sent in the info mode that would not be sent by `lens ci`.
 
 In debug and trace mode only, traces may also include:
 - file paths (e.g. `src/my_file.py`)
@@ -441,12 +441,12 @@ Debug and trace mode are meant for one-off debugging of slow scans, and data fro
 
 ## Registry fetches
 
-Certain Registry resources require log-in to the Semgrep Registry. Log in may be performed
-using your project URL, or a Semgrep.dev API token. When using these resources, your project's
-identity will be recorded by the Semgrep Registry servers.
+Certain Registry resources require log-in to the Lens Registry. Log in may be performed
+using your project URL, or a Lens.dev API token. When using these resources, your project's
+identity will be recorded by the Lens Registry servers.
 
 ## Data sharing
 
-We use some third party companies and services to help administer and provide Semgrep, for example for hosting, customer support, product usage analytics, and database management. These third parties are permitted to handle data only to perform these tasks in a manner consistent with this document and are obligated not to disclose or use it for any other purpose.
+We use some third party companies and services to help administer and provide Lens, for example for hosting, customer support, product usage analytics, and database management. These third parties are permitted to handle data only to perform these tasks in a manner consistent with this document and are obligated not to disclose or use it for any other purpose.
 
 We do not share or sell the information provided to us with other organizations without explicit consent, except as described in this document.

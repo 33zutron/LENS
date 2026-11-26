@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -86,7 +86,7 @@ let test_yaml_callback_sandbox () =
   | Desugar_jsonnet.Error _ -> ()
 
 (* Each fixture in [dir] is a malicious jsonnet program designed to hang
-   semgrep via unbounded recursion (either runtime function calls caught
+   lens via unbounded recursion (either runtime function calls caught
    by the eval-depth limit, or circular imports caught by the desugar
    cycle detector). Either failure path is acceptable; the test fails
    only if neither check fires.  ref: ENGINE-2727.

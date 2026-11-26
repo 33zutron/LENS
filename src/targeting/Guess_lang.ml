@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -318,7 +318,7 @@ let inspect_file_p (lang : Lang.t) path =
   eval test path
 
 let wrap_with_error_message lang path bool_res :
-    (Fpath.t, Semgrep_output_v1_t.skipped_target) result =
+    (Fpath.t, Lens_output_v1_t.skipped_target) result =
   match bool_res with
   | true -> Ok path
   | false ->

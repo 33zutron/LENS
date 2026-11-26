@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@
 (* A test that sometimes fails for unknown reasons *)
 val flaky : Testo.Tag.t
 
-(* End-to-end semgrep tests *)
+(* End-to-end lens tests *)
 val e2e : Testo.Tag.t
 
 (* This is used to exclude all the tests involving this or that language. *)

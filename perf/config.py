@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2024 Semgrep Inc.
+# Copyright (c) 2021-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -26,7 +26,7 @@ from attrs import define
 from attrs import field
 from ruamel.yaml import YAML
 
-from semgrep.state import get_state
+from lens.state import get_state
 
 
 logger = logging.getLogger(__file__)
@@ -174,12 +174,12 @@ class RuleConfig:
             self._write(cache_path, consolidated_rules)
         elif self.is_short_config():
             env = get_state().env
-            rule_config_url = f"{env.semgrep_url}/{self.config_str}"
+            rule_config_url = f"{env.lens_url}/{self.config_str}"
             consolidated_rules = self._fetch_rule_config_from_url(rule_config_url)
             self._write(cache_path, consolidated_rules)
         else:
             raise ValueError(
-                f"Could not resolve location of the config string '{self.config_str}'. Try using a filesystem path or valid Semgrep config"
+                f"Could not resolve location of the config string '{self.config_str}'. Try using a filesystem path or valid Lens config"
             )
         return cache_path
 
@@ -193,11 +193,11 @@ class BenchmarkRunSetupData:
     run_name: str = field(default="benchmark_run")
     rule_configs: List[RuleConfig] = field(default=["p/r2c"])
     repositories: List[Repository] = field(factory=list)
-    semgrep_options: List[str] = field(default=[])
+    lens_options: List[str] = field(default=[])
 
 
 @define
-class SemgrepBenchmarkConfig:
+class LensBenchmarkConfig:
     """
     Stores data needed to start a benchmarking run.
 
@@ -211,8 +211,8 @@ class SemgrepBenchmarkConfig:
         - url: <url>
           commit_hash: <commit_hash>
         rule_configs:
-        - <string used with 'semgrep -f', e.g., p/xss>
-        opts: <semgrep CLI flags>
+        - <string used with 'lens -f', e.g., p/xss>
+        opts: <lens CLI flags>
     - run_name2:
         ...
     '''
@@ -222,13 +222,13 @@ class SemgrepBenchmarkConfig:
 
     @classmethod
     def parse_config(
-        cls: Type["SemgrepBenchmarkConfig"], config_file: Path
-    ) -> "SemgrepBenchmarkConfig":
+        cls: Type["LensBenchmarkConfig"], config_file: Path
+    ) -> "LensBenchmarkConfig":
         logger.debug(f"Using config at {config_file.absolute()}")
         with open(config_file) as fin:
             config = yaml.load(fin)
 
-        return SemgrepBenchmarkConfig(
+        return LensBenchmarkConfig(
             [
                 BenchmarkRunSetupData(
                     run_name=config_data.get("name", f"run-{int(time.time())}"),
@@ -240,7 +240,7 @@ class SemgrepBenchmarkConfig:
                         Repository(repo.get("url"), repo.get("commit_hash"))
                         for repo in config_data.get("repos", [])
                     ],
-                    semgrep_options=config_data.get("opts", []),
+                    lens_options=config_data.get("opts", []),
                 )
                 for config_data in config.get("runs", [])
             ]

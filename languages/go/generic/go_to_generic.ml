@@ -319,7 +319,7 @@ let top_func () =
       | TypeInstantiation (ty, args) -> (type_as_expr (TApply (ty, args))).G.e
       | Cast (t, (l, e, r)) ->
           let t = type_ t and e = expr e in
-          (* for semgrep and autofix to get the right range by including
+          (* for lens and autofix to get the right range by including
            * 'r' in the range.
            * alt: change G.Cast to take a bracket
            *)

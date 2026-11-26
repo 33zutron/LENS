@@ -1,11 +1,11 @@
 (library
- (public_name semgrep.prefiltering)
+ (public_name lens.prefiltering)
  (name prefiltering)
  (libraries
     ast_generic
     parser_regexp
-    semgrep.core
-    semgrep.target
+    lens.core
+    lens.target
  )
  (preprocess
    (pps
@@ -20,11 +20,11 @@
 )
 
 (rule
- (targets Semgrep_prefilter_j.ml Semgrep_prefilter_j.mli)
- (deps    Semgrep_prefilter.atd)
+ (targets Lens_prefilter_j.ml Lens_prefilter_j.mli)
+ (deps    Lens_prefilter.atd)
  (action  (run atdgen -j -j-strict-fields %{deps})))
 
 (rule
- (targets Semgrep_prefilter_t.ml Semgrep_prefilter_t.mli)
- (deps    Semgrep_prefilter.atd)
+ (targets Lens_prefilter_t.ml Lens_prefilter_t.mli)
+ (deps    Lens_prefilter.atd)
  (action  (run atdgen -t %{deps})))

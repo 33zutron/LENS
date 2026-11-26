@@ -1,1 +1,1 @@
-test_nosem_func()  # nosemgrep: rules.test-nosem
+test_nosem_func()  # nolens: rules.test-nosem

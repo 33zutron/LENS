@@ -1,7 +1,7 @@
 (* Yoann Padioleau
  *
  * Copyright (C) 2010 Facebook
- * Copyright (C) 2023-2024 Semgrep Inc.
+ * Copyright (C) 2023-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -27,7 +27,7 @@ open Fpath_.Operators
  * similar code:
  *  - Lexing.position (also used for Spacegrep.Loc.Pos), but no convenient
  *    line x col
- *  - Semgrep_output_v1.position, but no filename
+ *  - Lens_output_v1.position, but no filename
  *  - Tree_sitter_run.Loc.pos (derived itself from Tree_sitter_bindings.Tree_sitter_output_t.position),
  *    but no filename, no bytepos, just line x col.
  *)
@@ -36,7 +36,7 @@ open Fpath_.Operators
 (* Types *)
 (*****************************************************************************)
 
-(* Pos.t is used in many places in Semgrep, either directly
+(* Pos.t is used in many places in Lens, either directly
   or indirectly via Tok.t.
 
    In theory, we should just have 'type t = int'. This would be nice

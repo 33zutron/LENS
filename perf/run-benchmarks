@@ -1,9 +1,9 @@
 #! /usr/bin/env python3
 #
-# Run semgrep on a series of pairs (rules, repo) with different options,
-# and report the time it takes. Optionally upload the results to the semgrep
+# Run lens on a series of pairs (rules, repo) with different options,
+# and report the time it takes. Optionally upload the results to the lens
 # dashboard.
-# This script assumes the presence of 'semgrep' in the PATH.
+# This script assumes the presence of 'lens' in the PATH.
 #
 import argparse
 import copy
@@ -24,7 +24,7 @@ from typing import Tuple
 
 import requests
 from config import BenchmarkRunSetupData
-from config import SemgrepBenchmarkConfig
+from config import LensBenchmarkConfig
 from constants import BPS_ENDPOINT
 from constants import DASHBOARD_URL
 from constants import LPS_ENDPOINT
@@ -40,8 +40,8 @@ from corpus import LARGE_CORPUSES
 from corpus import MEDIUM_CORPUSES
 from corpus import SMALL_CORPUSES
 from repository_time_per_rule import RepositoryTimePerRule
-from variant import SEMGREP_VARIANTS
-from variant import SemgrepVariant
+from variant import LENS_VARIANTS
+from variant import LensVariant
 from variant import STD_VARIANTS
 
 logger = logging.getLogger(__file__)
@@ -56,9 +56,9 @@ PERF_PATH = "OSS/perf"
 PERF_RULE_PATH = "OSS.perf"
 
 
-# This class allows us to put semgrep results in a set and compute set
+# This class allows us to put lens results in a set and compute set
 # differences while saving the original JSON dictionary
-class SemgrepResult:
+class LensResult:
     def __init__(self, dict: dict) -> None:
         self.res = dict
         dict2 = copy.deepcopy(dict)
@@ -89,13 +89,13 @@ class SemgrepResult:
         )
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, SemgrepResult):
+        if not isinstance(other, LensResult):
             raise NotImplementedError
 
         return self.str == other.str
 
     def __lt__(self, other: object) -> bool:
-        if not isinstance(other, SemgrepResult):
+        if not isinstance(other, LensResult):
             raise NotImplementedError
 
         return self.str > other.str
@@ -124,7 +124,7 @@ def upload(url: str, value: str) -> None:
     print(r.read().decode())
 
 
-# coupling: timings has type Semgrep_output_v1.profile
+# coupling: timings has type Lens_output_v1.profile
 def upload_result(
     variant_name: str, metric_name: str, value: float, timings: dict
 ) -> None:
@@ -133,7 +133,7 @@ def upload_result(
     upload(metric_url, str(value))
 
     if variant_name == STD and timings is not None:
-        # Compute bps from semgrep timing data
+        # Compute bps from lens timing data
         assert "rules" in timings
         assert "profiling_times" in timings
         assert "total_bytes" in timings
@@ -161,7 +161,7 @@ def upload_result(
                     fd.close()
 
             except FileNotFoundError:
-                # Semgrep creates artificial temporary target files (for
+                # Lens creates artificial temporary target files (for
                 # example, the Flask lifecycle harness) to aid in analysis under
                 # some circumstances. It cleans these up after it runs. If we
                 # try to open them here, we'll get an error.
@@ -193,7 +193,7 @@ def standardize_findings(findings: dict, include_time: bool) -> Tuple[dict, dict
         raise Exception(msg)
     results = {
         "errors": findings["errors"],
-        "results": {SemgrepResult(i) for i in findings["results"]},
+        "results": {LensResult(i) for i in findings["results"]},
     }
     timings = findings["time"] if include_time else None
     return results, timings
@@ -229,10 +229,10 @@ def output_differences(
     return fd_len, sd_len
 
 
-def run_semgrep(
+def run_lens(
     docker: str,
     corpus: Corpus,
-    variant: SemgrepVariant,
+    variant: LensVariant,
     include_time: bool,
     hard_timeout: int = 0,
     trace: bool = False,
@@ -261,7 +261,7 @@ def run_semgrep(
             # some containers use /bin/bash as the entrypoint,
             # so we override it here
             "--entrypoint",
-            "semgrep",
+            "lens",
             docker,
             "--quiet",
             "--config",
@@ -269,23 +269,23 @@ def run_semgrep(
             "/targets",
         ]
     else:
-        # Absolute paths for rules and targets are required by semgrep
-        # when running within the semgrep docker container.
+        # Absolute paths for rules and targets are required by lens
+        # when running within the lens docker container.
         args = [
-            "semgrep",
+            "lens",
             "--config",
             os.path.abspath(corpus.rule_dir),
         ]
     args.extend(common_args)
-    args.extend(corpus.semgrep_options)
-    if variant.semgrep_extra != "":
-        args.extend([variant.semgrep_extra])
+    args.extend(corpus.lens_options)
+    if variant.lens_extra != "":
+        args.extend([variant.lens_extra])
     if include_time:
         args.extend(["--time"])
     if trace:
         args.extend(["--trace"])
     if trace_endpoint:
-        args.extend(["--trace-endpoint semgrep-dev", trace_endpoint])
+        args.extend(["--trace-endpoint lens-dev", trace_endpoint])
 
     # Finally, add target
     if not docker:
@@ -293,9 +293,9 @@ def run_semgrep(
         args.append(os.path.abspath(corpus.target_dir))
 
     print(f"current directory: {os.getcwd()}")
-    print("semgrep command: {}".format(" ".join(args)))
-    os.environ["SEMGREP_CORE_EXTRA"] = variant.semgrep_core_extra
-    print(f"extra arguments for semgrep-core: '{variant.semgrep_core_extra}'")
+    print("lens command: {}".format(" ".join(args)))
+    os.environ["LENS_CORE_EXTRA"] = variant.lens_core_extra
+    print(f"extra arguments for lens-core: '{variant.lens_core_extra}'")
 
     t1 = time.time()
     res = subprocess.run(  # nosem
@@ -304,28 +304,28 @@ def run_semgrep(
     t2 = time.time()
 
     status = res.returncode
-    print(f"semgrep exit status: {status}")
+    print(f"lens exit status: {status}")
     if status == 0:
         print("success")
     elif status == 3:
         print("warning: some files couldn't be parsed")
     else:
-        print("************* Semgrep stdout *************")
+        print("************* Lens stdout *************")
         print(res.stdout)
-        print("************* Semgrep stderr *************")
+        print("************* Lens stderr *************")
         print(res.stderr)
         res.check_returncode()
 
     try:
         stdout_decoded = res.stdout.decode("utf-8")
-        semgrep_results = json.loads(stdout_decoded)
+        lens_results = json.loads(stdout_decoded)
     except (ValueError, json.JSONDecodeError):
         logger.error(
-            f"Unable to decode the Semgrep result as JSON. Exiting.\n******\n{res.stdout}"
+            f"Unable to decode the Lens result as JSON. Exiting.\n******\n{res.stdout}"
         )
         sys.exit(1)
 
-    return t2 - t1, semgrep_results
+    return t2 - t1, lens_results
 
 
 def prepare_rule_cache_for_this_run(
@@ -359,7 +359,7 @@ def prepare_rule_cache_for_this_run(
 
 
 def prepare_benchmark_run(
-    benchmark_config: SemgrepBenchmarkConfig, clean: bool
+    benchmark_config: LensBenchmarkConfig, clean: bool
 ) -> List[Corpus]:
     """
     Sets up the relevant data for a benchmarking run
@@ -384,7 +384,7 @@ def prepare_benchmark_run(
                     setup_data.run_name,
                     rule_cache_dir.absolute(),
                     Path("input") / repo_name,
-                    semgrep_options=setup_data.semgrep_options,
+                    lens_options=setup_data.lens_options,
                 )
             )
 
@@ -415,9 +415,9 @@ def generate_prep_file(
     )
 
 
-def get_semgrep_version():
+def get_lens_version():
     return (
-        subprocess.run(["semgrep", "--version"], capture_output=True)
+        subprocess.run(["lens", "--version"], capture_output=True)
         .stdout.decode("utf-8")
         .strip()
     )
@@ -448,10 +448,10 @@ def run_benchmarks(
     def get_corpuses(config_file: Path) -> List[Corpus]:
         config_file_path = config_file.absolute()
         return prepare_benchmark_run(
-            SemgrepBenchmarkConfig.parse_config(config_file_path), clean
+            LensBenchmarkConfig.parse_config(config_file_path), clean
         )
 
-    variants = SEMGREP_VARIANTS
+    variants = LENS_VARIANTS
     if std_only or output_time_per_rule_json:
         variants = STD_VARIANTS
     if filter_variant:
@@ -502,17 +502,17 @@ def run_benchmarks(
 
             std_findings = {}
             options = sorted(
-                re.sub(r"\W+", "", option) for option in corpus.semgrep_options
+                re.sub(r"\W+", "", option) for option in corpus.lens_options
             )
             for variant in variants:
                 # Run variant
                 name = ".".join(
-                    ["semgrep"] + options + ["bench", corpus.name, variant.name]
+                    ["lens"] + options + ["bench", corpus.name, variant.name]
                 )
                 metric_name = ".".join([name, "duration"])
                 print(f"------ {name} ------")
                 try:
-                    duration, semgrep_results = run_semgrep(
+                    duration, lens_results = run_lens(
                         docker,
                         corpus,
                         variant,
@@ -532,7 +532,7 @@ def run_benchmarks(
 
                 if not output_time_per_rule_json is None:
                     output_per_rule_json_results.times_per_file_to_times_per_rule(
-                        corpus.name, semgrep_results
+                        corpus.name, lens_results
                     )
 
                 # Report results
@@ -540,7 +540,7 @@ def run_benchmarks(
                 print(msg)
                 results_msgs.append(msg)
 
-                findings, timings = standardize_findings(semgrep_results, include_time)
+                findings, timings = standardize_findings(lens_results, include_time)
                 durations.append(
                     {
                         "name": name,
@@ -571,7 +571,7 @@ def run_benchmarks(
 
             saved_findings.append(
                 {
-                    "name": ".".join(["semgrep", "bench", corpus.name]),
+                    "name": ".".join(["lens", "bench", corpus.name]),
                     "findings": jsonify_findings(std_findings),
                 }
             )
@@ -609,7 +609,7 @@ def main() -> None:
         "--docker",
         metavar="DOCKER_IMAGE",
         type=str,
-        help="use the specified docker image for semgrep, such as returntocorp/semgrep:develop",
+        help="use the specified docker image for lens, such as returntocorp/lens:develop",
     )
     parser.add_argument(
         "--dummy",
@@ -638,7 +638,7 @@ def main() -> None:
         help="run benchmarks according to a config file",
     )
     parser.add_argument(
-        "--std-only", help="only run the default semgrep", action="store_true"
+        "--std-only", help="only run the default lens", action="store_true"
     )
     parser.add_argument(
         "--filter-corpus",
@@ -653,7 +653,7 @@ def main() -> None:
         help="run the variant only if it satisfies the regexp (e.g., 'dr.*') ",
     )
     parser.add_argument(
-        "--upload", help="upload results to semgrep dashboard", action="store_true"
+        "--upload", help="upload results to lens dashboard", action="store_true"
     )
     parser.add_argument(
         "--save-to",
@@ -690,7 +690,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--trace_endpoint",
-        metavar="SEMGREP_OTEL_ENDPOINT",
+        metavar="LENS_OTEL_ENDPOINT",
         help="Add endpoint for collecting tracing",
         type=str,
     )

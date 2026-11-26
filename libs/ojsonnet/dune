@@ -1,4 +1,4 @@
-; This should be independent of semgrep, so do not use semgrep dependencies here!
+; This should be independent of lens, so do not use lens dependencies here!
 (library
  (public_name ojsonnet)
  (wrapped false)

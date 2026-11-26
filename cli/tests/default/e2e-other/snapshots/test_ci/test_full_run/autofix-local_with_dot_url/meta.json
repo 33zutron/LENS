@@ -1,6 +1,6 @@
 {
   "meta": {
-    "semgrep_version": "<sanitized version>",
+    "lens_version": "<sanitized version>",
     "repository": "checkout_project_name",
     "repo_url": "https://TestName/_git/Core.Thing",
     "branch": "some/branch-name",

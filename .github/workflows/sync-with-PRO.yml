@@ -7,13 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: token
-        name: Get token for semgrep-ci GitHub App
+        name: Get token for lens-ci GitHub App
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
         with:
-          client-id: ${{ secrets.SEMGREP_CI_CLIENT_ID }}
-          owner: semgrep
-          private-key: ${{ secrets.SEMGREP_CI_APP_KEY }}
-          repositories: semgrep, semgrep-proprietary
+          client-id: ${{ secrets.LENS_CI_CLIENT_ID }}
+          owner: lens
+          private-key: ${{ secrets.LENS_CI_APP_KEY }}
+          repositories: lens, lens-proprietary
       - name: Checkout OSS
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
         with:
@@ -26,7 +26,7 @@ jobs:
           lfs: true
           path: PRO
           ref: ${{ inputs.pro_ref }}
-          repository: semgrep/semgrep-proprietary
+          repository: lens/lens-proprietary
           token: ${{ steps.token.outputs.token }}
       - env:
           BRANCHNAME: sync-with-PRO-${{ github.run_id }}-${{ github.run_attempt }}
@@ -50,11 +50,11 @@ jobs:
           echo $AUTHOR > /tmp/pr_author
           # Add original attribution
           echo "" >> /tmp/pr_body
-          echo "Synced from OSS PR https://github.com/semgrep/semgrep/pull/$PR_NUMBER" >> /tmp/pr_body
+          echo "Synced from OSS PR https://github.com/lens/lens/pull/$PR_NUMBER" >> /tmp/pr_body
           echo "Author: @$AUTHOR" >> /tmp/pr_body
           echo "Imported by: @${{ github.actor }}" >> /tmp/pr_body
           echo "" >> /tmp/pr_body
-          echo "Closes https://github.com/semgrep/semgrep/pull/$PR_NUMBER" >> /tmp/pr_body
+          echo "Closes https://github.com/lens/lens/pull/$PR_NUMBER" >> /tmp/pr_body
 
           # Indicates to our sync tool that this commit should be attributed to
           # the original author when it is synced back to OSS. This is the
@@ -108,7 +108,7 @@ jobs:
           PRO_PR_URL=$(cat /tmp/pro_pr_url)
           AUTHOR=$(cat /tmp/pr_author)
           echo -en "@${{ github.actor }} has imported this pull request. " >> /tmp/comment_body
-          echo -en "Semgrep employees can find it at $PRO_PR_URL.\n" >> /tmp/comment_body
+          echo -en "Lens employees can find it at $PRO_PR_URL.\n" >> /tmp/comment_body
           echo -en "\n" >> /tmp/comment_body
           echo -en "@$AUTHOR, thank you for your contribution! " >> /tmp/comment_body
           echo -en "Once the internal PR has been merged, this PR will be " >> /tmp/comment_body

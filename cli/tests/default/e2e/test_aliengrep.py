@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2025 Semgrep Inc.
+# Copyright (c) 2023-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -10,9 +10,9 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
 # LICENSE for more details.
 #
-# Test aliengrep integration in Semgrep rules
+# Test aliengrep integration in Lens rules
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
 @pytest.mark.kinda_slow
@@ -35,9 +35,9 @@ from tests.fixtures import RunSemgrep
         ),
     ],
 )
-def test_aliengrep(run_semgrep_in_tmp: RunSemgrep, posix_snapshot, rule, target):
+def test_aliengrep(run_lens_in_tmp: RunLens, posix_snapshot, rule, target):
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(rule, target_name=target).stdout,
+        run_lens_in_tmp(rule, target_name=target).stdout,
         "results.json",
     )
 
@@ -49,9 +49,9 @@ def test_aliengrep(run_semgrep_in_tmp: RunSemgrep, posix_snapshot, rule, target)
         ("rules/aliengrep/nosem-html.yaml", "aliengrep/nosem.html"),
     ],
 )
-def test_aliengrep_nosem(run_semgrep_in_tmp: RunSemgrep, posix_snapshot, rule, target):
+def test_aliengrep_nosem(run_lens_in_tmp: RunLens, posix_snapshot, rule, target):
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             rule, target_name=target, options=["--no-rewrite-rule-ids"]
         ).stdout,
         "results.json",

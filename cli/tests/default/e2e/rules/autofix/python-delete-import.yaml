@@ -1,5 +1,5 @@
 rules:
-- id: python-typing-osemgrep
+- id: python-typing-olens
   pattern: from typing import $X
   languages: [ python ]
   fix: ""

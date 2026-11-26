@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 (*
-   Exit semgrep-core cleanly with appropriate logging and error messages.
+   Exit lens-core cleanly with appropriate logging and error messages.
 *)
 
 open Common
@@ -30,7 +30,7 @@ let string_of_reason = function
   | Unknown_exception e -> spf "unknown exception %s" (Exception.to_string e)
 
 (*
-   TODO: standardize these error codes to help the semgrep wrapper explain
+   TODO: standardize these error codes to help the lens wrapper explain
    what went wrong? Normally, errors are encoded in the json response but
    it's not always possible.
 *)
@@ -40,7 +40,7 @@ let code_of_reason = function
   | Bad_command_line -> 1
   | Unknown_exception _ -> (* same code as an uncaught exception *) 2
 
-let exit_semgrep reason =
+let exit_lens reason =
   let code = code_of_reason reason in
   let msg = string_of_reason reason in
   Logs.info (fun m -> m "exit %i: %s" code msg);

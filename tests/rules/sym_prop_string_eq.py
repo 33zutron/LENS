@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/2783
+# https://github.com/returntocorp/lens/issues/2783
 def test():
     a = "FOO"
     a = a.lower()

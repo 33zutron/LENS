@@ -2,7 +2,7 @@
 ifeq ($(shell uname -o),Cygwin)
   EXE := .exe
 
-  # TODO: Remove when https://github.com/semgrep/testo/issues/124 is fixed
+  # TODO: Remove when https://github.com/lens/testo/issues/124 is fixed
   # Run tests in serial on Windows to prevent deadlocks
   TEST_WORKERS := -j 0
 

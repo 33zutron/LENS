@@ -36,7 +36,7 @@
  *  - support for old syntax is removed. No IfColon, ColonStmt,
  *    CaseColonList.
  *  - support for extra tools is removed. No XdebugXxx
- *    update: but support for semgrep is restored (Ellipsis)
+ *    update: but support for lens is restored (Ellipsis)
  *  - support for features we don't really use in our code is removed
  *    e.g. unset cast. No Use, UseDirect, UseParen. No CastUnset.
  *    Also no StaticObjCallVar.

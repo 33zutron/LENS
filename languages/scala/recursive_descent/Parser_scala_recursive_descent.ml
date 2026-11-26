@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Matthew McQuaid
  *
- * Copyright (C) 2021-2022 Semgrep Inc.
+ * Copyright (C) 2021-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -32,7 +32,7 @@ module Log = Log_parser_scala.Log
  *
  * alt:
  *  - use Parsers.scala of dotty? but the source is longer, and most of
- *    the code out there is still Scala2 code, so it's better for semgrep
+ *    the code out there is still Scala2 code, so it's better for lens
  *    to focus on Scala 2 first.
  *  - use the one in scalameta? The code looks cleaner, but it handles
  *    more constructs because it handles also Scala3 (so it needs to manage
@@ -1174,45 +1174,45 @@ let stableId in_ : stable_id = path ~thisOK:false ~typeOK:false in_
  * alt: have all functions mutually recursive
  *)
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let interpolatedString_ =
   ref (fun ~inPattern _ ->
       ignore inPattern;
       failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let exprTypeArgs_ = ref (fun _ -> failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let annotTypeRest_ = ref (fun _ -> failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let template_ = ref (fun _ -> failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let defOrDcl_ = ref (fun _ _ -> failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let tmplDef_ = ref (fun _ -> failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let blockStatSeq_ = ref (fun _ -> failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let indentedExprOrBlockStatSeqUntil_ =
   ref (fun _ ~until:_ -> failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let packageOrPackageObject_ = ref (fun _ _ -> failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let typeCaseClauses_ = ref (fun _ -> failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let paramClauseInner_ =
   ref (fun ~caseParam:_ ~endTok:_ _ _ -> failwith "forward ref not set")
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let paramType_ =
   ref (fun ?repeatedParameterOK _ ->
       ignore repeatedParameterOK;
@@ -2312,7 +2312,7 @@ and simpleExpr ?(is_block_expr = false) in_ : expr =
               { ckind = (Singleton, ii); cparams = []; cparents; cbody }
             in
             New (ii, def)
-        (* semgrep-ext: *)
+        (* lens-ext: *)
         | T.Ellipsis ii ->
             skipToken in_;
             AST.Ellipsis ii
@@ -2431,7 +2431,7 @@ and interpolatedString ~inPattern in_ =
             let ((s, t) as x) = ident in_ in
             (* ast: Ident(x) *)
             (* if the identifier starts with $, it is a metavariable, not a variable
-             * inside an interpolated string. However, if we are not in semgrep_mode,
+             * inside an interpolated string. However, if we are not in lens_mode,
              * we treat these identifiers as normal variables, so we need to strip this $
              *)
             if s.[0] =$= '$' then
@@ -2629,7 +2629,7 @@ and caseClauses in_ : case_clauses =
    * with
    *   let caseSeparated part in_ =
    *     separatedToken (Kcase ab) part in_
-   * but for semgrep we also need to handle ellipsis
+   * but for lens we also need to handle ellipsis
    *)
   (* similar to separatedToken body *)
   let ts = ref [] in
@@ -2682,7 +2682,7 @@ and typeCaseClauses in_ : type_case_clauses =
    * with
    *   let caseSeparated part in_ =
    *     separatedToken (Kcase ab) part in_
-   * but for semgrep we also need to handle ellipsis
+   * but for lens we also need to handle ellipsis
    *)
   (* similar to separatedToken body *)
   let ts = ref [] in
@@ -2844,7 +2844,7 @@ and followingIsEnclosedGenerators in_ =
       if in_.token =~= LARROW ab then
         false
         (* it's a pattern *)
-        (* nosemgrep *)
+        (* nolens *)
       else if TH.isIdentBool in_.token then
         true (* it's not a pattern since token cannot be an infix operator *)
       else
@@ -3231,7 +3231,7 @@ let importSelectors in_ : import_selector list bracket =
 (** {{{
  *  ImportExpr ::= StableId `.` (NamedSelector | WildCardSelector | `_` | ImportSelectors)
                  | StableId `as` id  (scala 3)
-                 | (* semgrep-ext: allow this for things like `import $X` *)
+                 | (* lens-ext: allow this for things like `import $X` *)
                    metavariable
  *  }}}
 *)
@@ -3579,7 +3579,7 @@ let param _owner implicitmod _caseParam in_ : binding =
             []
         (* ast: if (caseParam) mods |= Flags.CASEACCESSOR *)
       in
-      (* semgrep-ext: *)
+      (* lens-ext: *)
       match in_.token with
       | Ellipsis ii ->
           nextToken in_;
@@ -5174,7 +5174,7 @@ let parse toks =
       try try_rule toks block with
       | Parsing_error.Syntax_error _ -> Exception.reraise e1)
 
-let semgrep_pattern toks =
+let lens_pattern toks =
   let partialCaseClause in_ =
     match in_.token with
     | Kcase ii ->

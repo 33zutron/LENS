@@ -1,9 +1,9 @@
-; This library contains all the "core" data structures used by semgrep
+; This library contains all the "core" data structures used by lens
 ; except the Rule (now in ../rule/) and the generic AST (now in ../libs/ast_generic)
 
 (library
- (public_name semgrep.core)
- (name semgrep_core)
+ (public_name lens.core)
+ (name lens_core)
  (wrapped false)
  (libraries
    base
@@ -21,8 +21,8 @@
    telemetry
    parallelism
 
-   semgrep_core_rule
-   semgrep_core_target
+   lens_core_rule
+   lens_core_target
  )
  (preprocess
    (pps

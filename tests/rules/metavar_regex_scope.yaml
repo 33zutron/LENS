@@ -9,6 +9,6 @@ rules:
       metavariable: '$FUNC'
       regex: '(foo|bar)'
   message: |
-    Semgrep found a match
+    Lens found a match
   severity: WARNING
   languages: [python]

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2024 Semgrep Inc.
+   Copyright (c) 2023-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -12,4 +12,4 @@
 *)
 (** Collect information about the project contributions from git log. *)
 
-val get_contributions : unit -> Semgrep_output_v1_j.contribution list
+val get_contributions : unit -> Lens_output_v1_j.contribution list

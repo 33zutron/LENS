@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ import pytest
 # ---------------------------------------------------------------------------------
 
 # Minimal uv.lock pinning pyjwt 2.8.0, which is vulnerable (CVE: crit-header bypass,
-# fixed in >= 2.10.0). Semgrep SCA should flag this under supply-chain rules.
+# fixed in >= 2.10.0). Lens SCA should flag this under supply-chain rules.
 _VULNERABLE_UV_LOCK = """\
 version = 1
 requires-python = ">=3.9"
@@ -125,9 +125,9 @@ def clean_project(tmp_path: Path) -> Path:
 
 
 def _write_plugin_json(project_dir: Path, *, disable: bool) -> None:
-    semgrep_dir = project_dir / ".semgrep"
-    semgrep_dir.mkdir(exist_ok=True)
-    (semgrep_dir / "plugin.json").write_text(
+    lens_dir = project_dir / ".lens"
+    lens_dir.mkdir(exist_ok=True)
+    (lens_dir / "plugin.json").write_text(
         json.dumps({"disable_supply_chain_scan": disable})
     )
 
@@ -138,18 +138,18 @@ def _run_hook(
     extra_env: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[bytes]:
     """
-    Invokes `semgrep mcp -k supply-chain-scan` the same way Claude does:
-      echo '<hook-payload>' | semgrep mcp -k supply-chain-scan
+    Invokes `lens mcp -k supply-chain-scan` the same way Claude does:
+      echo '<hook-payload>' | lens mcp -k supply-chain-scan
     """
     payload = json.dumps({"tool_input": {"command": command}, "cwd": str(project_dir)})
     env = {
         **os.environ,
-        "SEMGREP_MCP_DISABLE_TRACING": "true",
+        "LENS_MCP_DISABLE_TRACING": "true",
         "CLAUDE_PROJECT_DIR": str(project_dir),
         **(extra_env or {}),
     }
     return subprocess.run(
-        ["semgrep", "mcp", "-k", "supply-chain-scan"],
+        ["lens", "mcp", "-k", "supply-chain-scan"],
         input=payload.encode(),
         capture_output=True,
         env=env,
@@ -157,7 +157,7 @@ def _run_hook(
 
 
 # ---------------------------------------------------------------------------------
-# Settings / config file tests (no SEMGREP_APP_TOKEN required)
+# Settings / config file tests (no LENS_APP_TOKEN required)
 # ---------------------------------------------------------------------------------
 
 
@@ -165,7 +165,7 @@ def _run_hook(
 def test_disabled_by_config_exits_without_scanning(vulnerable_project: Path) -> None:
     """Hook exits 0 with no output when disable_supply_chain_scan=true in plugin.json."""
     _write_plugin_json(vulnerable_project, disable=True)
-    result = _run_hook(vulnerable_project, extra_env={"SEMGREP_APP_TOKEN": "test"})
+    result = _run_hook(vulnerable_project, extra_env={"LENS_APP_TOKEN": "test"})
     assert result.returncode == 0
     assert result.stdout == b""
 
@@ -178,14 +178,14 @@ def test_not_disabled_by_config_proceeds_to_scan(tmp_path: Path) -> None:
     scan and produces output — either findings JSON or an empty `{}`.
     """
     _write_plugin_json(tmp_path, disable=False)
-    result = _run_hook(tmp_path, extra_env={"SEMGREP_APP_TOKEN": "test"})
+    result = _run_hook(tmp_path, extra_env={"LENS_APP_TOKEN": "test"})
     assert result.stdout != b""
 
 
 @pytest.mark.quick
 def test_no_config_file_proceeds_to_scan(tmp_path: Path) -> None:
     """Without any plugin.json the hook uses defaults and proceeds to scan."""
-    result = _run_hook(tmp_path, extra_env={"SEMGREP_APP_TOKEN": "test"})
+    result = _run_hook(tmp_path, extra_env={"LENS_APP_TOKEN": "test"})
     assert result.stdout != b""
 
 
@@ -193,7 +193,7 @@ def test_no_config_file_proceeds_to_scan(tmp_path: Path) -> None:
 def test_non_install_command_exits_cleanly(tmp_path: Path) -> None:
     """Commands that are not package-manager installs are silently ignored."""
     result = _run_hook(
-        tmp_path, command="git status", extra_env={"SEMGREP_APP_TOKEN": "test"}
+        tmp_path, command="git status", extra_env={"LENS_APP_TOKEN": "test"}
     )
     assert result.returncode == 0
     assert result.stdout == b""
@@ -204,21 +204,21 @@ def test_non_install_command_disabled_config(tmp_path: Path) -> None:
     """Non-install command is ignored even when disable_supply_chain_scan=false."""
     _write_plugin_json(tmp_path, disable=False)
     result = _run_hook(
-        tmp_path, command="make build", extra_env={"SEMGREP_APP_TOKEN": "test"}
+        tmp_path, command="make build", extra_env={"LENS_APP_TOKEN": "test"}
     )
     assert result.returncode == 0
     assert result.stdout == b""
 
 
 # ---------------------------------------------------------------------------------
-# Full CLI integration (requires SEMGREP_APP_TOKEN, can only be run locally)
+# Full CLI integration (requires LENS_APP_TOKEN, can only be run locally)
 # ---------------------------------------------------------------------------------
 
 
 @pytest.mark.slow
 @pytest.mark.skipif(
-    not os.environ.get("SEMGREP_APP_TOKEN"),
-    reason="SEMGREP_APP_TOKEN not set; skipping integration test.",
+    not os.environ.get("LENS_APP_TOKEN"),
+    reason="LENS_APP_TOKEN not set; skipping integration test.",
 )
 def test_supply_chain_scan_integration_blocks_on_vulnerable_project(
     vulnerable_project: Path,
@@ -233,8 +233,8 @@ def test_supply_chain_scan_integration_blocks_on_vulnerable_project(
 
 @pytest.mark.slow
 @pytest.mark.skipif(
-    not os.environ.get("SEMGREP_APP_TOKEN"),
-    reason="SEMGREP_APP_TOKEN not set; skipping integration test.",
+    not os.environ.get("LENS_APP_TOKEN"),
+    reason="LENS_APP_TOKEN not set; skipping integration test.",
 )
 def test_supply_chain_scan_integration_no_block_on_clean_project(
     clean_project: Path,
@@ -248,8 +248,8 @@ def test_supply_chain_scan_integration_no_block_on_clean_project(
 
 @pytest.mark.slow
 @pytest.mark.skipif(
-    not os.environ.get("SEMGREP_APP_TOKEN"),
-    reason="SEMGREP_APP_TOKEN not set; skipping integration test.",
+    not os.environ.get("LENS_APP_TOKEN"),
+    reason="LENS_APP_TOKEN not set; skipping integration test.",
 )
 def test_supply_chain_scan_integration_disabled_skips_scan(
     vulnerable_project: Path,

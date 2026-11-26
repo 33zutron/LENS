@@ -1,6 +1,6 @@
 (* Brandon Wu
  *
- * Copyright (C) 2019-2024 Semgrep, Inc.
+ * Copyright (C) 2019-2024 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -13,13 +13,13 @@
  * LICENSE for more details.
  *)
 
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
 
-(* The internal state associated with the /semgrep/search command, which
+(* The internal state associated with the /lens/search command, which
    starts a streaming search process with the LSP.
    Will be reset on every new search request!
 *)

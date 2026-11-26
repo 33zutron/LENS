@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 #
-# Compare the findings for two different versions of semgrep.
-# It's meant to run within a semgrep pull request.
+# Compare the findings for two different versions of lens.
+# It's meant to run within a lens pull request.
 #
 import json
 import os

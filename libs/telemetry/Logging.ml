@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) Semgrep, Inc.
+ * Copyright (C) Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -31,7 +31,7 @@ let attach_otel_reporter ?attributes reporter =
                and we're not sure of the usefulness *)
       (* COUPLING: we do something similar in tracing.py. If we want to
                enable sending debug logs here we probably want to send them from
-               pysemgrep too! *)
+               pylens too! *)
       match level with
       | Logs.Debug -> r1.Logs.report src level ~over k msgf
       | _ -> (

@@ -90,7 +90,7 @@ runs:
 #  - url: git@github.com:returntocorp/big-js
 #    commit_hash: 08ba212ac7961768fcde386f70eea7a901ddb8f5
 #  rule_configs:
-#  - big-js/semgrep_slow.yml
+#  - big-js/lens_slow.yml
 #  opts: []
 #- name: rails  # ruby rulepack on a large ruby repo
 #  repos:

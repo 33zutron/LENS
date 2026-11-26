@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -15,7 +15,7 @@ val run_core_search :
   Rule.search_rule ->
   Fpath.t ->
   Core_result.processed_match list option
-(** [run_core_search] runs a search intended for the /semgrep/search IDE
+(** [run_core_search] runs a search intended for the /lens/search IDE
     search command, by hooking lower into the Match_search_mode matching
     process, bypassing the CLI.
   *)

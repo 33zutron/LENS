@@ -1,0 +1,27 @@
+; OCaml implementation of the 'lens validate' subcommand.
+
+(library
+  (public_name lens.olens_cli_validate)
+  (name olens_cli_validate)
+  (wrapped false)
+  (libraries
+    cmdliner
+    commons
+
+    ; lens-core
+    ;lens.engine
+    ;lens.engine.tests
+    ;lens.core_scan
+    ; olens
+    lens.olens_core
+    lens.core_runner
+    lens.olens_networking
+    lens.olens_reporting
+  )
+ (preprocess
+   (pps
+     ppx_profiling
+     ppx_deriving.show
+   )
+ )
+)

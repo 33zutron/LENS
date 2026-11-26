@@ -1,6 +1,6 @@
 rules:
   - id: match-multiple-metavar-type-rule20
-    message: Semgrep found a match
+    message: Lens found a match
     severity: WARNING
     languages:
       - cpp

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -25,7 +25,7 @@ type t = {
   (* subtle but the pattern:/pattern-inside:/pattern-regex: and
    * pattern-not:/pattern-not-inside:/pattern-not-regex: are actually different,
    * so we need to keep the information around during the evaluation.
-   * Note that this useful only for few tests in semgrep-rules/ so we
+   * Note that this useful only for few tests in lens-rules/ so we
    * probably want to simplify things later and remove the difference between
    * xxx, xxx-inside, and xxx-regex.
    * TODO: in fact, if we do a proper intersection of ranges, where we
@@ -122,11 +122,11 @@ let inside_compatible x y =
  *
  * alt: we could force the user to first And the metavariable-regex
  * with the pattern-inside, to have the right scope.
- * See https://github.com/semgrep/semgrep/issues/2664
+ * See https://github.com/lens/lens/issues/2664
  * alt: we could do the rewriting ourselves, detecting that the
  * metavariable-regex has the wrong scope.
  *
- * TODO: remove ~debug_matches, just use SEMGREP_LOG_SRCS=engine
+ * TODO: remove ~debug_matches, just use LENS_LOG_SRCS=engine
  *)
 let intersect_ranges config ~debug_matches xs ys =
   let left_merge u v =
@@ -159,7 +159,7 @@ let difference_ranges config pos neg =
           |> List.exists (fun y ->
               (* pattern-not vs pattern-not-inside vs pattern-not-regex,
                * the difference matters!
-               * This fixed 10 mismatches in semgrep-rules and some e2e tests.
+               * This fixed 10 mismatches in lens-rules and some e2e tests.
                *)
               match y.kind with
               (* pattern-not-inside: x cannot occur inside y *)

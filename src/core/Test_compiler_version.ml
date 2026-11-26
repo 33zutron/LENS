@@ -1,5 +1,5 @@
 (*
- * Copyright (C) 2025 Semgrep, Inc.
+ * Copyright (C) 2025 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -18,9 +18,9 @@ let t = Testo.create
 
 let tests : Testo.t list =
   [
-    t "OCaml compiler version starts with 5.4.0+semgrep-fork" (fun () ->
+    t "OCaml compiler version starts with 5.4.0+lens-fork" (fun () ->
         let ocaml_version = Sys.ocaml_version in
-        let expected_prefix = "5.4.0+semgrep-fork" in
+        let expected_prefix = "5.4.0+lens-fork" in
         if not (String.starts_with ~prefix:expected_prefix ocaml_version) then
           failwith
             (spf "Expected OCaml version to start with '%s', but got '%s'"

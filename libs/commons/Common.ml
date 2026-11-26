@@ -22,7 +22,7 @@ module Log = Log_commons.Log
  * do a try and finalize and instead just call the function, which
  * helps in ocamldebug and also in getting better backtraces.
  *)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let debugger = ref false
 
 (*****************************************************************************)
@@ -49,7 +49,7 @@ let spf = Printf.sprintf
  * play well with calls to 'protect' nested inside 'finally' blocks.
  *)
 let protect ~finally work =
-  (* nosemgrep: no-fun-protect *)
+  (* nolens: no-fun-protect *)
   try Fun.protect ~finally work with
   | Fun.Finally_raised exn1 as exn ->
       (* Just re-raise whatever exception was raised during a 'finally',
@@ -68,7 +68,7 @@ include Eq.Operators
 let phys_equal = Eq.phys_equal
 let phys_not_equal = Eq.phys_not_equal
 
-(* Used to give choice whether id_info fields should be checked in semgrep *)
+(* Used to give choice whether id_info fields should be checked in lens *)
 let equal_ref_option equal_f a b =
   match (!a, !b) with
   | None, None -> true

@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/3402
+# https://github.com/returntocorp/lens/issues/3402
 
 def test1():
     hardcoded = "hello"

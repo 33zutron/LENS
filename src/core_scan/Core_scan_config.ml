@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,23 +10,23 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-(* LATER: osemgrep: not needed after osemgrep migration done *)
+(* LATER: olens: not needed after olens migration done *)
 type output_format =
   | Text
   (* In JSON mode, we might need to display intermediate '.' in the
-   * output for pysemgrep to track progress as well as extra targets
+   * output for pylens to track progress as well as extra targets
    * found by extract-mode rules, hence the bool below.
    *)
   | Json of bool (* dots *)
-  (* for osemgrep *)
+  (* for olens *)
   | NoOutput
 [@@deriving show]
 
 (*
-   'Rule_files' is for the semgrep-core CLI. A single rule file is represented
-   as a singleton list; pysemgrep may pass multiple generated shards so core can
+   'Rule_files' is for the lens-core CLI. A single rule file is represented
+   as a singleton list; pylens may pass multiple generated shards so core can
    parse them in parallel.
-   'Rules' is for osemgrep or when for some reason the rules had to be
+   'Rules' is for olens or when for some reason the rules had to be
     preparsed.
 *)
 type rule_source = Rule_files of Fpath.t list | Rules of Rule.t list
@@ -50,12 +50,12 @@ let pp_rule_source (fmt : Format.formatter) (x : rule_source) : unit =
       else Format.fprintf fmt "Rules (%a)" Rule.pp_rules xs
 
 (*
-   'Target_file' is for the semgrep-core CLI which gets a list of
+   'Target_file' is for the lens-core CLI which gets a list of
    paths as an explicit list rather than by discovering files by scanning
    folders recursively.
-   'Targets' is used by osemgrep, which also takes care of identifying
+   'Targets' is used by olens, which also takes care of identifying
    targets but doesn't have to put them in a file since we stay in the
-   same process and we bypass the semgrep-core CLI.
+   same process and we bypass the lens-core CLI.
 *)
 type target_source = Target_file of Fpath.t | Targets of Target.t list
 [@@deriving show]
@@ -89,8 +89,8 @@ let finalize_num_jobs = function
   | Force n ->
       n
 
-(* This is mostly the flags of the semgrep-core program.
- * LATER: should delete or merge with osemgrep Core_runner.conf
+(* This is mostly the flags of the lens-core program.
+ * LATER: should delete or merge with olens Core_runner.conf
  *)
 type t = {
   (* Main flags, input *)
@@ -102,7 +102,7 @@ type t = {
   matching_explanations : bool;
   strict : bool;
   (* respect or not the paths: directive in a rule. Useful to set to false
-   * in a testing context as in `semgrep test`
+   * in a testing context as in `lens test`
    *)
   respect_rule_paths : bool;
   (* Hook to display match results incrementally, after a file has been fully
@@ -133,7 +133,7 @@ type t = {
 }
 [@@deriving show]
 
-(* Default values for all the semgrep-core command-line arguments and options.
+(* Default values for all the lens-core command-line arguments and options.
    Its values can be inherited using the 'with' syntax:
       let my_config = { Core_scan_config.default with ncores = 3 }
 *)

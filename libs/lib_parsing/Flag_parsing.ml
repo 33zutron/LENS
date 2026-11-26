@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -18,7 +18,7 @@ let verbose_lexing = Hook.create false
 let verbose_parsing = Hook.create true
 
 (* see Parse_info.lexical_error helper and Lexical_error exn *)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let exn_when_lexical_error = ref true
 
 (* Do not raise an exn when a parse error but use NotParsedCorrectly.

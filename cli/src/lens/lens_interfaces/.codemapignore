@@ -1,0 +1,8 @@
+*_[jt].ml
+*_j.mli
+
+lens_output_v1.*
+ast_generic_v1.*
+lens_metrics.*
+# negation :)
+!*.atd

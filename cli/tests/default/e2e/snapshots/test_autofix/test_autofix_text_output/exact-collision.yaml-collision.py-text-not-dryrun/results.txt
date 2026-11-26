@@ -7,14 +7,14 @@
     targets/autofix/collision.py
     ❯❱ rules.autofix.first-rule
           ❰❰ Blocking ❱❱
-          Semgrep found a match
+          Lens found a match
 
            ▶▶┆ Autofix ▶ once
             2┆ a = 1
 
     ❯❱ rules.autofix.second-rule
           ❰❰ Blocking ❱❱
-          Semgrep found a match
+          Lens found a match
 
            ▶▶┆ Autofix ▶ twice
             2┆ a = 1

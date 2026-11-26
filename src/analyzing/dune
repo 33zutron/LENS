@@ -1,5 +1,5 @@
 ; Try to not add too many dependencies in this directory. This library
-; used to be in pfff and is still used in projects outside semgrep (e.g.,
+; used to be in pfff and is still used in projects outside lens (e.g.,
 ; codemap/efuns) which rely on this pfff-lang_... name and rely on
 ; small dependencies.
 (library
@@ -12,8 +12,8 @@
    commons
    ast_generic
    parallelism
-   semgrep.core ; Lang
-   semgrep.il
+   lens.core ; Lang
+   lens.il
  )
  (preprocess
     (pps

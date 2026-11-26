@@ -81,7 +81,7 @@
 └────────────────┘
 
   SCAN ENVIRONMENT
-  versions    - semgrep <MASKED> on python <MASKED>
+  versions    - lens <MASKED> on python <MASKED>
   environment - running in environment git, triggering event is unknown
 
 
@@ -118,7 +118,7 @@
  • Targets scanned: 3
  • Parsed lines: ~100.0%
  • Scan was limited to files tracked by git
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+ • For a detailed list of skipped files and lines, run lens with the --verbose flag
 CI scan completed successfully.
   Has findings for blocking rules so exiting with code 1
 

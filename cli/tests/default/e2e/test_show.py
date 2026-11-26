@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,20 +11,20 @@
 # LICENSE for more details.
 #
 #
-# Tests for the 'semgrep show' subcommands
+# Tests for the 'lens show' subcommands
 #
 import os
 import subprocess
 from pathlib import Path
 
 import pytest
-from tests.semgrep_runner import mk_semgrep_base_command
+from tests.lens_runner import mk_lens_base_command
 
 
 @pytest.mark.kinda_slow
 def test_show_project_root(snapshot):
     stdout = subprocess.check_output(
-        mk_semgrep_base_command("show", ["project-root", "."]),
+        mk_lens_base_command("show", ["project-root", "."]),
         encoding="utf-8",
     )
     project_root = Path(stdout.rstrip())

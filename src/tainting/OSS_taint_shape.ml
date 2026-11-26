@@ -1,6 +1,6 @@
 (* Iago Abal
  *
- * Copyright (C) 2024 Semgrep Inc.
+ * Copyright (C) 2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -231,7 +231,7 @@ let internal_UNSAFE_find_offset_in_obj o obj =
   | Some _ -> (o, obj)
   | None ->
       let num_fields = Fields.cardinal obj in
-      if num_fields <= Limits_semgrep.taint_MAX_OBJ_FIELDS then
+      if num_fields <= Limits_lens.taint_MAX_OBJ_FIELDS then
         let obj = Fields.add o cell_none_bot obj in
         (o, obj)
       else (
@@ -278,14 +278,14 @@ let fix_poly_taint_with_offset offset taints =
        * function adds some offset, we could end up a very large
        * amount of polymorphic taint.
        * This actually happened with rule
-       * semgrep.perf.rules.express-fs-filename from the Pro
+       * lens.perf.rules.express-fs-filename from the Pro
        * benchmarks, and file
        * WebGoat/src/main/resources/webgoat/static/js/libs/ace.js.
        *
        * TODO: This is way less likely to happen if we had better
        *   type info and we used it to remove taint, e.g. if Boolean
        *   and integer expressions didn't propagate taint. *)
-      List.length offset < Limits_semgrep.taint_MAX_POLY_OFFSET
+      List.length offset < Limits_lens.taint_MAX_POLY_OFFSET
     then extended_lval
     else (
       Log.warn (fun m ->
@@ -349,7 +349,7 @@ let rec unify_cell cell1 cell2 =
   else
     let (Cell (xtaint1, shape1)) = cell1 in
     let (Cell (xtaint2, shape2)) = cell2 in
-    (* TODO: Apply 'Flag_semgrep.max_taint_set_size' here too ? *)
+    (* TODO: Apply 'Flag_lens.max_taint_set_size' here too ? *)
     let xtaint = Xtaint.union xtaint1 xtaint2 in
     let shape = unify_shape shape1 shape2 in
     Cell (xtaint, shape)
@@ -611,8 +611,8 @@ let update_offset_and_unify new_taints new_shape offset opt_cell =
           (new_xtaint, shape)
       | `Tainted taints as xtaint ->
           if
-            !Flag_semgrep.max_taint_set_size =|= 0
-            || Taints.cardinal taints < !Flag_semgrep.max_taint_set_size
+            !Flag_lens.max_taint_set_size =|= 0
+            || Taints.cardinal taints < !Flag_lens.max_taint_set_size
           then (Xtaint.union new_xtaint xtaint, shape)
           else (
             Log.warn (fun m ->

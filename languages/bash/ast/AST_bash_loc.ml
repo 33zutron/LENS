@@ -1,6 +1,6 @@
 (* Martin Jambon
  *
- * Copyright (C) 2021 Semgrep Inc.
+ * Copyright (C) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -97,9 +97,9 @@ let expression_loc = function
   | Ansii_c_string x -> wrap_loc x
   | Special_character x -> wrap_loc x
   | Concatenation (loc, _) -> loc
-  | Expr_semgrep_ellipsis tok -> (tok, tok)
-  | Expr_semgrep_deep_ellipsis (loc, _) -> loc
-  | Expr_semgrep_metavar x -> wrap_loc x
+  | Expr_lens_ellipsis tok -> (tok, tok)
+  | Expr_lens_deep_ellipsis (loc, _) -> loc
+  | Expr_lens_metavar x -> wrap_loc x
   | Equality_test (loc, _, _) -> loc
   | Empty_expression loc -> loc
   | Array (loc, _) -> loc
@@ -123,8 +123,8 @@ let string_fragment_loc = function
   | Expansion (loc, _) -> loc
   | Command_substitution x -> bracket_loc x
   | Arithmetic_expansion x -> bracket_loc x
-  | Frag_semgrep_metavar x -> wrap_loc x
-  | Frag_semgrep_named_ellipsis x -> wrap_loc x
+  | Frag_lens_metavar x -> wrap_loc x
+  | Frag_lens_named_ellipsis x -> wrap_loc x
 
 let _expansion_loc = function
   | Simple_expansion (loc, _) -> loc

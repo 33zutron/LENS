@@ -164,7 +164,7 @@ let any_of_string s =
       let _tr, lexer, lexbuf_fake =
         Parsing_helpers.mk_lexer_for_yacc toks is_comment
       in
-      Parser_php.semgrep_pattern lexer lexbuf_fake)
+      Parser_php.lens_pattern lexer lexbuf_fake)
 
 let program_of_string s =
   match any_of_string s with

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ open Fpath_.Operators
  * the ruleid: annotations, look at Test_subcommand.ml.
  *
  * This module is mostly a copy-paste of Error_code.compare_actual_to_expected
- * but with Semgrep_error_code.error instead of Error_code.t for the error type.
+ * but with Lens_error_code.error instead of Error_code.t for the error type.
  *)
 
 (*****************************************************************************)

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 val meth : string
-(** method to match on: [semgrep/loginStatus] *)
+(** method to match on: [lens/loginStatus] *)
 
 val on_request :
   Legacy_session.t ->

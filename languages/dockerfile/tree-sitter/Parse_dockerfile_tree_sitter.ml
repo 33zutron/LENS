@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -225,8 +225,8 @@ let remove_blank_prefix (x : string wrap) : string wrap =
 (*****************************************************************************)
 
 type ellipsis_or_bash =
-  | Semgrep_ellipsis of tok
-  | Semgrep_named_ellipsis of string wrap
+  | Lens_ellipsis of tok
+  | Lens_named_ellipsis of string wrap
   | Bash of AST_bash.blist option
 
 (* A plain ellipsis such as '...' (not e.g. '...;') is identified so
@@ -268,9 +268,9 @@ let parse_bash (env : env) shell_cmd : ellipsis_or_bash =
   let input_kind, _ = env.extra in
   let contents, tok = shell_cmd in
   match input_kind with
-  | Pattern when is_plain_ellipsis contents -> Semgrep_ellipsis (snd shell_cmd)
+  | Pattern when is_plain_ellipsis contents -> Lens_ellipsis (snd shell_cmd)
   | Pattern when is_named_ellipsis contents ->
-      Semgrep_named_ellipsis (String.trim contents, tok)
+      Lens_named_ellipsis (String.trim contents, tok)
   | _ ->
       let ts_res =
         H.wrap_parser
@@ -297,8 +297,8 @@ let parse_bash (env : env) shell_cmd : ellipsis_or_bash =
    The scope of an ARG is a stage, i.e. the section between a FROM instruction
    and the next FROM instruction or the end of the file.
 
-   The braceless syntax $FOO, like we do for Bash, is co-opted for Semgrep
-   metavariables when parsing a Semgrep pattern. In a pattern, ${FOO}
+   The braceless syntax $FOO, like we do for Bash, is co-opted for Lens
+   metavariables when parsing a Lens pattern. In a pattern, ${FOO}
    is the expansion of the FOO argument while ${$FOO} is the expansion
    of any argument represented by the metavariable $FOO.
 *)
@@ -317,7 +317,7 @@ let expansion (env : env) ((v1, v2) : CST.expansion) : docker_string_fragment =
       let mv_s = Tok.content_of_tok mv_tok in
       match env.extra with
       | Pattern, _ when AST_generic.is_metavar_name mv_s ->
-          Frag_semgrep_metavar (mv_s, mv_tok)
+          Frag_lens_metavar (mv_s, mv_tok)
       | _ ->
           let loc = (dollar, wrap_tok name) in
           Expansion (loc, Expand_var name))
@@ -334,7 +334,7 @@ let expansion (env : env) ((v1, v2) : CST.expansion) : docker_string_fragment =
       let expansion =
         match env.extra with
         | Pattern, _ when AST_generic.is_metavar_name name ->
-            Expand_semgrep_metavar var_or_mv
+            Expand_lens_metavar var_or_mv
         | _ -> Expand_var var_or_mv
       in
       let close =
@@ -347,7 +347,7 @@ let expansion (env : env) ((v1, v2) : CST.expansion) : docker_string_fragment =
 let double_quoted_expansion (env : env) (x : CST.expansion) :
     double_quoted_string_fragment =
   match expansion env x with
-  | Frag_semgrep_metavar x -> Dbl_frag_semgrep_metavar x
+  | Frag_lens_metavar x -> Dbl_frag_lens_metavar x
   | Expansion x -> Dbl_expansion x
   | _ -> assert false
 
@@ -373,7 +373,7 @@ let param (env : env) ((v1, v2, v3, v4) : CST.param) : param =
 
 let expose_port (env : env) (x : CST.expose_port) : expose_port =
   match x with
-  | `Semg_ellips tok -> Expose_semgrep_ellipsis (token env tok (* "..." *))
+  | `Semg_ellips tok -> Expose_lens_ellipsis (token env tok (* "..." *))
   | `Expa_choice_SLAS (v1, v2) ->
       let port = expansion env v1 in
       let protocol_tok =
@@ -567,7 +567,7 @@ let generic_path (env : env) ((v1, v2) : generic_path) :
 
 let generic_path_or_ellipsis (env : env) (x : generic_path) : str_or_ellipsis =
   match (env.extra, generic_path env x) with
-  | (Pattern, _), [ Unquoted ("...", tok) ] -> Str_semgrep_ellipsis tok
+  | (Pattern, _), [ Unquoted ("...", tok) ] -> Str_lens_ellipsis tok
   | _, fragments ->
       let loc = Tok_range.of_list docker_string_fragment_loc fragments in
       Str_str (loc, fragments)
@@ -870,7 +870,7 @@ let json_string_array (env : env) ((v1, v2, v3) : CST.json_string_array) :
 
 let env_pair (env : env) (x : CST.env_pair) : env_pair =
   match x with
-  | `Semg_ellips tok -> Env_semgrep_ellipsis (token env tok (* "..." *))
+  | `Semg_ellips tok -> Env_lens_ellipsis (token env tok (* "..." *))
   | `Env_key_imm_tok_eq_opt_choice_double_quoted_str (v1, v2, v3) ->
       let k =
         Ident (str env v1 (* pattern [a-zA-Z][a-zA-Z0-9_]*[a-zA-Z0-9] *))
@@ -905,12 +905,12 @@ let spaced_env_pair (env : env) ((v1, v2, v3) : CST.spaced_env_pair) : env_pair
 
 let label_pair (env : env) (x : CST.label_pair) : label_pair =
   match x with
-  | `Semg_ellips tok -> Label_semgrep_ellipsis (token env tok (* "..." *))
+  | `Semg_ellips tok -> Label_lens_ellipsis (token env tok (* "..." *))
   | `Choice_semg_meta_imm_tok_eq_choice_double_quoted_str (v1, v2, v3) ->
       let key : key_or_metavar =
         match v1 with
         | `Semg_meta tok ->
-            Semgrep_metavar (str env tok (* pattern \$[A-Z_][A-Z_0-9]* *))
+            Lens_metavar (str env tok (* pattern \$[A-Z_][A-Z_0-9]* *))
         | `Pat_4128122 tok ->
             Key (Unquoted (str env tok (* pattern [-a-zA-Z0-9\._]+ *)))
         | `Double_quoted_str x -> Key (double_quoted_string env x)
@@ -926,7 +926,7 @@ let label_pair (env : env) (x : CST.label_pair) : label_pair =
 
 let shell_command (env : env) (x : CST.shell_command) =
   match x with
-  | `Semg_ellips tok -> Command_semgrep_ellipsis (token env tok)
+  | `Semg_ellips tok -> Command_lens_ellipsis (token env tok)
   | `Shell_frag_rep_requ_line_cont_shell_frag (v1, v2) -> (
       (* Stitch back the fragments together, then parse using the correct
          shell language. *)
@@ -960,8 +960,8 @@ let shell_command (env : env) (x : CST.shell_command) =
       match shell_compat with
       | Sh -> (
           match parse_bash env raw_shell_code with
-          | Semgrep_ellipsis tok -> Command_semgrep_ellipsis tok
-          | Semgrep_named_ellipsis x -> Command_semgrep_named_ellipsis x
+          | Lens_ellipsis tok -> Command_lens_ellipsis tok
+          | Lens_named_ellipsis x -> Command_lens_named_ellipsis x
           | Bash (Some bash_program) ->
               let loc = wrap_loc raw_shell_code in
               Sh_command (loc, bash_program)
@@ -980,7 +980,7 @@ let shell_command_parts env (v1, v2) : shell_fragment_part list =
 let shell_command_with_heredocs env (x : CST.shell_command)
     (heredoc_bodies : CST.heredoc_block list) : command =
   match x with
-  | `Semg_ellips tok -> Command_semgrep_ellipsis (token env tok)
+  | `Semg_ellips tok -> Command_lens_ellipsis (token env tok)
   | `Shell_frag_rep_requ_line_cont_shell_frag (v1, v2) ->
       let parts = shell_command_parts env (v1, v2) in
       let has_heredoc_marker =
@@ -1095,10 +1095,10 @@ let add_or_copy (env : env) (v1, v2, src_paths, v4, heredoc_bodies) :
 
 let rec instruction (env : env) (x : CST.instruction) : env * instruction =
   match x with
-  | `Semg_ellips tok -> (* "..." *) (env, Instr_semgrep_ellipsis (token env tok))
+  | `Semg_ellips tok -> (* "..." *) (env, Instr_lens_ellipsis (token env tok))
   | `Semg_meta tok ->
       (* pattern \$[A-Z_][A-Z_0-9]* *)
-      (env, Instr_semgrep_metavar (str env tok))
+      (env, Instr_lens_metavar (str env tok))
   | `Choice_from_inst x -> (
       match x with
       | `From_inst (v1, v2, v3, v4) ->
@@ -1257,7 +1257,7 @@ let rec instruction (env : env) (x : CST.instruction) : env * instruction =
           let key : ident_or_metavar =
             match v2 with
             | `Semg_meta tok ->
-                Semgrep_metavar (str env tok (* pattern \$[A-Z_][A-Z_0-9]* *))
+                Lens_metavar (str env tok (* pattern \$[A-Z_][A-Z_0-9]* *))
             | `Pat_4de4cb9 tok ->
                 Ident (str env tok (* pattern [a-zA-Z0-9_]+ *))
           in
@@ -1300,7 +1300,7 @@ let rec instruction (env : env) (x : CST.instruction) : env * instruction =
           let arg =
             match v2 with
             | `Semg_meta tok ->
-                Healthcheck_semgrep_metavar
+                Healthcheck_lens_metavar
                   (str env tok (* pattern \$[A-Z_][A-Z_0-9]* *))
             | `Semg_ellips tok ->
                 let tok = token env tok in
@@ -1356,7 +1356,7 @@ let rec instruction (env : env) (x : CST.instruction) : env * instruction =
           let maintainer = remove_blank_prefix maintainer_data in
           let loc = (wrap_tok name, wrap_tok maintainer) in
           let string_or_mv =
-            if is_metavar env maintainer then Str_semgrep_metavar maintainer
+            if is_metavar env maintainer then Str_lens_metavar maintainer
             else Str_string maintainer
           in
           (env, Maintainer (loc, name, string_or_mv))
@@ -1396,7 +1396,7 @@ let source_file (env : env) (xs : CST.source_file) =
    official 'docker' command.
 
    This may be fixed in the grammar eventually but for now, tree-sitter
-   inserts a "missing token" for the missing newline, and semgrep doesn't
+   inserts a "missing token" for the missing newline, and lens doesn't
    report it as an error.
 
    However, in some cases, a segfault occurs. This is fixed in recent

@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/3579
+// https://github.com/returntocorp/lens/issues/3579
 
 //ERROR:
 var foo = {

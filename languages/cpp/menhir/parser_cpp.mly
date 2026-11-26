@@ -244,7 +244,7 @@ open Parser_cpp_mly_helper
 (*************************************************************************)
 %start <Ast_cpp.program> main
 %start <Ast_cpp.toplevel option> toplevel
-%start <Ast_cpp.any> semgrep_pattern
+%start <Ast_cpp.any> lens_pattern
 
 %%
 (*************************************************************************)
@@ -316,11 +316,11 @@ toplevel_aux:
  | "}" { X (D (EmptyDef $1)) }
 
 (*************************************************************************)
-(* semgrep *)
+(* lens *)
 (*************************************************************************)
 
-(* this is the entry point used by semgrep to parse patterns *)
-semgrep_pattern:
+(* this is the entry point used by lens to parse patterns *)
+lens_pattern:
  | expr                                         EOF  { Expr $1 }
  (* TODO: statement_or_decl_cpp below internally calls block_declaration
   * which is not the same than declaration, hence some extra rules

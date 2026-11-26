@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2024 Semgrep Inc.
+# Copyright (c) 2021-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -71,7 +71,7 @@ class RepositoryTimePerRule:
     ) -> None:
         if not "time" in times_per_file:
             logger.error(
-                "Semgrep-core ran without the --time flag, please try again with --time set to true."
+                "Lens-core ran without the --time flag, please try again with --time set to true."
             )
             sys.exit(1)
 

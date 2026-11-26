@@ -1,6 +1,6 @@
 (* Iago Abal, Nat Mote
  *
- * Copyright (C) 2022-2024 Semgrep Inc.
+ * Copyright (C) 2022-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -16,11 +16,11 @@
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Taint traces to help understand semgrep findings (especially useful
+(* Taint traces to help understand lens findings (especially useful
  * when in interfile mode).
  *
  * Note that those "core" taint traces are translated at some point in
- * Semgrep_output_v1.match_dataflow_trace
+ * Lens_output_v1.match_dataflow_trace
  *
  * See also Matching_explanation.ml for a complementary way to explain
  * findings related to formula composition. The taint traces, as

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -17,16 +17,16 @@ from http.client import HTTPConnection
 import pytest
 import requests
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.app.scan_config import _ConfigPollTimeout
-from semgrep.app.scan_config import _poll_for_config_v2
-from semgrep.app.scan_config import fetch_scan_config
-from semgrep.app.scan_config import ScanConfigResponse
-from semgrep.app.scans import ScanHandler
-from semgrep.env import Env
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.app.scan_config import _ConfigPollTimeout
+from lens.app.scan_config import _poll_for_config_v2
+from lens.app.scan_config import fetch_scan_config
+from lens.app.scan_config import ScanConfigResponse
+from lens.app.scans import ScanHandler
+from lens.env import Env
 
 
-SEMGREP_URL = "https://semgrep.dev"
+LENS_URL = "https://lens.dev"
 SCAN_REQUEST_ID = "12345678-1234-5678-1234-567812345678"
 
 CREATE_SCAN_RESPONSE = {
@@ -60,21 +60,21 @@ def _make_response(mocker, json_data, status_code=200):
 def mock_state(mocker):
     state = mocker.MagicMock()
     state.local_scan_id = uuid.UUID(SCAN_REQUEST_ID)
-    state.env.semgrep_url = SEMGREP_URL
+    state.env.lens_url = LENS_URL
     state.env.sms_scan_id = None
     state.env.job_context = None
     state.env.upload_findings_timeout = 30
     state.env.v2_poll_timeout_seconds = 45
     state.env.v2_post_max_attempts = 3
     state.env.v2_overall_timeout_minutes = 3
-    mocker.patch("semgrep.app.scans.get_state", return_value=state)
-    mocker.patch("semgrep.app.scan_config.get_state", return_value=state)
+    mocker.patch("lens.app.scans.get_state", return_value=state)
+    mocker.patch("lens.app.scan_config.get_state", return_value=state)
     return state
 
 
 @pytest.fixture
 def mock_sleep(mocker):
-    return mocker.patch("semgrep.app.scan_config.sleep")
+    return mocker.patch("lens.app.scan_config.sleep")
 
 
 @pytest.fixture
@@ -92,7 +92,7 @@ def mock_args(mocker):
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_fetch_scan_config_success_immediate(
     mocker, mock_state, mock_sleep, handler, mock_args
 ):
@@ -121,7 +121,7 @@ def test_fetch_scan_config_success_immediate(
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_fetch_scan_config_success_after_pending(
     mocker, mock_state, mock_sleep, handler, mock_args
 ):
@@ -150,7 +150,7 @@ def test_fetch_scan_config_success_after_pending(
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_fetch_scan_config_config_failure(
     mocker, mock_state, mock_sleep, handler, mock_args
 ):
@@ -177,7 +177,7 @@ def test_fetch_scan_config_config_failure(
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_start_scan_uses_v2(mocker, mock_state, mock_sleep, mock_args):
     """start_scan always uses the v2 endpoint."""
     project_metadata, project_config = mock_args
@@ -192,7 +192,7 @@ def test_start_scan_uses_v2(mocker, mock_state, mock_sleep, mock_args):
     handler.start_scan(project_metadata, project_config)
 
     post_url = mock_state.app_session.post.call_args[0][0]
-    assert post_url == f"{SEMGREP_URL}/api/cli/v2/scans"
+    assert post_url == f"{LENS_URL}/api/cli/v2/scans"
     assert mock_state.app_session.get.call_count == 1
     get_url = mock_state.app_session.get.call_args[0][0]
     assert "/api/cli/v2/scans/" in get_url
@@ -200,7 +200,7 @@ def test_start_scan_uses_v2(mocker, mock_state, mock_sleep, mock_args):
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.parametrize("missing_field", ["config", "engine_params"])
 @pytest.mark.parametrize("dry_run", [False, True])
 def test_start_scan_requires_config_and_engine_params(
@@ -230,7 +230,7 @@ def test_start_scan_requires_config_and_engine_params(
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.parametrize(
     "job_context",
     [
@@ -247,23 +247,23 @@ def test_fetch_scan_config_retries_post_all_timeouts(
 ):
     """Retries POST up to _V2_POST_MAX_ATTEMPTS times on repeated poll timeouts, then raises."""
     project_metadata, project_config = mock_args
-    monkeypatch.setenv("SEMGREP_JOB_CONTEXT", job_context)
+    monkeypatch.setenv("LENS_JOB_CONTEXT", job_context)
     mock_state.env.job_context = Env().job_context
     sent_headers = []
 
     def post(url, **kwargs):
         prepared = requests.Request("POST", url, **kwargs).prepare()
-        connection = HTTPConnection("semgrep.dev")
+        connection = HTTPConnection("lens.dev")
         connection.putrequest("POST", "/api/cli/v2/scans")
         for name, value in prepared.headers.items():
             connection.putheader(name, value)
-        sent_headers.append(prepared.headers["X-Semgrep-Job-Context"])
+        sent_headers.append(prepared.headers["X-Lens-Job-Context"])
         mock_state.env.job_context = "changed after first attempt"
         return _make_response(mocker, CREATE_SCAN_RESPONSE)
 
     mock_state.app_session.post.side_effect = post
     poll = mocker.patch(
-        "semgrep.app.scan_config._poll_for_config_v2",
+        "lens.app.scan_config._poll_for_config_v2",
         side_effect=_ConfigPollTimeout("timed out"),
     )
 
@@ -292,7 +292,7 @@ def test_fetch_scan_config_retries_post_all_timeouts(
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_fetch_scan_config_success_on_second_post_attempt(
     mocker, mock_state, mock_sleep, handler, mock_args
 ):
@@ -303,7 +303,7 @@ def test_fetch_scan_config_success_on_second_post_attempt(
     )
     scan_response = mocker.MagicMock()
     poll = mocker.patch(
-        "semgrep.app.scan_config._poll_for_config_v2",
+        "lens.app.scan_config._poll_for_config_v2",
         side_effect=[_ConfigPollTimeout("timed out"), scan_response],
     )
 
@@ -321,7 +321,7 @@ def test_fetch_scan_config_success_on_second_post_attempt(
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_fetch_scan_config_failure_does_not_retry_post(
     mocker, mock_state, mock_sleep, handler, mock_args
 ):
@@ -331,7 +331,7 @@ def test_fetch_scan_config_failure_does_not_retry_post(
         mocker, CREATE_SCAN_RESPONSE
     )
     poll = mocker.patch(
-        "semgrep.app.scan_config._poll_for_config_v2",
+        "lens.app.scan_config._poll_for_config_v2",
         side_effect=Exception("Config generation failed"),
     )
 
@@ -354,7 +354,7 @@ def test_fetch_scan_config_failure_does_not_retry_post(
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_poll_for_config_v2_raises_config_poll_timeout_when_expired(
     mocker, mock_state, handler
 ):
@@ -376,7 +376,7 @@ def test_poll_for_config_v2_raises_config_poll_timeout_when_expired(
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_partial_scan_rule_ids_default_absent(mock_state):
     """Without --x-partial-scan-rule-id, scan_metadata.partial_scan_rule_ids is None
     and the field is omitted from the serialized JSON body."""
@@ -386,7 +386,7 @@ def test_partial_scan_rule_ids_default_absent(mock_state):
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_partial_scan_rule_ids_populated(mock_state):
     """When the flag is passed (one or more values), scan_metadata.partial_scan_rule_ids
     is wrapped as a list of RuleId and serializes as a list of strings."""
@@ -405,7 +405,7 @@ def test_partial_scan_rule_ids_populated(mock_state):
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_partial_scan_rule_ids_empty_tuple_is_absent(mock_state):
     """An empty tuple (the Click default when the flag isn't passed) is treated
     the same as omitted: field stays None and is not serialized."""
@@ -418,7 +418,7 @@ def test_partial_scan_rule_ids_empty_tuple_is_absent(mock_state):
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_is_partial_scan(mock_state):
     """is_partial_scan follows whether any rule ids were passed."""
     assert not ScanHandler(enable_transitive_reachability=None).is_partial_scan
@@ -431,7 +431,7 @@ def test_is_partial_scan(mock_state):
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.parametrize("enabled", [None, False, True])
 def test_gradle_module_attribution_engine_params(handler, mocker, enabled):
     assert handler.gradle_module_attribution is False
@@ -443,7 +443,7 @@ def test_gradle_module_attribution_engine_params(handler, mocker, enabled):
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.parametrize("unauthorized_on", ["post", "get"])
 def test_start_scan_invalid_token(mocker, mock_state, mock_args, unauthorized_on):
     project_metadata, project_config = mock_args

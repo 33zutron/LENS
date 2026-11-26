@@ -19,5 +19,5 @@ Skipping baseline scan, because there are no current findings.
  • Targets scanned: 0
  • Parsed lines: an unknown percentage
  • Scan was limited to files changed since baseline commit.
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+ • For a detailed list of skipped files and lines, run lens with the --verbose flag
 Ran 1 rule on 0 files: 0 findings.

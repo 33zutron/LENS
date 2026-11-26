@@ -1,5 +1,5 @@
 <?php
-//https://github.com/returntocorp/semgrep/issues/3588
+//https://github.com/returntocorp/lens/issues/3588
 class Autoconfigure
 {
     public function __construct(

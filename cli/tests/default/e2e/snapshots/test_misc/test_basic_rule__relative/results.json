@@ -58,7 +58,7 @@
         "message": "useless comparison operation `a + b == a + b` or `a + b != a + b`",
         "metadata": {
           "shortlink": "https://sg.run/xyz1",
-          "source": "https://semgrep.dev/r/eqeq-bad"
+          "source": "https://lens.dev/r/eqeq-bad"
         },
         "severity": "ERROR",
         "validation_state": "NO_VALIDATOR"

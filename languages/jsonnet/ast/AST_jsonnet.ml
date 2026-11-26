@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2022-2023 Semgrep Inc.
+ * Copyright (C) 2022-2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -31,17 +31,17 @@
  * used in https://github.com/sourcegraph/lsif-jsonnet
  *
  * The main uses for this file are:
- *  - to support the language Jsonnet in Semgrep,
+ *  - to support the language Jsonnet in Lens,
  *    that is to give the ability for jsonnet developers to use Jsonnet patterns
  *    to match over Jsonnet code, that is to write jsonnet rules (just like
  *    C developers can write C rules).
- *  - for advanced Semgrep users to write Semgrep rules in jsonnet instead
- *    of YAML (Semgrep 2.0).
+ *  - for advanced Lens users to write Lens rules in jsonnet instead
+ *    of YAML (Lens 2.0).
  *  - for ojsonnet, a Jsonnet interpreter written in OCaml,
- *    so we can use it in osemgrep instead of having to write an OCaml
+ *    so we can use it in olens instead of having to write an OCaml
  *    binding to the Jsonnet C library. This could allow in turn to provide
  *    better error messages when there is an error in a Jsonnet
- *    semgrep rule. Indeed, right now the error will be mostly
+ *    lens rule. Indeed, right now the error will be mostly
  *    reported on the resulting (also called "manifested") JSON.
  *    This could also enable at some point certain holistic optimizations or
  *    static checks.
@@ -107,7 +107,7 @@ type expr =
   | Error of tok (* 'error' *) * expr
   (* for the CST *)
   | ParenExpr of expr bracket
-  (* semgrep: *)
+  (* lens: *)
   | Ellipsis of tok
   | DeepEllipsis of expr bracket
 
@@ -205,7 +205,7 @@ and function_definition = {
 
 and parameter =
   | P of ident * (tok (* '=' *) * expr) option
-  (* semgrep: *)
+  (* lens: *)
   | ParamEllipsis of tok
 
 (* ------------------------------------------------------------------------- *)
@@ -217,7 +217,7 @@ and obj_member =
   | OLocal of obj_local
   | OField of field
   | OAssert of assert_
-  (* semgrep: *)
+  (* lens: *)
   | OEllipsis of tok
 
 and field = {
@@ -271,7 +271,7 @@ and import =
 type program = expr [@@deriving show]
 
 (*****************************************************************************)
-(* Any (for semgrep) *)
+(* Any (for lens) *)
 (*****************************************************************************)
 (* Right now there is just one case, but at some point we may want to
  * allow field patterns.

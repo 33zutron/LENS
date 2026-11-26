@@ -87,7 +87,7 @@
                   "endColumn": 11,
                   "endLine": 6,
                   "snippet": {
-                    "text": "    a == a  # nosemgrep"
+                    "text": "    a == a  # nolens"
                   },
                   "startColumn": 5,
                   "startLine": 6
@@ -150,7 +150,7 @@
                   "endColumn": 11,
                   "endLine": 9,
                   "snippet": {
-                    "text": "    x == x  # nosemgrep"
+                    "text": "    x == x  # nolens"
                   },
                   "startColumn": 5,
                   "startLine": 9
@@ -213,7 +213,7 @@
                   "endColumn": 11,
                   "endLine": 13,
                   "snippet": {
-                    "text": "    z == z  # nosemgrep"
+                    "text": "    z == z  # nolens"
                   },
                   "startColumn": 5,
                   "startLine": 13
@@ -276,7 +276,7 @@
                   "endColumn": 11,
                   "endLine": 16,
                   "snippet": {
-                    "text": "    y == 5  # nosemgrep"
+                    "text": "    y == 5  # nolens"
                   },
                   "startColumn": 5,
                   "startLine": 16
@@ -310,7 +310,7 @@
                   "endColumn": 13,
                   "endLine": 18,
                   "snippet": {
-                    "text": "    baz == 4  # nosemgrep"
+                    "text": "    baz == 4  # nolens"
                   },
                   "startColumn": 5,
                   "startLine": 18
@@ -509,7 +509,7 @@
       ],
       "tool": {
         "driver": {
-          "name": "Semgrep OSS",
+          "name": "Lens OSS",
           "rules": [
             {
               "defaultConfiguration": {
@@ -519,10 +519,10 @@
                 "text": "useless comparison"
               },
               "help": {
-                "markdown": "useless comparison\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/eqeq-bad)\n",
+                "markdown": "useless comparison\n\n<b>References:</b>\n - [Lens Rule](https://lens.dev/r/eqeq-bad)\n",
                 "text": "useless comparison"
               },
-              "helpUri": "https://semgrep.dev/r/eqeq-bad",
+              "helpUri": "https://lens.dev/r/eqeq-bad",
               "id": "eqeq-bad",
               "name": "eqeq-bad",
               "properties": {
@@ -530,7 +530,7 @@
                 "tags": []
               },
               "shortDescription": {
-                "text": "Semgrep Finding: eqeq-bad"
+                "text": "Lens Finding: eqeq-bad"
               }
             },
             {
@@ -541,10 +541,10 @@
                 "text": "useless comparison to 5"
               },
               "help": {
-                "markdown": "useless comparison to 5\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/eqeq-five)\n",
+                "markdown": "useless comparison to 5\n\n<b>References:</b>\n - [Lens Rule](https://lens.dev/r/eqeq-five)\n",
                 "text": "useless comparison to 5"
               },
-              "helpUri": "https://semgrep.dev/r/eqeq-five",
+              "helpUri": "https://lens.dev/r/eqeq-five",
               "id": "eqeq-five",
               "name": "eqeq-five",
               "properties": {
@@ -552,7 +552,7 @@
                 "tags": []
               },
               "shortDescription": {
-                "text": "Semgrep Finding: eqeq-five"
+                "text": "Lens Finding: eqeq-five"
               }
             },
             {
@@ -563,10 +563,10 @@
                 "text": "useless comparison to 4"
               },
               "help": {
-                "markdown": "useless comparison to 4\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/eqeq-four)\n",
+                "markdown": "useless comparison to 4\n\n<b>References:</b>\n - [Lens Rule](https://lens.dev/r/eqeq-four)\n",
                 "text": "useless comparison to 4"
               },
-              "helpUri": "https://semgrep.dev/r/eqeq-four",
+              "helpUri": "https://lens.dev/r/eqeq-four",
               "id": "eqeq-four",
               "name": "eqeq-four",
               "properties": {
@@ -574,7 +574,7 @@
                 "tags": []
               },
               "shortDescription": {
-                "text": "Semgrep Finding: eqeq-four"
+                "text": "Lens Finding: eqeq-four"
               }
             },
             {
@@ -585,10 +585,10 @@
                 "text": "found a dependency"
               },
               "help": {
-                "markdown": "found a dependency\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/-/advisories/supply-chain1)\n",
+                "markdown": "found a dependency\n\n<b>References:</b>\n - [Lens Rule](https://lens.dev/-/advisories/supply-chain1)\n",
                 "text": "found a dependency"
               },
-              "helpUri": "https://semgrep.dev/-/advisories/supply-chain1",
+              "helpUri": "https://lens.dev/-/advisories/supply-chain1",
               "id": "supply-chain1",
               "name": "supply-chain1",
               "properties": {
@@ -596,7 +596,7 @@
                 "tags": []
               },
               "shortDescription": {
-                "text": "Semgrep Finding: supply-chain1"
+                "text": "Lens Finding: supply-chain1"
               }
             },
             {
@@ -607,10 +607,10 @@
                 "text": "unsafe use of danger"
               },
               "help": {
-                "markdown": "unsafe use of danger\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/taint-test)\n",
+                "markdown": "unsafe use of danger\n\n<b>References:</b>\n - [Lens Rule](https://lens.dev/r/taint-test)\n",
                 "text": "unsafe use of danger"
               },
-              "helpUri": "https://semgrep.dev/r/taint-test",
+              "helpUri": "https://lens.dev/r/taint-test",
               "id": "taint-test",
               "name": "taint-test",
               "properties": {
@@ -618,7 +618,7 @@
                 "tags": []
               },
               "shortDescription": {
-                "text": "Semgrep Finding: taint-test"
+                "text": "Lens Finding: taint-test"
               }
             }
           ],
@@ -639,7 +639,7 @@
 └────────────────┘
 
   SCAN ENVIRONMENT
-  versions    - semgrep <MASKED> on python <MASKED>
+  versions    - lens <MASKED> on python <MASKED>
   environment - running in environment git, triggering event is unknown
 
   CONNECTION
@@ -680,11 +680,11 @@
  • Targets scanned: 3
  • Parsed lines: ~100.0%
  • Scan was limited to files tracked by git
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+ • For a detailed list of skipped files and lines, run lens with the --verbose flag
 CI scan completed successfully.
-  View results in Semgrep Cloud Platform:
-    https://semgrep.dev/orgs/org_name/findings?repo=local_scan/checkout_project_name&ref=some/branch-name
-    https://semgrep.dev/orgs/org_name/supply-chain/vulnerabilities?repo=local_scan/checkout_project_name&ref=some/branch-name
+  View results in Lens Cloud Platform:
+    https://lens.dev/orgs/org_name/findings?repo=local_scan/checkout_project_name&ref=some/branch-name
+    https://lens.dev/orgs/org_name/supply-chain/vulnerabilities?repo=local_scan/checkout_project_name&ref=some/branch-name
   Has findings for blocking rules so exiting with code 1
 Test Reason
 

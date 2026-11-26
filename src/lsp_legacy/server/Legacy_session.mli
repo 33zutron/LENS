@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
 open Lsp
 open Types
 
-val scan_config_parser_ref : (string -> Semgrep_output_v1_t.scan_config) ref
+val scan_config_parser_ref : (string -> Lens_output_v1_t.scan_config) ref
 (** [scan_config_parser_ref] is a reference to a function that parses a scan
     config from a string *)
 
@@ -43,7 +43,7 @@ type t = {
   capabilities : ServerCapabilities.t;
   workspace_folders : Fpath.t list;
   cached_workspace_targets : (Fpath.t, Fpath.t list) Base.Hashtbl.t;
-  cached_scans : (Fpath.t, Semgrep_output_v1_t.cli_match list) Base.Hashtbl.t;
+  cached_scans : (Fpath.t, Lens_output_v1_t.cli_match list) Base.Hashtbl.t;
   cached_session : session_cache;
   skipped_local_fingerprints : string list;
   user_settings : Legacy_user_settings.t;
@@ -59,9 +59,9 @@ val create : ServerCapabilities.t -> t
 (** [create capabilities] creates a [Session.t] given server capabilities *)
 
 val send_metrics :
-  ?core_time:Semgrep_output_v1_j.profile ->
+  ?core_time:Lens_output_v1_j.profile ->
   ?profiler:Profiler.t ->
-  ?cli_output:Semgrep_output_v1_j.cli_output ->
+  ?cli_output:Lens_output_v1_j.cli_output ->
   t ->
   unit
 (** [send_metrics t] sends metrics to the server *)
@@ -104,7 +104,7 @@ val scanned_files : t -> Fpath.t list
 (** [scanned_files t] returns the list of files that have been scanned in the session *)
 
 val previous_scan_of_file :
-  t -> Fpath.t -> Semgrep_output_v1_t.cli_match list option
+  t -> Fpath.t -> Lens_output_v1_t.cli_match list option
 (** [previous_scan_of_file session path] returns the last results of a scan on a file if it exists *)
 
 val add_skipped_fingerprint : t -> string -> t
@@ -120,7 +120,7 @@ val remove_open_documents : t -> Fpath.t list -> unit Lwt.t
 (** [remove_open_documents t path] removes all files from the list of open documents in the session *)
 
 val record_results :
-  t -> Semgrep_output_v1_t.cli_match list -> Fpath.t list -> unit
+  t -> Lens_output_v1_t.cli_match list -> Fpath.t list -> unit
 (** [record_results t results files] records the results of a scan in the session. This is
     used when generating code actions (such as autofix) *)
 

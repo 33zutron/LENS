@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 open Common
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 
 (*****************************************************************************)
 (* Prelude *)
@@ -20,7 +20,7 @@ module Out = Semgrep_output_v1_j
  *
  * See RPC_return.ml for the code implementing the Python RPC calls.
  *
- * coupling: OSS/cli/src/semgrep/rpc.py, the pysemgrep caller
+ * coupling: OSS/cli/src/lens/rpc.py, the pylens caller
  * coupling: Guardian's fragment scanner, which calls CallScan directly and
  * vendors the types. See src/rpc/README.txt.
  *)
@@ -82,7 +82,7 @@ let handle_call (conf : config) (call : Out.function_call) :
       Ok (`RetValidate valid)
   | `CallScan params -> (
       let msg =
-        "Scanning over RPC is a proprietary feature, but semgrep-pro has not \
+        "Scanning over RPC is a proprietary feature, but lens-pro has not \
          been loaded"
       in
       let/ scan = Option.to_result ~none:msg !RPC_return.hook_scan in
@@ -106,7 +106,7 @@ let handle_call (conf : config) (call : Out.function_call) :
           Ok (`RetResolveDependencies resolved)
       | None ->
           Error
-            "Dependency resolution is a proprietary feature, but semgrep-pro \
+            "Dependency resolution is a proprietary feature, but lens-pro \
              has not been loaded")
   | `CallUploadSymbolAnalysis (token, scan_id, symbol_analysis) -> (
       (* Caps are kind of a crap shoot whyen working across programming language
@@ -114,7 +114,7 @@ let handle_call (conf : config) (call : Out.function_call) :
       *)
       let token = Auth.unsafe_token_of_string token in
       match
-        Semgrep_App.upload_symbol_analysis ~token ~scan_id symbol_analysis
+        Lens_App.upload_symbol_analysis ~token ~scan_id symbol_analysis
       with
       | Error msg -> Error msg
       | Ok msg -> Ok (`RetUploadSymbolAnalysis msg))
@@ -134,12 +134,12 @@ let handle_call (conf : config) (call : Out.function_call) :
           Ok (`RetTransitiveReachabilityFilter xs)
       | None ->
           Error
-            "Transitive reachability is a proprietary feature, but semgrep-pro \
+            "Transitive reachability is a proprietary feature, but lens-pro \
              has not been loaded")
   | `CallGetTargets scanning_roots ->
       Ok
         (`RetGetTargets
-           (Core_scan.get_targets_for_pysemgrep ~par_conf:conf.par_conf
+           (Core_scan.get_targets_for_pylens ~par_conf:conf.par_conf
               ~num_jobs:conf.num_jobs scanning_roots))
   | `CallMatchSubprojects params -> (
       match !RPC_return.hook_match_subprojects with
@@ -148,11 +148,11 @@ let handle_call (conf : config) (call : Out.function_call) :
           Ok (`RetMatchSubprojects xs)
       | None ->
           Error
-            "Subproject matching is a proprietary feature, but semgrep-pro has \
+            "Subproject matching is a proprietary feature, but lens-pro has \
              not been loaded")
   | `CallRunSymbolAnalysis params -> (
       let msg =
-        "Symbol analysis is a proprietary feature, but semgrep-pro has not \
+        "Symbol analysis is a proprietary feature, but lens-pro has not \
          been loaded"
       in
       let/ run_symbol_analysis =
@@ -165,7 +165,7 @@ let handle_call (conf : config) (call : Out.function_call) :
       { token; scan_id; manifest; lockfile; symbol_analysis } -> (
       let token = Auth.unsafe_token_of_string token in
       match
-        Semgrep_App.upload_subproject_symbol_analysis ~token ~scan_id ~manifest
+        Lens_App.upload_subproject_symbol_analysis ~token ~scan_id ~manifest
           ~lockfile symbol_analysis
       with
       | Error msg -> Error msg
@@ -220,7 +220,7 @@ let handle_request conf chan_in chan_out size =
   let res =
     let/ call_str = read_packet chan_in size in
     let/ rpc_call =
-      try Ok (Semgrep_output_v1_j.rpc_call_of_string call_str) with
+      try Ok (Lens_output_v1_j.rpc_call_of_string call_str) with
       | e ->
           let e = Exception.catch e in
           Error (spf "Error parsing RPC request:\n%s" (Exception.to_string e))
@@ -247,7 +247,7 @@ let handle_request conf chan_in chan_out size =
       profiling_results = Core_json_output.export_simple_profiling_results ();
     }
   in
-  let res_str = Semgrep_output_v1_j.string_of_function_result result in
+  let res_str = Lens_output_v1_j.string_of_function_result result in
   write_packet chan_out res_str
 
 let rec handle_multiple_requests conf chan_in chan_out =
@@ -259,7 +259,7 @@ let rec handle_multiple_requests conf chan_in chan_out =
     end
   | Error str ->
       write_packet chan_out
-        (Semgrep_output_v1_j.string_of_function_return (`RetError str))
+        (Lens_output_v1_j.string_of_function_return (`RetError str))
 
 (*****************************************************************************)
 (* Entry points *)

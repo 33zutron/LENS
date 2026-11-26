@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@
      https://www.pcre.org/current/doc/html/pcre2pattern.html
 
    Dig into the test outputs to see what the generated PCRE code looks like
-   e.g. cat ~/semgrep/_build/default/tests/_build/_tests/semgrep-core/aliengrep.014.output
+   e.g. cat ~/lens/_build/default/tests/_build/_tests/lens-core/aliengrep.014.output
 *)
 
 module Log = Log_aliengrep.Log
@@ -406,7 +406,7 @@ let to_regexp (conf : Conf.t) (ast : Pat_AST.t) =
     let add str = acc := str :: !acc in
     (* excluded_brace = closing brace that can only be used as a closing
        brace matching the currently open brace. This is to prevent
-       a semgrep pattern like '(...x)' from matching '()x)'.
+       a lens pattern like '(...x)' from matching '()x)'.
        Other closing brace characters that may be found are mismatched
        and treated as ordinary punctuation characters ("other") forming
        a node.

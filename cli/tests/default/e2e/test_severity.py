@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,12 +11,12 @@
 # LICENSE for more details.
 #
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
 @pytest.mark.kinda_slow
-def test_severity_error(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
-    json_str = run_semgrep_in_tmp(
+def test_severity_error(run_lens_in_tmp: RunLens, posix_snapshot):
+    json_str = run_lens_in_tmp(
         "rules/inside.yaml", options=["--severity", "ERROR"]
     ).stdout
     assert json_str != ""
@@ -26,19 +26,19 @@ def test_severity_error(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 
 
 @pytest.mark.kinda_slow
-def test_severity_info(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
+def test_severity_info(run_lens_in_tmp: RunLens, posix_snapshot):
     # Shouldn't return errors or results, since inside.yaml has 'severity: ERROR'
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp("rules/inside.yaml", options=["--severity", "INFO"]).stdout,
+        run_lens_in_tmp("rules/inside.yaml", options=["--severity", "INFO"]).stdout,
         "results.json",
     )
 
 
 @pytest.mark.kinda_slow
-def test_severity_warning(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
+def test_severity_warning(run_lens_in_tmp: RunLens, posix_snapshot):
     # Shouldn't return errors or results, since inside.yaml has 'severity: ERROR'
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             "rules/inside.yaml", options=["--severity", "WARNING"]
         ).stdout,
         "results.json",
@@ -46,11 +46,11 @@ def test_severity_warning(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
 
 
 @pytest.mark.kinda_slow
-def test_severity_multiple(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
+def test_severity_multiple(run_lens_in_tmp: RunLens, posix_snapshot):
     # Shouldn't return errors or results, since inside.yaml has 'severity: ERROR'
     # Differs from the two preceding tests in that we're testing adding multiple severity strings
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             "rules/inside.yaml", options=["--severity", "INFO", "--severity", "WARNING"]
         ).stdout,
         "results.json",

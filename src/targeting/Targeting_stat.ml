@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) 2024, Semgrep, Inc.
+ * Copyright (C) 2024, Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -20,7 +20,7 @@ module Log = Log_targeting.Log
 (*****************************************************************************)
 
 (* This file contains useful debugging info we can glean from targets.
- * Linux `stat` but more specific to Semgrep. We collect line count, file kind
+ * Linux `stat` but more specific to Lens. We collect line count, file kind
  *  (regular, symlink etc.), if it was minified, size, if it's a textual file
  *  type and more
  *
@@ -72,7 +72,7 @@ let stat_file (file : Fpath.t) =
       let minified =
         textual && Result.is_error (Skip_target.is_minified file)
       in
-      (* TODO: iago's is_large_machine_optimized PR (semgrep/semgrep#9992) *)
+      (* TODO: iago's is_large_machine_optimized PR (lens/lens#9992) *)
       Ok
         {
           kind = stats.st_kind;

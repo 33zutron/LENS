@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 (*
-   Find target files suitable to be analyzed by semgrep,
+   Find target files suitable to be analyzed by lens,
    regardless of rules or languages.
  *)
 
@@ -33,19 +33,19 @@ module Explicit_targets : sig
 end
 
 type conf = {
-  exclude : glob list;  (** global exclude list, passed via semgrep --exclude *)
+  exclude : glob list;  (** global exclude list, passed via lens --exclude *)
   include_ : glob list option;
-      (** global include list, passed via semgrep --include
+      (** global include list, passed via lens --include
           Those are flags copied from grep (and ripgrep).
       *)
   max_target_bytes : int;
   respect_gitignore : bool;
       (** Whether to respect what is specified in the '.gitignore' files
-          found in the project and extended by optional '.semgrepignore' files.
+          found in the project and extended by optional '.lensignore' files.
           Note that Git supports other sources of gitignore patterns, making
           this option confusing. *)
-  respect_semgrepignore_files : bool;
-      (** Whether to respect or ignore the '.semgrepignore' files found
+  respect_lensignore_files : bool;
+      (** Whether to respect or ignore the '.lensignore' files found
           in the project. *)
   extra_gitignore_patterns_to_exclude_git_untracked_files : string list;
       (** Extra Gitignore patterns to be passed to [git ls-files
@@ -53,27 +53,27 @@ type conf = {
 
           This option is provided as an optimization. Git is very fast
           at listing files (even untracked files) so we prefer to use
-          it. Unfortunately, applying Semgrepignore filters is done on
+          it. Unfortunately, applying Lensignore filters is done on
           the expanded list of paths returned by Git which can be very
           time-consuming (O(number of paths × number of patterns)).
           Reducing the list of paths returned by Git can be a
           significant time-saver and it is possible with this option
           when we're only interested in a small subset of the
           untracked files, typically when Gitignore filtering is
-          disabled with [respect_semgrepignore_files = false].
+          disabled with [respect_lensignore_files = false].
 
           Note that the patterns can be negated so as to de-exclude paths.
           This can be used to specify which paths to add to the empty set
-          similar to semgrep's [--include] option.
+          similar to lens's [--include] option.
           For examples, the patterns [["*"; "!*/"; "!*.ml"; "!*.mli"]] will
           select all the untracked ml and mli files
           (assuming Gitignore filtering is turned off with
-          [respect_semgrepignore_files = false]).
+          [respect_lensignore_files = false]).
       *)
-  semgrepignore_filename : string option;
-      (** An alternate name for '.semgrepignore'. This is intended for
-          testing semgrep and prevent test targets from being excluded by the
-          containing project's global '.semgrepignore'. *)
+  lensignore_filename : string option;
+      (** An alternate name for '.lensignore'. This is intended for
+          testing lens and prevent test targets from being excluded by the
+          containing project's global '.lensignore'. *)
   always_select_explicit_targets : bool;
       (** Language-specific filtering: CLI option '--scan-unknown-extensions'
           allows explicit targets (files on the command line) to bypass
@@ -82,7 +82,7 @@ type conf = {
           command line to be analyzed any analyzer specified in rules
           (--config) or command-line patterns (-e/-f):
 
-            semgrep scan --scan-unknown-extensions dockerfiles/*
+            lens scan --scan-unknown-extensions dockerfiles/*
 
           Target files discovered by scanning folders are not affected by
           this option.
@@ -94,14 +94,14 @@ type conf = {
           It's a hash table for fast access.
       *)
   force_project_root : project_root option;
-      (** osemgrep-only: see Git_project.ml and the force_root parameter *)
+      (** olens-only: see Git_project.ml and the force_root parameter *)
   force_novcs_project : bool;
       (** force the project to not use git or other VCS to list files.
           The special folders '.git', '.hg', etc. may still be used to guess
           the project root. To impose the project root as well, set
           'force_project_root = true'. *)
   exclude_minified_files : bool;
-      (** osemgrep-only: exclude scanning large files based on
+      (** olens-only: exclude scanning large files based on
           max_target_bytes, default true *)
   exclude_binary_files : bool;
       (** exclude scanning binary files, default true. Binary files are
@@ -116,14 +116,14 @@ and glob = string
 
 and project_root =
   | Filesystem of Rfpath.t
-  (* currently used to optimize Semgrep query console *)
+  (* currently used to optimize Lens query console *)
   | Git_remote of git_remote
 
 and git_remote = { url : Uri.t } [@@deriving show]
 
 val default_conf : conf
 
-(* Entry point used by osemgrep.
+(* Entry point used by olens.
 
    Take a set of scanning roots which are files or folders (directories) and
    expand them into the set of files that could be targets for some
@@ -142,7 +142,7 @@ val default_conf : conf
 val get_targets :
   conf ->
   Scanning_root.t list ->
-  Fppath.t list * Core_error.t list * Semgrep_output_v1_t.skipped_target list
+  Fppath.t list * Core_error.t list * Lens_output_v1_t.skipped_target list
 
 (* Same as get_targets but drop the ppath (path within the project).
  *
@@ -155,11 +155,11 @@ val get_targets :
 val get_target_fpaths :
   conf ->
   Scanning_root.t list ->
-  Fpath.t list * Core_error.t list * Semgrep_output_v1_t.skipped_target list
+  Fpath.t list * Core_error.t list * Lens_output_v1_t.skipped_target list
 
 (* internals used also in Find_targets_old.ml *)
 val get_reason_for_exclusion :
-  Gitignore.selection_event list -> Semgrep_output_v1_t.skip_reason
+  Gitignore.selection_event list -> Lens_output_v1_t.skip_reason
 
 val drop_warnings : (string * Fpath.t) list -> string list
 (** [drop_warnings drops] renders the warnings for paths that could not be

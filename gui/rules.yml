@@ -1,0 +1,41 @@
+rules:
+  - id: lens.python.dynamic-eval
+    languages: [python]
+    message: Avoid evaluating source text dynamically.
+    severity: ERROR
+    pattern: eval(...)
+
+  - id: lens.javascript.dynamic-eval
+    languages: [javascript, typescript]
+    message: Avoid evaluating source text dynamically.
+    severity: ERROR
+    pattern: eval(...)
+
+  - id: lens.python.hardcoded-secret
+    languages: [python]
+    message: A credential may be hard-coded in source.
+    severity: WARNING
+    patterns:
+      - pattern: $KEY = "$VALUE"
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: (?i)(password|secret|token|api[_-]?key)
+      - metavariable-regex:
+          metavariable: $VALUE
+          regex: .{8,}
+
+  - id: lens.javascript.hardcoded-secret
+    languages: [javascript, typescript]
+    message: A credential may be hard-coded in source.
+    severity: WARNING
+    patterns:
+      - pattern-either:
+          - pattern: const $KEY = "$VALUE"
+          - pattern: let $KEY = "$VALUE"
+          - pattern: var $KEY = "$VALUE"
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: (?i)(password|secret|token|api[_-]?key)
+      - metavariable-regex:
+          metavariable: $VALUE
+          regex: .{8,}

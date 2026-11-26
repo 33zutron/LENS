@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -13,9 +13,9 @@
 open Lsp.Types
 open Legacy_lsp_
 module Conv = Legacy_convert_utils
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 
-let meth = "semgrep/loginFinish"
+let meth = "lens/loginFinish"
 let wait_before_retry_in_ms = 6 * 1000
 
 (* let's give them a solid 3 minutes, since people can be slow, and somehow *)
@@ -56,12 +56,12 @@ let on_request session id params : Legacy_session.t * Legacy_lsp_.Reply.t =
     match params with
     | None ->
         Logs.warn (fun m ->
-            m "semgrep/loginFinish got no params but expected some");
+            m "lens/loginFinish got no params but expected some");
 
         Reply.both
           (Reply.now
              (notify_show_message ~kind:MessageType.Error
-                "semgrep/loginFinish got no parameters, but expected some"))
+                "lens/loginFinish got no parameters, but expected some"))
           (Reply.now (respond_json id `Null))
     | Some _ ->
         (* All of this is side-effecting, so we can run it asynchronously, and
@@ -93,20 +93,20 @@ let on_request session id params : Legacy_session.t * Legacy_lsp_.Reply.t =
               |> Lwt.return
             in
             let^ token, _ =
-              Semgrep_login.fetch_token_async
+              Lens_login.fetch_token_async
                 ~min_wait_ms:wait_before_retry_in_ms ~max_retries
                 ~wait_hook:(fun delay_ms ->
                   Lwt_platform.sleep Float.(of_int delay_ms /. 1000.))
                 sessionId
             in
             let^ deployment =
-              Semgrep_App.deployment_config_async token
+              Lens_App.deployment_config_async token
               |> Lwt.map (Option.to_result ~none:"failed to get deployment")
             in
             (* TODO: state.app_session.authenticate()
                basically, just add the token to the metrics once that exists
             *)
-            let^ _deployment = Semgrep_login.save_token_async token in
+            let^ _deployment = Lens_login.save_token_async token in
             let%lwt () =
               Reply.apply send
                 (Reply.both

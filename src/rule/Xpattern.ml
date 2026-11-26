@@ -33,7 +33,7 @@ type xpattern_kind =
         We used to keep the compiled regexp of type `Regexp_engine.t', but
         that is not a pure OCaml data structure and it cannot be serialized.
 
-        This had previously caused weird Semgrep crashes like
+        This had previously caused weird Lens crashes like
 
             Invalid_argument "output_value: abstract value (Custom)"
 

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,7 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 
 (** Collect information about the project contributions from git log. *)
 
@@ -31,9 +31,9 @@ let contrib_to_contrib (contrib : Git_wrapper.contribution) : Out.contribution =
       contributor = { commit_author_name; commit_author_email };
     }
 
-let get_contributions () : Semgrep_output_v1_j.contribution list =
+let get_contributions () : Lens_output_v1_j.contribution list =
   (* We use ~since:"last 90 days" because of our usage policy.
-   * See https://semgrep.dev/docs/usage-limits
+   * See https://lens.dev/docs/usage-limits
    *)
   let ninety_days_ago =
     Datetime_.time_n_days_ago ~days:90 ~time:(Datetime_.now ())

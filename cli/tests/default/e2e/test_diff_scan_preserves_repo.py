@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
 import subprocess
 
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 pytestmark = pytest.mark.kinda_slow
 
@@ -36,7 +36,7 @@ def _get_git_status() -> str:
 
 
 @pytest.mark.kinda_slow
-def test_diff_scan_preserves_repo(git_tmp_path, run_semgrep: RunSemgrep):
+def test_diff_scan_preserves_repo(git_tmp_path, run_lens: RunLens):
     # Create baseline commit with a file that has a finding
     initial_file = git_tmp_path / "initial.py"
     initial_file.write_text("x = 42")
@@ -69,14 +69,14 @@ rules:
     # Uncommitted changes
     initial_file.write_text("z = 42")
 
-    # Capture git status before running semgrep
+    # Capture git status before running lens
     git_status_before = _get_git_status()
     assert "test_rule.yaml" in git_status_before
     assert "staged.py" in git_status_before
     assert "initial.py" in git_status_before
 
     # Diff scan
-    run_semgrep(
+    run_lens(
         config=str(rule_file),
         options=["--baseline-commit", base_commit],
         assert_exit_code=0,
@@ -85,7 +85,7 @@ rules:
     # Git status is preserved
     git_status_after = _get_git_status()
     assert git_status_before == git_status_after, (
-        f"Git status changed after semgrep scan!\n"
+        f"Git status changed after lens scan!\n"
         f"Before: {repr(git_status_before)}\n"
         f"After:  {repr(git_status_after)}"
     )

@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/4509
+// https://github.com/returntocorp/lens/issues/4509
 
 app.get('/api/v1/users/filter', (req, res) => {
     var where = ""

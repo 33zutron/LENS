@@ -1,6 +1,6 @@
 (* Nat Mote
  *
- * Copyright (C) 2019-2023 Semgrep, Inc.
+ * Copyright (C) 2019-2023 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -355,7 +355,7 @@ and type_of_ast_generic_type lang t : G.name Type.t =
 (* Typing visitor / check a program *)
 (*****************************************************************************)
 
-(* Currently, for types created during naming in Semgrep (OSS and Pro Engine),
+(* Currently, for types created during naming in Lens (OSS and Pro Engine),
  * we can't tell the difference between a resolved name and an unresolved name,
  * so we turn them all into `Type.N`s. Some of the names will be fully-qualified
  * resolved names, and some will just be names as written by the user.
@@ -383,7 +383,7 @@ let name_and_targs_of_named_type lang = function
 (* This function is for guessing the type of an expression, when we can't figure
  * it out using ordinary type inference. This typically happens when some name
  * cannot be resolved because it either came from an external file (in OSS
- * Semgrep) or from the standard library or a third party library (in Pro
+ * Lens) or from the standard library or a third party library (in Pro
  * Engine).
  *
  * For example, in Java we guess that `x.equals(y)` returns a `boolean`, even if

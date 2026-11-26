@@ -5,7 +5,7 @@ rules:
           new $TYPE
       - pattern: |
           new $CALL(...)
-    message: Semgrep found a match
+    message: Lens found a match
     languages:
       - cpp
     severity: WARNING

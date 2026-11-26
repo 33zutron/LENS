@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -20,10 +20,10 @@ import pytest
 def mcp_test_env():
     # Disable tracing for MCP tests. We don't want tests to send tracing data to Datadog since
     # they show up as abnormally short spans. This also implicitly disables metrics.
-    os.environ["SEMGREP_MCP_DISABLE_TRACING"] = "true"
+    os.environ["LENS_MCP_DISABLE_TRACING"] = "true"
     yield
-    if "SEMGREP_MCP_DISABLE_TRACING" in os.environ:
-        del os.environ["SEMGREP_MCP_DISABLE_TRACING"]
+    if "LENS_MCP_DISABLE_TRACING" in os.environ:
+        del os.environ["LENS_MCP_DISABLE_TRACING"]
 
 
 @pytest.fixture

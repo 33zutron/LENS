@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024 Semgrep Inc.
+# Copyright (c) 2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -12,8 +12,8 @@
 #
 import pytest
 
-from semgrep.external.git_url_parser import Parser
-from semgrep.meta import get_url_from_sstp_url
+from lens.external.git_url_parser import Parser
+from lens.meta import get_url_from_sstp_url
 
 
 @pytest.mark.quick
@@ -346,7 +346,7 @@ def test_get_url_from_sstp_url():
 
 @pytest.mark.quick
 def test_get_url_from_sstp_url_empty_string():
-    # Regression test for https://github.com/semgrep/semgrep/issues/11342
+    # Regression test for https://github.com/lens/lens/issues/11342
     # When git has no remote set, repo_url is an empty string — should not crash.
     assert get_url_from_sstp_url("") is None
 
@@ -358,7 +358,7 @@ def test_get_url_from_sstp_url_none():
 
 @pytest.mark.quick
 def test_parser_empty_string():
-    # Regression test for https://github.com/semgrep/semgrep/issues/11342
+    # Regression test for https://github.com/lens/lens/issues/11342
     # Parser.__init__ should not crash on empty string input.
     p = Parser("")
     assert p._url == ""

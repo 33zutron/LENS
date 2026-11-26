@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024 Semgrep Inc.
+   Copyright (c) 2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -37,7 +37,7 @@ module Operators : sig
 
   (*
      Disable the use of (==) since some people confuse it with structural
-     equality. We do this here since we're disabling in with semgrep anyway
+     equality. We do this here since we're disabling in with lens anyway
      and it's quicker if the compiler can report it.
   *)
 

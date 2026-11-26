@@ -1,4 +1,4 @@
-class SemgrepMain {
+class LensMain {
     
     private List<@NotNull panelist> panelists;
     

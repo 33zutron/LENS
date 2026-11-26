@@ -1,6 +1,6 @@
 rules:
   - id: print-no-fix-key
     pattern: print("...")
-    message: Semgrep found a print call
+    message: Lens found a print call
     languages: [python]
     severity: WARNING

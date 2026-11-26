@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -29,7 +29,7 @@ let parse file =
 (* Unit tests *)
 (*****************************************************************************)
 
-(* ran from the root of the semgrep repository *)
+(* ran from the root of the lens repository *)
 let tests_path = Fpath.v "tests"
 
 let tests =

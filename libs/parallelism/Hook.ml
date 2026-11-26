@@ -1,6 +1,6 @@
 (* Yosef Alsuhaibani, Nat Mote, Nathan Taylor
  *
- * Copyright (C) 2020-2025 Semgrep Inc.
+ * Copyright (C) 2020-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -68,7 +68,7 @@
  * somewhat thoughtful about how we use Hooks, which is unfortunate.
  *
  * An orthogonal issue to the design of Eio's fiber-local storage is that we
- * at Semgrep are in the process of gradually migrating to it; since we need
+ * at Lens are in the process of gradually migrating to it; since we need
  * backwards compatibility with the old Parmap-based parallelism model, we
  * can't assume that we are always running under an Eio event handler[1].
  * So, we need to really have _two_ hook implementations: one for the non-Eio

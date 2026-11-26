@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2025 Semgrep Inc.
+# Copyright (c) 2022-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -20,7 +20,7 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep import semver_specifier
 from semdep.external.packaging.specifiers import InvalidSpecifier  # type: ignore
 from semdep.external.packaging.specifiers import SpecifierSet  # type: ignore
@@ -28,16 +28,16 @@ from semdep.external.packaging.version import InvalidVersion  # type: ignore
 from semdep.external.packaging.version import Version  # type: ignore
 from semdep.golang_version import compare_golang_specifier
 from semdep.maven_version import compare_maven_specifier
-from semgrep.error import SemgrepError
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.verbose_logging import getLogger
+from lens.error import LensError
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.verbose_logging import getLogger
 
 logger = getLogger(__name__)
 
 # First characters of the version string the requirements.txt parser reports
 # for a requirement that is not pinned to a single release: the PEP 440
 # comparators and wildcard, e.g. ">=2.0", "~=1.26", "==2.2.*". A bare name is
-# reported as "". Mirrors `is_version_range` in semgrep-app, which applies the
+# reported as "". Mirrors `is_version_range` in lens-app, which applies the
 # same shapes to pypi rows for the Dependencies page and SBOM export.
 UNPINNED_VERSION_LEADING_CHARS = "<>!~=*"
 
@@ -130,7 +130,7 @@ def declared_range_intersects(advisory_range: str, declared_range: str) -> bool:
             SpecifierSet(advisory_range)
         )
     except InvalidSpecifier:
-        raise SemgrepError(
+        raise LensError(
             f"unknown package version comparison expression: {advisory_range}"
         )
     declared_interval = UNBOUNDED_VERSION_INTERVAL
@@ -172,7 +172,7 @@ def is_in_range(ecosystem: Ecosystem, range: str, version: str) -> bool:
                 matched = len(list(ss.filter([version]))) > 0
                 return matched
             except InvalidSpecifier:
-                raise SemgrepError(
+                raise LensError(
                     f"unknown package version comparison expression: {range}"
                 )
         else:
@@ -180,7 +180,7 @@ def is_in_range(ecosystem: Ecosystem, range: str, version: str) -> bool:
             try:
                 result = all(compare_golang_specifier(s, version) for s in specifiers)
             except Exception as e:
-                raise SemgrepError(
+                raise LensError(
                     f"bad golang module version comparison between version {version} and spec range {range}: {e}"
                 )
             return result
@@ -190,7 +190,7 @@ def is_in_range(ecosystem: Ecosystem, range: str, version: str) -> bool:
             matched = len(list(ss.filter([version]))) > 0
             return matched
         except InvalidSpecifier:
-            raise SemgrepError(
+            raise LensError(
                 f"unknown package version comparison expression: {range}"
             )
 

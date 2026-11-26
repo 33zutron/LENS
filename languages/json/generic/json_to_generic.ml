@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2020 Semgrep Inc.
+ * Copyright (C) 2020 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -79,7 +79,7 @@ let expr ?(unescape_strings = false) x =
                     let key =
                       (* we don't want $FLD: 1 to be transformed
                        * in "$FLD" : 1, which currently would not match
-                       * anything in Semgrep (this may change though) *)
+                       * anything in Lens (this may change though) *)
                       if AST_generic.is_metavar_name (fst id) then
                         G.N (G.Id (id, G.empty_id_info ())) |> G.e
                       else G.L (G.String (fb id)) |> G.e

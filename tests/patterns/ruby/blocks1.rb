@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/3880
+# https://github.com/returntocorp/lens/issues/3880
 # OK:
 f(x) do |n|
     puts n

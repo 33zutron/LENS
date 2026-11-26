@@ -1,5 +1,5 @@
 Configuration is invalid - found 2 configuration error(s), and 0 rule(s).
-semgrep error: Detected duplicate key
+lens error: Detected duplicate key
   --> rules/invalid-rules/invalid-metavariable-regex.yaml:6
 5  |     - metavariable-regex:
 6  |         metavariable: $HOST

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -20,9 +20,9 @@
 import json
 
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 RULE = "rules/dependency_aware/dependency_path.yaml"
 # reachability rule (has a code pattern) over the same fixture; index.js matches
@@ -68,15 +68,15 @@ def _sarif_dependency_paths(results: str):
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 def test_dependency_paths_deep_chain_json(
-    run_semgrep_on_copied_files: RunSemgrep, snapshot
+    run_lens_on_copied_files: RunLens, snapshot
 ):
     # 3-level chain (top -> mid -> victim) exercises the multi-hop walk up to the
     # direct introducer, not just a single transitive edge.
-    results, _errors = run_semgrep_on_copied_files(
+    results, _errors = run_lens_on_copied_files(
         RULE,
         target_name=TARGET,
-        # dependency-path computation lives in pysemgrep; --legacy forces it
-        # (the default entrypoint dispatches to osemgrep, which does not emit it)
+        # dependency-path computation lives in pylens; --legacy forces it
+        # (the default entrypoint dispatches to olens, which does not emit it)
         options=["--legacy", "--x-dependency-paths"],
         output_format=OutputFormat.JSON,
     )
@@ -89,9 +89,9 @@ def test_dependency_paths_deep_chain_json(
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 def test_dependency_paths_deep_chain_sarif(
-    run_semgrep_on_copied_files: RunSemgrep, snapshot
+    run_lens_on_copied_files: RunLens, snapshot
 ):
-    results, _errors = run_semgrep_on_copied_files(
+    results, _errors = run_lens_on_copied_files(
         RULE,
         target_name=TARGET,
         options=["--legacy", "--x-dependency-paths"],
@@ -106,10 +106,10 @@ def test_dependency_paths_deep_chain_sarif(
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 def test_dependency_paths_absent_without_flag(
-    run_semgrep_on_copied_files: RunSemgrep,
+    run_lens_on_copied_files: RunLens,
 ):
     # the gate: without --x-dependency-paths, the field must not be emitted
-    results, _errors = run_semgrep_on_copied_files(
+    results, _errors = run_lens_on_copied_files(
         RULE,
         target_name=TARGET,
         options=["--legacy"],
@@ -129,11 +129,11 @@ def _reachable_findings(results: str):
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 def test_dependency_paths_reachable_with_flag(
-    run_semgrep_on_copied_files: RunSemgrep,
+    run_lens_on_copied_files: RunLens,
 ):
     # the reachable path (code match on the transitive "victim") must also carry
     # the introduction path when the flag is set
-    results, _errors = run_semgrep_on_copied_files(
+    results, _errors = run_lens_on_copied_files(
         REACHABLE_RULE,
         target_name=TARGET,
         options=["--legacy", "--x-dependency-paths"],
@@ -147,12 +147,12 @@ def test_dependency_paths_reachable_with_flag(
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 def test_dependency_paths_reachable_absent_without_flag(
-    run_semgrep_on_copied_files: RunSemgrep,
+    run_lens_on_copied_files: RunLens,
 ):
     # regression guard: the reachable path used to gate on `parent_index is not
     # None` (always true), leaking paths without the flag. It must gate on the
     # flag, like the unreachable path.
-    results, _errors = run_semgrep_on_copied_files(
+    results, _errors = run_lens_on_copied_files(
         REACHABLE_RULE,
         target_name=TARGET,
         options=["--legacy"],

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2025 Semgrep Inc.
+# Copyright (c) 2022-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -22,17 +22,17 @@ from typing import Optional
 import pytest
 from tests.conftest import remove_cert_warnings
 from tests.conftest import skip_on_windows
-from tests.semgrep_runner import SEMGREP_BASE_SCAN_COMMAND
+from tests.lens_runner import LENS_BASE_SCAN_COMMAND
 
-from semgrep.util import IS_WINDOWS
+from lens.util import IS_WINDOWS
 
 pytestmark = pytest.mark.kinda_slow
 
 # This becomes a string that's added to target files in our test repos.
 # Commits append a line similar to 'foo = 23478921' to files of the repo.
 # Searching for this string and counting for the number of occurrences
-# reflects the state of the files that were scanned by semgrep.
-# A typical commit adds a line, increasing the number of semgrep findings.
+# reflects the state of the files that were scanned by lens.
+# A typical commit adds a line, increasing the number of lens findings.
 SENTINEL_1 = 23478921
 
 
@@ -118,19 +118,19 @@ def run_sentinel_scan(
     base_commit: Optional[str] = None,
 ):
     env = {"LANG": "en_US.UTF-8"}
-    env["SEMGREP_USER_AGENT_APPEND"] = "testing"
+    env["LENS_USER_AGENT_APPEND"] = "testing"
     unique_settings_file = tempfile.NamedTemporaryFile().name
     Path(unique_settings_file).write_text(
         "anonymous_user_id: 5f52484c-3f82-4779-9353-b29bbd3193b6\n"
         "has_shown_metrics_notification: true\n"
     )
-    env["SEMGREP_SETTINGS_FILE"] = unique_settings_file
+    env["LENS_SETTINGS_FILE"] = unique_settings_file
     env["PATH"] = os.environ.get("PATH", "")
     if IS_WINDOWS:
         env["SYSTEMROOT"] = os.environ.get("SYSTEMROOT", "")
         env["USERPROFILE"] = os.environ.get("USERPROFILE", "")
 
-    cmd = SEMGREP_BASE_SCAN_COMMAND + [
+    cmd = LENS_BASE_SCAN_COMMAND + [
         "--disable-version-check",
         "--metrics",
         "off",
@@ -165,11 +165,11 @@ def assert_out_match(snapshot, output, snapshot_name):
 
 
 def assert_err_match(snapshot, output, snapshot_name, replace_base_commit=None):
-    if "PYTEST_USE_OSEMGREP" in os.environ:
-        # PySemgrep and OSemgrep currently display slightly different information
+    if "PYTEST_USE_OLENS" in os.environ:
+        # PyLens and OLens currently display slightly different information
         # messages, causing a mismatch in the stderr output. While we may consider
-        # activating this assertion for OSemgrep in the future, it will only be
-        # feasible once PySemgrep and OSemgrep exhibit identical line-by-line
+        # activating this assertion for OLens in the future, it will only be
+        # feasible once PyLens and OLens exhibit identical line-by-line
         # information messages.
         return
     err = (
@@ -258,7 +258,7 @@ def test_one_commit_with_baseline(git_tmp_path, posix_snapshot):
 @skip_on_windows  # git_commit different hashes
 def test_symlink(git_tmp_path, posix_snapshot):
     # Test that head having no change to base (git commit --allow-empty)
-    # doesnt break semgrep
+    # doesnt break lens
     foo = git_tmp_path / "foo.py"
     foo.write_text(f"x = {SENTINEL_1}\n")
     bar = git_tmp_path / "bar.py"
@@ -419,7 +419,7 @@ def test_dir_changed_to_file(git_tmp_path, posix_snapshot):
 
 
 def test_no_findings_both(git_tmp_path, posix_snapshot):
-    # Test if no findings in head or base semgrep doesnt explode
+    # Test if no findings in head or base lens doesnt explode
     foo = git_tmp_path / "foo.py"
     bar = git_tmp_path / "bar.py"
     bar.write_text(f"y = 1\n")
@@ -840,7 +840,7 @@ def test_commit_doesnt_exist(git_tmp_path, posix_snapshot):
 # TODO: please explain:
 # - What's expected from this repo?
 #   (describe the test expectations)
-# - How can I create this repo for testing semgrep commands on it?
+# - How can I create this repo for testing lens commands on it?
 #   1. Run the tests.
 #   2. Visit your local equivalent of /tmp/pytest-of-martin/pytest-1194/
 #      where you'll find the repos that were created for each test.
@@ -920,7 +920,7 @@ def complex_merge_repo(git_tmp_path):
         commits["baz"].append(_git_commit(index, add=True))
 
 
-# Test semgrep scans on the files that changed between a baseline commit
+# Test lens scans on the files that changed between a baseline commit
 # and another commit on a repo with a messy merge history.
 # These commits are given names which are branch names "foo", "bar", etc.
 # We run the test using all pairs of such commits.
@@ -936,7 +936,7 @@ def complex_merge_repo(git_tmp_path):
 #   in the current commit.
 #
 # There is a discrepancy in output for the test
-# 'test_crisscrossing_merges[baz-foo]' between Semgrepignore v1 and v2 due
+# 'test_crisscrossing_merges[baz-foo]' between Lensignore v1 and v2 due
 # to Git failing to determine a merge base in one implementation but not the
 # other. To reproduce the bug:
 #  1. cd into the test repo (after running the test and visiting the temp
@@ -951,10 +951,10 @@ def complex_merge_repo(git_tmp_path):
 #       fatal: multiple merge bases found
 #
 #     According to 'git diff --help', the two commands above should be
-#     equivalent but they're not. Pysemgrep (Semgrepignore v1) uses the latter
+#     equivalent but they're not. Pylens (Lensignore v1) uses the latter
 #     which fails. The error is caught and the fallback behavior is to use
-#     the baseline commit directly instead of the merge base. Osemgrep
-#     (Semgrepignore v2) uses the former which succeeds, resulting in a
+#     the baseline commit directly instead of the merge base. Olens
+#     (Lensignore v2) uses the former which succeeds, resulting in a
 #     different test output.
 #
 @pytest.mark.parametrize("current, baseline", permutations(["foo", "bar", "baz"], 2))

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,14 +15,14 @@ from typing import List
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.rule import Rule
-from semgrep.run_scan import filter_dependency_aware_rules
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ManifestKind
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Pipfile
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Pypi
-from semgrep.subproject import from_resolved_dependencies
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.rule import Rule
+from lens.run_scan import filter_dependency_aware_rules
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import ManifestKind
+from lens.lens_interfaces.lens_output_v1 import Pipfile
+from lens.lens_interfaces.lens_output_v1 import Pypi
+from lens.subproject import from_resolved_dependencies
 
 
 @pytest.fixture
@@ -78,11 +78,11 @@ def sample_rules():
         ),
     ]
 
-    # Ensure `should_run_on_semgrep_core` is True by adding a key like 'patterns' to `_raw` for each rule
+    # Ensure `should_run_on_lens_core` is True by adding a key like 'patterns' to `_raw` for each rule
     for rule in rules:
         rule._raw["patterns"] = [
             "pattern"
-        ]  # Any valid key that should trigger `should_run_on_semgrep_core`
+        ]  # Any valid key that should trigger `should_run_on_lens_core`
 
     return rules
 

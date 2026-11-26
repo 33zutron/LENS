@@ -1,10 +1,10 @@
-; Library to support the different ways to "configure" semgrep.
-; Not everything related to configuring semgrep is here (e.g., the rule format,
+; Library to support the different ways to "configure" lens.
+; Not everything related to configuring lens is here (e.g., the rule format,
 ; most CLI flags), but in the long term we should try to put it here.
 ; This library should not depend on anything. It cannot depend on ../core.
 (library
- (public_name semgrep.configuring)
- (name semgrep_configuring)
+ (public_name lens.configuring)
+ (name lens_configuring)
  (wrapped false)
  (libraries
    atdgen-runtime

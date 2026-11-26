@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) Semgrep, Inc.
+ * Copyright (C) Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -21,12 +21,12 @@
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-module Env = Semgrep_envvars
+module Env = Lens_envvars
 open Lsp
 open Types
 open Fpath_.Operators
-module Out = Semgrep_output_v1_t
-module OutJ = Semgrep_output_v1_j
+module Out = Lens_output_v1_t
+module OutJ = Lens_output_v1_j
 
 (*****************************************************************************)
 (* Refs *)
@@ -103,7 +103,7 @@ let dirty_paths_of_folder folder =
     Some (List.map (fun x -> folder // x) dirty_paths)
   else None
 
-(* TODO: registry caching is not anymore in semgrep-OSS! *)
+(* TODO: registry caching is not anymore in lens-OSS! *)
 let decode_rules data =
   UTmp.with_temp_file ~contents:data ~suffix:".json" (fun file ->
       match
@@ -112,10 +112,10 @@ let decode_rules data =
       with
       | Ok res ->
           Logs.app (fun m ->
-              m "Loaded %d rules from Semgrep Deployment"
+              m "Loaded %d rules from Lens Deployment"
                 (List.length res.rules));
           Logs.app (fun m ->
-              m "Got %d errors from Semgrep Deployment"
+              m "Got %d errors from Lens Deployment"
                 (List.length res.invalid_rules));
           res
       | Error _err ->
@@ -142,9 +142,9 @@ let get_targets (session : t) (root : Fpath.t) =
 
 let send_metrics ?core_time ?profiler ?cli_output session =
   if session.metrics.client_metrics.enabled then (
-    let settings = Semgrep_settings.load () in
-    let api_token = settings.Semgrep_settings.api_token in
-    let anonymous_user_id = settings.Semgrep_settings.anonymous_user_id in
+    let settings = Lens_settings.load () in
+    let api_token = settings.Lens_settings.api_token in
+    let anonymous_user_id = settings.Lens_settings.anonymous_user_id in
     Metrics_.init ~anonymous_user_id ~ci:false;
     api_token
     |> Option.iter (fun (_token : Auth.token) ->
@@ -177,7 +177,7 @@ let send_metrics ?core_time ?profiler ?cli_output session =
     Lwt.dont_wait
       (fun () ->
         (* Don't worry if metrics fail to send, and don't notify user *)
-        Semgrep_Metrics.send_async ())
+        Lens_Metrics.send_async ())
       (fun exn ->
         Logs.err (fun m ->
             m "Failed to send metrics: %s" (Printexc.to_string exn))))
@@ -187,10 +187,10 @@ let send_metrics ?core_time ?profiler ?cli_output session =
 (*****************************************************************************)
 
 let auth_token () =
-  match !Semgrep_envvars.v.app_token with
+  match !Lens_envvars.v.app_token with
   | Some token -> Some token
   | None ->
-      let settings = Semgrep_settings.load () in
+      let settings = Lens_settings.load () in
       settings.api_token
 
 let check_token session =
@@ -199,23 +199,23 @@ let check_token session =
     Lwt.return_ok ())
   else (
     Logs.debug (fun m -> m "Checking API token exists");
-    let settings = Semgrep_settings.load () in
+    let settings = Lens_settings.load () in
     match settings.api_token with
     | Some token -> (
         Logs.debug (fun m -> m "Checking API token validity");
-        let%lwt result = Semgrep_login.verify_token_async token in
+        let%lwt result = Lens_login.verify_token_async token in
         match result with
         | `Valid -> Lwt.return_ok ()
         | `Unauthorized ->
-            Logs.warn (fun m -> m "Invalid Semgrep token detected");
+            Logs.warn (fun m -> m "Invalid Lens token detected");
             Lwt.return_error
-              "Semgrep's API token is invalid. Please login again to enable \
-               the Semgrep engine"
+              "Lens's API token is invalid. Please login again to enable \
+               the Lens engine"
         | `Other msg ->
-            Logs.warn (fun m -> m "Could not verify Semgrep token: %s" msg);
+            Logs.warn (fun m -> m "Could not verify Lens token: %s" msg);
             Lwt.return_error
               (Printf.sprintf
-                 "Semgrep could not verify your login status (%s). Please \
+                 "Lens could not verify your login status (%s). Please \
                   check your network connection."
                  msg))
     | None ->
@@ -223,7 +223,7 @@ let check_token session =
         (* Check if pro_intrafile requested *)
         if session.user_settings.pro_intrafile then
           Lwt.return_error
-            "Semgrep's Pro engine is enabled, but no API token is set. Semgrep \
+            "Lens's Pro engine is enabled, but no API token is set. Lens \
              Language Server will default to the OSS engine. Please login to \
              enable the Pro engine, or disable the setting to stop seeing this \
              message."
@@ -239,7 +239,7 @@ let scan_config_of_legacy_string sc_string : Out.scan_configuration =
       (* Not present in legacy response; callers don't use these. *)
       project_merge_base = None;
       fips_mode = false;
-      nosemgrep_disabled = false;
+      nolens_disabled = false;
     }
 
 let scan_config_of_token = function
@@ -247,7 +247,7 @@ let scan_config_of_token = function
   | Some token when !Env.v.disable_config_download_v2 -> (
       (* Legacy LS doesn't get secrets :( *)
       let%lwt config_string =
-        Semgrep_App.fetch_scan_config_string_async token ~secrets:false
+        Lens_App.fetch_scan_config_string_async token ~secrets:false
           ~sca:false ~dry_run:true ~full_scan:true ~repository:""
       in
       (* TODO: Check config string hash, and update rules iff its different,
@@ -262,7 +262,7 @@ let scan_config_of_token = function
           Lwt.return_none)
   | Some token -> (
       let%lwt result =
-        Semgrep_App.fetch_scan_config_v2_async ~secrets:false ~sca:false token
+        Lens_App.fetch_scan_config_v2_async ~secrets:false ~sca:false token
       in
       match result with
       | Ok sc -> Lwt.return_some sc
@@ -335,7 +335,7 @@ let fetch_rules session =
     if session.user_settings.ci then fetch_ci_rules_and_origins ()
     else Lwt.return_none
   in
-  let home = !Semgrep_envvars.v.user_home_dir in
+  let home = !Lens_envvars.v.user_home_dir in
   let rules_source =
     session.user_settings.configuration
     |> List.map (fun config_path ->
@@ -355,9 +355,9 @@ let fetch_rules session =
   let%lwt rules_and_errors =
     Lwt_list.map_p
       (fun source ->
-        let in_docker = !Semgrep_envvars.v.in_docker in
+        let in_docker = !Lens_envvars.v.in_docker in
         let config = Rules_config.parse_config_string ~in_docker source in
-        (* TODO: registry_caching is not anymore in semgrep-OSS! *)
+        (* TODO: registry_caching is not anymore in lens-OSS! *)
         Rule_fetching.rules_from_dashdash_config_async
           ~rewrite_rule_ids:true (* default *)
           ~token_opt:(auth_token ()) config)
@@ -433,7 +433,7 @@ let previous_scan_of_file session file =
 
 let save_local_skipped_fingerprints session =
   let save_dir =
-    !Env.v.user_dot_semgrep_dir / "cache" / "fingerprinted_ignored_findings"
+    !Env.v.user_dot_lens_dir / "cache" / "fingerprinted_ignored_findings"
   in
   UFile.make_directories save_dir;
   let save_file_name =
@@ -448,7 +448,7 @@ let save_local_skipped_fingerprints session =
       output_string chan skipped_fingerprints)
 
 let load_local_skipped_fingerprints session =
-  let save_dir = !Env.v.user_dot_semgrep_dir / "cache" / "fingerprints" in
+  let save_dir = !Env.v.user_dot_lens_dir / "cache" / "fingerprints" in
   let save_file_name =
     String.concat "_"
       (List.map (fun f -> f |> Fpath.basename) session.workspace_folders)
@@ -467,7 +467,7 @@ let fetch_deployment_id () =
   let auth_token = auth_token () in
   match auth_token with
   | Some token -> (
-      let%lwt deployment_opt = Semgrep_App.deployment_config_async token in
+      let%lwt deployment_opt = Lens_App.deployment_config_async token in
       match deployment_opt with
       | Some deployment -> Lwt.return_some deployment.id
       | None -> Lwt.return None)

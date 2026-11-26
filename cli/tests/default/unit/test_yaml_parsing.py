@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2024 Semgrep Inc.
+# Copyright (c) 2020-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -17,9 +17,9 @@ from textwrap import dedent
 import pytest
 from ruamel.yaml import YAML
 
-from semgrep.config_resolver import Config
-from semgrep.config_resolver import parse_config_string
-from semgrep.error import InvalidRuleSchemaError
+from lens.config_resolver import Config
+from lens.config_resolver import parse_config_string
+from lens.error import InvalidRuleSchemaError
 
 
 @pytest.mark.quick
@@ -114,7 +114,7 @@ def test_default_yaml_type_safe():
     assert rt_yaml.load(io.StringIO(s)) == ["echo Hello world"]
 
     # Unsafe, executes the system call
-    # nosemgrep: python.lang.security.deserialization.avoid-unsafe-ruamel.avoid-unsafe-ruamel
+    # nolens: python.lang.security.deserialization.avoid-unsafe-ruamel.avoid-unsafe-ruamel
     unsafe_yaml = YAML(typ="unsafe")
     assert unsafe_yaml.load(io.StringIO(s)) == 0
 
@@ -207,7 +207,7 @@ def test_invalid_pattern_child():
     with pytest.raises(InvalidRuleSchemaError):
         # NOTE: force_jsonschema is used to force the use of the jsonschema parser
         # instead of the rpc-based validation as we need raise an error earlier
-        # in Parse_rule.ml to match the behavior for pysemgrep.
+        # in Parse_rule.ml to match the behavior for pylens.
         # See SAF-1556 for more details.
         parse_config_string("testfile", rule, None, force_jsonschema=True)
 

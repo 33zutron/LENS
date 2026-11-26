@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) Semgrep, Inc.
+ * Copyright (C) Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -84,7 +84,7 @@ module Attributes = struct
   let vcs_ref_head_revision = "vcs.ref.head.revision"
   let vcs_ref_head_name = "vcs.ref.head.name"
 
-  (* These are semgrep specific and technically shouldn't be in this library but
+  (* These are lens specific and technically shouldn't be in this library but
      these will be applied to all metrics *)
   let scan_engine = "scan.engine"
   let scan_source = "scan.source"

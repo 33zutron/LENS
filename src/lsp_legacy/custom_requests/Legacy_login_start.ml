@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -12,13 +12,13 @@
 *)
 module SN = Lsp.Server_notification
 module Conv = Legacy_convert_utils
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 
-let meth = "semgrep/loginStart"
+let meth = "lens/loginStart"
 
 let on_request (session : Legacy_session.t) (req_id : Jsonrpc.Id.t) _params :
     Legacy_session.t * Legacy_lsp_.Reply.t =
-  let session_id, uri = Semgrep_login.make_login_url () in
+  let session_id, uri = Lens_login.make_login_url () in
   ( session,
     Legacy_lsp_.Reply.now
       (Legacy_lsp_.respond_json req_id

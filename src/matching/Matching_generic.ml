@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,7 +19,7 @@ module B = AST_generic
 module G = AST_generic
 module MV = Metavariable
 module H = AST_generic_helpers
-module Flag = Flag_semgrep
+module Flag = Flag_lens
 module Log = Log_matching.Log
 
 (*****************************************************************************)

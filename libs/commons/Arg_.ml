@@ -131,7 +131,7 @@ let arg_parse2 l msg short_usage_fun =
   | Arg.Bad msg ->
       let xs = lines msg in
       (* take only head, it's where the error msg is *)
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.err (fun m -> m "%s" (List_.hd_exn "unexpected empty list" xs));
       short_usage_fun ();
       raise (UnixExit (2, msg))

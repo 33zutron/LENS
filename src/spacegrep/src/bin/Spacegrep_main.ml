@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2020-2025 Semgrep Inc.
+   Copyright (c) 2020-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -25,8 +25,8 @@ let timeout_exit_code = 3
 
 type when_use_color = Auto | Always | Never
 
-(* There used to be a Semgrep output_format when spacegrep was called
- * from the Semgrep Python wrapper, but it's not the case anymore
+(* There used to be a Lens output_format when spacegrep was called
+ * from the Lens Python wrapper, but it's not the case anymore
  *)
 type output_format = Text
 
@@ -47,9 +47,9 @@ type config = {
   comment_style : Comment.style;
 }
 
-(* Those 2 types below are copy-pasted from Semgrep_core_response.atd
+(* Those 2 types below are copy-pasted from Lens_core_response.atd
  * but duplicated here to avoid some dependencies between spacegrep and
- * semgrep-core.
+ * lens-core.
  *)
 type skip_reason = Minified | Binary
 type skipped_target = { path : string; reason : skip_reason; details : string }
@@ -345,8 +345,8 @@ let output_format_term =
     Arg.info [ "output-format" ]
       ~doc:
         "Specifies how to print the matches. The default format, 'text', is an \
-         unspecified human-readable format. The other format is 'semgrep', \
-         which produces json output for consumption by the semgrep front-end. \
+         unspecified human-readable format. The other format is 'lens', \
+         which produces json output for consumption by the lens front-end. \
          Use a program like 'jq' or 'ydump' for pretty-printing this json \
          output."
   in
@@ -417,7 +417,7 @@ let time_term =
       ~doc:
         "Include parsing and matching times in the output.\n\
         \            This is an extra json field if the output is json\n\
-        \            ('semgrep' format)."
+        \            ('lens' format)."
   in
   Arg.value (Arg.flag info)
 
@@ -499,11 +499,11 @@ let man =
     `S Manpage.s_description;
     `P "Match a pattern against an arbitrary program read from stdin.";
     `S Manpage.s_authors;
-    `P "Martin Jambon <martin@semgrep.com>";
+    `P "Martin Jambon <martin@lens.com>";
     `S Manpage.s_bugs;
-    `P "Check out bug reports at https://github.com/semgrep/semgrep/issues.";
+    `P "Check out bug reports at https://github.com/lens/lens/issues.";
     `S Manpage.s_see_also;
-    `P "semgrep, spacecat";
+    `P "lens, spacecat";
   ]
 
 let info name = Cmd.info ~doc ~man name
@@ -520,7 +520,7 @@ let parse_command_line name =
 let main () =
   (*
      Make the GC work less aggressively than the default similar to
-     what's done for semgrep-core.
+     what's done for lens-core.
      This wastes memory but makes everything 2-3x faster.
      See https://md.ekstrandom.net/blog/2010/06/ocaml-memory-tuning
 

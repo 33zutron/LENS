@@ -1,4 +1,4 @@
-public class SemgrepTest
+public class LensTest
 {
 	public static final String MD5_1 = "MD5";
 	public final String MD5_2 = "MD5";

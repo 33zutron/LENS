@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024 Semgrep Inc.
+   Copyright (c) 2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,12 +10,12 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-let src = Logs.Src.create "semgrep.analyzing"
+let src = Logs.Src.create "lens.analyzing"
 
 module Log = (val Logs.src_log src : Logs.LOG)
 
 (*****************************************************************************)
-(* Debugging tags, select with SEMGREP_LOG_TAGS *)
+(* Debugging tags, select with LENS_LOG_TAGS *)
 (*****************************************************************************)
 
 let svalue_tag = Logs_.create_tags [ "svalue" ]

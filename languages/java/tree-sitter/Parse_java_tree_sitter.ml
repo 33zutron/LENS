@@ -24,7 +24,7 @@ module H = Parse_tree_sitter_helpers
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Java parser using tree-sitter-lang/semgrep-java and converting
+(* Java parser using tree-sitter-lang/lens-java and converting
  * to ../ast//ast_java.ml
  *
  * The resulting AST can then be converted to the generic AST by using
@@ -48,7 +48,7 @@ let option = Option.map
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-java/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-java/Boilerplate.ml *)
 
 (**
    Boilerplate to be used as a template when mapping the java CST

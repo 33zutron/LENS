@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -14,7 +14,7 @@
  * For parsing helpers for tree-sitter, see Parse_tree_sitter_helpers.ml
  *)
 
-(* history: we used to use /tmp files to parse Semgrep string patterns by
+(* history: we used to use /tmp files to parse Lens string patterns by
  * just dumping the pattern string first with Common.with_tmp_file and
  * then using the tmp file. Even though /tmp access is fast and often
  * cached in memory (e.g., by the Linux buffer cache), it is still

@@ -33,7 +33,7 @@ func (s *server) handlerBadFmt (w http.ResponseWriter, r *http.Request) {
 	}
 
     // ok: test
-	_, err3 := http.Get("https://semgrep.dev")
+	_, err3 := http.Get("https://lens.dev")
 	if err3 != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -41,7 +41,7 @@ func (s *server) handlerBadFmt (w http.ResponseWriter, r *http.Request) {
 
     url4 := fmt.Sprintf("ftps://%s/path/to/%s", "test", r.URL.Path)
     // ok: test
-	_, err4 := http.Get("https://semgrep.dev")
+	_, err4 := http.Get("https://lens.dev")
 	if err3 != nil {
 		http.Error(w, err.Error(), 500)
 		return

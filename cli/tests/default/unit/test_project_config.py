@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2024 Semgrep Inc.
+# Copyright (c) 2022-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,11 +15,11 @@ from typing import Sequence
 
 import pytest
 import ruamel.yaml
-from tests.conftest import make_semgrepconfig_file
+from tests.conftest import make_lensconfig_file
 
-from semgrep.app.project_config import ProjectConfig
-from semgrep.error import SemgrepError
-from semgrep.error import UNPARSEABLE_YAML_EXIT_CODE
+from lens.app.project_config import ProjectConfig
+from lens.error import LensError
+from lens.error import UNPARSEABLE_YAML_EXIT_CODE
 
 CONFIG_TAGS = "tags:\n- tag1\n- tag_key:tag_val\n"
 CONFIG_TAGS_MONOREPO_1 = "tags:\n- tag1\n- service:service-1\n"
@@ -37,9 +37,9 @@ def create_mock_dir(git_tmp_path, files: Sequence[str]) -> None:
 def test_projectconfig__find_all_config_files_basic(git_tmp_path):
     dir_files = ["test.py", "main.py", "setup.py"]
     create_mock_dir(git_tmp_path, dir_files)
-    make_semgrepconfig_file(git_tmp_path, CONFIG_TAGS)
+    make_lensconfig_file(git_tmp_path, CONFIG_TAGS)
     config_files = ProjectConfig._find_all_config_files(git_tmp_path, git_tmp_path)
-    assert config_files == [git_tmp_path / ".semgrepconfig"]
+    assert config_files == [git_tmp_path / ".lensconfig"]
 
 
 @pytest.mark.quick
@@ -53,30 +53,30 @@ def test_projectconfig__find_all_config_files_monorepo(git_tmp_path):
     service_2_dir = git_tmp_path / "service2"
 
     # Root config file
-    make_semgrepconfig_file(git_tmp_path, CONFIG_TAGS)
+    make_lensconfig_file(git_tmp_path, CONFIG_TAGS)
     # Service 1 config file
-    make_semgrepconfig_file(service_1_dir, CONFIG_TAGS_MONOREPO_1)
+    make_lensconfig_file(service_1_dir, CONFIG_TAGS_MONOREPO_1)
     # Service 2 config file
-    make_semgrepconfig_file(service_2_dir, CONFIG_TAGS_MONOREPO_2)
+    make_lensconfig_file(service_2_dir, CONFIG_TAGS_MONOREPO_2)
 
     config_files = ProjectConfig._find_all_config_files(git_tmp_path, service_1_dir)
 
     # Assert that it only contains config from root
-    assert git_tmp_path / ".semgrepconfig" in config_files
+    assert git_tmp_path / ".lensconfig" in config_files
     # Assert that it only contains config from service1
-    assert service_1_dir / ".semgrepconfig" in config_files
+    assert service_1_dir / ".lensconfig" in config_files
     # Assert that it does not contain config from service2
-    assert service_2_dir / ".semgrepconfig" not in config_files
+    assert service_2_dir / ".lensconfig" not in config_files
 
 
 @pytest.mark.quick
 def test_projectconfig_load_all_basic(git_tmp_path, mocker):
     dir_files = ["test.py", "main.py", "setup.py"]
     create_mock_dir(git_tmp_path, dir_files)
-    make_semgrepconfig_file(git_tmp_path, CONFIG_TAGS)
+    make_lensconfig_file(git_tmp_path, CONFIG_TAGS)
 
     mocker.patch.object(Path, "cwd", return_value=git_tmp_path)
-    mocker.patch("semgrep.git.get_git_root_path", return_value=git_tmp_path)
+    mocker.patch("lens.git.get_git_root_path", return_value=git_tmp_path)
     proj_config = ProjectConfig.load_all()
 
     expected_tags = ["tag1", "tag_key:tag_val"]
@@ -94,14 +94,14 @@ def test_projectconfig_load_all_monorepo(git_tmp_path, mocker):
     service_2_dir = git_tmp_path / "service2"
 
     # Root config file
-    make_semgrepconfig_file(git_tmp_path, CONFIG_TAGS)
+    make_lensconfig_file(git_tmp_path, CONFIG_TAGS)
     # Service 1 config file
-    make_semgrepconfig_file(service_1_dir, CONFIG_TAGS_MONOREPO_1)
+    make_lensconfig_file(service_1_dir, CONFIG_TAGS_MONOREPO_1)
     # Service 2 config file
-    make_semgrepconfig_file(service_2_dir, CONFIG_TAGS_MONOREPO_2)
+    make_lensconfig_file(service_2_dir, CONFIG_TAGS_MONOREPO_2)
 
     mocker.patch.object(Path, "cwd", return_value=service_1_dir)
-    mocker.patch("semgrep.git.get_git_root_path", return_value=git_tmp_path)
+    mocker.patch("lens.git.get_git_root_path", return_value=git_tmp_path)
     proj_config = ProjectConfig.load_all()
 
     expected_tags = ["tag1", "service:service-1"]
@@ -110,33 +110,33 @@ def test_projectconfig_load_all_monorepo(git_tmp_path, mocker):
 
 @pytest.mark.quick
 def test_projectconfig_load_from_file_invalid_format(tmp_path):
-    tmp_file = tmp_path / ".semgrepconfig"
+    tmp_file = tmp_path / ".lensconfig"
     yaml = ruamel.yaml.YAML(typ="safe")
     invalid_cfg = {"version": "v1", "tags": {"tag1": "value1"}}
     with tmp_file.open("w") as f:
         yaml.dump(invalid_cfg, f)
 
-    with pytest.raises(SemgrepError) as exc:
+    with pytest.raises(LensError) as exc:
         ProjectConfig.load_from_file(tmp_file)
     assert exc.value.code == UNPARSEABLE_YAML_EXIT_CODE
 
 
 @pytest.mark.quick
 def test_projectconfig_load_from_file_invalid_yaml(tmp_path):
-    tmp_file = tmp_path / ".semgrepconfig.yml"
+    tmp_file = tmp_path / ".lensconfig.yml"
     tmp_file.write_text("tags: [\n")  # invalid YAML
 
-    with pytest.raises(SemgrepError) as exc:
+    with pytest.raises(LensError) as exc:
         ProjectConfig.load_from_file(tmp_file)
     assert exc.value.code == UNPARSEABLE_YAML_EXIT_CODE
 
 
 @pytest.mark.quick
 def test_projectconfig_load_from_file_wrong_top_level_type(tmp_path):
-    tmp_file = tmp_path / ".semgrepconfig.yaml"
+    tmp_file = tmp_path / ".lensconfig.yaml"
     tmp_file.write_text("- tag1\n- tag2\n")  # valid YAML, but not a mapping
 
-    with pytest.raises(SemgrepError) as exc:
+    with pytest.raises(LensError) as exc:
         ProjectConfig.load_from_file(tmp_file)
     assert exc.value.code == UNPARSEABLE_YAML_EXIT_CODE
 

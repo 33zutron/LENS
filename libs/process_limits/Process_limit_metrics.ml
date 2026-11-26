@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) Semgrep, Inc.
+ * Copyright (C) Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -25,22 +25,22 @@ module Time_limit_meter = (val Ometrics.make_meter Ometrics.default_meter_meta)
 module Time_limit_counter =
   (val Time_limit_meter.make_int_counter
          (Ometrics.make_instrument_meta
-            ~name:"semgrep_scan_timeouts"
+            ~name:"lens_scan_timeouts"
               (* No unit here as we are just accumulating a  unit-less value *)
             ~description:
-              "How many timeouts Semgrep has set (and possibly exceeded)"
+              "How many timeouts Lens has set (and possibly exceeded)"
             ()))
 
 module Time_limit_duration =
   (val Time_limit_meter.make_int_counter
-         (Ometrics.make_instrument_meta ~name:"semgrep_scan_timeouts_duration"
+         (Ometrics.make_instrument_meta ~name:"lens_scan_timeouts_duration"
             ~description:"Specified durations for time limits" ~unit_:"ms" ()))
 
 module Time_limit_overrun =
   (val Time_limit_meter.make_int_counter
-         (Ometrics.make_instrument_meta ~name:"semgrep_scan_timeouts_overrun"
+         (Ometrics.make_instrument_meta ~name:"lens_scan_timeouts_overrun"
             ~description:
-              "How much time Semgrep has spent beyond its time limits"
+              "How much time Lens has spent beyond its time limits"
             ~unit_:"ms" ()))
 
 (*****************************************************************************)

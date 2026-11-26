@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -276,7 +276,7 @@ let rec get ?(headers = []) ?timeout_secs url =
     let server_response = server_response_of_response (response, body) `GET in
     match server_response.code with
     (* Automatically resolve redirects, in this case a 307 Temporary Redirect.
-       This is important for installing the Semgrep Pro Engine binary, which
+       This is important for installing the Lens Pro Engine binary, which
        receives a temporary redirect at the proper endpoint. *)
     | 301
     | 302
@@ -314,7 +314,7 @@ let rec get_eio ?(headers = []) url =
     let server_response = server_response_of_response (response, body) `GET in
     match server_response.code with
     (* Automatically resolve redirects, in this case a 307 Temporary Redirect.
-       This is important for installing the Semgrep Pro Engine binary, which
+       This is important for installing the Lens Pro Engine binary, which
        receives a temporary redirect at the proper endpoint.
       *)
     | 301

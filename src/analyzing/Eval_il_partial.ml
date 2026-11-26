@@ -1,6 +1,6 @@
 (* Iago Abal
  *
- * Copyright (C) 2020 Semgrep Inc.
+ * Copyright (C) 2020 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -160,7 +160,7 @@ let literal_of_string ?tok s : G.literal =
          * we are picking an arbitrary token from one of the strings involved in
          * computing `s` and prentending it is a real token for `s`, but it's NOT.
          * This may not interact well with Autofix (?). Anyways for now we have
-         * to do this because an $MVAR could match `s` and Semgrep assumes that
+         * to do this because an $MVAR could match `s` and Lens assumes that
          * an $MVAR always has a source location. *)
         tok
   in

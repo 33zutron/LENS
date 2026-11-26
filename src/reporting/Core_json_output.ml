@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,19 +19,19 @@ module J = JSON
 module E = Core_error
 module MV = Metavariable
 module QProf = Core_quick_profiling
-module Out = Semgrep_output_v1_j
-module OutUtils = Semgrep_output_utils
+module Out = Lens_output_v1_j
+module OutUtils = Lens_output_utils
 module Log = Log_reporting.Log
 
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* semgrep-core -json output.
+(* lens-core -json output.
  *
- * See semgrep_output_v1.atd and its [core_output] for the JSON spec of this
- * output. This "core" output is then read by pysemgrep in core_runner.py
- * (or by osemgrep in Core_runner.ml) and transform in a "CLI" output
- * (see [cli_output] in semgrep_output_v1.atd) which is then finally printed
+ * See lens_output_v1.atd and its [core_output] for the JSON spec of this
+ * output. This "core" output is then read by pylens in core_runner.py
+ * (or by olens in Core_runner.ml) and transform in a "CLI" output
+ * (see [cli_output] in lens_output_v1.atd) which is then finally printed
  * out to the user (see Cli_json_output.ml and Output.ml).
  *)
 
@@ -42,14 +42,14 @@ let max_truncated_length = 2048
 
 let truncate_for_output =
   String_.truncate_with_message max_truncated_length
-    (* nosemgrep *)
+    (* nolens *)
     (spf "%s... (truncated %d more characters)")
 
 let range_of_any_opt startp_of_match_range any =
   let empty_range = (startp_of_match_range, startp_of_match_range) in
   match any with
   (* those are ok and we don't want to generate a NoTokenLocation for those.
-   * alt: change Semgrep.atd to make optional startp/endp for metavar_value.
+   * alt: change Lens.atd to make optional startp/endp for metavar_value.
    *)
   | Ss []
   | Params []
@@ -107,7 +107,7 @@ let range_of_any_opt startp_of_match_range any =
 type key = string * string * int * int * string option * string option
 [@@deriving show]
 
-(* This is a port of the original pysemgrep cli_unique_key. This used to be in the CLI,
+(* This is a port of the original pylens cli_unique_key. This used to be in the CLI,
    but has since been moved to core.
 *)
 let core_unique_key (c : Out.core_match) : key =
@@ -168,7 +168,7 @@ let dedup_and_sort (xs : Out.core_match list) : Out.core_match list =
   in
   let seen = Base.Hashtbl.Poly.create ~size:101 () in
   xs |> OutUtils.sort_core_matches
-  (* This deduplication logic used to live in Pysemgrep, which would assume that
+  (* This deduplication logic used to live in Pylens, which would assume that
      the matches had already been sorted via sort_core_matches.
      If you run through this deduplication logic without that assumption, you'll
      keep undesirable matches, such as those with less metavariables.
@@ -181,7 +181,7 @@ let dedup_and_sort (xs : Out.core_match list) : Out.core_match list =
           Base.Hashtbl.set seen ~key ~data:x
       | _ -> ());
   (* Here, we must sort again, though.
-     This is because we yet again need to enforce that when Pysemgrep receives these
+     This is because we yet again need to enforce that when Pylens receives these
      matches, that they are sorted via sort_core_matches.
      If we don't do this, then stuff like test_baseline will start breaking.
      So we end up sorting twice. Such is life.
@@ -254,12 +254,12 @@ let metavars startp_of_match_range (s, mval) =
             propagated_value = get_propagated_value startp_of_match_range any;
           } )
 
-(* TODO! semgrep-core used to have its own format for taint traces
- * (called core_match_call_trace), but with osemgrep we want to merge
+(* TODO! lens-core used to have its own format for taint traces
+ * (called core_match_call_trace), but with olens we want to merge
  * things gradually, but the cli_match_dataflow_trace has those
  * strings attached to location that we ultimately need to generate
- * directly from semgrep-core (to avoid some boilerplate code in
- * pysemgrep).
+ * directly from lens-core (to avoid some boilerplate code in
+ * pylens).
  *)
 let content_of_loc (loc : Out.location) : string =
   OutUtils.content_of_file_at_range (loc.start, loc.end_) loc.path
@@ -289,7 +289,7 @@ let taint_trace_to_dataflow_trace (traces : Taint_trace.item list) :
     Out.match_dataflow_trace option =
   (* Here, we ignore all but the first taint trace, for source or sink.
      This is because we added support for multiple sources/sinks in a single
-     trace, but only internally to semgrep-core. Externally, our CLI dataflow
+     trace, but only internally to lens-core. Externally, our CLI dataflow
      trace datatype still has only one trace per finding. To fit into that
      type, we have to pick one arbitrarily.
 
@@ -393,8 +393,8 @@ let sca_to_sca (rule_metadata : Yojson.Basic.t option) (m : SCA_match.t) :
     let found_dependency : Out.found_dependency =
       Dependency.to_found_dependency ~lockfile_path:lockfile dep None
     in
-    (* dependency paths are computed in pysemgrep (dependency_aware_rule.py),
-     * not in semgrep-core; left unset here. *)
+    (* dependency paths are computed in pylens (dependency_aware_rule.py),
+     * not in lens-core; left unset here. *)
     Out.
       {
         dependency_pattern;
@@ -508,7 +508,7 @@ let match_to_match (x : Core_result.processed_match) :
       Error err
 [@@profiling]
 
-(* less: Semgrep_error_code should be defined fully Output_from_core.atd
+(* less: Lens_error_code should be defined fully Output_from_core.atd
  * so we would not need those conversions
  *)
 let error_to_error (err : Core_error.t) : Out.core_error =
@@ -700,7 +700,7 @@ let profiling_to_profiling (opt_quick_profiling : QProf.t option)
                     !!target info (Unix.error_message code));
               None)
       |> Common2.sum_int;
-    (* those are filled later in pysemgrep from the Profiler class *)
+    (* those are filled later in pylens from the Profiler class *)
     profiling_times = [];
     prefiltering =
       opt_quick_profiling |> Option.map quick_profiling_to_prefiltering;
@@ -744,7 +744,7 @@ let export_simple_profiling_results () : Out.profiling_entry list =
 *)
 
 (*****************************************************************************)
-(* Final semgrep-core output *)
+(* Final lens-core output *)
 (*****************************************************************************)
 
 let core_output_of_matches_and_errors (res : Core_result.t) : Out.core_output =
@@ -759,10 +759,10 @@ let core_output_of_matches_and_errors (res : Core_result.t) : Out.core_output =
     errors;
     paths =
       {
-        (* It seems that we have two separate paths, one for osemgrep
-            (Cli_json_output.ml) and another for pysemgrep here. We
+        (* It seems that we have two separate paths, one for olens
+            (Cli_json_output.ml) and another for pylens here. We
             should update this section to output the results
-            specifically for pysemgrep. *)
+            specifically for pylens. *)
         skipped = None;
         scanned = res.scanned |> List.map Target.internal_path;
       };

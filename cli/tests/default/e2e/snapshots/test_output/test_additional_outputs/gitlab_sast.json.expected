@@ -2,21 +2,21 @@
   "$schema": "https://gitlab.com/gitlab-org/security-products/security-report-schemas/-/blob/master/dist/sast-report-format.json",
   "scan": {
     "analyzer": {
-      "id": "semgrep",
-      "name": "Semgrep",
-      "url": "https://semgrep.dev",
+      "id": "lens",
+      "name": "Lens",
+      "url": "https://lens.dev",
       "vendor": {
-        "name": "Semgrep"
+        "name": "Lens"
       },
       "version": "<MASKED>"
     },
     "end_time": "<MASKED>",
     "scanner": {
-      "id": "semgrep",
-      "name": "Semgrep",
-      "url": "https://semgrep.dev",
+      "id": "lens",
+      "name": "Lens",
+      "url": "https://lens.dev",
       "vendor": {
-        "name": "Semgrep"
+        "name": "Lens"
       },
       "version": "<MASKED>"
     },
@@ -36,9 +36,9 @@
       "id": "30b0accd-52fb-52b0-995b-f1a7f094320f",
       "identifiers": [
         {
-          "name": "Semgrep - rules.eqeq-is-bad",
-          "type": "semgrep_type",
-          "url": "https://semgrep.dev/r/eqeq-bad",
+          "name": "Lens - rules.eqeq-is-bad",
+          "type": "lens_type",
+          "url": "https://lens.dev/r/eqeq-bad",
           "value": "rules.eqeq-is-bad"
         }
       ],
@@ -49,10 +49,10 @@
       },
       "message": "useless comparison operation `a + b == a + b` or `a + b != a + b`",
       "scanner": {
-        "id": "semgrep",
-        "name": "Semgrep",
+        "id": "lens",
+        "name": "Lens",
         "vendor": {
-          "name": "Semgrep"
+          "name": "Lens"
         }
       },
       "severity": "High"

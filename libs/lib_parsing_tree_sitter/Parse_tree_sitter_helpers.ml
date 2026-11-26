@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2020 Semgrep Inc.
+ * Copyright (C) 2020 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -104,7 +104,7 @@ let debug_sexp_cst_after_error sexp_cst =
   let s = Printexc.get_backtrace () in
   Log.warn (fun m -> m "Some constructs are not handled yet. CST was: ");
   (* bugfix: do not use CST.dump_tree because it prints on stdout
-   * and will mess up our interaction with semgrep python wrapper and
+   * and will mess up our interaction with lens python wrapper and
    * also for the parsing_stat CI job.
    *
    * alt: Use Print_sexp.to_stderr of martin

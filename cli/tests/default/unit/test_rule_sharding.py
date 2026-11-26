@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -12,11 +12,11 @@
 #
 import pytest
 
-from semgrep.core_runner import _shard_count
-from semgrep.core_runner import _shard_rules
-from semgrep.core_runner import RULE_FILE_SHARD_MAX_COUNT
-from semgrep.core_runner import RULE_FILE_SHARD_MIN_RULES
-from semgrep.core_runner import RULE_FILE_SHARD_TARGET_BYTES
+from lens.core_runner import _shard_count
+from lens.core_runner import _shard_rules
+from lens.core_runner import RULE_FILE_SHARD_MAX_COUNT
+from lens.core_runner import RULE_FILE_SHARD_MIN_RULES
+from lens.core_runner import RULE_FILE_SHARD_TARGET_BYTES
 
 MiB = 1024 * 1024
 
@@ -49,7 +49,7 @@ class TestShardCount:
     def test_shards_without_explicit_jobs(self):
         """No `--jobs` means core picks its own domain count, so still shard.
 
-        This is the default configuration for `semgrep scan` and `semgrep ci`,
+        This is the default configuration for `lens scan` and `lens ci`,
         and the case the old jobs-derived policy left entirely unsharded.
         """
         assert _shard_count(10_240, None, 114 * MiB) == 57

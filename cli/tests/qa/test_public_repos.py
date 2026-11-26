@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ from pathlib import Path
 import appdirs  # type: ignore
 import pytest
 from tests.conftest import TESTS_PATH
-from tests.semgrep_runner import SEMGREP_BASE_SCAN_COMMAND
+from tests.lens_runner import LENS_BASE_SCAN_COMMAND
 
 from .public_repos import REPOS
 
@@ -69,7 +69,7 @@ def chdir(dirname=None):
 
 
 def assert_sentinel_results(repo_path, sentinel_path, language):
-    cmd = SEMGREP_BASE_SCAN_COMMAND + [
+    cmd = LENS_BASE_SCAN_COMMAND + [
         "--disable-version-check",
         "--timeout=0",
         "--pattern",
@@ -88,20 +88,20 @@ def assert_sentinel_results(repo_path, sentinel_path, language):
     # This is useful for debugging. I don't see a downside to printing
     # such important debugging info when running tests so I'm leaving it
     # -- Martin
-    print(f"semgrep command: {cmd}")
+    print(f"lens command: {cmd}")
 
-    # nosemgrep: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
-    semgrep_run = subprocess.run(cmd, capture_output=True, encoding="utf-8")
-    assert semgrep_run.returncode == 0
+    # nolens: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
+    lens_run = subprocess.run(cmd, capture_output=True, encoding="utf-8")
+    assert lens_run.returncode == 0
 
-    output = json.loads(semgrep_run.stdout)
+    output = json.loads(lens_run.stdout)
     assert output["errors"] == []
     assert len(output["results"]) == 1
     assert output["results"][0]["path"] == str(sentinel_path)
 
 
 REPO_CACHE = Path(
-    os.environ.get("QA_TESTS_CACHE_PATH", appdirs.user_cache_dir("semgrep-qa-tests"))
+    os.environ.get("QA_TESTS_CACHE_PATH", appdirs.user_cache_dir("lens-qa-tests"))
 )
 
 
@@ -161,7 +161,7 @@ def _github_repo(repo_url: str, repo_destination: Path):
 # Those repos, once downloaded are cached locally in ~/.cache.
 # You may have to clear the cache manually if some tests start failing.
 #
-def test_semgrep_on_repo(monkeypatch, tmp_path, repo):
+def test_lens_on_repo(monkeypatch, tmp_path, repo):
     (tmp_path / "rules").symlink_to(Path(TESTS_PATH / "qa" / "rules").resolve())
 
     monkeypatch.chdir(tmp_path)
@@ -183,7 +183,7 @@ def test_semgrep_on_repo(monkeypatch, tmp_path, repo):
             sentinel_file.write(sentinel_info["file_contents"])
         assert_sentinel_results(repo_path, sentinel_path, language)
 
-    cmd = SEMGREP_BASE_SCAN_COMMAND + [
+    cmd = LENS_BASE_SCAN_COMMAND + [
         "--disable-version-check",
         "--config=rules/regex-sentinel.yaml",
         "--timeout=0",
@@ -197,14 +197,14 @@ def test_semgrep_on_repo(monkeypatch, tmp_path, repo):
         repo_path,
     ]
 
-    print(f"semgrep command: {cmd}")
+    print(f"lens command: {cmd}")
 
-    # nosemgrep: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
+    # nolens: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
     res = subprocess.run(cmd, encoding="utf-8", capture_output=True)
-    print("--- semgrep error output ---")
+    print("--- lens error output ---")
     print(res.stderr)
     print("----------------------------")
-    print("--- semgrep standard output ---")
+    print("--- lens standard output ---")
     print(res.stdout)
     print("-------------------------------")
     assert res.returncode == 0

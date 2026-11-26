@@ -28,7 +28,7 @@
       "code": 7,
       "level": "error",
       "message": "invalid configuration file found (1 configs were invalid)",
-      "type": "SemgrepError"
+      "type": "LensError"
     }
   ],
   "paths": {

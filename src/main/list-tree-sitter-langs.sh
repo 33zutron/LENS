@@ -7,12 +7,12 @@
 set -eu
 
 # Paths are relative to the project root which can be
-# semgrep, semgrep-proprietary, or semgrep-proprietary/OSS depending
+# lens, lens-proprietary, or lens-proprietary/OSS depending
 # on context.
-paths=$(echo languages/*/tree-sitter/semgrep-*)
+paths=$(echo languages/*/tree-sitter/lens-*)
 
-# Extract 'some_lang' from folders named 'semgrep-some-lang'
+# Extract 'some_lang' from folders named 'lens-some-lang'
 for path in $paths; do
-  semgrep_lang=$(basename "$path")
-  echo "${semgrep_lang#semgrep-}" | tr '-' '_' | sort
+  lens_lang=$(basename "$path")
+  echo "${lens_lang#lens-}" | tr '-' '_' | sort
 done

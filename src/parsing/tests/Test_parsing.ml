@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2020-2022 Semgrep Inc.
+ * Copyright (C) 2020-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,7 +19,7 @@ module PS = Parsing_stat
 module G = AST_generic
 module J = JSON
 module FT = File_type
-module Resp = Semgrep_output_v1_t
+module Resp = Lens_output_v1_t
 
 (*****************************************************************************)
 (* Prelude *)
@@ -38,7 +38,7 @@ module Resp = Semgrep_output_v1_t
 
 (* Global store, because I don't want to pass it through a bunch of func calls.
  *)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let store = ref []
 
 (* This function just processes the exception backtrace to find the first instance where a function
@@ -120,7 +120,7 @@ let fail_on_error (parsing_res : ('a, 'extras) Tree_sitter_run.Parsing_result.t)
 
 let dump_pfff_ast lang file =
   let ast =
-    Hook.with_hook_set Flag_semgrep.pfff_only true (fun () ->
+    Hook.with_hook_set Flag_lens.pfff_only true (fun () ->
         let res = Parse_target.just_parse_with_lang lang file in
         res.ast)
   in
@@ -327,7 +327,7 @@ let dump_lang_ast (lang : Lang.t) (file : Fpath.t) : unit =
   match lang with
   | Lang.Ocaml ->
       let (ast : AST_ocaml.program) =
-        if Hook.get Flag_semgrep.tree_sitter_only then
+        if Hook.get Flag_lens.tree_sitter_only then
           let res = Parse_ocaml_tree_sitter.parse file in
           res.program |> List_.optlist_to_list
         else Parse_ml.parse_program file
@@ -351,8 +351,8 @@ let dump_lang_ast (lang : Lang.t) (file : Fpath.t) : unit =
    Expand the root into a list of files in the specified language, and return
    a record for each file.
 
-   This is meant to run the same parsers as semgrep-core does for normal
-   semgrep scans.
+   This is meant to run the same parsers as lens-core does for normal
+   lens scans.
 *)
 let parsing_common ?(verbose = true) (lang : Lang.t) (root : Fpath.t) =
   let timeout_seconds = 10.0 in
@@ -366,7 +366,7 @@ let parsing_common ?(verbose = true) (lang : Lang.t) (root : Fpath.t) =
    *
    * In fact, it is not clear how much less it must be. For example with:
    * $ ulimit -v 1000000
-   * $ semgrep-core -lang c -parsing_stats -json lang/c/tmp/php-php-src/ext/fileinfo/
+   * $ lens-core -lang c -parsing_stats -json lang/c/tmp/php-php-src/ext/fileinfo/
    * I still get a core dump with a "Fatal error: out of memory",
    * even if I set mem_limit_mb below to 500.
    * Seems like the Gc alarm does not trigger, maybe because there is no
@@ -378,7 +378,7 @@ let parsing_common ?(verbose = true) (lang : Lang.t) (root : Fpath.t) =
    * I also had to filter big files.
    *
    * TODO: The weird thing is that even with the 1Gb limit below, I often
-   * see with 'top' semgrep-core -parsing_stat using more than 2GB.
+   * see with 'top' lens-core -parsing_stat using more than 2GB.
    * Weird. Maybe the allocation happens in tree-sitter which are out of
    * control of the OCaml GC.
    *)
@@ -582,11 +582,11 @@ let diff_pfff_tree_sitter xs =
   xs
   |> List.iter (fun file ->
       let ast1 =
-        Hook.with_hook_set Flag_semgrep.pfff_only true (fun () ->
+        Hook.with_hook_set Flag_lens.pfff_only true (fun () ->
             Parse_target.parse_program file)
       in
       let ast2 =
-        Hook.with_hook_set Flag_semgrep.tree_sitter_only true (fun () ->
+        Hook.with_hook_set Flag_lens.tree_sitter_only true (fun () ->
             Parse_target.parse_program file)
       in
       let s1 = AST_generic.show_program ast1 in

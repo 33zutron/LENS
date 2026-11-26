@@ -1,11 +1,11 @@
 (library
- (public_name semgrep.legacy_language_server.requests)
- (name osemgrep_language_server_requests)
+ (public_name lens.legacy_language_server.requests)
+ (name olens_language_server_requests)
  (wrapped false)
  (libraries
-   semgrep.legacy_language_server.scan_helpers
-   semgrep.legacy_language_server.custom_requests
-   semgrep.legacy_language_server.custom_commands)
+   lens.legacy_language_server.scan_helpers
+   lens.legacy_language_server.custom_requests
+   lens.legacy_language_server.custom_commands)
   (preprocess
    (pps
      ppx_deriving_yojson

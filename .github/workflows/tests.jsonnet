@@ -1,6 +1,6 @@
 // The goals of this workflow are to check that:
-// - we can build semgrep-core and pysemgrep
-// - all our semgrep-core and pysemgrep (and osemgrep) tests are passing
+// - we can build lens-core and pylens
+// - all our lens-core and pylens (and olens) tests are passing
 // - we can build a Docker image (for amd64 and arm64)
 // - we can build Linux and MacOS binaries and python "wheels" for pypi
 //   (also for amd64 and arm64)
@@ -8,7 +8,7 @@
 
 local actions = import 'libs/actions.libsonnet';
 local gha = import 'libs/gha.libsonnet';
-local semgrep = import 'libs/semgrep.libsonnet';
+local lens = import 'libs/lens.libsonnet';
 local uses = import 'libs/uses.libsonnet';
 
 // some jobs rely on artifacts produced by these workflow
@@ -77,7 +77,7 @@ local snapshot_update_pr_steps(add_paths, repo_name) = [
       echo ":camera_flash: The pytest shapshots changed in your PR." >> /tmp/message.txt
       echo "Please carefully review these changes and make sure they are intended:" >> /tmp/message.txt
       echo >> /tmp/message.txt
-      echo "1. Review the changes at https://github.com/semgrep/%(repo_name)s/commit/$COMMIT_LONG_SHA" >> /tmp/message.txt
+      echo "1. Review the changes at https://github.com/lens/%(repo_name)s/commit/$COMMIT_LONG_SHA" >> /tmp/message.txt
       echo "2. Accept the new snapshots with" >> /tmp/message.txt
       echo >> /tmp/message.txt
       echo "       git fetch origin && git cherry-pick \"$COMMIT_SHA\" && git push" >> /tmp/message.txt
@@ -88,26 +88,26 @@ local snapshot_update_pr_steps(add_paths, repo_name) = [
 ];
 
 // ----------------------------------------------------------------------------
-// Semgrep-core and osemgrep jobs
+// Lens-core and olens jobs
 // ----------------------------------------------------------------------------
 
 // This is mostly the same that in build-test-core-x86.jsonnet
 // but without the artifact creation and with more tests.
 // alt: we could factorize
-local test_semgrep_core_job =
-  semgrep.containers.ocaml_alpine.job(
+local test_lens_core_job =
+  lens.containers.ocaml_alpine.job(
     actions.checkout_with_submodules() +
-    semgrep.build_test_steps()
+    lens.build_test_steps()
   );
 
 // alt: could factorize with previous job
-local test_osemgrep_job =
-  semgrep.containers.ocaml_alpine.job(
+local test_olens_job =
+  lens.containers.ocaml_alpine.job(
     actions.checkout_with_submodules() +
     [
-      semgrep.opam_setup(),
+      lens.opam_setup(),
     ] +
-    semgrep.osemgrep_test_steps_after_checkout
+    lens.olens_test_steps_after_checkout
   );
 
 // ----------------------------------------------------------------------------
@@ -118,8 +118,8 @@ local test_osemgrep_job =
 
 // alt: could just use submodule:true, not sure it's worth the opti
 local fetch_submodules_step = {
-  name: 'Fetch semgrep-cli submodules',
-  run: 'git submodule update --init --recursive --recommend-shallow cli/src/semgrep/semgrep_interfaces',
+  name: 'Fetch lens-cli submodules',
+  run: 'git submodule update --init --recursive --recommend-shallow cli/src/lens/lens_interfaces',
 };
 
 local download_x86_artifacts =
@@ -130,9 +130,9 @@ local install_x86_artifacts = {
   run: |||
     # upload-artifact does not preserve the executable bit
     # (https://github.com/actions/upload-artifact#permission-loss),
-    # so restore it before installing semgrep-core.
+    # so restore it before installing lens-core.
     chmod +x artifacts/*
-    #alt: put it in cli/src/semgrep/bin/, like make copy-core-for-cli
+    #alt: put it in cli/src/lens/bin/, like make copy-core-for-cli
     sudo cp artifacts/* /usr/bin
   |||,
 };
@@ -146,10 +146,10 @@ local install_python_deps = {
 
 // Run pytest with many python versions
 local test_cli_job = {
-  name: 'test semgrep-cli',
+  name: 'test lens-cli',
   'runs-on': 'ubuntu-22.04',
   needs: [
-    // Needed for semgrep-core
+    // Needed for lens-core
     'build-test-core-x86',
   ],
   permissions: gha.pull_request_permissions,
@@ -190,7 +190,7 @@ local test_cli_job = {
       },
     ] + snapshot_update_pr_steps(
       add_paths='cli/tests/default/e2e/snapshots',
-      repo_name='semgrep'
+      repo_name='lens'
     ),
 };
 
@@ -200,7 +200,7 @@ local test_cli_job = {
 //   $ make qa
 
 local test_qa_job = {
-  name: 'quality assurance on semgrep',
+  name: 'quality assurance on lens',
   'runs-on': 'ubuntu-22.04',
   needs: [
     'build-test-core-x86',
@@ -219,17 +219,17 @@ local test_qa_job = {
   steps:
     actions.checkout() +
     [
-      // Is it indented that we also fetch tests/semgrep-rules?
+      // Is it indented that we also fetch tests/lens-rules?
       {
-        name: 'Fetch semgrep-cli submodules',
-        run: 'git submodule update --init --recursive --recommend-shallow cli/src/semgrep/semgrep_interfaces tests/semgrep-rules',
+        name: 'Fetch lens-cli submodules',
+        run: 'git submodule update --init --recursive --recommend-shallow cli/src/lens/lens_interfaces tests/lens-rules',
       },
-      actions.setup_python_step(semgrep.python_version),
+      actions.setup_python_step(lens.python_version),
       download_x86_artifacts,
       install_x86_artifacts,
       // TODO: mostly like install_python_deps with PATH adjustment
       {
-        name: 'Install semgrep',
+        name: 'Install lens',
         'working-directory': 'cli',
         run: |||
           export PATH=/github/home/.local/bin:$PATH
@@ -240,7 +240,7 @@ local test_qa_job = {
         uses: uses.actions.cache,
         with: {
           path: '~/.cache/qa-public-repos',
-          key: "qa-public-repos-${{ hashFiles('semgrep/tests/qa/*public_repos*') }}-${{ matrix.split }}",
+          key: "qa-public-repos-${{ hashFiles('lens/tests/qa/*public_repos*') }}-${{ matrix.split }}",
         },
       },
       {
@@ -250,7 +250,7 @@ local test_qa_job = {
         |||,
       },
       {
-        name: 'Test semgrep',
+        name: 'Test lens',
         'working-directory': 'cli',
         run: |||
           export PATH=/github/home/.local/bin:$PATH
@@ -271,7 +271,7 @@ local bench_prepare_steps =
   actions.checkout() +
   [
     fetch_submodules_step,
-    actions.setup_python_step(semgrep.default_python_version),
+    actions.setup_python_step(lens.default_python_version),
     download_x86_artifacts,
     install_x86_artifacts,
     install_python_deps,
@@ -288,8 +288,8 @@ local benchmarks_lite_job = {
       name: 'Test dummy benchmarks on latest',
       'working-directory': 'cli',
       run: |||
-        uv run semgrep --version
-        uv run semgrep-core -version
+        uv run lens --version
+        uv run lens-core -version
         uv run python3 ../perf/run-benchmarks --dummy
       |||,
     },
@@ -334,11 +334,11 @@ local ignore_md = {
   // (e.g. build-test-javascript)
   permissions: gha.write_permissions,
   jobs: {
-    'test-semgrep-core': test_semgrep_core_job,
-    'test-osemgrep': test_osemgrep_job,
-    // Pysemgrep tests that require check-semgrep-pro
+    'test-lens-core': test_lens_core_job,
+    'test-olens': test_olens_job,
+    // Pylens tests that require check-lens-pro
     'test-cli': test_cli_job,
-    // Pysemgrep tests that require build-test-core-x86
+    // Pylens tests that require build-test-core-x86
     'test-qa': test_qa_job,
     'benchmarks-lite': benchmarks_lite_job,
     // Docker stuff
@@ -351,7 +351,7 @@ local ignore_md = {
     },
   },
   export:: {
-    // Used in semgrep-proprietary.
+    // Used in lens-proprietary.
     snapshot_update_pr_steps: snapshot_update_pr_steps,
   },
 }

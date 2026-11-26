@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/2787
+// https://github.com/returntocorp/lens/issues/2787
 import React, { Component } from "react";
 class BadPractice extends Component {
   render() {

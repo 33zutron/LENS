@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -17,9 +17,9 @@ from typing import List
 
 import pytest
 
-import semgrep.run_scan as run_scan
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.rule import Rule
+import lens.run_scan as run_scan
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.rule import Rule
 
 
 def _sast_rule(rule_id: str) -> Dict[str, Any]:

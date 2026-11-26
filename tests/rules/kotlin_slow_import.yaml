@@ -1,4 +1,4 @@
-# From https://github.com/returntocorp/semgrep/pull/7845
+# From https://github.com/returntocorp/lens/pull/7845
 # This used to take a very long time when running with `-filter_irrelevant_rules` due
 # to the CNF getting very large
 rules:
@@ -14,7 +14,7 @@ rules:
 
       To prevent this vulnerability, validate the user input, perform contextual output encoding or sanitize the input.
 
-      For more information, see: [XSS prevention in Go](https://semgrep.dev/docs/cheat-sheets/go-xss/).
+      For more information, see: [XSS prevention in Go](https://lens.dev/docs/cheat-sheets/go-xss/).
     metadata:
       category: security
       confidence: HIGH

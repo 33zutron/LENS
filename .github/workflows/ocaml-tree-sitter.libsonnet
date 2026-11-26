@@ -1,8 +1,8 @@
-// Shared paths and steps for ocaml-tree-sitter-semgrep GHA workflows.
-// Parameterized by ots_dir for reuse from semgrep-proprietary.
+// Shared paths and steps for ocaml-tree-sitter-lens GHA workflows.
+// Parameterized by ots_dir for reuse from lens-proprietary.
 
 local actions = import 'libs/actions.libsonnet';
-local semgrep = import 'libs/semgrep.libsonnet';
+local lens = import 'libs/lens.libsonnet';
 local uses = import 'libs/uses.libsonnet';
 
 // restore/save share the actions/cache pin; save only on a miss.
@@ -10,7 +10,7 @@ local cache_restore = std.strReplace(uses.actions.cache, '/cache@', '/cache/rest
 local cache_save = std.strReplace(uses.actions.cache, '/cache@', '/cache/save@');
 
 local for_tree(ots_dir) =
-  local root = std.substr(ots_dir, 0, std.length(ots_dir) - std.length('libs/ocaml-tree-sitter-semgrep'));
+  local root = std.substr(ots_dir, 0, std.length(ots_dir) - std.length('libs/ocaml-tree-sitter-lens'));
   local build_paths = ['Makefile', 'dune-project', 'dune-workspace', '*.opam', 'opam-lockfiles/*.locked'];
   local integration_paths = std.set(build_paths + [root + p for p in build_paths + [
     'tree-sitter-config.sh',
@@ -18,7 +18,7 @@ local for_tree(ots_dir) =
     'cli/pyproject.toml',
     'cli/uv.lock',
     '.github/workflows/libs/actions.libsonnet',
-    '.github/workflows/libs/semgrep.libsonnet',
+    '.github/workflows/libs/lens.libsonnet',
     '.github/workflows/libs/uses.libsonnet',
   ]]);
   local core_dir = ots_dir + '/core';
@@ -134,7 +134,7 @@ local for_tree(ots_dir) =
     grammar_paths: language_paths + grammar_tool_paths,
 
     // Grammar jobs install only the generator dependencies.
-    setup_ocaml_step: semgrep.opam_setup(cache_profile='grammar'),
+    setup_ocaml_step: lens.opam_setup(cache_profile='grammar'),
 
     // lfs=true: every caller builds the tree, and lib/parser.c is
     // LFS-tracked, so plain `git diff`/`git status` need real content.

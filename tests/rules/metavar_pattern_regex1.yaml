@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/3503
+# https://github.com/returntocorp/lens/issues/3503
 rules:
   - id: test-mvp-regex-1
     languages:

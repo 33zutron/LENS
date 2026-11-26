@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -51,7 +51,7 @@ val hook_mk_taint_spec_match_preds :
   main loop which runs over rules. This cache is only safe to share with if
   [taint_config_of_rule] is used on the same file!
 
-  NOTE: It could be a private function, but it is also used by Deep Semgrep.
+  NOTE: It could be a private function, but it is also used by Deep Lens.
  *)
 val preds_of_rule :
   per_file_formula_cache:Formula_cache.t ->

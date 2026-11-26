@@ -1,4 +1,4 @@
-// Multi-statement pattern rule, exercising the `semgrep_statement_list`
+// Multi-statement pattern rule, exercising the `lens_statement_list`
 // path through the rule layer (not just the unit `match_pattern` path).
 
 dynamic data;

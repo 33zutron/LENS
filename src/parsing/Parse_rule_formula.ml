@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Emma Jin, Brandon Wu
  *
- * Copyright (C) 2019-2023 Semgrep Inc.
+ * Copyright (C) 2019-2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -390,7 +390,7 @@ and parse_pair_old env ((key, value) : key * G.expr) :
         | __else__ ->
             error_at_expr env.id x
               "Expected object with only one entry -- did you forget a hyphen?")
-    | _ -> error_at_expr env.id x "Received invalid Semgrep pattern"
+    | _ -> error_at_expr env.id x "Received invalid Lens pattern"
   in
   let get_nested_formula_in_list env i x =
     let env = { env with path = string_of_int i :: env.path } in
@@ -410,7 +410,7 @@ and parse_pair_old env ((key, value) : key * G.expr) :
   | "pattern-not-inside" ->
       let+ formula = get_formula ~allow_string:true env value in
       R.Not (t, R.Inside (t, formula) |> R.f) |> R.f
-  | "semgrep-internal-pattern-anywhere" ->
+  | "lens-internal-pattern-anywhere" ->
       let/ pattern = parse_str_or_dict env value in
       let+ formula =
         match pattern with
@@ -476,7 +476,7 @@ and parse_pair_old env ((key, value) : key * G.expr) :
                 H.dict_take_opt dict "metavariable-pattern",
                 H.dict_take_opt dict "metavariable-comparison",
                 H.dict_take_opt dict "metavariable-name",
-                H.dict_take_opt dict "semgrep-internal-metavariable-name" )
+                H.dict_take_opt dict "lens-internal-metavariable-name" )
             with
             | None, None, None, None, None, None, None, None ->
                 let+ nested_formula = get_nested_formula_in_list env i expr in
@@ -708,7 +708,7 @@ and parse_extra (env : env) (key : key) (value : G.expr) :
       in
       Ok (MetavarComparison { metavariable; comparison; strip; base })
   | "metavariable-name"
-  | "semgrep-internal-metavariable-name" ->
+  | "lens-internal-metavariable-name" ->
       let/ mv_name_dict = parse_dict env key value in
       let/ mvar = take_key mv_name_dict env parse_string "metavariable" in
       let parse_kind = function
@@ -753,14 +753,14 @@ and parse_extra (env : env) (key : key) (value : G.expr) :
               "expected either module(s) or fqn(s), but not both"
         | Some _, _, _
         | _, _, Some _
-          when not (String.equal (fst key) "semgrep-internal-metavariable-name")
+          when not (String.equal (fst key) "lens-internal-metavariable-name")
           ->
             (* TODO: Resolve the TODO item for `match_fqn` in
               `Metavariable_name.ml` before removing the
-              `semgrep-internal-` prefix from the `fqn` filter. *)
+              `lens-internal-` prefix from the `fqn` filter. *)
             error_at_key env.id key
               "kind, fqn(s) constraints are not supported without \
-               semgrep-internal- prefix"
+               lens-internal- prefix"
         | _ -> Ok ()
       in
       Ok (MetavarName { mvar; kind; modules; fqns })

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -12,14 +12,14 @@
 *)
 (** Quick (core) profiling data.
 
-  This is summarized profiling data that is **always** tracked by Semgrep,
+  This is summarized profiling data that is **always** tracked by Lens,
   so it needs to be quick to obtain and cheap to keep around. This is in
   contrast with 'Core_profiling', that tracks rather fine-grained data (e.g.
   parsing time for every single file), and it can be expensive for very large
   repos, so it is only enabled with `-json_time` (or `--time` from the CLI).
 
   In `Core_result` we have both `Core_quick_profiling.t` as well as
-  `Core_profiling.t`, and we combine them into Semgrep's output `time` field
+  `Core_profiling.t`, and we combine them into Lens's output `time` field
   when generating the JSON output.
 
  *)
@@ -54,7 +54,7 @@ module Prefiltering_stats : sig
 
   val zero : t
   val combine : t -> t -> t
-  val to_ratio_stats : t -> Semgrep_output_v1_t.prefiltering_stats
+  val to_ratio_stats : t -> Lens_output_v1_t.prefiltering_stats
 end
 
 type t = {

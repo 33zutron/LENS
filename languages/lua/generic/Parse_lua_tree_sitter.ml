@@ -1,6 +1,6 @@
 (* Ruin0x11
  *
- * Copyright (c) 2020 Semgrep Inc.
+ * Copyright (c) 2020 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -22,7 +22,7 @@ module Log = Log_parser_lua.Log
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* LUA parser using tree-sitter-lang/semgrep-lua and converting
+(* LUA parser using tree-sitter-lang/lens-lua and converting
  * directly to AST_generic
  *
  *)
@@ -39,7 +39,7 @@ let fb = Tok.unsafe_fake_bracket
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-lua/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-lua/Boilerplate.ml *)
 
 (**
    Boilerplate to be used as a template when mapping the lua CST

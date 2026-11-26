@@ -2,26 +2,26 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Semgrep Core: Help",
+      "name": "Lens Core: Help",
       "type": "ocaml.earlybird",
       "request": "launch",
-      "program": "${workspaceFolder}/bin/semgrep-core.bc",
+      "program": "${workspaceFolder}/bin/lens-core.bc",
       "arguments": ["--help"],
       "preLaunchTask": "Build Core Bytecode"
     },
     {
-      "name": "OSemgrep: Help",
+      "name": "OLens: Help",
       "type": "ocaml.earlybird",
       "request": "launch",
-      "program": "${workspaceFolder}/bin/osemgrep.bc",
+      "program": "${workspaceFolder}/bin/olens.bc",
       "arguments": ["--help"],
       "preLaunchTask": "Build Core Bytecode"
     },
     {
-      "name": "OSemgrep: LSP",
+      "name": "OLens: LSP",
       "type": "ocaml.earlybird",
       "request": "launch",
-      "program": "${workspaceFolder}/bin/osemgrep.bc",
+      "program": "${workspaceFolder}/bin/olens.bc",
       "arguments": ["lsp", "--experimental"],
       "preLaunchTask": "Build Core Bytecode"
     },

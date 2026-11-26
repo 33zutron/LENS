@@ -35,11 +35,11 @@ check-markers:
 
 .PHONY: clean
 clean:
-	rm -rf build/ semgrep.egg-info/ .eggs/
+	rm -rf build/ lens.egg-info/ .eggs/
 	rm -rf .pytest_cache/ .benchmarks/
-# clean also the semgrep-pro artifacts, not just semgrep-core
-	rm -f src/semgrep/bin/semgrep-core*
-	rm -f src/semgrep/bin/pro-installed-by.txt
+# clean also the lens-pro artifacts, not just lens-core
+	rm -f src/lens/bin/lens-core*
+	rm -f src/lens/bin/pro-installed-by.txt
 
 ###############################################################################
 # Tests
@@ -126,30 +126,30 @@ test-dev:
 	# Finally, run the slowest tests
 	time $(PYTEST) -m 'not quick and not kinda_slow' tests/default
 
-# Run the end-to-end tests only. These are tests that invoke the semgrep
+# Run the end-to-end tests only. These are tests that invoke the lens
 # command line, excluding unit tests. They don't include the quality assurance
 # (QA) tests because they take longer and aren't as narrowly targeted.
 #
-# We exclude the few tests that don't invoke the semgrep command directly.
+# We exclude the few tests that don't invoke the lens command directly.
 .PHONY: e2e
 e2e:
 	$(PYTEST) -m 'not pysemfail' tests/default/e2e
 
-# Run the end-to-end tests using osemgrep instead of pysemgrep.
-# See tests/semgrep_runner.py for the use of the environment variables below.
-# To run individual tests, export PYTEST_USE_OSEMGREP=true
+# Run the end-to-end tests using olens instead of pylens.
+# See tests/lens_runner.py for the use of the environment variables below.
+# To run individual tests, export PYTEST_USE_OLENS=true
 # and run 'pytest tests/default/e2e/test_output.py' in a shell for example.
 #TODO: right now we just run the e2e-only because it's our main goal for Q4
 #
 # coupling: must match the 'e2e' target above except for the pysemfail/osemfail
 # markers
-.PHONY: osemgrep-e2e
-osemgrep-e2e:
-	PYTEST_USE_OSEMGREP=true $(PYTEST) -m 'not osemfail' tests/default/e2e
+.PHONY: olens-e2e
+olens-e2e:
+	PYTEST_USE_OLENS=true $(PYTEST) -m 'not osemfail' tests/default/e2e
 
 .PHONY: e2e-other
 e2e-other:
-	$(PYTEST) -m 'not no_semgrep_cli and not todo' tests/default/e2e-other
+	$(PYTEST) -m 'not no_lens_cli and not todo' tests/default/e2e-other
 
 # For tests that require login and the pro binary.
 #
@@ -157,31 +157,31 @@ e2e-other:
 e2e-pro-need-login:
 	$(PYTEST) tests/e2e-pro-need-login
 
-# Run the extra tests on public repos and semgrep-rules
+# Run the extra tests on public repos and lens-rules
 .PHONY: qa
 qa:
 	$(PYTEST) tests/qa
 
 ###############################################################################
-# Osemgrep tests
+# Olens tests
 ###############################################################################
 
-# Run all the known passing-with-osemgrep tests (not tagged with osemfail)
+# Run all the known passing-with-olens tests (not tagged with osemfail)
 # coupling: this is run in CI in .github/workflows/tests.yml
 osempass:
-	PYTEST_USE_OSEMGREP=true $(PYTEST) -n auto \
+	PYTEST_USE_OLENS=true $(PYTEST) -n auto \
 	  -m 'not osemfail' tests/default/e2e tests/default/e2e-other
 
 # to be used to discover tests that we should remove the osemfail pytest mark
 osempass-check-if-new-osempass:
-	PYTEST_USE_OSEMGREP=true $(PYTEST) -n auto -v --no-summary \
-	  -m 'not no_semgrep_cli and osemfail' tests/default/e2e \
+	PYTEST_USE_OLENS=true $(PYTEST) -n auto -v --no-summary \
+	  -m 'not no_lens_cli and osemfail' tests/default/e2e \
 	 | (grep PASSED || echo 'Found no new passing tests')
 
-# Run the quality assurance tests using osemgrep instead of the Python CLI.
-.PHONY: osemgrep-qa
-osemgrep-qa:
-	PYTEST_USE_OSEMGREP=true $(MAKE) qa
+# Run the quality assurance tests using olens instead of the Python CLI.
+.PHONY: olens-qa
+olens-qa:
+	PYTEST_USE_OLENS=true $(MAKE) qa
 
 ###############################################################################
 # Dev targets
@@ -196,7 +196,7 @@ regenerate-tests:
 	uv run pytest -n auto \
 	  --run-only-snapshots --snapshot-update --allow-snapshot-deletion \
 	  -m 'not pysemfail' tests/default/e2e tests/default/e2e-other
-	PYTEST_USE_OSEMGREP=true uv run pytest -n auto \
+	PYTEST_USE_OLENS=true uv run pytest -n auto \
 	  --run-only-snapshots --snapshot-update --allow-snapshot-deletion \
 	  -m 'pysemfail' tests/default/e2e tests/default/e2e-other
 

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
 (* One match *)
 type processed_match = {
   pm : Core_match.t;
-  (* semgrep-core is now responsible for the nosemgrep and autofix *)
+  (* lens-core is now responsible for the nolens and autofix *)
   is_ignored : bool;
   autofix_edit : Textedit.t option;
 }
@@ -24,12 +24,12 @@ type t = {
   processed_matches : processed_match list;
   errors : Core_error.t list;
   (* Fixpoint timeouts happen more often than we would like, and it's mainly
-    Semgrep devs that will use this info for debugging, so for now we are
+    Lens devs that will use this info for debugging, so for now we are
     separating these timeouts and reporting them as profiling data instead.
-    See 'OSS/src/rule/semgrep_output_v1.atd'. *)
+    See 'OSS/src/rule/lens_output_v1.atd'. *)
   fixpoint_timeouts : Core_error.t list;
   (* The targets are all the files that were considered valid targets for the
-   * semgrep scan. This excludes files that were filtered out on purpose
+   * lens scan. This excludes files that were filtered out on purpose
    * due to being in the wrong language, too big, etc.
    * It includes targets that couldn't be scanned, for instance due to
    * a parsing error.
@@ -40,7 +40,7 @@ type t = {
   (* extra information useful to also give to the user (in JSON or
    * in textual reports) or for tools (e.g., the playground).
    *)
-  skipped_targets : Semgrep_output_v1_t.skipped_target list;
+  skipped_targets : Lens_output_v1_t.skipped_target list;
   skipped_rules : Rule_error.invalid_rule list;
   (*
      valid_rules: deduplicated, valid rules
@@ -60,7 +60,7 @@ type t = {
      This information must be collected here, at the point that we
      return from the core engine.
   *)
-  symbol_analysis : Semgrep_output_v1_t.symbol_analysis option;
+  symbol_analysis : Lens_output_v1_t.symbol_analysis option;
 }
 [@@deriving show]
 
@@ -110,7 +110,7 @@ val mk_result :
  * still need to print a core_result on stdout in JSON. In that
  * case we usually transform the exn into a Core_error that gets
  * added in the errors field.
- * This is also used for semgrep-core metachecker (-check_rules)
+ * This is also used for lens-core metachecker (-check_rules)
  *)
 val mk_result_with_just_errors : Core_error.t list -> t
 val empty_match_result : Core_profiling.times match_result

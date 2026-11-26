@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2021 Semgrep Inc.
+ * Copyright (C) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -16,9 +16,9 @@ open AST_generic
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Analyzing a semgrep pattern for optimization purpose.
+(* Analyzing a lens pattern for optimization purpose.
  *
- * It is useless to run the semgrep engine with rules containing specific
+ * It is useless to run the lens engine with rules containing specific
  * identifiers (e.g., 'eval') or strings (e.g., 'react.js')
  * that are never mentioned in the target file.
  *
@@ -29,9 +29,9 @@ open AST_generic
  * a pattern that we can run first on the target file.
  *
  * This module is currently used by:
- *  - Mini_rules and Semgrep_generic, to skip certain mini-rules
+ *  - Mini_rules and Lens_generic, to skip certain mini-rules
  *    (but not entire files)
- *  - the Semgrep.ml engine to skip entire files!
+ *  - the Lens.ml engine to skip entire files!
  *)
 
 module String_set = Sets.String_set
@@ -101,7 +101,7 @@ let extract_strings_and_mvars_for_intrafile =
                &&
                (* deprecated *)
                not (Pattern.is_regexp_string str) ->
-            (* Semgrep can match "foo" against "foo/bar", so we just
+            (* Lens can match "foo" against "foo/bar", so we just
              * overapproximate taking the sub-strings, see
              * Pattern_vs_code.m_module_name_prefix. *)
             (* THINK: What if the pattern looks for foo/bar but the code

@@ -1,0 +1,13 @@
+Test name: without git > basic lensignore
+--- Files not added to git ---
+.lensignore
+a
+b
+--- begin input files ---
+--- end input files ---
+--- Errors ---
+--- Selected targets ---
+selected .lensignore
+selected a
+--- Skipped targets ---
+ignored b [Lens_output_v1_t.Lensignore_patterns_match]

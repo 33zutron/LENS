@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,9 +14,9 @@
 # formatting results when files are skipped.
 import pytest
 from tests.conftest import skip_on_windows
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 
 # Test output formatting in verbose mode.
@@ -27,10 +27,10 @@ from semgrep.constants import OutputFormat
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replacement
 def test_exclude_include_verbose_sorted_1(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/eqeq.yaml",
             options=["--exclude", "excluded.*", "--exclude", "included.*", "--verbose"],
             output_format=OutputFormat.TEXT,
@@ -49,10 +49,10 @@ def test_exclude_include_verbose_sorted_1(
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replacement
 def test_exclude_include_verbose_sorted_2(
-    run_semgrep_on_copied_files: RunSemgrep, posix_snapshot
+    run_lens_on_copied_files: RunLens, posix_snapshot
 ):
     posix_snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             "rules/nosem.yaml",
             # OCaml runtime expands '*.*' arguments
             options=["--exclude=*.*", "--verbose"],

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,10 +10,10 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-(* entry point of semgrep-core *)
+(* entry point of lens-core *)
 val main : string array -> unit
 
-(* internals used also in semgrep-core-proprietary *)
+(* internals used also in lens-core-proprietary *)
 
 val lang : Lang.t option ref
 val num_jobs : Core_scan_config.num_jobs ref
@@ -49,7 +49,7 @@ val maybe_with_tracing :
   (Core_scan_config.t -> 'a) ->
   'a
 
-(* This requires many capabilities partly because of semgrep-core -rpc
+(* This requires many capabilities partly because of lens-core -rpc
  * which now does lots of things (including calling Core_scan for
  * transitive reachability).
  *)

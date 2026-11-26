@@ -1,6 +1,6 @@
 (library
- (public_name semgrep.engine.tests)
- (name semgrep_engine_tests)
+ (public_name lens.engine.tests)
+ (name lens_engine_tests)
  (wrapped false)
  (libraries
    base
@@ -8,9 +8,9 @@
    commons
    yojson
 
-   semgrep.core
-   semgrep.il
-   semgrep.engine
+   lens.core
+   lens.il
+   lens.engine
  )
  (preprocess
     (pps

@@ -2,7 +2,7 @@
 (* Yoann Padioleau
  *
  * Copyright (C) 2010, 2013, 2014 Facebook
- * Copyright (C) 2019 Semgrep Inc.
+ * Copyright (C) 2019 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -649,7 +649,7 @@ and backquote = parse
   | [^'`' '$' '\\']+ {
       T_ENCAPSED_STRING(tok lexbuf, tokinfo lexbuf)
     }
-  (* semgrep-ext: this is for metavariable in semgrep *)
+  (* lens-ext: this is for metavariable in lens *)
   | "$"[^'`' '$' '\\' '{']* {
       T_ENCAPSED_STRING(tok lexbuf, tokinfo lexbuf)
   }

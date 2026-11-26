@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2026 Semgrep Inc.
+   Copyright (c) 2026 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
 *)
 (*
    Wrappers for using the Pcre2 module safely with settings that make
-   sense for semgrep such as automatically setting some flags and
+   sense for lens such as automatically setting some flags and
    handling exceptions.
 
    If you need a function from Pcre2 that is not being exposed by this module,

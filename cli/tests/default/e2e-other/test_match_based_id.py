@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2024 Semgrep Inc.
+# Copyright (c) 2022-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,13 +15,13 @@ import shutil
 from pathlib import Path
 
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 
 # It should generate the right *fixed* fingerprint based on the rule and match.
-# The fingerprint should not change across semgrep versions; it must remain
+# The fingerprint should not change across lens versions; it must remain
 # stable.
 @pytest.mark.kinda_slow
 @pytest.mark.parametrize(
@@ -33,9 +33,9 @@ from semgrep.constants import OutputFormat
     ],
 )
 @pytest.mark.kinda_slow
-def test_value(run_semgrep_in_tmp: RunSemgrep, snapshot, rule_and_target):
+def test_value(run_lens_in_tmp: RunLens, snapshot, rule_and_target):
     (rule, target) = rule_and_target
-    results, _errors = run_semgrep_in_tmp(
+    results, _errors = run_lens_in_tmp(
         rule,
         target_name=target,
         output_format=OutputFormat.JSON,
@@ -45,8 +45,8 @@ def test_value(run_semgrep_in_tmp: RunSemgrep, snapshot, rule_and_target):
     snapshot.assert_match(results, "results.json")
 
 
-# TODO: this currently don't pass with osemgrep, mostly because
-# of rule.py formula_string() not being fully ported to osemgrep
+# TODO: this currently don't pass with olens, mostly because
+# of rule.py formula_string() not being fully ported to olens
 @pytest.mark.kinda_slow
 @pytest.mark.parametrize(
     "rule_and_target",
@@ -54,9 +54,9 @@ def test_value(run_semgrep_in_tmp: RunSemgrep, snapshot, rule_and_target):
 )
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_value_osemfail(run_semgrep_in_tmp: RunSemgrep, snapshot, rule_and_target):
+def test_value_osemfail(run_lens_in_tmp: RunLens, snapshot, rule_and_target):
     (rule, target) = rule_and_target
-    results, _errors = run_semgrep_in_tmp(
+    results, _errors = run_lens_in_tmp(
         rule,
         target_name=target,
         output_format=OutputFormat.JSON,
@@ -67,8 +67,8 @@ def test_value_osemfail(run_semgrep_in_tmp: RunSemgrep, snapshot, rule_and_targe
 
 
 @pytest.mark.kinda_slow
-def test_duplicate_matches_indexing(run_semgrep_in_tmp: RunSemgrep, snapshot):
-    results, _errors = run_semgrep_in_tmp(
+def test_duplicate_matches_indexing(run_lens_in_tmp: RunLens, snapshot):
+    results, _errors = run_lens_in_tmp(
         "rules/match_based_id/duplicates.yaml",
         target_name="match_based_id/duplicates",
         output_format=OutputFormat.JSON,
@@ -85,7 +85,7 @@ def test_duplicate_matches_indexing(run_semgrep_in_tmp: RunSemgrep, snapshot):
     [],
 )
 def test_id_change(
-    run_semgrep_on_copied_files: RunSemgrep, tmp_path, rule, target_name, expect_change
+    run_lens_on_copied_files: RunLens, tmp_path, rule, target_name, expect_change
 ):
     """
     Ensures that match-based IDs are resistant to various types of changes in
@@ -98,15 +98,15 @@ def test_id_change(
     corresponding pair
     of files, and update the parameterization above.
 
-    :param rule: The Semgrep rule that should trigger a finding
+    :param rule: The Lens rule that should trigger a finding
     :param target: The filename of the target pair
     :param expect_change: Whether or not to expect an ID change
     """
 
     # Since the match_based_id includes the target path, we must create a static
     # target path.
-    # Note that b/c we use run_semgrep_on_copied_files, the current working
-    # directory for Semgrep is tmp_path; I specify the target as an absolute
+    # Note that b/c we use run_lens_on_copied_files, the current working
+    # directory for Lens is tmp_path; I specify the target as an absolute
     # path so that things will bomb out if, for whatever reason, the working
     # directory changes.
     static_target = (
@@ -116,7 +116,7 @@ def test_id_change(
     def run_on_target(subpath):
         source_target = tmp_path / "targets" / "match_based_id" / subpath / target_name
         shutil.copy(source_target, static_target)
-        results, _ = run_semgrep_on_copied_files(
+        results, _ = run_lens_on_copied_files(
             rule,
             target_name=static_target,
             output_format=OutputFormat.JSON,
@@ -146,8 +146,8 @@ def test_id_change(
 )
 @pytest.mark.osemfail
 def test_id_change_osemfail(
-    run_semgrep_on_copied_files: RunSemgrep, tmp_path, rule, target_name, expect_change
+    run_lens_on_copied_files: RunLens, tmp_path, rule, target_name, expect_change
 ):
     test_id_change(
-        run_semgrep_on_copied_files, tmp_path, rule, target_name, expect_change
+        run_lens_on_copied_files, tmp_path, rule, target_name, expect_change
     )

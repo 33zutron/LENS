@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2025 Semgrep Inc.
+# Copyright (c) 2022-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,8 +14,8 @@ from pathlib import Path
 
 import pytest
 
-from semgrep.target_manager import TargetManager
-from semgrep.types import fake_targets_of_paths
+from lens.target_manager import TargetManager
+from lens.types import fake_targets_of_paths
 
 # ppaths: all start with a slash
 CANDIDATE_NAMES = [

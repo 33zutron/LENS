@@ -1,5 +1,5 @@
 #
-# Spacegrep's library and executables are built as part of semgrep-core.
+# Spacegrep's library and executables are built as part of lens-core.
 # Use './bin/spacegrep' and './bin/spacecat' after running 'make'.
 #
 .PHONY: build

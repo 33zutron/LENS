@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -37,7 +37,7 @@ open Telemetry
 
    Instrument names are important, see
    https://prometheus.io/docs/practices/naming/ for a guide, but TL;DR; They
-   will be named semgrep_<thing_measuring>_<units>. Note that our infra will
+   will be named lens_<thing_measuring>_<units>. Note that our infra will
    automatically add the units to the metric name, so no need to do that.
 
    A meter is just an organizational tool for instruments. You use them to apply

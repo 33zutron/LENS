@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -28,7 +28,7 @@ type ('target_content, 'xpattern) t = {
  * was on multiple lines anyway the token_location.str was contain
  * the whole string. However, external programs using a startp/endp
  * expect a different location if the end part is on a different line
- * (e.g., pysemgrep), so now we return a pair.
+ * (e.g., pylens), so now we return a pair.
  *)
 and match_range = Tok.location * Tok.location
 

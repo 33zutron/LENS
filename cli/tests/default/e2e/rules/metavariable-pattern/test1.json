@@ -25,16 +25,16 @@
           "https://docs.github.com/en/actions/learn-github-actions/security-hardening-for-github-actions#understanding-the-risk-of-script-injections",
           "https://securitylab.github.com/research/github-actions-untrusted-input/"
         ],
-        "semgrep.dev": {
+        "lens.dev": {
           "rule": {
             "origin": "community",
             "rule_id": "v8UjQj",
-            "url": "https://semgrep.dev/playground/r/K3TPZA/yaml.github-actions.security.run-shell-injection.run-shell-injection",
+            "url": "https://lens.dev/playground/r/K3TPZA/yaml.github-actions.security.run-shell-injection.run-shell-injection",
             "version_id": "K3TPZA"
           }
         },
         "shortlink": "https://sg.run/pkzk",
-        "source": "https://semgrep.dev/r/yaml.github-actions.security.run-shell-injection.run-shell-injection",
+        "source": "https://lens.dev/r/yaml.github-actions.security.run-shell-injection.run-shell-injection",
         "subcategory": [
           "vuln"
         ],
@@ -145,16 +145,16 @@
         "references": [
           "https://docs.github.com/en/actions/learn-github-actions/security-hardening-for-github-actions#understanding-the-risk-of-script-injections"
         ],
-        "semgrep.dev": {
+        "lens.dev": {
           "rule": {
             "origin": "community",
             "rule_id": "X5Udrd",
-            "url": "https://semgrep.dev/playground/r/DkT3ge/yaml.github-actions.security.curl-eval.curl-eval",
+            "url": "https://lens.dev/playground/r/DkT3ge/yaml.github-actions.security.curl-eval.curl-eval",
             "version_id": "DkT3ge"
           }
         },
         "shortlink": "https://sg.run/9r7r",
-        "source": "https://semgrep.dev/r/yaml.github-actions.security.curl-eval.curl-eval",
+        "source": "https://lens.dev/r/yaml.github-actions.security.curl-eval.curl-eval",
         "subcategory": [
           "audit"
         ],

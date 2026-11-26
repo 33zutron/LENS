@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -77,7 +77,7 @@ type ctx = facts list
  * true. the functions in this file will only execute if both
  * -deep_intra_file and -path_sensitive are enabled.
  *)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let hook_path_sensitive = ref false
 
 (* this visitor is used for annotating an expression and its subexpressions

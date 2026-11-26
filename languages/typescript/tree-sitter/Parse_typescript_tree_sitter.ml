@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2020-2025 Semgrep Inc.
+   Copyright (c) 2020-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
 (**
    Derive a JS/TS AST from a tree-sitter TS (or TSX) CST.
 
-   This is derived from generated code 'semgrep-typescript/lib/Boilerplate.ml'
+   This is derived from generated code 'lens-typescript/lib/Boilerplate.ml'
    in tree-sitter-lang.
 *)
 
@@ -115,13 +115,13 @@ let map_sep_list (env : env) (head : 'a) (tail : (_ * 'a) list)
   in
   head :: tail
 
-(* Since some patterns parse both with and without the `__SEMGREP_EXPRESSION`
+(* Since some patterns parse both with and without the `__LENS_EXPRESSION`
  * prefix, we sometimes parse something without but would like to parse it
  * with the prefix anyways.
  * This function will just detect whether the program is of a form which
  * falls under that. This includes `{ ... }` and `foo: e`.
  *)
-let is_semgrep_pattern_we_would_rather_parse_as_expression cst =
+let is_lens_pattern_we_would_rather_parse_as_expression cst =
   match cst with
   | `Opt_hash_bang_line_rep_stmt
       ( _,
@@ -1594,7 +1594,7 @@ and member_expression (env : env) ((v1, v2, v3) : CST.member_expression) : expr
       in
       (* has a leading '#' indicating a private property.
           Should it have a special construct so we could match
-          all private properties in semgrep with e.g. #$VAR ? *)
+          all private properties in lens with e.g. #$VAR ? *)
       ObjAccess (expr, dot, PN id)
   | `Semg_ellips tok ->
       let tok = token env tok in
@@ -4437,7 +4437,7 @@ let method_pattern (env : env) (x : CST.method_pattern) : any =
           let _semicolon = ignore v2 in
           Property (add_decorators decorators v1))
 
-let semgrep_pattern (env : env) (x : CST.semgrep_pattern) : any =
+let lens_pattern (env : env) (x : CST.lens_pattern) : any =
   match x with
   | `Exp x -> Expr (expression env x)
   | `Pair_opt_choice_auto_semi (v1, _v2) -> (
@@ -4538,7 +4538,7 @@ let program (env : env) (x : CST.program) : any =
       Program v2
   | `Semg_exp (v1, v2) ->
       let _v1 = token env v1 in
-      let v2 = semgrep_pattern env v2 in
+      let v2 = lens_pattern env v2 in
       v2
   | `Switch_case v1 -> Partial (PartialSwitchCase (switch_case env v1))
 
@@ -4587,16 +4587,16 @@ let parse ?dialect file =
  * or the rule-writer may want to pass us something which is just an expression, or some
  * other AST node which does not qualify as an entire standalone program.
  *
- * In which case, we use a special entry point, `__SEMGREP_EXPRESSION`, to signal to the
+ * In which case, we use a special entry point, `__LENS_EXPRESSION`, to signal to the
  * tree-sitter parser which case we would like to exercise.
  *
  * Usually it is straightforward to just run one and then keep the other for backup.
- * Unfortunately, there are cases of patterns which parse both with `__SEMGREP_EXPRESSION`
+ * Unfortunately, there are cases of patterns which parse both with `__LENS_EXPRESSION`
  * and without. This means that we have to pick one arbitrarily.
  *
  * We have decided that our canonical order will be to first try it without the prefix,
  * using the prefix as a fallback, and and then using a function
- * `is_semgrep_pattern_we_would_rather_parse_as_expression` for certain program forms
+ * `is_lens_pattern_we_would_rather_parse_as_expression` for certain program forms
  * which we would prefer to add the prefix for.
  *
  * For instance, we would prefer to parse `{...}` and `foo: e` as expressions, but
@@ -4607,7 +4607,7 @@ let parse ?dialect file =
  *)
 let parse_expression_or_source_file str =
   let do_expression str =
-    let expr_str = "__SEMGREP_EXPRESSION " ^ str in
+    let expr_str = "__LENS_EXPRESSION " ^ str in
     Tree_sitter_tsx.Parse.string expr_str
   and do_program str = Tree_sitter_tsx.Parse.string str in
   let res = do_program str in
@@ -4616,7 +4616,7 @@ let parse_expression_or_source_file str =
   | { errors = _ :: _; _ } -> do_expression str
   (* If we succeeded, we may want to still switch over to the expression case. *)
   | { program = Some cst; _ }
-    when is_semgrep_pattern_we_would_rather_parse_as_expression cst -> (
+    when is_lens_pattern_we_would_rather_parse_as_expression cst -> (
       let res2 = do_expression str in
       match res2 with
       (* If this one works, we're all good. *)

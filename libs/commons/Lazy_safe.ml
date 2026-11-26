@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -19,11 +19,11 @@ type 'a t = 'a Lazy.t * 'a Eio.Lazy.t
 let default_cancel_kind = `Record
 
 let from_val v =
-  (* nosemgrep: no-unsafe-lazy *)
+  (* nolens: no-unsafe-lazy *)
   (Lazy.from_val v, Eio.Lazy.from_val v)
 
 let from_fun ?(cancel = default_cancel_kind) f =
-  (* nosemgrep: no-unsafe-lazy *)
+  (* nolens: no-unsafe-lazy *)
   (Lazy.from_fun f, Eio.Lazy.from_fun ~cancel f)
 
 (* From https://github.com/ocaml-multicore/eio/issues/800:
@@ -41,13 +41,13 @@ let is_eio_context () =
 
 let force ((l, el) : 'a t) : 'a =
   if is_eio_context () then Eio.Lazy.force el
-  else Lazy.force l (* nosemgrep: no-unsafe-lazy *)
+  else Lazy.force l (* nolens: no-unsafe-lazy *)
 
 let map ?(cancel = default_cancel_kind) f x =
   let l, el = x in
-  (* nosemgrep: no-unsafe-lazy *)
+  (* nolens: no-unsafe-lazy *)
   (Lazy.map f l, Eio.Lazy.from_fun ~cancel (fun () -> f (Eio.Lazy.force el)))
 
 let is_val ((l, _el) : 'a t) =
-  (* nosemgrep: no-unsafe-lazy *)
+  (* nolens: no-unsafe-lazy *)
   Lazy.is_val l || false (* Eio.Lazy.is_val el does not exist *)

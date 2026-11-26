@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# https://github.com/returntocorp/semgrep/issues/3881
+# https://github.com/returntocorp/lens/issues/3881
 import os
 import sqlite3
 

@@ -1,6 +1,6 @@
 rules:
   - id: regression_0.113.0
-    message: Semgrep found a match
+    message: Lens found a match
     languages:
       - php
     severity: WARNING

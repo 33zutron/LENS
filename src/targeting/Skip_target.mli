@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,27 +11,27 @@
    LICENSE for more details.
 *)
 val is_minified :
-  Fpath.t -> (Fpath.t, Semgrep_output_v1_t.skipped_target) result
+  Fpath.t -> (Fpath.t, Lens_output_v1_t.skipped_target) result
 (** [is_minified path] returns [Ok path] if the file is not minified, and
     [Error skipped_target] if it is. This is based on whitespace and line
     density *)
 
 val is_big :
   int ->
-  Semgrep_output_v1_t.fpath ->
-  (Semgrep_output_v1_t.fpath, Semgrep_output_v1_t.skipped_target) result
+  Lens_output_v1_t.fpath ->
+  (Lens_output_v1_t.fpath, Lens_output_v1_t.skipped_target) result
 (** [is_big max_target_bytes path] returns [Ok path] if the file is less than or
     equal to [max_target_bytes] or [max_target_bytes = -1], and [Error
     skipped_target] if it is larger. *)
 
-val is_binary : Fpath.t -> (Fpath.t, Semgrep_output_v1_t.skipped_target) result
+val is_binary : Fpath.t -> (Fpath.t, Lens_output_v1_t.skipped_target) result
 (** [is_binary path] returns [Ok path] if the file is not binary, and [Error
     skipped_target] if it is. Source-like files (per [File_type]) are never
     considered binary; other files are classified by matching magic numbers at
     the start of the file. *)
 
 val exclude_big_files :
-  int -> Fpath.t list -> Fpath.t list * Semgrep_output_v1_t.skipped_target list
+  int -> Fpath.t list -> Fpath.t list * Lens_output_v1_t.skipped_target list
 (** [exclude_big_files max_target_bytes paths] will exclude files larger that
     [max_target_bytes]. No files are excluded if [max_target_bytes = -1]*)
 
@@ -43,10 +43,10 @@ val exclude_big_files :
 *)
 
 val filter_dir_access_permissions :
-  Fpath.t -> (Fpath.t, Semgrep_output_v1_t.skipped_target) result
+  Fpath.t -> (Fpath.t, Lens_output_v1_t.skipped_target) result
 
 val filter_file_access_permissions :
-  Fpath.t -> (Fpath.t, Semgrep_output_v1_t.skipped_target) result
+  Fpath.t -> (Fpath.t, Lens_output_v1_t.skipped_target) result
 
 val exclude_inaccessible_files :
-  Fpath.t list -> Fpath.t list * Semgrep_output_v1_t.skipped_target list
+  Fpath.t list -> Fpath.t list * Lens_output_v1_t.skipped_target list

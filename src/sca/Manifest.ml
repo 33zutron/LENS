@@ -1,6 +1,6 @@
 (* Matthew McQuaid, Cooper Pierce
  *
- * Copyright (c) 2024, Semgrep Inc.
+ * Copyright (c) 2024, Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
  * LICENSE for more details.
  *)
 open Common
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 
 (*****************************************************************************)
 (* Prelude *)

@@ -1,6 +1,6 @@
 rules:
   - id: cpp-match-func-def
-    message: Semgrep found a match
+    message: Lens found a match
     options:
       cpp_parsing_pref: as_fundef
     languages:
@@ -11,7 +11,7 @@ rules:
       - pattern: foo $X($Y, $Z);
 
   - id: cpp-match-ctor
-    message: Semgrep found a match
+    message: Lens found a match
     options:
       cpp_parsing_pref: as_vardef_with_ctor
     languages:
@@ -22,7 +22,7 @@ rules:
       - pattern-not: foo $X(3, ...);
 
   - id: cpp-match-ctor-3
-    message: Semgrep found a match
+    message: Lens found a match
     languages:
       - cpp
     severity: WARNING

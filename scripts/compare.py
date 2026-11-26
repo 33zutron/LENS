@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Compares behavior of two versions of Semgrep on a rule ID. See the Python
+# Compares behavior of two versions of Lens on a rule ID. See the Python
 # docstring below for compare() for more information.
 import os
 import subprocess
@@ -11,10 +11,10 @@ import click
 import requests
 from ruamel import yaml
 
-from semgrep.semgrep_types import LANGUAGE
+from lens.lens_types import LANGUAGE
 
 
-SEMGREP_DEV_TIMEOUT_S = 30.0
+LENS_DEV_TIMEOUT_S = 30.0
 
 
 def compute_docker_executable(use_podman: bool) -> str:
@@ -34,21 +34,21 @@ def compute_docker_executable(use_podman: bool) -> str:
 @click.option("--use-podman", is_flag=True, help="Use podman instead of docker.")
 def compare(start: str, end: str, snippet: str, use_podman: bool) -> int:
     """
-    Compares behavior of two versions of Semgrep on a rule ID
+    Compares behavior of two versions of Lens on a rule ID
 
-    START - The first version of Semgrep to run
+    START - The first version of Lens to run
 
-    END - The second version of Semgrep to run
+    END - The second version of Lens to run
 
     SNIPPET - A snippet or rule ID (e.g. "Wlz" or "ievans:print-to-logger2")
     """
 
     is_ruleset = ":" in snippet
     collection_path = "rulesets" if is_ruleset else "rules"
-    url = f"https://semgrep.dev/api/registry/{collection_path}/{snippet}?definition=1&test_cases=1"
+    url = f"https://lens.dev/api/registry/{collection_path}/{snippet}?definition=1&test_cases=1"
     headers = {"Accept": "application/json"}
-    # nosemgrep: python.flask.security.injection.ssrf-requests.ssrf-requests
-    data = requests.get(url, timeout=SEMGREP_DEV_TIMEOUT_S, headers=headers).json()
+    # nolens: python.flask.security.injection.ssrf-requests.ssrf-requests
+    data = requests.get(url, timeout=LENS_DEV_TIMEOUT_S, headers=headers).json()
     data = data["rules"][0] if is_ruleset else data
 
     definition = data["definition"]
@@ -66,18 +66,18 @@ def compare(start: str, end: str, snippet: str, use_podman: bool) -> int:
             *(["--security-opt", "label=disable"] if use_podman else []),
             "-v",
             f"{dir}:/src",
-            f"semgrep/semgrep:{version}",
-            "semgrep",
+            f"lens/lens:{version}",
+            "lens",
             "scan",
             "--config",
-            "semgrep.yml",
+            "lens.yml",
             ".",
         ]
 
     with tempfile.TemporaryDirectory() as td:
         os.chdir(td)
 
-        with open("semgrep.yml", "w") as fd:
+        with open("lens.yml", "w") as fd:
             yaml.safe_dump(definition, fd)  # type: ignore ## for some reason this is missing from ruamel stub
 
         target_name = (
@@ -87,13 +87,13 @@ def compare(start: str, end: str, snippet: str, use_podman: bool) -> int:
             fd.write(target)
 
         click.secho(f"===== RUNNING WITH VERSION {start} =====\n", fg="blue", bold=True)
-        # The following rule shouldn't be running on Semgrep, it's an FP factory
-        # nosemgrep: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
+        # The following rule shouldn't be running on Lens, it's an FP factory
+        # nolens: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
         subprocess.run(docker_cmd(use_podman, td, start))
         click.secho(
             f"\n\n===== RUNNING WITH VERSION {end} =====\n", fg="blue", bold=True
         )
-        # nosemgrep: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
+        # nolens: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
         subprocess.run(docker_cmd(use_podman, td, end))
 
     return 0

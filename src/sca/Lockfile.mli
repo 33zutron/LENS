@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,7 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-type kind = Semgrep_output_v1_t.lockfile_kind =
+type kind = Lens_output_v1_t.lockfile_kind =
   | PipRequirementsTxt
   | PoetryLock
   | PipfileLock
@@ -36,7 +36,7 @@ type kind = Semgrep_output_v1_t.lockfile_kind =
   | MavenInstallJson
 [@@deriving eq, ord, show]
 
-type t = Semgrep_output_v1_t.lockfile = { kind : kind; path : Fpath.t }
+type t = Lens_output_v1_t.lockfile = { kind : kind; path : Fpath.t }
 [@@deriving ord, show]
 
 val mk_lockfile : kind -> Fpath.t -> t
@@ -44,7 +44,7 @@ val mk_lockfile : kind -> Fpath.t -> t
     See also {!Dependency_source_xtarget.t}, an augmented version with the
     contents of the lockfile. *)
 
-val kind_to_ecosystem_opt : kind -> Semgrep_output_v1_t.ecosystem option
+val kind_to_ecosystem_opt : kind -> Lens_output_v1_t.ecosystem option
 (** Maps a lockfile kind to its corresponding package ecosystem.
 
     A lockfile (e.g. package-lock.json, Gemfile.lock) belongs to a specific
@@ -70,6 +70,6 @@ val kind_to_ecosystem_opt : kind -> Semgrep_output_v1_t.ecosystem option
 (* Try to infer the kind of a lockfile based on its file name (e.g.,
  * package-lock.json -> Npm). Will raise Failure for unknown lockfile filename.
  * coupling: Match_subprojects.ml
- * This is used just by `semgrep show dump-lockfile` right now.
+ * This is used just by `lens show dump-lockfile` right now.
  *)
 val kind_of_filename_exn : Fpath.t -> kind

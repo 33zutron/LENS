@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -46,7 +46,7 @@ let in_pattern env =
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-move/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-move/Boilerplate.ml *)
 
 (**
    Boilerplate to be used as a template when mapping the move CST
@@ -1961,7 +1961,7 @@ and  map_macro_call_expression (env : env) ((v1, v2, v3) : CST.macro_call_expres
   let call_args = map_arg_list env v3 in
   let typed_func = H2.add_type_args_opt_to_name mod_name type_args in
   G.Call (G.N typed_func |> G.e, call_args) |> G.e*)
-and map_semgrep_metavar_ellipsis (env : env) (x : CST.semgrep_metavar_ellipsis)
+and map_lens_metavar_ellipsis (env : env) (x : CST.lens_metavar_ellipsis)
     =
   let ellipsis = token env x in
   G.Ellipsis ellipsis |> G.e
@@ -2106,7 +2106,7 @@ and map_expression (env : env) (x : CST.expression) : G.expr =
   | `Ellips tok -> (* "..." *) G.Ellipsis (token env tok) |> G.e
   | `Deep_ellips x -> map_deep_ellipsis env x
 
-(*| `Semg_meta_ellips x -> (map_semgrep_metavar_ellipsis env x)
+(*| `Semg_meta_ellips x -> (map_lens_metavar_ellipsis env x)
   | `Typed_meta x -> (map_typed_metavariable env x)*)
 and map_name_expression (env : env) ((v1, v2) : CST.name_expression) =
   let name = map_module_access env v1 in
@@ -2826,7 +2826,7 @@ and map_let_expr (env : env) ((v1, v2, v3, v4) : CST.let_statement) : G.expr =
       in
       G.Record (sc, transpiled, sc) |> G.e
 
-let map_semgrep_expression (env : env) (x : CST.semgrep_expression) =
+let map_lens_expression (env : env) (x : CST.lens_expression) =
   G.E
     (match x with
     | `Exp x -> map_expression env x
@@ -2904,7 +2904,7 @@ let map_module_definition (env : env) ((v1, v2, v3) : CST.module_definition) =
   let def = G.ModuleDef { mbody = G.ModuleStruct (None, mod_body) } in
   G.DefStmt (ent, def) |> G.s
 
-let map_semgrep_statement (env : env) (xs : CST.semgrep_statement) =
+let map_lens_statement (env : env) (xs : CST.lens_statement) =
   let stmt_list_list =
     xs
     |> List.map (fun x ->
@@ -2932,8 +2932,8 @@ let map_semgrep_statement (env : env) (xs : CST.semgrep_statement) =
 let map_source_file (env : env) (x : CST.source_file) =
   match x with
   | `Rep_module_defi xs -> G.Pr (xs |> List.map (map_module_definition env))
-  | `Semg_exp x -> map_semgrep_expression env x
-  | `Semg_stmt x -> map_semgrep_statement env x
+  | `Semg_exp x -> map_lens_expression env x
+  | `Semg_stmt x -> map_lens_statement env x
   | `Semg_part x -> (
       match x with
       | `Func_sign x ->

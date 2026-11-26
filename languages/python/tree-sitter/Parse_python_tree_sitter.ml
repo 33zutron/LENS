@@ -20,7 +20,7 @@ open AST_python
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Python parser using tree-sitter-lang/semgrep-python and converting
+(* Python parser using tree-sitter-lang/lens-python and converting
  * to ../ast/AST_Python.ml
  *
  * The resulting AST can then be converted to the generic AST by using
@@ -75,7 +75,7 @@ let single_or_tuple e xs =
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-python/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-python/Boilerplate.ml *)
 
 (* Disable warnings against unused variables *)
 [@@@warning "-26"]

@@ -1,7 +1,7 @@
-; the main code behind semgrep-core
+; the main code behind lens-core
 (library
- (public_name semgrep.core_scan)
- (name semgrep_core_scan)
+ (public_name lens.core_scan)
+ (name lens_core_scan)
  (wrapped false)
  (libraries
     base
@@ -12,11 +12,11 @@
     commons
     eio
 
-    semgrep.core
-    semgrep.parsing
-    semgrep.matching
-    semgrep.reporting
-    semgrep.engine
+    lens.core
+    lens.parsing
+    lens.matching
+    lens.reporting
+    lens.engine
  )
  (preprocess (pps
       ppx_deriving.show

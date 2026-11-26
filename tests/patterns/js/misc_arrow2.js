@@ -10,7 +10,7 @@ b = () => { return 3; };
 
 
 
-// from https://semgrep.dev/s/q6WR/
+// from https://lens.dev/s/q6WR/
 
 //ERROR: match
 var k = (a,...rest) => { return 10; }

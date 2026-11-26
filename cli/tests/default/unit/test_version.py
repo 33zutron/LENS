@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2024 Semgrep Inc.
+# Copyright (c) 2020-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -12,14 +12,14 @@
 #
 import pytest
 
-from semgrep.app import version
+from lens.app import version
 
 
 @pytest.mark.quick
 def test_version_check_caching(tmp_path, mocker, monkeypatch):
-    tmp_cache_path = tmp_path / "semgrep_version"
+    tmp_cache_path = tmp_path / "lens_version"
 
-    monkeypatch.setenv("SEMGREP_VERSION_CACHE_PATH", str(tmp_cache_path))
+    monkeypatch.setenv("LENS_VERSION_CACHE_PATH", str(tmp_cache_path))
     fetch_mock = mocker.patch.object(
         version, "_fetch_latest_version", return_value={"version": "1.2.3"}
     )

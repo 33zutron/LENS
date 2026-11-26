@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,11 +14,11 @@ import uuid
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.app.scans import ScanHandler
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.app.scans import ScanHandler
 
 
-SEMGREP_URL = "https://semgrep.dev"
+LENS_URL = "https://lens.dev"
 SCAN_REQUEST_ID = "12345678-1234-5678-1234-567812345678"
 
 V1_SCAN_RESPONSE = {
@@ -37,15 +37,15 @@ V1_SCAN_RESPONSE = {
 def mock_state(mocker):
     state = mocker.MagicMock()
     state.local_scan_id = uuid.UUID(SCAN_REQUEST_ID)
-    state.env.semgrep_url = SEMGREP_URL
+    state.env.lens_url = LENS_URL
     state.env.sms_scan_id = None
     state.env.upload_findings_timeout = 30
-    mocker.patch("semgrep.app.scans.get_state", return_value=state)
+    mocker.patch("lens.app.scans.get_state", return_value=state)
     return state
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.parametrize("gradle_module_attribution", [False, True])
 def test_dump_and_load_scan_config_roundtrip(
     mocker, mock_state, tmp_path, gradle_module_attribution
@@ -68,7 +68,7 @@ def test_dump_and_load_scan_config_roundtrip(
     assert config_path.exists()
 
     # Create a second handler that loads the saved config via start_scan
-    mocker.patch("semgrep.app.scans.telemetry")
+    mocker.patch("lens.app.scans.telemetry")
     handler2 = ScanHandler(
         enable_transitive_reachability=None,
         load_saved_scan_config_path=config_path,
@@ -88,10 +88,10 @@ def test_dump_and_load_scan_config_roundtrip(
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_load_scan_config_missing_file_fails(mocker, mock_state, tmp_path):
     """Loading from a nonexistent path logs an error and falls through to the app."""
-    mocker.patch("semgrep.app.scans.telemetry")
+    mocker.patch("lens.app.scans.telemetry")
     handler = ScanHandler(
         enable_transitive_reachability=None,
         load_saved_scan_config_path=tmp_path / "nonexistent.json",
@@ -106,7 +106,7 @@ def test_load_scan_config_missing_file_fails(mocker, mock_state, tmp_path):
 
 
 @pytest.mark.quick
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 def test_no_dump_when_path_not_set(mock_state, tmp_path):
     """No config file is written when dump_scan_config_path is not provided."""
     handler = ScanHandler(

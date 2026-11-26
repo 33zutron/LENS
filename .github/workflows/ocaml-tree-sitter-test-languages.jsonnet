@@ -1,4 +1,4 @@
-// Per-language grammar build/test matrix for ocaml-tree-sitter-semgrep.
+// Per-language grammar build/test matrix for ocaml-tree-sitter-lens.
 // For each language from scripts/list-languages, runs `./test-lang <lang>`.
 // All failures are fatal.
 
@@ -293,10 +293,10 @@ local concurrency = {
   'cancel-in-progress': true,
 };
 
-local ots_dir = 'libs/ocaml-tree-sitter-semgrep';
+local ots_dir = 'libs/ocaml-tree-sitter-lens';
 
 {
-  name: 'Test Grammars in ocaml-tree-sitter-semgrep',
+  name: 'Test Grammars in ocaml-tree-sitter-lens',
   on: {
     // No path filter: a required check that never runs stays pending.
     pull_request: {},

@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Iago Abal
  *
- * Copyright (C) 2019-2022 Semgrep Inc.
+ * Copyright (C) 2019-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -59,7 +59,7 @@ module G = AST_generic
   = TODO =
     - Have all arguments of Calls be variables?
     - Store just the range and id_info_id, so easy to propagate back
-      info to generic AST or to return match ranges to semgrep?
+      info to generic AST or to return match ranges to lens?
 
   history:
    - cst_php.ml (was actually called ast_php.ml)

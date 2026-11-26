@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -10,7 +10,7 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
 # LICENSE for more details.
 #
-# Tests for the metrics sent by `semgrep install-semgrep-pro`:
+# Tests for the metrics sent by `lens install-lens-pro`:
 # - the install-method heuristic (environment.installMethod)
 # - the install_pro payload section (success/error)
 # - that the command sends (or does not send) metrics depending on
@@ -24,12 +24,12 @@ import pytest
 import requests
 from click.testing import CliRunner
 
-from semgrep.cli import cli
-from semgrep.commands import install
-from semgrep.metrics import get_install_method
-from semgrep.metrics import Metrics
-from semgrep.semgrep_core import SemgrepCore
-from semgrep.state import SemgrepState
+from lens.cli import cli
+from lens.commands import install
+from lens.metrics import get_install_method
+from lens.metrics import Metrics
+from lens.lens_core import LensCore
+from lens.state import LensState
 
 FAKE_TOKEN = "abc123"
 
@@ -38,10 +38,10 @@ FAKE_TOKEN = "abc123"
 def isolated_env(tmp_path, monkeypatch):
     # Never inherit metrics/auth configuration from the environment running
     # the tests, and keep settings.yml writes out of the real home directory.
-    monkeypatch.delenv("SEMGREP_SEND_METRICS", raising=False)
-    monkeypatch.delenv("SEMGREP_APP_TOKEN", raising=False)
-    monkeypatch.delenv("SEMGREP_IN_DOCKER", raising=False)
-    monkeypatch.setenv("SEMGREP_SETTINGS_FILE", str(tmp_path / "settings.yml"))
+    monkeypatch.delenv("LENS_SEND_METRICS", raising=False)
+    monkeypatch.delenv("LENS_APP_TOKEN", raising=False)
+    monkeypatch.delenv("LENS_IN_DOCKER", raising=False)
+    monkeypatch.setenv("LENS_SETTINGS_FILE", str(tmp_path / "settings.yml"))
 
 
 ##############################################################################
@@ -54,35 +54,35 @@ def isolated_env(tmp_path, monkeypatch):
     "path, expected",
     [
         (
-            "/opt/homebrew/Cellar/semgrep/1.100.0/libexec/lib/python3.12/site-packages/semgrep/metrics.py",
+            "/opt/homebrew/Cellar/lens/1.100.0/libexec/lib/python3.12/site-packages/lens/metrics.py",
             "homebrew",
         ),
         (
-            "/home/linuxbrew/.linuxbrew/Cellar/semgrep/1.100.0/libexec/lib/python3.12/site-packages/semgrep/metrics.py",
+            "/home/linuxbrew/.linuxbrew/Cellar/lens/1.100.0/libexec/lib/python3.12/site-packages/lens/metrics.py",
             "homebrew",
         ),
         (
-            "/home/user/.venv/lib/python3.12/site-packages/semgrep/metrics.py",
+            "/home/user/.venv/lib/python3.12/site-packages/lens/metrics.py",
             "pip",
         ),
         (
-            "/usr/lib/python3/dist-packages/semgrep/metrics.py",
+            "/usr/lib/python3/dist-packages/lens/metrics.py",
             "pip",
         ),
         (
-            "/home/user/code/semgrep/cli/src/semgrep/metrics.py",
+            "/home/user/code/lens/cli/src/lens/metrics.py",
             "unknown",
         ),
         (
-            r"C:\Users\user\AppData\Local\Programs\Python\Python312\Lib\site-packages\semgrep\metrics.py",
+            r"C:\Users\user\AppData\Local\Programs\Python\Python312\Lib\site-packages\lens\metrics.py",
             "pip",
         ),
         (
-            r"C:\Users\user\project\.venv\Lib\site-packages\semgrep\metrics.py",
+            r"C:\Users\user\project\.venv\Lib\site-packages\lens\metrics.py",
             "pip",
         ),
         (
-            r"C:\Users\user\code\semgrep\cli\src\semgrep\metrics.py",
+            r"C:\Users\user\code\lens\cli\src\lens\metrics.py",
             "unknown",
         ),
     ],
@@ -93,14 +93,14 @@ def test_get_install_method_from_path(path, expected) -> None:
 
 @pytest.mark.quick
 def test_get_install_method_docker_wins(monkeypatch) -> None:
-    monkeypatch.setenv("SEMGREP_IN_DOCKER", "1")
-    pip_path = "/usr/lib/python3.12/site-packages/semgrep/metrics.py"
+    monkeypatch.setenv("LENS_IN_DOCKER", "1")
+    pip_path = "/usr/lib/python3.12/site-packages/lens/metrics.py"
     assert get_install_method(pip_path) == "docker"
 
 
 @pytest.mark.quick
 def test_environment_install_method_in_payload(monkeypatch) -> None:
-    monkeypatch.setenv("SEMGREP_IN_DOCKER", "1")
+    monkeypatch.setenv("LENS_IN_DOCKER", "1")
     metrics = Metrics()
     assert metrics.payload.environment.installMethod == "docker"
     assert '"installMethod": "docker"' in metrics.as_json()
@@ -139,21 +139,21 @@ def test_clear_install_pro_error() -> None:
 
 
 ##############################################################################
-# run_install_semgrep_pro instrumentation
+# run_install_lens_pro instrumentation
 ##############################################################################
 
 
 @pytest.fixture
-def fake_state(tmp_path, mocker) -> SemgrepState:
+def fake_state(tmp_path, mocker) -> LensState:
     """A fresh logged-in state, with paths pointed into tmp_path."""
-    state = SemgrepState()
+    state = LensState()
     state.app_session.token = FAKE_TOKEN
     mocker.patch.object(install, "get_state", return_value=state)
     mocker.patch.object(
-        SemgrepCore, "path", return_value=str(tmp_path / "semgrep-core")
+        LensCore, "path", return_value=str(tmp_path / "lens-core")
     )
     mocker.patch.object(
-        SemgrepCore, "pro_version_stamp_path", return_value=tmp_path / "pro-stamp"
+        LensCore, "pro_version_stamp_path", return_value=tmp_path / "pro-stamp"
     )
     return state
 
@@ -162,13 +162,13 @@ def fake_state(tmp_path, mocker) -> SemgrepState:
 def test_run_install_success_records_outcome(fake_state, mocker) -> None:
     mocker.patch.object(
         install,
-        "download_semgrep_pro",
+        "download_lens_pro",
         side_effect=lambda _state, _platform, dest: dest.write_bytes(b"binary"),
     )
     mocker.patch.object(install, "sub_check_output", return_value="1.2.3\n")
     mocker.patch("os.chmod")
 
-    install.run_install_semgrep_pro()
+    install.run_install_lens_pro()
 
     assert fake_state.metrics.payload.install_pro.success is True
     assert fake_state.metrics.payload.install_pro.error is None
@@ -179,13 +179,13 @@ def test_run_install_records_deployment_id(fake_state, mocker) -> None:
     mocker.patch.object(install, "get_deployment_id", return_value=1234)
     mocker.patch.object(
         install,
-        "download_semgrep_pro",
+        "download_lens_pro",
         side_effect=lambda _state, _platform, dest: dest.write_bytes(b"binary"),
     )
     mocker.patch.object(install, "sub_check_output", return_value="1.2.3\n")
     mocker.patch("os.chmod")
 
-    install.run_install_semgrep_pro()
+    install.run_install_lens_pro()
 
     assert fake_state.metrics.payload.environment.deployment_id == 1234
     assert '"deployment_id": 1234' in fake_state.metrics.as_json()
@@ -196,7 +196,7 @@ def test_run_install_no_token_records_error(fake_state) -> None:
     fake_state.app_session.token = None
 
     with pytest.raises(SystemExit):
-        install.run_install_semgrep_pro()
+        install.run_install_lens_pro()
 
     assert fake_state.metrics.payload.install_pro.error == "no-api-token"
 
@@ -208,10 +208,10 @@ def test_run_install_rejects_intel_macos_before_network(
     monkeypatch.setattr(sys, "platform", "darwin")
     monkeypatch.setattr(platform, "machine", lambda: "x86_64")
     get_deployment_id = mocker.patch.object(install, "get_deployment_id")
-    download = mocker.patch.object(install, "download_semgrep_pro")
+    download = mocker.patch.object(install, "download_lens_pro")
 
     with pytest.raises(SystemExit):
-        install.run_install_semgrep_pro()
+        install.run_install_lens_pro()
 
     get_deployment_id.assert_not_called()
     download.assert_not_called()
@@ -223,11 +223,11 @@ def test_run_install_rejects_intel_macos_before_network(
     "exception",
     [
         # binary starts but dies, e.g. dynamic linking failed after exec
-        subprocess.CalledProcessError(1, "semgrep-core-proprietary"),
+        subprocess.CalledProcessError(1, "lens-core-proprietary"),
         # binary cannot even start, e.g. exec format error on the wrong arch
         OSError(8, "Exec format error"),
         # binary hangs
-        subprocess.TimeoutExpired("semgrep-core-proprietary", 10),
+        subprocess.TimeoutExpired("lens-core-proprietary", 10),
     ],
 )
 def test_run_install_version_check_failure_records_error(
@@ -235,14 +235,14 @@ def test_run_install_version_check_failure_records_error(
 ) -> None:
     mocker.patch.object(
         install,
-        "download_semgrep_pro",
+        "download_lens_pro",
         side_effect=lambda _state, _platform, dest: dest.write_bytes(b"binary"),
     )
     mocker.patch.object(install, "sub_check_output", side_effect=exception)
     mocker.patch("os.chmod")
 
     with pytest.raises(SystemExit):
-        install.run_install_semgrep_pro()
+        install.run_install_lens_pro()
 
     assert fake_state.metrics.payload.install_pro.error == "version-check-failed"
 
@@ -261,29 +261,29 @@ def test_download_http_auth_failures(
     get_mock.return_value.__enter__.return_value = response
 
     with pytest.raises(SystemExit):
-        install.download_semgrep_pro(fake_state, "manylinux", tmp_path / "download")
+        install.download_lens_pro(fake_state, "manylinux", tmp_path / "download")
 
     assert fake_state.metrics.payload.install_pro.error == expected_error
 
 
 ##############################################################################
-# Command-level: does install-semgrep-pro post metrics?
+# Command-level: does install-lens-pro post metrics?
 ##############################################################################
 
 
 @pytest.fixture
 def mock_install_steps(tmp_path, mocker):
-    """Mock the individual install steps so the real run_install_semgrep_pro
+    """Mock the individual install steps so the real run_install_lens_pro
     logic (including its metrics instrumentation) still runs."""
     mocker.patch.object(
-        SemgrepCore, "path", return_value=str(tmp_path / "semgrep-core")
+        LensCore, "path", return_value=str(tmp_path / "lens-core")
     )
     mocker.patch.object(
-        SemgrepCore, "pro_version_stamp_path", return_value=tmp_path / "pro-stamp"
+        LensCore, "pro_version_stamp_path", return_value=tmp_path / "pro-stamp"
     )
     mocker.patch.object(
         install,
-        "download_semgrep_pro",
+        "download_lens_pro",
         side_effect=lambda _state, _platform, dest: dest.write_bytes(b"binary"),
     )
     mocker.patch.object(install, "sub_check_output", return_value="1.2.3\n")
@@ -299,15 +299,15 @@ def post_metrics_mock(mocker):
 def test_install_command_sends_metrics_when_logged_in(
     monkeypatch, mock_install_steps, post_metrics_mock
 ) -> None:
-    monkeypatch.setenv("SEMGREP_APP_TOKEN", FAKE_TOKEN)
+    monkeypatch.setenv("LENS_APP_TOKEN", FAKE_TOKEN)
 
-    result = CliRunner().invoke(cli, ["install-semgrep-pro"])
+    result = CliRunner().invoke(cli, ["install-lens-pro"])
 
     assert result.exit_code == 0
     post_metrics_mock.assert_called_once()
     # autospec=True passes the Metrics instance as the first positional arg
     payload = post_metrics_mock.call_args.args[0].payload
-    assert "subcommand/install-semgrep-pro" in payload.value.features
+    assert "subcommand/install-lens-pro" in payload.value.features
     assert payload.install_pro.success is True
     assert payload.install_pro.error is None
     assert payload.errors.returnCode == 0
@@ -318,14 +318,14 @@ def test_install_command_sends_metrics_when_logged_in(
 def test_install_command_sends_failure_metrics(
     monkeypatch, mock_install_steps, post_metrics_mock, mocker
 ) -> None:
-    monkeypatch.setenv("SEMGREP_APP_TOKEN", FAKE_TOKEN)
+    monkeypatch.setenv("LENS_APP_TOKEN", FAKE_TOKEN)
     mocker.patch.object(
         install,
         "sub_check_output",
-        side_effect=subprocess.CalledProcessError(1, "semgrep-core-proprietary"),
+        side_effect=subprocess.CalledProcessError(1, "lens-core-proprietary"),
     )
 
-    result = CliRunner().invoke(cli, ["install-semgrep-pro"])
+    result = CliRunner().invoke(cli, ["install-lens-pro"])
 
     assert result.exit_code == 2
     post_metrics_mock.assert_called_once()
@@ -342,12 +342,12 @@ def test_install_command_unexpected_exception_records_unknown(
     # An exception raised before any step reason is staged (here, while
     # determining the install path) has nothing to attribute it to, so the
     # outcome falls back to "unknown".
-    monkeypatch.setenv("SEMGREP_APP_TOKEN", FAKE_TOKEN)
+    monkeypatch.setenv("LENS_APP_TOKEN", FAKE_TOKEN)
     mocker.patch.object(
-        install, "determine_semgrep_pro_path", side_effect=RuntimeError("boom")
+        install, "determine_lens_pro_path", side_effect=RuntimeError("boom")
     )
 
-    result = CliRunner().invoke(cli, ["install-semgrep-pro"])
+    result = CliRunner().invoke(cli, ["install-lens-pro"])
 
     assert result.exit_code == 2
     post_metrics_mock.assert_called_once()
@@ -370,14 +370,14 @@ def test_install_command_unexpected_exception_records_unknown(
 def test_install_command_download_error_records_download_reason(
     monkeypatch, mock_install_steps, post_metrics_mock, mocker, exception
 ) -> None:
-    monkeypatch.setenv("SEMGREP_APP_TOKEN", FAKE_TOKEN)
+    monkeypatch.setenv("LENS_APP_TOKEN", FAKE_TOKEN)
     mocker.patch.object(
         install,
-        "download_semgrep_pro",
+        "download_lens_pro",
         side_effect=exception,
     )
 
-    result = CliRunner().invoke(cli, ["install-semgrep-pro"])
+    result = CliRunner().invoke(cli, ["install-lens-pro"])
 
     assert result.exit_code == 2
     payload = post_metrics_mock.call_args.args[0].payload
@@ -389,9 +389,9 @@ def test_install_command_download_error_records_download_reason(
 def test_install_command_metrics_off(
     monkeypatch, mock_install_steps, post_metrics_mock
 ) -> None:
-    monkeypatch.setenv("SEMGREP_APP_TOKEN", FAKE_TOKEN)
+    monkeypatch.setenv("LENS_APP_TOKEN", FAKE_TOKEN)
 
-    result = CliRunner().invoke(cli, ["install-semgrep-pro", "--metrics", "off"])
+    result = CliRunner().invoke(cli, ["install-lens-pro", "--metrics", "off"])
 
     assert result.exit_code == 0
     post_metrics_mock.assert_not_called()
@@ -403,7 +403,7 @@ def test_install_command_no_metrics_when_logged_out(
 ) -> None:
     # not logged in: the command fails early, and in AUTO mode metrics must
     # not be sent for unauthenticated runs
-    result = CliRunner().invoke(cli, ["install-semgrep-pro"])
+    result = CliRunner().invoke(cli, ["install-lens-pro"])
 
     assert result.exit_code != 0
     post_metrics_mock.assert_not_called()

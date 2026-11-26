@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2025 Semgrep Inc.
+# Copyright (c) 2022-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -145,7 +145,7 @@ REPOS = [
     Repo("https://github.com/coinbase/gtt-ui"),
     Repo(
         "https://github.com/DevSlop/Pixi",
-        xfail_reason="DevSlop-Pixi/app/public/api-docs/ contains some minified JS files that cause Semgrep to timeout, so the output will contain some errors.",
+        xfail_reason="DevSlop-Pixi/app/public/api-docs/ contains some minified JS files that cause Lens to timeout, so the output will contain some errors.",
     ),
     Repo(
         "https://github.com/home-assistant/home-assistant",
@@ -175,7 +175,7 @@ REPOS = [
     ),
     Repo(
         "https://github.com/dropbox/DropboxBusinessScripts",
-        xfail_reason="https://github.com/returntocorp/semgrep/issues/1498",
+        xfail_reason="https://github.com/returntocorp/lens/issues/1498",
     ),
     Repo(
         "https://github.com/dropbox/dbx_build_tools",

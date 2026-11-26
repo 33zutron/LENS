@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -18,7 +18,7 @@ module R = Rule
 module PM = Core_match
 module RP = Core_result
 module E = Core_error
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 module Log = Log_engine.Log
 
 (*****************************************************************************)
@@ -29,10 +29,10 @@ module Log = Log_engine.Log
 (*****************************************************************************)
 (* Types *)
 (*****************************************************************************)
-(* This can be captured in Run_semgrep.ml *)
+(* This can be captured in Run_lens.ml *)
 exception File_timeout of Rule_ID.t list
 
-(* TODO make this one of the Semgrep_error_code exceptions *)
+(* TODO make this one of the Lens_error_code exceptions *)
 exception Multistep_rules_not_available
 
 type timeout_config = {
@@ -266,7 +266,7 @@ let check ~matches_hook ~(timeout : timeout_config option)
   in
   Log.info (fun m -> m "checking %s with %d rules" !!file (List.length rules));
   (match (!Profiling.profile, analyzer) with
-  (* coupling: see Run_semgrep.xtarget_of_file() *)
+  (* coupling: see Run_lens.xtarget_of_file() *)
   | Profiling.ProfAll, Analyzer.L (_lang, []) ->
       Log.debug (fun m ->
           m "forcing parsing of AST outside of rules, for better profile");

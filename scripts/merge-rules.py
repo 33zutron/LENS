@@ -3,7 +3,7 @@
 # in a directory and all subdirectories. Skips directories and files with
 # a leading .
 # Useful for local work (slicing and dicing rules) and as help for creation of
-# .semgrep.yml files for CI
+# .lens.yml files for CI
 import os
 import sys
 

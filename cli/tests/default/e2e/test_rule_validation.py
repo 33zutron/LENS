@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2025 Semgrep Inc.
+# Copyright (c) 2021-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -13,15 +13,15 @@
 import pytest
 from tests.conftest import mask_floats
 from tests.conftest import skip_on_windows
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 VALIDATION_MODES = ["full", "core-only", "none"]
 
 
 def _validation_options(mode: str) -> list:
-    # "full" is the default semgrep behavior, so don't bother passing the flag
+    # "full" is the default lens behavior, so don't bother passing the flag
     # for it; this also keeps the bare `--validate` case under test.
     if mode == "full":
         return ["--validate"]
@@ -56,9 +56,9 @@ parametrized_invalid_rules = [
 @pytest.mark.osemfail
 @skip_on_windows  # better backslash replacement logic
 def test_validation_of_invalid_rules(
-    run_semgrep_in_tmp: RunSemgrep, posix_snapshot, rule, validation_mode: str
+    run_lens_in_tmp: RunLens, posix_snapshot, rule, validation_mode: str
 ):
-    _, err = run_semgrep_in_tmp(
+    _, err = run_lens_in_tmp(
         rule,
         options=_validation_options(validation_mode),
         output_format=OutputFormat.TEXT,
@@ -84,12 +84,12 @@ parametrized_top_level_valid = [
 )
 @pytest.mark.osemfail
 def test_extra_top_level_valid(
-    run_semgrep_in_tmp: RunSemgrep, posix_snapshot, rule, validation_mode: str
+    run_lens_in_tmp: RunLens, posix_snapshot, rule, validation_mode: str
 ):
     """
     An extra field in the rule does not cause it to fail validation
     """
-    _, err = run_semgrep_in_tmp(
+    _, err = run_lens_in_tmp(
         rule,
         options=_validation_options(validation_mode),
         output_format=OutputFormat.TEXT,
@@ -120,9 +120,9 @@ parametrized_valid_rules = [
     ids=[f"{rule}-{mode}" for rule, mode in parametrized_valid_rules],
 )
 def test_validation_of_valid_rules(
-    run_semgrep_in_tmp: RunSemgrep, rule, validation_mode: str
+    run_lens_in_tmp: RunLens, rule, validation_mode: str
 ):
-    run_semgrep_in_tmp(
+    run_lens_in_tmp(
         rule,
         options=_validation_options(validation_mode),
         output_format=OutputFormat.TEXT,

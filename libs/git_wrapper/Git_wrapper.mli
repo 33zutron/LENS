@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -321,4 +321,4 @@ val list_object_metadata :
     contents. For a blob, [size] is the size of its contents in bytes. *)
 
 val remote_repo_name : string -> string option
-(** [remote_repo_name "https://github.com/semgrep/semgrep.git"] will return [Some "semgrep"] *)
+(** [remote_repo_name "https://github.com/lens/lens.git"] will return [Some "lens"] *)

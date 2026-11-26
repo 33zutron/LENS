@@ -19,7 +19,7 @@
         "engine_kind": "OSS",
         "fingerprint": "0x42",
         "lines": "requires login",
-        "message": "Semgrep found a match foo\n",
+        "message": "Lens found a match foo\n",
         "metadata": {},
         "severity": "WARNING",
         "validation_state": "NO_VALIDATOR"
@@ -42,7 +42,7 @@
         "engine_kind": "OSS",
         "fingerprint": "0x42",
         "lines": "requires login",
-        "message": "Semgrep found a match bar\n",
+        "message": "Lens found a match bar\n",
         "metadata": {},
         "severity": "WARNING",
         "validation_state": "NO_VALIDATOR"

@@ -154,7 +154,7 @@
       ],
       "tool": {
         "driver": {
-          "name": "Semgrep OSS",
+          "name": "Lens OSS",
           "rules": [
             {
               "defaultConfiguration": {
@@ -174,7 +174,7 @@
                 "tags": []
               },
               "shortDescription": {
-                "text": "Semgrep Finding: rules.classic"
+                "text": "Lens Finding: rules.classic"
               }
             }
           ],

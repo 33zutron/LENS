@@ -1,9 +1,9 @@
 (library
- (name semgrep_core_tests)
- (public_name semgrep.core.tests)
+ (name lens_core_tests)
+ (public_name lens.core.tests)
  (wrapped false)
  (libraries
-   semgrep.core
+   lens.core
    testo
    alcotest
  )

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -14,7 +14,7 @@
    Utilities to help printing user-facing messages with optional color on
    stdout and stderr.
 
-   Programs such as Semgrep use both stdout and stderr to display
+   Programs such as Lens use both stdout and stderr to display
    human-readable messages.
 
    See UConsole.ml to actually print messages.

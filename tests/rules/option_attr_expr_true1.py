@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/3489
+# https://github.com/returntocorp/lens/issues/3489
 
 from foo.bar import baz
 

@@ -4,19 +4,19 @@ test_nosem_func()
 # NOSEM: rules.test-nosem
 test_nosem_func()
 
-# nosemgrep: rules.test-nosem
+# nolens: rules.test-nosem
 test_nosem_func()
 
-# NOSEMGREP
+# NOLENS
 test_nosem_func()
 
-# nOseMgREP: rules.test-nosem
+# nOlens: rules.test-nosem
 test_nosem_func()
 
 test_nosem_func()  # nosem: rules.test-nosem
 test_nosem_func()  # NOSEM: rules.test-nosem
-test_nosem_func()  # nosemgrep: rules.test-nosem
-test_nosem_func()  # NOSEMGREP
-test_nosem_func()  # nOseMgREP: rules.test-nosem
+test_nosem_func()  # nolens: rules.test-nosem
+test_nosem_func()  # NOLENS
+test_nosem_func()  # nOlens: rules.test-nosem
 
 test_nosem_func()

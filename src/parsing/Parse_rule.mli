@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -20,7 +20,7 @@
    [Error (x : Rule.Error.t)], (e.g., [Error (Rule.InvalidYaml _)]).
 
    rewrite_rule_ids, if not None, provides what's needed to parse the rule
-   ID 'foo' as 'path.to.foo'. This is the default behavior for 'semgrep scan'.
+   ID 'foo' as 'path.to.foo'. This is the default behavior for 'lens scan'.
    See the command-line option --rewrite-rule-ids.
 
    When [par_conf] is an [Eio_executor] and [num_jobs > 1], the per-rule
@@ -34,8 +34,8 @@ val parse_and_filter_invalid_rules :
   Fpath.t ->
   (Rule_error.rules_and_invalid, Rule_error.t) result
 
-(* This is used for parsing -e/-f extended patterns in Run_semgrep.ml
- * and now also in osemgrep Config_resolver.ml.
+(* This is used for parsing -e/-f extended patterns in Run_lens.ml
+ * and now also in olens Config_resolver.ml.
  * This can raise Failure for spacegrep parsing errors, and returns
  * Error (Rule.InvalidRegexp _) for regexp errors.
  *)
@@ -56,7 +56,7 @@ val parse :
   Fpath.t ->
   (Rule.rules, Rule_error.t) result
 
-(* Internals, used by osemgrep to setup a ojsonnet import hook.
+(* Internals, used by olens to setup a ojsonnet import hook.
  * The filename parameter is just used in case of missing 'rules:'
  * to report the error on the first line of the file.
  *)

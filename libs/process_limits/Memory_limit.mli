@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -41,7 +41,7 @@ exception ExceededMemoryLimit of string
    on Linux/x86_64 where we'd get a 'Stack_overflow' exception.
    See:
    - https://discuss.ocaml.org/t/is-there-any-value-in-having-a-maximum-stack-size/8214/10
-   - https://github.com/semgrep/semgrep/issues/3640
+   - https://github.com/lens/lens/issues/3640
 
    The limits set by this function call should be lower than the system
    limits so as to get exceptions instead of segfaults.
@@ -74,7 +74,7 @@ exception ExceededMemoryLimit of string
    indicates no limit.
 
    Default values are the minimum values we're willing to support for
-   semgrep-core:
+   lens-core:
    - default stack_warning_kb: 100 KiB
    - default heap_warning_mb: 500 MiB
 *)

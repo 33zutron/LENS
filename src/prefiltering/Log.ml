@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,4 +10,4 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-include (val Logs.src_log (Logs.Src.create "semgrep.prefiltering") : Logs.LOG)
+include (val Logs.src_log (Logs.Src.create "lens.prefiltering") : Logs.LOG)

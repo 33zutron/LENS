@@ -3,17 +3,17 @@
 ; Note that the actual targeting code is in ../targeting/
 
 (library
- (public_name semgrep.target)
- (name semgrep_core_target)
+ (public_name lens.target)
+ (name lens_core_target)
  (wrapped false)
  (libraries
    ; standard libraries
    ; in libs/
    commons
    ; in src/
-   ; We should not depend on any other semgrep libs
-   semgrep.sca ; for SCA_depencency.ml in Lockfile_xtarget.ml and more
-   semgrep.rule ; for semgrep_output_v1.atd core types like 'ecosystem'
+   ; We should not depend on any other lens libs
+   lens.sca ; for SCA_depencency.ml in Lockfile_xtarget.ml and more
+   lens.rule ; for lens_output_v1.atd core types like 'ecosystem'
  )
  (preprocess
    (pps

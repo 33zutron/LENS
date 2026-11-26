@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -14,7 +14,7 @@
 val parse : Fpath.t -> (AST_scala.program, Parser_scala.token) Parsing_result.t
 val parse_program : Fpath.t -> AST_scala.program
 
-(* for semgrep *)
+(* for lens *)
 val any_of_string : string -> AST_scala.any
 
 (* internal *)

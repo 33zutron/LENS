@@ -12,7 +12,7 @@ local uses = import './uses.libsonnet';
       id: 'setup-docker-tag',
       run: |||
         echo "Github event is ${{ github.event_name }}"
-        if [ "${{ github.repository }}" = "semgrep/semgrep-proprietary" ]; then
+        if [ "${{ github.repository }}" = "lens/lens-proprietary" ]; then
           PRO_PREFIX="pro-"
         else
           PRO_PREFIX=""
@@ -57,7 +57,7 @@ local uses = import './uses.libsonnet';
   },
   // workflow_inputs is a JSON object that looks like [{ "name": "name_1", "value": "value_1" }, ...]
   // "value_1" should be a string that can include GHA expression for the value, e.g.,
-  // "semgrep/semgrep:${{ needs.setup-docker-tag.outputs.docker-tag }}".
+  // "lens/lens:${{ needs.setup-docker-tag.outputs.docker-tag }}".
   // This will be converted into env vars to avoid accidental script injections
   // and reconstructed as the JSON body in the POST request to Argo.
   trigger_argo_workflow: function(trigger_url, workflow_inputs) {

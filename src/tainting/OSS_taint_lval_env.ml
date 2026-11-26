@@ -1,6 +1,6 @@
 (* Iago Abal
  *
- * Copyright (C) 2022-2024 Semgrep Inc.
+ * Copyright (C) 2022-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -123,7 +123,7 @@ let normalize_lval lval =
 
 let track_if_var_was_touched___do_not_nest env ~callback f =
   if Option.is_some env.var_was_touched then
-    (* nosemgrep: no-logs-in-library *)
+    (* nolens: no-logs-in-library *)
     Logs.err (fun m -> m "BUG: %s: Nested call!?" __FUNCTION__);
   let res, env = f { env with var_was_touched = Some callback } in
   (res, { env with var_was_touched = None })
@@ -168,7 +168,7 @@ let remove_some_lval_from_tainted_set tainted =
    * By using using `find_first_opt` we try to find the one with the lowest sid,
    * which hopefully isn't needed anymore... (unless it's inside a loop...).
    * This could perhaps (?) break monotonicity and cause divergence of the fixpoint,
-   * but the Limits_semgrep.taint_FIXPOINT_TIMEOUT seconds timeout would take care
+   * but the Limits_lens.taint_FIXPOINT_TIMEOUT seconds timeout would take care
    * of that. *)
   match
     tainted
@@ -182,8 +182,8 @@ let remove_some_lval_from_tainted_set tainted =
 let check_tainted_lvals_limit tainted new_var =
   if
     (not (NameMap.mem new_var tainted))
-    && !Flag_semgrep.max_tainted_vars > 0
-    && NameMap.cardinal tainted > !Flag_semgrep.max_tainted_vars
+    && !Flag_lens.max_tainted_vars > 0
+    && NameMap.cardinal tainted > !Flag_lens.max_tainted_vars
   then (
     match remove_some_lval_from_tainted_set tainted with
     | Some (dropped_var, tainted) ->

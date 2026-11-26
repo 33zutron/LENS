@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/7893
+# https://github.com/returntocorp/lens/issues/7893
 
 # This requires Pro
 # from constants import ONE_DAY

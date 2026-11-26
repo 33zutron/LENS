@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2023-2024 Semgrep Inc.
+ * Copyright (C) 2023-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -14,7 +14,7 @@
  *)
 open Common
 module E = Core_error
-module Log = Log_semgrep.Log
+module Log = Log_lens.Log
 
 (*****************************************************************************)
 (* Prelude *)
@@ -26,9 +26,9 @@ module Log = Log_semgrep.Log
  *
  * Yet another way to store matches/findings.
  * Just like for Core_error.ml, "core" results are translated at some point in
- * Semgrep_output_v1.core_output, then processed in pysemgrep (or osemgrep)
- * and translated again in Semgrep_output_v1.cli_output.
- * There's also Core_runner.result in osemgrep.
+ * Lens_output_v1.core_output, then processed in pylens (or olens)
+ * and translated again in Lens_output_v1.cli_output.
+ * There's also Core_runner.result in olens.
  *
  * From the simplest matches to the most complex we have:
  * Core_match.t
@@ -37,10 +37,10 @@ module Log = Log_semgrep.Log
  * -> Core_result.matches_single_file_with_time (this file)
  * -> Core_result.t (this file)
  * -> Core_result.result_or_exn (this file)
- * -> Semgrep_output_v1.core_output
+ * -> Lens_output_v1.core_output
  *  -> Core_runner.result
- *  -> Semgrep_output_v1.cli_output
- *  -> Semgrep_output_v1.findings
+ *  -> Lens_output_v1.cli_output
+ *  -> Lens_output_v1.findings
  * LATER: it would be good to remove some intermediate types.
  *)
 
@@ -83,7 +83,7 @@ type matches_single_file_with_time = Core_profiling.file_profiling match_result
    When we bridge the gap from `Core_result.t` to `Out.core_output`, we have
    to associate each match to a (potential) edit or ignored status.
    We will choose to embed the fix information in `Core_result.t`, as
-   autofixing and nosemgrep are now valid functions of the core engine, and
+   autofixing and nolens are now valid functions of the core engine, and
    thus the produced fixes are related to its produced results.
    These edits start as all None, but will be filled in by
    `Autofix.produce_autofixes`, and the associated Autofix_processor step.
@@ -93,7 +93,7 @@ type matches_single_file_with_time = Core_profiling.file_profiling match_result
    to Out.core_output, but this would require us to do autofixing and ignoring
    at the same time as output, which conflates process of producing output and
    side-effectively applying autofixes / filtering. In addition, the `Autofix`
-   and `Nosemgrep` modules are not available from that directory.
+   and `Nolens` modules are not available from that directory.
 *)
 type processed_match = {
   pm : Core_match.t;
@@ -107,15 +107,15 @@ type t = {
   processed_matches : processed_match list;
   errors : Core_error.t list;
   fixpoint_timeouts : Core_error.t list;
-  (* A target is scanned when semgrep found some applicable rules.
-   * The information is useful to return to pysemgrep/osemgrep to
+  (* A target is scanned when lens found some applicable rules.
+   * The information is useful to return to pylens/olens to
    * display statistics.
    * old: was simply [Fpath.t list] before, but for inter-file diff scan
    * metrics we also need to know the analyzer used on the target,
    * hence the use of [Target.t list] now
    *)
   scanned : Target.t list;
-  skipped_targets : Semgrep_output_v1_t.skipped_target list;
+  skipped_targets : Lens_output_v1_t.skipped_target list;
   skipped_rules : Rule_error.invalid_rule list;
   valid_rules : Rule.rule list;
   rules_with_targets : Rule.rule list;
@@ -125,7 +125,7 @@ type t = {
   rules_by_engine : (Rule_ID.t * Engine_kind.t) list;
   interfile_languages_used : Analyzer.t list;
   (* extra information *)
-  symbol_analysis : Semgrep_output_v1_t.symbol_analysis option;
+  symbol_analysis : Lens_output_v1_t.symbol_analysis option;
 }
 [@@deriving show]
 
@@ -296,7 +296,7 @@ let collate_results (init : 'c) (combine : 'b option -> 'c -> 'c)
        done for consistency with other parsing errors, like ParseError or
        LexicalError, which are only reported once per file, not rule.
 
-       See also the note in semgrep_output_v1.atd.
+       See also the note in lens_output_v1.atd.
     *)
     errors = List.fold_left E.ErrorSet.union E.ErrorSet.empty errors;
     quick_profiling;

@@ -1,6 +1,6 @@
 (* Martin Jambon
  *
- * Copyright (C) 2021 Semgrep Inc.
+ * Copyright (C) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -49,15 +49,15 @@ type shell_compatibility =
 
 type string_or_metavar =
   | Str_string of string wrap
-  | Str_semgrep_metavar of string wrap
+  | Str_lens_metavar of string wrap
 
 (* $foo or something like ${foo ...} *)
 type expansion =
   | Expand_var of (* FOO in ${FOO} *) string wrap
-  | Expand_semgrep_metavar of (* $FOO in ${$FOO} *) string wrap
+  | Expand_lens_metavar of (* $FOO in ${$FOO} *) string wrap
 
 (* Fragment of a string possibly containing variable expansions
-   or semgrep metavariables. This is similar to what we do in AST_bash.ml.
+   or lens metavariables. This is similar to what we do in AST_bash.ml.
 
    TODO: evaluate String_content fragments so that they can be compared
    regardless of escaping.
@@ -65,7 +65,7 @@ type expansion =
 type double_quoted_string_fragment =
   | Dbl_string_content of (* escaped *) string wrap
   | Dbl_expansion of (* $X in program mode, ${X}, ${X ... } *) (loc * expansion)
-  | Dbl_frag_semgrep_metavar of (* $X in pattern mode *) string wrap
+  | Dbl_frag_lens_metavar of (* $X in pattern mode *) string wrap
 
 type docker_string_fragment =
   | Unquoted of string wrap
@@ -73,16 +73,16 @@ type docker_string_fragment =
      type expected by the generic AST. *)
   | Single_quoted of (loc * string wrap bracket)
   | Double_quoted of (loc * double_quoted_string_fragment list bracket)
-  (* Expansion and Frag_semgrep_metavar: see Dbl_expansion and
-     Dbl_frag_semgrep_metavar *)
+  (* Expansion and Frag_lens_metavar: see Dbl_expansion and
+     Dbl_frag_lens_metavar *)
   | Expansion of (loc * expansion)
-  | Frag_semgrep_metavar of string wrap
+  | Frag_lens_metavar of string wrap
 
-type ident_or_metavar = Ident of string wrap | Semgrep_metavar of string wrap
+type ident_or_metavar = Ident of string wrap | Lens_metavar of string wrap
 
 type key_or_metavar =
   | Key of docker_string_fragment
-  | Semgrep_metavar of string wrap
+  | Lens_metavar of string wrap
 
 (* A string which is possibly the concatenation of several fragments.
 
@@ -93,7 +93,7 @@ type key_or_metavar =
    a: Unquoted
    b: Single_quoted
    c: Dbl_string_content
-   d: Dbl_expansion or Dbl_frag_semgrep_metavar
+   d: Dbl_expansion or Dbl_frag_lens_metavar
    e: Dbl_expansion
    f: Dbl_string_content
    g: Expansion
@@ -102,11 +102,11 @@ type key_or_metavar =
    fewer fragments of 3 kinds:
    - string data
    - variable expansion
-   - semgrep metavariable (in the context of a semgrep pattern only)
+   - lens metavariable (in the context of a lens pattern only)
 
    In our example, the fragments would be: "abc", $D, $E, "f", $G.
    This simplification may or may not be performed when converting to
-   Semgrep's generic AST.
+   Lens's generic AST.
 *)
 type docker_string = loc * docker_string_fragment list
 
@@ -131,7 +131,7 @@ type heredoc_template = {
 type str_or_ellipsis =
   | Str_str of docker_string
   | Str_template of heredoc_template
-  | Str_semgrep_ellipsis of tok
+  | Str_lens_ellipsis of tok
 
 type array_elt =
   (* JSON string array, not to be confused with ordinary double-quoted strings
@@ -167,8 +167,8 @@ type command =
   (* !!! This is where we embed Bash constructs (Bash lists) !!! *)
   | Sh_command of loc * AST_bash.blist
   | Other_shell_command of shell_compatibility * string wrap
-  | Command_semgrep_ellipsis of tok
-  | Command_semgrep_named_ellipsis of string wrap
+  | Command_lens_ellipsis of tok
+  | Command_lens_named_ellipsis of string wrap
   (* If the instruction contains at least one heredoc template, we don't
      know the shell command statically and we produce such a template.
      Only the RUN instruction supports heredocs in commands, not CMD,
@@ -194,12 +194,12 @@ type image_spec = {
 (* 'ENV key=value' where the key is an identifier, not a string template. *)
 type env_pair =
   | Env_pair of loc * ident_or_metavar * tok (* = *) * docker_string
-  | Env_semgrep_ellipsis of tok
+  | Env_lens_ellipsis of tok
 
 (* 'LABEL key=value' where the key can be a string template. *)
 type label_pair =
   | Label_pair of loc * key_or_metavar * tok (* = *) * docker_string
-  | Label_semgrep_ellipsis of tok
+  | Label_lens_ellipsis of tok
 
 (* value *)
 
@@ -221,13 +221,13 @@ type healthcheck =
   | Healthcheck_none of tok
   | Healthcheck_ellipsis of tok
   | Healthcheck_cmd of loc * param_or_ellipsis list * cmd_instr
-  | Healthcheck_semgrep_metavar of string wrap
+  | Healthcheck_lens_metavar of string wrap
 
 type expose_port =
   | Expose_port of (* port/protocol *) string wrap * string wrap option
   | Expose_port_fragment of docker_string_fragment * string wrap
   | Expose_fragment of docker_string_fragment
-  | Expose_semgrep_ellipsis of tok
+  | Expose_lens_ellipsis of tok
 
 type add_or_copy =
   loc * string wrap * param list * path_or_ellipsis list * docker_string
@@ -264,7 +264,7 @@ type instruction =
       (* e.g. CROSS_BUILD_COPY;
          TODO: who uses this exactly? and where is it documented? *) of
       loc * string wrap * string wrap
-  | Instr_semgrep_ellipsis of tok
-  | Instr_semgrep_metavar of string wrap
+  | Instr_lens_ellipsis of tok
+  | Instr_lens_metavar of string wrap
 
 type program = instruction list

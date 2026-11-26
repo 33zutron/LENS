@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -15,7 +15,7 @@ val filter_target_for_analyzer : Analyzer.t -> Fpath.t -> bool
 
 val filter_paths : Rule.path_filter -> Fppath.t -> bool
 (** Determine whether a target file passes the path filters specified
-   in a Semgrep rule (paths.exclude, paths.include).
+   in a Lens rule (paths.exclude, paths.include).
    If the target file doesn't have a proper ppath, the filters can't be applied
    and the result is true.
  *)

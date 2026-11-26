@@ -1,13 +1,13 @@
 (library
- (public_name semgrep.legacy_language_server.scan_helpers)
- (name osemgrep_language_server_scan_helpers)
+ (public_name lens.legacy_language_server.scan_helpers)
+ (name olens_language_server_scan_helpers)
  (wrapped false)
  (libraries
    lsp
 
-   semgrep.legacy_language_server.server
-   semgrep.legacy_language_server.util
-   semgrep.osemgrep_reporting
+   lens.legacy_language_server.server
+   lens.legacy_language_server.util
+   lens.olens_reporting
 
  )
  (preprocess

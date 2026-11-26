@@ -1,2 +1,2 @@
-generated lockfiles for `semgrep.opam`; see ../../opam-lockfiles/README.md as
+generated lockfiles for `lens.opam`; see ../../opam-lockfiles/README.md as
 to how to update them.

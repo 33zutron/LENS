@@ -1,5 +1,5 @@
 <?php
-// https://github.com/returntocorp/semgrep/issues/3741
+// https://github.com/returntocorp/lens/issues/3741
 
 //ERROR:
 $a = "hello" . "foo" . "world";

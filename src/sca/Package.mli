@@ -1,5 +1,5 @@
 (*
- * Copyright (c) 2025, Semgrep Inc.
+ * Copyright (c) 2025, Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -82,11 +82,11 @@ val version_constraint : string -> version_constraint
 
 (* See also SCA_dependency.t which specifies the ecosystem, URI,
    and location in a lockfile.
-   This is mostly the same type that dependency_child in semgrep_output_v1.atd
+   This is mostly the same type that dependency_child in lens_output_v1.atd
 
    TODO: add support for aliases. In yarn/npm, an alias is the name
    given locally to a package. A typical use of aliases is when an application
-   uses two different versions of the same library. A semgrep rule
+   uses two different versions of the same library. A lens rule
    references the canonical (official) name of the library while the local
    name is what appears in the source code so we will need to maintain
    a mapping between the two.

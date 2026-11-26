@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -18,25 +18,25 @@ from unittest.mock import patch
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.subproject_matchers import ExactLockfileManifestMatcher
 from semdep.subproject_matchers import ExactManifestOnlyMatcher
 from semdep.subproject_matchers import SubprojectMatcher
-from semgrep.resolve_dependency_source import resolve_dependency_source
-from semgrep.resolve_dependency_source import ResolveDependenciesRpcResult
-from semgrep.resolve_subprojects import attach_auxillary_sboms
-from semgrep.resolve_subprojects import filter_subprojects_by_rule_ecosystems
-from semgrep.resolve_subprojects import find_subprojects
-from semgrep.resolve_subprojects import match_subprojects
-from semgrep.resolve_subprojects import resolve_subprojects
-from semgrep.rule import Rule
-from semgrep.run_scan import resolve_dependencies
-from semgrep.subproject import collect_skipped_subprojects
-from semgrep.subproject import DependencyResolutionConfig
-from semgrep.subproject import generate_dependency_source_id
-from semgrep.subproject import subproject_to_plan_output
-from semgrep.target_manager import TargetManager
-from semgrep.types import fake_targets_of_paths
+from lens.resolve_dependency_source import resolve_dependency_source
+from lens.resolve_dependency_source import ResolveDependenciesRpcResult
+from lens.resolve_subprojects import attach_auxillary_sboms
+from lens.resolve_subprojects import filter_subprojects_by_rule_ecosystems
+from lens.resolve_subprojects import find_subprojects
+from lens.resolve_subprojects import match_subprojects
+from lens.resolve_subprojects import resolve_subprojects
+from lens.rule import Rule
+from lens.run_scan import resolve_dependencies
+from lens.subproject import collect_skipped_subprojects
+from lens.subproject import DependencyResolutionConfig
+from lens.subproject import generate_dependency_source_id
+from lens.subproject import subproject_to_plan_output
+from lens.target_manager import TargetManager
+from lens.types import fake_targets_of_paths
 
 
 @pytest.mark.quick
@@ -450,7 +450,7 @@ def make_restricted_resolution_config(
 def make_repo_with_lockfile(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.chdir(tmp_path)
     subprocess.check_call(["git", "init"])
-    subprocess.check_call(["git", "config", "user.email", "test@semgrep.com"])
+    subprocess.check_call(["git", "config", "user.email", "test@lens.com"])
     subprocess.check_call(["git", "config", "user.name", "Test"])
     Path("requirements.txt").touch()
     subprocess.check_call(["git", "add", "."])
@@ -757,7 +757,7 @@ def test_resolve_subprojects_does_not_resolve_precomputed_failures(
         raise AssertionError("local resolution attempted")
 
     monkeypatch.setattr(
-        "semgrep.resolve_subprojects.resolve_dependency_source", fail_if_called
+        "lens.resolve_subprojects.resolve_dependency_source", fail_if_called
     )
     config = DependencyResolutionConfig(
         allow_local_builds=False,
@@ -779,7 +779,7 @@ def test_resolve_subprojects_does_not_resolve_precomputed_failures(
 # Please don't use @patch because it can't be typechecked and makes refactoring
 # particularly tricky.
 @pytest.mark.quick
-@patch("semgrep.resolve_dependency_source._resolve_dependencies_rpc")
+@patch("lens.resolve_dependency_source._resolve_dependencies_rpc")
 def test_precomputed_sbom_resolution_failure_warns_before_fallback(
     mock_resolve, tmp_path: Path, caplog: pytest.LogCaptureFixture
 ) -> None:
@@ -815,7 +815,7 @@ def test_precomputed_sbom_resolution_failure_warns_before_fallback(
 # Please don't use @patch because it can't be typechecked and makes refactoring
 # particularly tricky.
 @pytest.mark.quick
-@patch("semgrep.resolve_dependency_source._resolve_dependencies_rpc")
+@patch("lens.resolve_dependency_source._resolve_dependencies_rpc")
 def test_ptt_unconditionally_generates_dependency_graphs(
     mock_dynamic_resolve, tmp_path: Path
 ) -> None:
@@ -859,7 +859,7 @@ def test_ptt_unconditionally_generates_dependency_graphs(
 # particularly tricky.
 @pytest.mark.quick
 @patch("semdep.parsers.requirements.parse_requirements")
-@patch("semgrep.resolve_dependency_source._resolve_dependencies_rpc")
+@patch("lens.resolve_dependency_source._resolve_dependencies_rpc")
 def test_ptt_unconditional_graph_generation_falls_back_on_lockfile_parsing(
     mock_dynamic_resolve, mock_parse_requirements, tmp_path: Path
 ) -> None:

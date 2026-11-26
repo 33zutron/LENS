@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -17,12 +17,12 @@ from typing import List
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.git import BaselineHandler
-from semgrep.resolve_subprojects import filter_changed_subprojects
-from semgrep.rule import Rule
-from semgrep.subproject import get_all_source_files
-from semgrep.target_manager import TargetManager
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.git import BaselineHandler
+from lens.resolve_subprojects import filter_changed_subprojects
+from lens.rule import Rule
+from lens.subproject import get_all_source_files
+from lens.target_manager import TargetManager
 
 EXAMPLE_RULES = [
     Rule(
@@ -73,7 +73,7 @@ def test_without_baseline(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
 
     # Initialize git repo
     subprocess.check_call(["git", "init"])
-    subprocess.check_call(["git", "config", "user.email", "baselinetest@semgrep.com"])
+    subprocess.check_call(["git", "config", "user.email", "baselinetest@lens.com"])
     subprocess.check_call(["git", "config", "user.name", "Baseline Test"])
     subprocess.check_call(["git", "checkout", "-B", "main"])
 
@@ -182,7 +182,7 @@ def test_with_baseline__new_code_files(
 
     # Initialize git repo
     subprocess.check_call(["git", "init"])
-    subprocess.check_call(["git", "config", "user.email", "baselinetest@semgrep.com"])
+    subprocess.check_call(["git", "config", "user.email", "baselinetest@lens.com"])
     subprocess.check_call(["git", "config", "user.name", "Baseline Test"])
     subprocess.check_call(["git", "checkout", "-B", "main"])
 
@@ -321,7 +321,7 @@ def test_with_baseline__changed_source_files(
 
     # Initialize git repo
     subprocess.check_call(["git", "init"])
-    subprocess.check_call(["git", "config", "user.email", "baselinetest@semgrep.com"])
+    subprocess.check_call(["git", "config", "user.email", "baselinetest@lens.com"])
     subprocess.check_call(["git", "config", "user.name", "Baseline Test"])
     subprocess.check_call(["git", "checkout", "-B", "main"])
 

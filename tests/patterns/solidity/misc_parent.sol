@@ -1,4 +1,4 @@
-// from https://semgrep.dev/s/7nk2
+// from https://lens.dev/s/7nk2
 pragma solidity ^0.6.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";

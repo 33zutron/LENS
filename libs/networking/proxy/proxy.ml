@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -61,7 +61,7 @@ let getenv k =
 let getenv_proxy_uri_string var =
   match getenv var with
   | Some value when String.trim value = "" ->
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.warn (fun m ->
           m
             "%s is set to an empty value; ignoring it and sending the requests \
@@ -162,7 +162,7 @@ let uri_of_env_with_scheme scheme var =
                * that URI would have to be redacted, and redaction drops the
                * scheme, which would leave a warning claiming an augmentation
                * it does not show. *)
-              (* nosemgrep: no-logs-in-library *)
+              (* nolens: no-logs-in-library *)
               Logs.warn (fun m ->
                   m "%s was supplied a URI with no scheme; assuming %s" var
                     scheme);
@@ -179,7 +179,7 @@ let uri_of_env_with_scheme scheme var =
  * password, and these warnings end up in CI logs. *)
 let credentials_from_env () =
   let both_must_be_set set_var unset_var =
-    (* nosemgrep: no-logs-in-library *)
+    (* nolens: no-logs-in-library *)
     Logs.warn (fun m ->
         m
           "%s was set, but %s was not. Both must be set to authenticate to a \
@@ -236,7 +236,7 @@ let configure_proxy settings =
   let scheme_proxy = make_scheme_proxy settings in
   let all_proxy = settings.all_proxy in
   let proxy_headers = make_proxy_headers settings in
-  (* nosemgrep: no-logs-in-library *)
+  (* nolens: no-logs-in-library *)
   Logs.info (fun m -> m "Proxy was configured with %a" pp_settings settings);
   Cohttp_lwt_unix.Client.set_cache
     (Cohttp_lwt_unix.Connection_proxy.call
@@ -248,7 +248,7 @@ let configure_proxy settings =
 let configure_proxy_eio settings =
   let scheme_proxies = make_scheme_proxy settings in
   let proxy_headers = make_proxy_headers settings in
-  (* nosemgrep: no-logs-in-library *)
+  (* nolens: no-logs-in-library *)
   Logs.info (fun m -> m "EIO proxy was configured with %a" pp_settings settings);
   Cohttp_eio.Client.set_proxies ?no_proxy_patterns:settings.no_proxy
     ?default_proxy:settings.all_proxy ~scheme_proxies ?proxy_headers ()

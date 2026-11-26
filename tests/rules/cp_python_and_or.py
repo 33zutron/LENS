@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/6079
+# https://github.com/returntocorp/lens/issues/6079
 def test(x):
     a = x >= 80300 and "typarray" or "NULL"
     #ruleid: test

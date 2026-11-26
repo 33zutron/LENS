@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) Semgrep, Inc.
+ * Copyright (C) Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -42,7 +42,7 @@ open Telemetry
 
    Instrument names are important, see
    https://prometheus.io/docs/practices/naming/ for a guide, but TL;DR; They
-   will be named semgrep_<thing_measuring>_<units>. Note that our infra will
+   will be named lens_<thing_measuring>_<units>. Note that our infra will
    automatically add the units to the metric name, so no need to do that.
 
    A meter is just an organizational tool for instruments. You use them to apply
@@ -289,7 +289,7 @@ let default_metric_attributes () =
   in
   let default_attr_keys =
     [
-      (* Semgrep version *)
+      (* Lens version *)
       Telemetry.Attributes.version;
       (* e.g. prod, dev2, staging *)
       Telemetry.Attributes.deployment_environment_name;
@@ -571,7 +571,7 @@ module Make_meter
         ?description:instrument_meta.description ?unit_:instrument_meta.unit_
 
     let emit ?exemplar ?(attrs = []) ?now (x : value) : unit =
-      (* Always include some attrs on all metrics such as semgrep's version. See module level comment for
+      (* Always include some attrs on all metrics such as lens's version. See module level comment for
          why *)
       let attrs = attrs @ default_metric_attributes () in
       let data_point =

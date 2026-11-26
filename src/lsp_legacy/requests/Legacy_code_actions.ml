@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) 2019-2023 Semgrep, Inc.
+ * Copyright (C) 2019-2023 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -27,7 +27,7 @@ open Legacy_rpc_server
 module CN = Client_notification
 module CR = Client_request
 module Conv = Legacy_convert_utils
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 
 (*****************************************************************************)
 (* Helpers *)
@@ -54,7 +54,7 @@ let fix_code_action_of_match (m : OutJ.cli_match) =
   let action =
     CodeAction.create ~command
       ~title:
-        (Printf.sprintf "Semgrep(%s): Apply autofix"
+        (Printf.sprintf "Lens(%s): Apply autofix"
            (Rule_ID.to_string m.check_id))
       ~isPreferred:true ~kind:CodeActionKind.QuickFix ~edit ()
   in
@@ -69,7 +69,7 @@ let ignore_code_action_of_match (m : OutJ.cli_match) =
     CodeAction.create ~command
       ~title:
         Printf.(
-          sprintf "Semgrep(%s): Ignore finding" (Rule_ID.to_string m.check_id))
+          sprintf "Lens(%s): Ignore finding" (Rule_ID.to_string m.check_id))
       ~isPreferred:true ~kind:CodeActionKind.QuickFix ()
   in
   `CodeAction action
@@ -109,7 +109,7 @@ let code_actions_of_file (matches : OutJ.cli_match list) file =
          }
      },
      "kind": "quickfix",
-     "title": "Apply fix suggested by Semgrep rule python.cryptography.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1"
+     "title": "Apply fix suggested by Lens rule python.cryptography.security.insecure-hash-algorithms.insecure-hash-algorithm-sha1"
    }
 *)
 
@@ -137,7 +137,7 @@ let on_request server
     in
     Legacy_session.previous_scan_of_file server.session file
     |> Option.value ~default:[]
-    |> List.filter (fun (m : Semgrep_output_v1_t.cli_match) ->
+    |> List.filter (fun (m : Lens_output_v1_t.cli_match) ->
         List.mem (Conv.range_of_cli_match m) ranges)
   in
   let actions = code_actions_of_cli_matches matches [ file ] in

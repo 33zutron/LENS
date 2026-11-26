@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2024 Semgrep Inc.
+   Copyright (c) 2021-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,5 +10,5 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-(* Check semgrep patterns for potential issues. *)
+(* Check lens patterns for potential issues. *)
 val check : Lang.t -> Pattern.t -> (unit, string) Result.t

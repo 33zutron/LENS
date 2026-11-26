@@ -1,0 +1,28 @@
+; Library to support the different ways to "configure" lens (e.g., Lens env variables,
+; .lens/settings.yml config file, .lensconfig).
+; Not everything related to configuring lens is here (e.g., the rule format,
+; the CLI flags), but in the long term we should try to put it here.
+; Eventually, this will be merged with the /configuring library from lens-core
+
+(library
+  (public_name lens.olens_configuring)
+  (name olens_configuring)
+  (wrapped false)
+  (libraries
+   uri
+   uuidm
+   commons
+
+   olens_core ; for Error.ml
+  )
+ (preprocess
+   (pps
+     ppx_profiling
+     ppx_deriving.show
+     ppx_deriving.eq
+     ppx_hash
+     ppx_inline_test
+     ppx_assert
+   )
+ )
+)

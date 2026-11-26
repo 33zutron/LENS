@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Libcurl is the library for curl. Semgrep depends on it at runtime because it
+# Libcurl is the library for curl. Lens depends on it at runtime because it
 # uses a backend relying on curl to send OpenTelemetry traces.
 #
 # We build libcurl from source rather than using Alpine's curl-static package
@@ -41,7 +41,7 @@ elif [[ -e /etc/alpine-release ]]; then
     cd /tmp/curl-${CURL_VERSION}
 
     # Jan 2025: Disabling libpsl (a cookie checking library apparently) because it started
-    # to cause linking errors later in semgrep about a "missing -lpsl"
+    # to cause linking errors later in lens about a "missing -lpsl"
     #
     # disable zstd since it does not play with linking, we haven't built curl
     # with it before, but it's used by default if another dependency installs

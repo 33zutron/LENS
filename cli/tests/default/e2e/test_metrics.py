@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2025 Semgrep Inc.
+# Copyright (c) 2021-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
 # LICENSE for more details.
 #
 """
-Tests for semgrep.metrics and associated command-line arguments.
+Tests for lens.metrics and associated command-line arguments.
 """
 import json
 import os
@@ -31,11 +31,11 @@ from pytest import MonkeyPatch
 from tests.conftest import RULES_PATH
 from tests.conftest import skip_on_windows
 from tests.conftest import TARGETS_PATH
-from tests.fixtures import RunSemgrep
-from tests.semgrep_runner import SemgrepRunner
+from tests.fixtures import RunLens
+from tests.lens_runner import LensRunner
 
-from semgrep.cli import cli
-from semgrep.config_resolver import ConfigFile
+from lens.cli import cli
+from lens.config_resolver import ConfigFile
 
 
 # Test data to avoid making web calls in test code
@@ -66,14 +66,14 @@ USELESS_EQEQ = """rules:
   metadata:
     category: correctness
     license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-    source: https://semgrep.dev/r/python.lang.correctness.useless-eqeq.useless-eqeq
+    source: https://lens.dev/r/python.lang.correctness.useless-eqeq.useless-eqeq
 """
 
 
 @pytest.fixture(scope="function")
 def mock_config_request(monkeypatch: MonkeyPatch) -> Iterator[None]:
     monkeypatch.setattr(
-        "semgrep.config_resolver.ConfigLoader._download_config_from_url",
+        "lens.config_resolver.ConfigLoader._download_config_from_url",
         lambda s, url: ConfigFile(None, USELESS_EQEQ, url),
     )
     yield
@@ -144,7 +144,7 @@ def mock_config_request(monkeypatch: MonkeyPatch) -> Iterator[None]:
 @pytest.mark.osemfail
 @skip_on_windows  # freeze
 def test_flags(
-    run_semgrep_in_tmp: RunSemgrep,
+    run_lens_in_tmp: RunLens,
     mock_config_request,
     config,
     metrics_flag,
@@ -155,8 +155,8 @@ def test_flags(
     Test that we try to send metrics when we should be
     """
     options = ["--metrics", metrics_flag] if metrics_flag is not None else []
-    env = {"SEMGREP_SEND_METRICS": metrics_env} if metrics_env is not None else {}
-    _, stderr = run_semgrep_in_tmp(
+    env = {"LENS_SEND_METRICS": metrics_env} if metrics_env is not None else {}
+    _, stderr = run_lens_in_tmp(
         config,
         options=[*options, "--debug"],
         force_metrics_off=False,
@@ -175,14 +175,14 @@ def test_flags(
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
 @skip_on_windows  # freeze
-def test_flags_actual_send(run_semgrep_in_tmp: RunSemgrep):
+def test_flags_actual_send(run_lens_in_tmp: RunLens):
     """
     Test that the server for metrics sends back success
     """
-    _, stderr = run_semgrep_in_tmp(
+    _, stderr = run_lens_in_tmp(
         "rules/eqeq.yaml",
         options=["--debug"],
-        env={"SEMGREP_SEND_METRICS": "on"},
+        env={"LENS_SEND_METRICS": "on"},
         force_metrics_off=False,
         use_click_runner=True,
     )
@@ -217,9 +217,9 @@ def test_metrics_payload(tmp_path, snapshot, mocker, monkeypatch, pro_flag):
     time.tzset()
 
     # this makes event_id deterministic
-    mocker.patch("semgrep.metrics.get_frozen_id", return_value=uuid.UUID("0" * 32))
-    mocker.patch("semgrep.metrics.mock_float", return_value=0.0)
-    mocker.patch("semgrep.metrics.mock_int", return_value=0)
+    mocker.patch("lens.metrics.get_frozen_id", return_value=uuid.UUID("0" * 32))
+    mocker.patch("lens.metrics.mock_float", return_value=0.0)
+    mocker.patch("lens.metrics.mock_int", return_value=0)
 
     mock_post = mocker.patch("requests.post")
 
@@ -233,10 +233,10 @@ def test_metrics_payload(tmp_path, snapshot, mocker, monkeypatch, pro_flag):
     (tmp_path / "rule.yaml").symlink_to(RULES_PATH / "metrics_send" / "deep.yaml")
     monkeypatch.chdir(tmp_path)
 
-    runner = SemgrepRunner(
+    runner = LensRunner(
         env={
-            "SEMGREP_SETTINGS_FILE": str(tmp_path / ".settings.yaml"),
-            "SEMGREP_INTEGRATION_NAME": "funkyintegration",
+            "LENS_SETTINGS_FILE": str(tmp_path / ".settings.yaml"),
+            "LENS_INTEGRATION_NAME": "funkyintegration",
         },
         use_click_runner=True,
     )
@@ -253,7 +253,7 @@ def test_metrics_payload(tmp_path, snapshot, mocker, monkeypatch, pro_flag):
     payload["environment"]["version"] = _mask_digits(payload["environment"]["version"])
     payload["environment"]["isAuthenticated"] = False
     payload["environment"]["os"] = "<MASKED>"
-    # depends on how the machine running the tests installed semgrep
+    # depends on how the machine running the tests installed lens
     payload["environment"]["installMethod"] = "<MASKED>"
 
     payload["performance"]["maxMemoryBytes"] = _mask_digits(

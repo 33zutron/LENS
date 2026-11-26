@@ -1,6 +1,6 @@
 (* Ben Kettle
  *
- * Copyright (c) 2024, Semgrep Inc.
+ * Copyright (c) 2024, Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
  * LICENSE for more details.
  *)
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 
 (*****************************************************************************)
 (* Prelude *)
@@ -31,7 +31,7 @@ type t = Out.dependency_source =
   | ManifestLockfile of (Manifest.t * Lockfile.t)
   (* The dependency_source should be LockfileOnly or ManifestLockfile,
    * but not ManifestOnly.
-   * Right now this variant is only used by pysemgrep; it is
+   * Right now this variant is only used by pylens; it is
    * deconstructed in multiple LockfileXxx when calling the dynamic resolver.
    * Note that this variant introduces a series of problems in the Python code
    * because atdpy generates a List[DependencySource] and List are

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
 *)
 open Lsp
 open Types
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 
 let range_of_cli_match (m : OutJ.cli_match) =
   Range.create

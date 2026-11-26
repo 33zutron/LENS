@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2024 Semgrep Inc.
+   Copyright (c) 2021-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -82,14 +82,14 @@
    and we wrap expressions in statements and vice-versa as required by
    the context.
 
-   Shell variables and semgrep metavariables:
+   Shell variables and lens metavariables:
 
-   - In a pattern, '$XXX' is interpreted as a semgrep metavariable,
+   - In a pattern, '$XXX' is interpreted as a lens metavariable,
      at matching time, represented as '$XXX'.
    - In a program, '$XXX' is interpreted as the dereferencing of a
      shell variable, at matching time, represented as 'XXX'.
    - '${XXX}' is always interpreted as the dereferencing of a shell variable
-     and should be used in semgrep patterns to disambiguate from the
+     and should be used in lens patterns to disambiguate from the
      metavariable '$XXX'.
 *)
 
@@ -151,7 +151,7 @@ let get_var_name (var : variable_name) : string wrap =
   match var with
   | Simple_variable_name name
   | Special_variable_name name
-  | Var_semgrep_metavar name ->
+  | Var_lens_metavar name ->
       name
 
 let mk_var_expr (var : variable_name) : G.expr =
@@ -359,9 +359,9 @@ and command (env : env) (cmd : command) : stmt_or_expr =
       List.map (assignment env) assignments |> block
   | Simple_command { loc; assignments = _; arguments } -> (
       match arguments with
-      | [ (Expr_semgrep_ellipsis tok as e) ] ->
+      | [ (Expr_lens_ellipsis tok as e) ] ->
           Expr ((tok, tok), expression env e)
-      | [ (String_fragment (loc, Frag_semgrep_named_ellipsis _) as e) ] ->
+      | [ (String_fragment (loc, Frag_lens_named_ellipsis _) as e) ] ->
           Expr (loc, expression env e)
       | arguments ->
           let args = List.map (expression env) arguments in
@@ -410,7 +410,7 @@ and command (env : env) (cmd : command) : stmt_or_expr =
         match loop_var with
         | Simple_variable_name var
         | Special_variable_name var
-        | Var_semgrep_metavar var ->
+        | Var_lens_metavar var ->
             let entity = G.basic_entity var in
             let pat =
               match entity.name with
@@ -572,10 +572,10 @@ and expression (env : env) (e : expression) : G.expr =
   | Ansii_c_string str -> G.L (G.String (fb str)) |> G.e
   | Special_character str -> G.L (G.String (fb str)) |> G.e
   | Concatenation (loc, el) -> List.map (expression env) el |> call loc C.concat
-  | Expr_semgrep_ellipsis tok -> G.Ellipsis tok |> G.e
-  | Expr_semgrep_deep_ellipsis (_loc, (open_, e, close)) ->
+  | Expr_lens_ellipsis tok -> G.Ellipsis tok |> G.e
+  | Expr_lens_deep_ellipsis (_loc, (open_, e, close)) ->
       G.DeepEllipsis (open_, expression env e, close) |> G.e
-  | Expr_semgrep_metavar mv -> G.N (mk_name mv) |> G.e
+  | Expr_lens_metavar mv -> G.N (mk_name mv) |> G.e
   | Equality_test (loc, _, _) -> (* don't know what this is *) todo_expr loc
   | Empty_expression loc -> G.L (G.String (fb ("", fst loc))) |> G.e
   | Array (_loc, (open_, elts, close)) ->
@@ -663,7 +663,7 @@ and arithmetic_operand (env : env) (e : expression) : G.expr =
       expansion env (Simple_expansion (loc, Simple_variable_name (name, tok)))
   | Word ((s, _) as num) when is_portable_int_literal s ->
       G.L (G.Int (Parsed_int.parse num)) |> G.e
-  | Expr_semgrep_deep_ellipsis (_loc, (open_, e, close)) ->
+  | Expr_lens_deep_ellipsis (_loc, (open_, e, close)) ->
       (* '<... x ...>' *)
       G.DeepEllipsis (open_, arithmetic_operand env e, close) |> G.e
   | _ -> expression env e
@@ -681,8 +681,8 @@ and string_fragment (env : env) (frag : string_fragment) : G.expr =
       call loc C.cmd_subst [ arg ]
   | Arithmetic_expansion (open_, e, close) ->
       call (open_, close) C.arith_expansion [ arithmetic env e ]
-  | Frag_semgrep_metavar mv -> G.N (mk_name mv) |> G.e
-  | Frag_semgrep_named_ellipsis x -> G.N (mk_name x) |> G.e
+  | Frag_lens_metavar mv -> G.N (mk_name mv) |> G.e
+  | Frag_lens_named_ellipsis x -> G.N (mk_name x) |> G.e
 
 (*
    '$' followed by a variable to transform and expand into a list.

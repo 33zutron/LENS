@@ -1,0 +1,22 @@
+/tree-sitter-*
+/lens-*/**/binding.gyp
+/lens-*/**/index.js
+/lens-*/**/src
+/lens-*/**/inherited
+/lens-*/**/test.log
+
+# tree-sitter generate (in 0.22+) emits these binding scaffolds next to
+# the parser sources, even when --no-bindings is passed.
+/lens-*/**/.editorconfig
+/lens-*/**/.gitattributes
+/lens-*/**/.gitignore
+/lens-*/**/Package.swift
+/lens-*/**/pyproject.toml
+/lens-*/**/setup.py
+
+# lens-powershell's prep script rewrites the upstream grammar from
+# ESM to CJS into this file.
+/lens-powershell/grammar-base.js
+
+# sed -i -e backups left on macOS by prep scripts (e.g. lens-c-sharp-pro).
+**/*.js-e

@@ -19,28 +19,28 @@
     networking.http_helpers.tests
     networking.proxy.tests
     parallelism.tests
-    semgrep.analyzing.tests ; Unit_dataflow
-    semgrep.core
-    semgrep.core.tests
-    semgrep.core_cli
-    semgrep.printing.tests
-    semgrep.fixing.tests
-    semgrep.metachecking.tests
-    semgrep.naming.tests
-    semgrep.matching.tests
-    semgrep.parsing
-    semgrep.parsing.tests
-    semgrep.reporting.tests
-    semgrep.targeting.tests
-    semgrep.matching
-    semgrep.engine
+    lens.analyzing.tests ; Unit_dataflow
+    lens.core
+    lens.core.tests
+    lens.core_cli
+    lens.printing.tests
+    lens.fixing.tests
+    lens.metachecking.tests
+    lens.naming.tests
+    lens.matching.tests
+    lens.parsing
+    lens.parsing.tests
+    lens.reporting.tests
+    lens.targeting.tests
+    lens.matching
+    lens.engine
     aliengrep.tests
     glob.tests
     gitignore.tests
     git_wrapper.tests
     paths.tests
     lib_parsing.tests
-    semgrep.ast_generic.tests
+    lens.ast_generic.tests
     fast_json.tests
     ojsonnet.tests
     process_limits.tests
@@ -49,14 +49,14 @@
     parser_python.menhir.tests
     parser_scala.recursive_descent.tests
 
-    osemgrep_legacy_language_server
+    olens_legacy_language_server
 
-    osemgrep_cli_login
-    semgrep.osemgrep_networking.tests
-    semgrep.osemgrep_cli_ci.tests
-    semgrep.osemgrep_cli_test.tests
-    semgrep.osemgrep_reporting.tests
-    semgrep.osemgrep_tests
+    olens_cli_login
+    lens.olens_networking.tests
+    lens.olens_cli_ci.tests
+    lens.olens_cli_test.tests
+    lens.olens_reporting.tests
+    lens.olens_tests
   )
  (modes native byte) ; bytecode here for debugging
  (preprocess

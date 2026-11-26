@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2024 Semgrep Inc.
+   Copyright (c) 2023-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -73,11 +73,11 @@ type level = {
   patterns : path_selectors;
 }
 
-(* The legacy semgrepignore format adds ':include' directives. *)
-type format = Gitignore | Legacy_semgrepignore
+(* The legacy lensignore format adds ':include' directives. *)
+type format = Gitignore | Legacy_lensignore
 
 (* 'gitignore_filename' exists because we want to support reading gitignore
-   patterns from files other than '.gitignore' such as '.semgrepignore'.
+   patterns from files other than '.gitignore' such as '.lensignore'.
 
    The order of the file names defines
    the order in which multiples file in the same folder are loaded,
@@ -87,11 +87,11 @@ type format = Gitignore | Legacy_semgrepignore
 *)
 type gitignore_filename = {
   (* The file kind is the name for the conventional file kind
-     chosen by the user (e.g. "semgrepignore" for ".semgrepignore" files).
+     chosen by the user (e.g. "lensignore" for ".lensignore" files).
      This is used in error messages and such.
   *)
   source_kind : string;
-  (* The filename is e.g. '.gitignore' or '.semgrepignore'.
+  (* The filename is e.g. '.gitignore' or '.lensignore'.
   *)
   filename : string;
   (* Specify if the format is strict Gitignore or some extension. *)

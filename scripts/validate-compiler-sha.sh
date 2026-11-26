@@ -2,25 +2,25 @@
 set -xeu
 
 # usage
-# ./scripts/validate-compiler-sha.sh [path/to/semgrep-core]
+# ./scripts/validate-compiler-sha.sh [path/to/lens-core]
 # Checks if the installed ocamlc compiler SHA matches the opam pin version SHA
-# if a path was supplied to a semgrep-core binary, checks what the binary was
+# if a path was supplied to a lens-core binary, checks what the binary was
 # built with instead.
 
 # optional arg
-PATH_TO_SEMGREP_CORE=${1-}
+PATH_TO_LENS_CORE=${1-}
 
 # what we've pinned in opam
 SHA_PINNED_IN_OPAM=$(
     opam pin list --normalise |
-        grep -oE 'semgrep/ocaml\.git#[0-9a-f]*' |
+        grep -oE 'lens/ocaml\.git#[0-9a-f]*' |
         cut -d'#' -f2
 )
 
 # the SHA infered from the compiler
 SHA_IN_OCAMLC=$(
     opam exec -- ocamlc -version |
-        grep -oE "\+semgrep-fork@[a-f0-9]*" |
+        grep -oE "\+lens-fork@[a-f0-9]*" |
         cut -d'@' -f2
 )
 
@@ -42,20 +42,20 @@ if [ "$SHA_PINNED_IN_OPAM" != "$SHA_IN_OCAMLC" ]; then
 fi
 
 # if the path to a binary is not provided exit early
-if [ -z "$PATH_TO_SEMGREP_CORE" ]; then
+if [ -z "$PATH_TO_LENS_CORE" ]; then
     exit 0
 fi
 
-# what semgrep was built with
-SHA_SEMGREP_WAS_BUILT_WITH=$(
-    ./"$PATH_TO_SEMGREP_CORE" -ocaml_version |
-        grep -oE "\+semgrep-fork@[a-f0-9]*" |
+# what lens was built with
+SHA_LENS_WAS_BUILT_WITH=$(
+    ./"$PATH_TO_LENS_CORE" -ocaml_version |
+        grep -oE "\+lens-fork@[a-f0-9]*" |
         cut -d'@' -f2
 )
 
-echo "The SHA infered from the binary was $SHA_SEMGREP_WAS_BUILT_WITH"
+echo "The SHA infered from the binary was $SHA_LENS_WAS_BUILT_WITH"
 
-if [ -n "$SHA_SEMGREP_WAS_BUILT_WITH" ] && [ "$SHA_PINNED_IN_OPAM" != "$SHA_SEMGREP_WAS_BUILT_WITH" ]; then
+if [ -n "$SHA_LENS_WAS_BUILT_WITH" ] && [ "$SHA_PINNED_IN_OPAM" != "$SHA_LENS_WAS_BUILT_WITH" ]; then
     echo "They are not equal!"
     exit 1
 fi

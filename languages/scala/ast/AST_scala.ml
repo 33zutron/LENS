@@ -117,7 +117,7 @@ and import_selector =
   | NamedSelector of named_selector
   | WildCardSelector of wildcard_selector
 
-(* semgrep-ext: we allow single identifiers here so we can support import $X *)
+(* lens-ext: we allow single identifiers here so we can support import $X *)
 and import_expr =
   | ImportExprSpec of import_path * import_spec
   | ImportExprMvar of ident
@@ -230,7 +230,7 @@ and pattern =
   | PatUnderscoreStar of tok (* '_' *) * tok (* '*' *)
   | PatDisj of pattern * tok (* | *) * pattern
   | PatQuoted of quoted
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | PatEllipsis of tok
 
 (*****************************************************************************)
@@ -266,7 +266,7 @@ and expr =
   | Quoted of quoted
   | BlockExpr of block_expr
   | S of stmt
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | Ellipsis of tok
   | DeepEllipsis of expr bracket
   | DotAccessEllipsis of expr * tok (* ... *)
@@ -289,7 +289,7 @@ and type_case_clauses = (((* _ *) tok, type_) Either_.t, type_) case_clause list
 
 and ('a, 'b) case_clause =
   | CC of ('a, 'b) case_clause_classic
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | CaseEllipsis of tok
 
 and ('a, 'b) case_clause_classic = {
@@ -325,7 +325,7 @@ and stmt =
   | Try of tok * expr * catch_clause option * finally_clause option
   | Throw of tok * expr
 
-(* TODO: ForEllipsis for semgrep *)
+(* TODO: ForEllipsis for lens *)
 and for_header = enumerators bracket
 
 (* the first one is always a generator *)
@@ -333,7 +333,7 @@ and enumerators = enumerator list
 
 and enumerator =
   | G of generator
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | GEllipsis of tok
 (* less: GAssign *)
 
@@ -539,7 +539,7 @@ and bindings = (binding list * tok option (* using *)) bracket
 and binding =
   | ParamClassic of parameter_classic
   | ParamType of type_
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | ParamEllipsis of tok
 
 and parameter_classic = {

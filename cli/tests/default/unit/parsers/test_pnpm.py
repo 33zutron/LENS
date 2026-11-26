@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -17,10 +17,10 @@ from semdep.parsers.pnpm import parse_dependency_version
 from semdep.parsers.pnpm import parse_pnpm
 from semdep.parsers.pnpm import ParseResult
 from semdep.parsers.pnpm import sanitize_dependency_post_v9
-from semgrep.semgrep_interfaces.semgrep_output_v1 import DependencyChild
-from semgrep.semgrep_interfaces.semgrep_output_v1 import DependencyKind
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Direct
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Transitive
+from lens.lens_interfaces.lens_output_v1 import DependencyChild
+from lens.lens_interfaces.lens_output_v1 import DependencyKind
+from lens.lens_interfaces.lens_output_v1 import Direct
+from lens.lens_interfaces.lens_output_v1 import Transitive
 
 
 @pytest.mark.quick

@@ -6,8 +6,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - name: Fetch semgrep-cli submodules
-        run: git submodule update --init --recursive --recommend-shallow cli/src/semgrep/semgrep_interfaces
+      - name: Fetch lens-cli submodules
+        run: git submodule update --init --recursive --recommend-shallow cli/src/lens/lens_interfaces
       - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78
         with:
           enable-cache: auto
@@ -15,23 +15,23 @@ jobs:
           version: 0.13.4
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
-          name: semgrep-core-x86-artifact
+          name: lens-core-x86-artifact
           path: artifacts
       - name: Install artifacts
         run: |
           # upload-artifact does not preserve the executable bit
           # (https://github.com/actions/upload-artifact#permission-loss),
-          # so restore it before installing semgrep-core.
+          # so restore it before installing lens-core.
           chmod +x artifacts/*
-          #alt: put it in cli/src/semgrep/bin/, like make copy-core-for-cli
+          #alt: put it in cli/src/lens/bin/, like make copy-core-for-cli
           sudo cp artifacts/* /usr/bin
       - name: Install Python dependencies
         run: uv sync --locked
         working-directory: cli
       - name: Test dummy benchmarks on latest
         run: |
-          uv run semgrep --version
-          uv run semgrep-core -version
+          uv run lens --version
+          uv run lens-core -version
           uv run python3 ../perf/run-benchmarks --dummy
         working-directory: cli
   build-test-core-x86:
@@ -41,7 +41,7 @@ jobs:
   build-test-osx-arm64:
     uses: ./.github/workflows/build-test-osx-arm64.yml
   test-cli:
-    name: test semgrep-cli
+    name: test lens-cli
     needs:
       - build-test-core-x86
     permissions:
@@ -51,8 +51,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - name: Fetch semgrep-cli submodules
-        run: git submodule update --init --recursive --recommend-shallow cli/src/semgrep/semgrep_interfaces
+      - name: Fetch lens-cli submodules
+        run: git submodule update --init --recursive --recommend-shallow cli/src/lens/lens_interfaces
       - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78
         with:
           enable-cache: auto
@@ -63,15 +63,15 @@ jobs:
         working-directory: cli
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
-          name: semgrep-core-x86-artifact
+          name: lens-core-x86-artifact
           path: artifacts
       - name: Install artifacts
         run: |
           # upload-artifact does not preserve the executable bit
           # (https://github.com/actions/upload-artifact#permission-loss),
-          # so restore it before installing semgrep-core.
+          # so restore it before installing lens-core.
           chmod +x artifacts/*
-          #alt: put it in cli/src/semgrep/bin/, like make copy-core-for-cli
+          #alt: put it in cli/src/lens/bin/, like make copy-core-for-cli
           sudo cp artifacts/* /usr/bin
       - name: Run pytest
         run: |
@@ -122,7 +122,7 @@ jobs:
           echo ":camera_flash: The pytest shapshots changed in your PR." >> /tmp/message.txt
           echo "Please carefully review these changes and make sure they are intended:" >> /tmp/message.txt
           echo >> /tmp/message.txt
-          echo "1. Review the changes at https://github.com/semgrep/semgrep/commit/$COMMIT_LONG_SHA" >> /tmp/message.txt
+          echo "1. Review the changes at https://github.com/lens/lens/commit/$COMMIT_LONG_SHA" >> /tmp/message.txt
           echo "2. Accept the new snapshots with" >> /tmp/message.txt
           echo >> /tmp/message.txt
           echo "       git fetch origin && git cherry-pick \"$COMMIT_SHA\" && git push" >> /tmp/message.txt
@@ -136,7 +136,7 @@ jobs:
           - "3.12"
           - "3.13"
           - "3.14"
-  test-osemgrep:
+  test-olens:
     container: alpine:3.23
     env:
       HOME: /root
@@ -155,20 +155,20 @@ jobs:
           GIT_CONFIG_COUNT: "1"
           GIT_CONFIG_KEY_0: maintenance.auto
           GIT_CONFIG_VALUE_0: "false"
-        uses: semgrep/setup-ocaml@a739c5405d73c42ef15a9dc995efc0f87396cc36
+        uses: lens/setup-ocaml@a739c5405d73c42ef15a9dc995efc0f87396cc36
         with:
-          cache-prefix: v8-semgrep-${{ hashFiles('opam-lockfiles/*.locked', '*.opam', 'dev/required.opam', 'libs/ocaml-tree-sitter-semgrep/core/tree-sitter.opam', 'cli/src/semgrep/semgrep_interfaces/semgrep-interfaces.opam', 'OSS/opam-lockfiles/*.locked', 'OSS/*.opam', 'OSS/dev/required.opam', 'OSS/libs/ocaml-tree-sitter-semgrep/core/tree-sitter.opam', 'OSS/cli/src/semgrep/semgrep_interfaces/semgrep-interfaces.opam') }}
+          cache-prefix: v8-lens-${{ hashFiles('opam-lockfiles/*.locked', '*.opam', 'dev/required.opam', 'libs/ocaml-tree-sitter-lens/core/tree-sitter.opam', 'cli/src/lens/lens_interfaces/lens-interfaces.opam', 'OSS/opam-lockfiles/*.locked', 'OSS/*.opam', 'OSS/dev/required.opam', 'OSS/libs/ocaml-tree-sitter-lens/core/tree-sitter.opam', 'OSS/cli/src/lens/lens_interfaces/lens-interfaces.opam') }}
           ocaml-compiler: ocaml-variants.5.4.0+options,ocaml-option-flambda
           opam-pin: false
           opam-repositories: |
             default: https://github.com/ocaml/opam-repository.git#922f67e068446a8d8e809a40251a259bd0549552
           save-opam-post-run: true
-      - name: Build semgrep-core
+      - name: Build lens-core
         run: |
           eval $(opam env)
           make install-deps
           make core
-      - name: Install osemgrep
+      - name: Install olens
         run: |
           eval $(opam env)
           make copy-core-for-cli
@@ -177,20 +177,20 @@ jobs:
           enable-cache: auto
           python-version: "3.11"
           version: 0.13.4
-      - name: Run pytest for osemgrep known passing tests
+      - name: Run pytest for olens known passing tests
         run: |
           git config --global --add safe.directory "$(pwd)"
           make osempass
         working-directory: cli
   test-qa:
-    name: quality assurance on semgrep
+    name: quality assurance on lens
     needs:
       - build-test-core-x86
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-      - name: Fetch semgrep-cli submodules
-        run: git submodule update --init --recursive --recommend-shallow cli/src/semgrep/semgrep_interfaces tests/semgrep-rules
+      - name: Fetch lens-cli submodules
+        run: git submodule update --init --recursive --recommend-shallow cli/src/lens/lens_interfaces tests/lens-rules
       - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78
         with:
           enable-cache: auto
@@ -198,31 +198,31 @@ jobs:
           version: 0.13.4
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
-          name: semgrep-core-x86-artifact
+          name: lens-core-x86-artifact
           path: artifacts
       - name: Install artifacts
         run: |
           # upload-artifact does not preserve the executable bit
           # (https://github.com/actions/upload-artifact#permission-loss),
-          # so restore it before installing semgrep-core.
+          # so restore it before installing lens-core.
           chmod +x artifacts/*
-          #alt: put it in cli/src/semgrep/bin/, like make copy-core-for-cli
+          #alt: put it in cli/src/lens/bin/, like make copy-core-for-cli
           sudo cp artifacts/* /usr/bin
-      - name: Install semgrep
+      - name: Install lens
         run: |
           export PATH=/github/home/.local/bin:$PATH
           uv sync --locked
         working-directory: cli
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
-          key: qa-public-repos-${{ hashFiles('semgrep/tests/qa/*public_repos*') }}-${{ matrix.split }}
+          key: qa-public-repos-${{ hashFiles('lens/tests/qa/*public_repos*') }}-${{ matrix.split }}
           path: ~/.cache/qa-public-repos
       - run: |
           mkdir -p ~/.cache/qa-public-repos
           touch ~/.cache/qa-public-repos/ok
       - env:
           QA_TESTS_CACHE_PATH: ~/.cache/qa-public-repos
-        name: Test semgrep
+        name: Test lens
         run: |
           export PATH=/github/home/.local/bin:$PATH
           uv run pytest -n auto -vv --tb=short --splits 4 --group ${{ matrix.split }} tests/qa
@@ -235,7 +235,7 @@ jobs:
           - 2
           - 3
           - 4
-  test-semgrep-core:
+  test-lens-core:
     container: alpine:3.23
     env:
       HOME: /root
@@ -254,9 +254,9 @@ jobs:
           GIT_CONFIG_COUNT: "1"
           GIT_CONFIG_KEY_0: maintenance.auto
           GIT_CONFIG_VALUE_0: "false"
-        uses: semgrep/setup-ocaml@a739c5405d73c42ef15a9dc995efc0f87396cc36
+        uses: lens/setup-ocaml@a739c5405d73c42ef15a9dc995efc0f87396cc36
         with:
-          cache-prefix: v8-semgrep-${{ hashFiles('opam-lockfiles/*.locked', '*.opam', 'dev/required.opam', 'libs/ocaml-tree-sitter-semgrep/core/tree-sitter.opam', 'cli/src/semgrep/semgrep_interfaces/semgrep-interfaces.opam', 'OSS/opam-lockfiles/*.locked', 'OSS/*.opam', 'OSS/dev/required.opam', 'OSS/libs/ocaml-tree-sitter-semgrep/core/tree-sitter.opam', 'OSS/cli/src/semgrep/semgrep_interfaces/semgrep-interfaces.opam') }}
+          cache-prefix: v8-lens-${{ hashFiles('opam-lockfiles/*.locked', '*.opam', 'dev/required.opam', 'libs/ocaml-tree-sitter-lens/core/tree-sitter.opam', 'cli/src/lens/lens_interfaces/lens-interfaces.opam', 'OSS/opam-lockfiles/*.locked', 'OSS/*.opam', 'OSS/dev/required.opam', 'OSS/libs/ocaml-tree-sitter-lens/core/tree-sitter.opam', 'OSS/cli/src/lens/lens_interfaces/lens-interfaces.opam') }}
           ocaml-compiler: ocaml-variants.5.4.0+options,ocaml-option-flambda
           opam-pin: false
           opam-repositories: |
@@ -264,9 +264,9 @@ jobs:
           save-opam-post-run: true
       - name: Install dependencies
         run: opam exec -- make install-deps
-      - name: Build semgrep-core
+      - name: Build lens-core
         run: opam exec -- make
-      - name: Test semgrep-core
+      - name: Test lens-core
         run: opam exec -- make test
 name: tests
 on:

@@ -1,7 +1,7 @@
 # Python language-feature pattern-matching coverage
 
 Companion to `tests/parsing/python/LANGUAGE_FEATURE_COVERAGE.md` (parser acceptance).
-This file maps each syntactic feature to a Semgrep **pattern** test (`.sgrep` +
+This file maps each syntactic feature to a Lens **pattern** test (`.sgrep` +
 annotated `.py` target). Patterns use the pfff parser and may lag tree-sitter targets.
 
 | Version | Feature | Pattern test |

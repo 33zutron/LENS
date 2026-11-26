@@ -1,4 +1,4 @@
-# https://github.com/returntocorp/semgrep/issues/4582
+# https://github.com/returntocorp/lens/issues/4582
 resource "aws_ssm_document" "s3_enabled_not_encrypted_yaml" {
   name          = "SSM-SessionManagerRunShell"
   document_type = "Session"

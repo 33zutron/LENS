@@ -1,5 +1,5 @@
 /*
-   Copyright (c) 2026 Semgrep Inc.
+   Copyright (c) 2026 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -29,7 +29,7 @@
 
 /* Doesn't allocate, raise, or release the runtime lock, so it can be
    declared [@@noalloc] on the OCaml side. */
-value semgrep_current_stack_id(value unit) {
+value lens_current_stack_id(value unit) {
   (void)unit;
   return Val_long(Caml_state->current_stack->id);
 }

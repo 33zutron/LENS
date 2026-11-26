@@ -1,7 +1,7 @@
-(* Semgrep matching engine configuration.
+(* Lens matching engine configuration.
 
    The goal of this module is to gather in one place all the possible
-   ways to configure the semgrep matching engine. We now let
+   ways to configure the lens matching engine. We now let
    the user enable/disable certain features on a per-rule (could do even
    per-pattern basis?). For example, constant propagation may be too powerful
    sometimes and prevent people to find certain code.
@@ -9,7 +9,7 @@
 
    Note that each option in this file will change the matching results;
    for non-functional settings such as optimizations (e.g., using a
-   cache) use instead Flag_semgrep.ml
+   cache) use instead Flag_lens.ml
 
    We're using atdgen to specify the list of configuaration options
    because atdgen generates automatically the boilerplate to read
@@ -29,7 +29,7 @@
            and this would be translated into 'True' for Python and whatever
            means "true" in other languages.
 
-   coupling: with semgrep-interfaces/rule_schema_v2.atd
+   coupling: with lens-interfaces/rule_schema_v2.atd
 *)
 
 (* !!Do not rename the fields because they can be referenced in rules!! *)

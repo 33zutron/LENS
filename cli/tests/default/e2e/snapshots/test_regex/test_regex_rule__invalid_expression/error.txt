@@ -1,4 +1,4 @@
-semgrep-core rule validation failed (RuleParseError)
+lens-core rule validation failed (RuleParseError)
 
 
 ┌─────────────┐
@@ -17,5 +17,5 @@ semgrep-core rule validation failed (RuleParseError)
  • Targets scanned: 11
  • Parsed lines: ~100.0%
  • Scan was limited to files tracked by git
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+ • For a detailed list of skipped files and lines, run lens with the --verbose flag
 Ran 1 rule on 11 files: 0 findings.

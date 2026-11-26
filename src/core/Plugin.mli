@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -14,7 +14,7 @@
    A plugin is an alternate function or piece of data provided by the user of
    a library, replacing the original value.
 
-   In Semgrep, this is intended to provide proprietary implementations
+   In Lens, this is intended to provide proprietary implementations
    of some functionality used by the common engine.
 
    This module provides a generic container [t] representing the slot

@@ -487,7 +487,7 @@ type program = stmts [@@deriving show, eq, ord]
 (*****************************************************************************)
 
 type any =
-  (* main any for semgrep *)
+  (* main any for lens *)
   | E of expr
   | S2 of stmt
   | Ss of stmts

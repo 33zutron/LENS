@@ -11,7 +11,7 @@
       "results": [],
       "tool": {
         "driver": {
-          "name": "Semgrep OSS",
+          "name": "Lens OSS",
           "rules": [
             {
               "defaultConfiguration": {
@@ -21,7 +21,7 @@
                 "text": "found"
               },
               "help": {
-                "markdown": "found\n\n<b>References:</b>\n - [Semgrep Rule](https://example.com/print)\n",
+                "markdown": "found\n\n<b>References:</b>\n - [Lens Rule](https://example.com/print)\n",
                 "text": "found"
               },
               "helpUri": "https://example.com/print",
@@ -32,7 +32,7 @@
                 "tags": []
               },
               "shortDescription": {
-                "text": "Semgrep Finding: rules.source-rule-url"
+                "text": "Lens Finding: rules.source-rule-url"
               }
             }
           ],

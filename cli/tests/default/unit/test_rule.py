@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2024 Semgrep Inc.
+# Copyright (c) 2022-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,8 +14,8 @@ from textwrap import dedent
 
 import pytest
 
-from semgrep.config_resolver import parse_config_string
-from semgrep.rule import Rule
+from lens.config_resolver import parse_config_string
+from lens.rule import Rule
 
 
 def create_validator_rule(
@@ -35,11 +35,11 @@ def create_validator_rule(
           severity: INFO
           message: bad
           metadata:
-            dev.semgrep.validation_state.actions:
+            dev.lens.validation_state.actions:
               valid: {valid_action}
               invalid: {invalid_action}
               error: {error_action}
-            dev.semgrep.actions:
+            dev.lens.actions:
               - {action}
           validators:
           - http:
@@ -47,7 +47,7 @@ def create_validator_rule(
                 headers:
                   Authorization: Bearer $REGEX
                   Host: api.example.com
-                  User-Agent: Semgrep
+                  User-Agent: Lens
                 method: GET
                 url: https://api.example.com/user
               response:

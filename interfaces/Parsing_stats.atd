@@ -1,6 +1,6 @@
 (*
    Output parsing stats for a collection of projects to json.
-   This is used by semgrep-core -parsing_stats -json
+   This is used by lens-core -parsing_stats -json
 *)
 
 type t = {

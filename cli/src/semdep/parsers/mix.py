@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.external.parsy import any_char
 from semdep.external.parsy import Parser
 from semdep.external.parsy import regex
@@ -36,13 +36,13 @@ from semdep.parsers.util import safe_parse_lockfile_and_manifest
 from semdep.parsers.util import transitivity
 from semdep.parsers.util import upto
 from semdep.parsers.util import whitespace
-from semgrep import telemetry
-from semgrep.semgrep_interfaces.semgrep_output_v1 import DependencyParserError
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import FoundDependency
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Fpath
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Hex
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ScaParserName
+from lens import telemetry
+from lens.lens_interfaces.lens_output_v1 import DependencyParserError
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import FoundDependency
+from lens.lens_interfaces.lens_output_v1 import Fpath
+from lens.lens_interfaces.lens_output_v1 import Hex
+from lens.lens_interfaces.lens_output_v1 import ScaParserName
 
 # :hex,
 atom = string(":") >> upto(",", consume_other=False)

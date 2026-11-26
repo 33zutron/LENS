@@ -2,16 +2,16 @@
 Python -> OCaml RPC
 --------------------------------------------------------------------------------
 
-The mechanism implemented here and in `rpc.py` in pysemgrep allows us to
+The mechanism implemented here and in `rpc.py` in pylens allows us to
 incrementally migrate functionality from Python to OCaml in support of our
-osemgrep effort. Instead of being limited to the one main call out to
-semgrep-core, we can now make additional calls from arbitrary points in the
+olens effort. Instead of being limited to the one main call out to
+lens-core, we can now make additional calls from arbitrary points in the
 Python code.
 
 To add a function:
 
 - Update the `function_call` and `function_return` types in
-  `semgrep_output_v1.atd` in the `semgrep-interfaces` module.
+  `lens_output_v1.atd` in the `lens-interfaces` module.
 - Update `RPC.ml` to handle the function call and return the appropriate value.
 - Update `rpc_call.py` to make the function call.
 - Call the function in `rpc_call.py` from wherever you need to in the Python code.
@@ -28,7 +28,7 @@ Invariants/limitations:
 - We pay the performance cost of serializing and deserializing each argument and
   return value. That cost is negligible for some workloads and is likely
   unacceptable for others. Carefully consider how best to use this.
-- Further, the semgrep-core rpc process handles only a single call and then
+- Further, the lens-core rpc process handles only a single call and then
   dies. We could change that, but there would be a little bit more complexity
   involved with managing a long-lived child process. Starting a process each
   time adds some overhead, effectively preventing us from using this for
@@ -48,17 +48,17 @@ RPC protocol details:
 - [OCaml] Serialize the result and send it following the same protocol.
 - [Python] Read the result from the channel following the same protocol.
 
-Not all callers are pysemgrep. Guardian's fragment scanner speaks this
+Not all callers are pylens. Guardian's fragment scanner speaks this
 protocol directly and vendors a copy of the types. Breaking changes are fine:
-the fragment scanner's sync job will ensure that Semgrep and the types are
+the fragment scanner's sync job will ensure that Lens and the types are
 updated in lockstep.
 
 We use stdin and stdout here. This is the simplest option for communication
 between the two processes. The main concern would be that we might inadvertently
 print something on the OCaml process' stdout. However, we already use stdout for
-the main call into semgrep-core from pysemgrep, so we are already disciplined
+the main call into lens-core from pylens, so we are already disciplined
 about printing to stdout.
 
 Future work:
 - Leave the RPC process running and let it serve multiple back-to-back calls.
-- Provide some seamless way to print to the pysemgrep stdout from OCaml code.
+- Provide some seamless way to print to the pylens stdout from OCaml code.

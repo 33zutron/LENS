@@ -12,7 +12,7 @@ rules:
       # ruleid: my-pattern-id
       - pattern: |
           $ABC
-    message: Semgrep found a match - $X
+    message: Lens found a match - $X
     languages:
       - yaml
     severity: WARNING

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -87,7 +87,7 @@ let cmd_exe () = Fpath.(v (system_root ()) / "System32" / "cmd.exe")
 (* A copy of cmd.exe in the current directory must not run via a bare name. *)
 let test_windows_no_cwd_lookup () =
   Testutil_files.with_tempdir ~chdir:true (fun dir ->
-      let planted = "semgrep-ucmd-planted" in
+      let planted = "lens-ucmd-planted" in
       Testutil_files.copy ~src:(cmd_exe ())
         ~dst:Fpath.(dir / (planted ^ ".exe"));
       let cmd = (Cmd.Name planted, [ "/c"; "exit 7" ]) in
@@ -121,7 +121,7 @@ let test_windows_no_cwd_lookup () =
    current directory is not consulted. *)
 let test_windows_path_and_explicit () =
   Testutil_files.with_tempdir ~chdir:true (fun dir ->
-      let local = "semgrep-ucmd-local.exe" in
+      let local = "lens-ucmd-local.exe" in
       Testutil_files.copy ~src:(cmd_exe ()) ~dst:Fpath.(dir / local);
       let check_exit name code =
         match
@@ -142,7 +142,7 @@ let test_windows_path_and_explicit () =
         d
       in
       let bad = mkdir "bad" and good = mkdir "good" in
-      let first = "semgrep-ucmd-first" and tool = "semgrep-ucmd-tool" in
+      let first = "lens-ucmd-first" and tool = "lens-ucmd-tool" in
       let bad_first = Fpath.(bad / (first ^ ".exe")) in
       UFile.write_file ~file:bad_first "no program";
       UFile.write_file ~file:Fpath.(dir / (tool ^ ".exe")) "no program";
@@ -155,7 +155,7 @@ let test_windows_path_and_explicit () =
       Common.protect
         ~finally:(fun () -> Unix.putenv "PATH" old_path)
         (fun () ->
-          let child_path = "C:\\semgrep-child-path" in
+          let child_path = "C:\\lens-child-path" in
           let env =
             Cmd.env_of_list ~inherit_parent_env:false
               [ ("PATH", child_path); ("SystemRoot", system_root ()) ]

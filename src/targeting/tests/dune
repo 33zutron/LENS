@@ -1,11 +1,11 @@
 (library
- (public_name semgrep.targeting.tests)
- (name semgrep_targeting_tests)
+ (public_name lens.targeting.tests)
+ (name lens_targeting_tests)
  (wrapped false)
  (libraries
    commons
-   semgrep.core
-   semgrep.targeting
+   lens.core
+   lens.targeting
  )
  (preprocess
    (pps

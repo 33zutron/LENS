@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 (*
-   Load and cache .gitignore (or .semgrepignore) files.
+   Load and cache .gitignore (or .lensignore) files.
 
    Design: the cache is built eagerly during [create] by walking every
    directory under the project root (skipping [.git/]) and parsing any
@@ -73,7 +73,7 @@ let create ?(gitignore_filenames = [ Gitignore.default_gitignore_filename ])
             (* A single malformed [.gitignore] (e.g. a bad regex) or a
                transient I/O failure here must not abort the entire cache
                build. Log + treat as "no gitignore at this directory". *)
-            (* nosemgrep: no-logs-in-library *)
+            (* nolens: no-logs-in-library *)
             Logs.warn (fun m ->
                 m
                   "Gitignore_cache: failed to parse gitignore under %s: %s; \

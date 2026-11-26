@@ -1,5 +1,5 @@
-; this library might be used outside semgrep (e.g., in pad's codemap)
-; so try to _not_ make it depend on semgrep.xxx libs
+; this library might be used outside lens (e.g., in pad's codemap)
+; so try to _not_ make it depend on lens.xxx libs
 (library
  (public_name ast_generic)
  (wrapped false)

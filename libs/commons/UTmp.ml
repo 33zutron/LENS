@@ -1,6 +1,6 @@
 (* Martin Jambon
  *
- * Copyright (C) 2023-2024 Semgrep Inc.
+ * Copyright (C) 2023-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -42,7 +42,7 @@ let created_lock = Mutex.create ()
       " keep temporary generated files" );
 *)
 
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let save_temp_files = ref false
 
 let erase_temp_files () =
@@ -54,7 +54,7 @@ let erase_temp_files () =
         Base.Hashtbl.clear temp_files_created)
 
 (* hooks for with_temp_file() *)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let temp_file_cleanup_hooks = ref []
 
 (* See the .mli for a long explanation.

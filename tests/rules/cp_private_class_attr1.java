@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/6793
+// https://github.com/returntocorp/lens/issues/6793
 
 package main;
 

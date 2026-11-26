@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/5652
+// https://github.com/returntocorp/lens/issues/5652
 class FooBar {
     def something(objectID: Int)(implicit ec: ExecutionContext) = {
         // ruleid: scala-taint

@@ -1,0 +1,14 @@
+# javascript
+lens-grammars/src/tree-sitter-javascript/LICENSE
+lens-grammars/src/tree-sitter-javascript/grammar.js
+
+# typescript, extends javascript
+lens-grammars/src/tree-sitter-typescript/LICENSE
+lens-grammars/src/tree-sitter-typescript/common/define-grammar.js
+lens-grammars/src/tree-sitter-typescript/typescript/grammar.js
+
+# lens extension of typescript
+lens-grammars/src/lens-typescript/typescript/grammar.js
+
+# tsx, extends javascript
+lens-grammars/src/tree-sitter-typescript/tsx/grammar.js

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2020-2024 Semgrep Inc.
+   Copyright (c) 2020-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,7 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 
 (* entry point *)
 val core_output_of_matches_and_errors : Core_result.t -> Out.core_output
@@ -26,7 +26,7 @@ val match_to_match :
  *)
 val metavar_string_of_any : AST_generic.any -> string
 
-(* now used also in osemgrep *)
+(* now used also in olens *)
 val error_to_error : Core_error.t -> Out.core_error
 val dedup_and_sort : Out.core_match list -> Out.core_match list
 

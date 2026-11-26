@@ -88,8 +88,8 @@ let fix_tokens_asi xs =
 (*****************************************************************************)
 (* retagging:
  *  - '{' when part of a composite literal
- *  - '{' when composite literal in semgrep at toplevel
- *  - ':' when part of a keyval in semgrep at toplevel
+ *  - '{' when composite literal in lens at toplevel
+ *  - ':' when part of a keyval in lens at toplevel
  *
  * This is similar to what we do in parsing_hacks_js.ml to overcome
  * some shift/reduce limitations by cheating and inventing new tokens.
@@ -108,18 +108,18 @@ let fix_tokens_lbody toks =
     in
 
     let retag_lbrace = Base.Hashtbl.Poly.create ~size:101 () in
-    let retag_lbrace_semgrep = Base.Hashtbl.Poly.create ~size:1 () in
-    let retag_lcolon_semgrep = Base.Hashtbl.Poly.create ~size:1 () in
-    let retag_lparen_semgrep = Base.Hashtbl.Poly.create ~size:1 () in
+    let retag_lbrace_lens = Base.Hashtbl.Poly.create ~size:1 () in
+    let retag_lcolon_lens = Base.Hashtbl.Poly.create ~size:1 () in
+    let retag_lparen_lens = Base.Hashtbl.Poly.create ~size:1 () in
 
     (match trees with
     (* TODO: check that actually a composite literal in it? *)
     | F.Braces (t1, _body, _) :: _ when Hook.get Flag_parsing.sgrep_mode ->
-        Base.Hashtbl.set retag_lbrace_semgrep ~key:t1 ~data:true
+        Base.Hashtbl.set retag_lbrace_lens ~key:t1 ~data:true
     (* no way it's a label *)
     | F.Tok (_s, info) :: F.Tok (":", t2) :: _
       when Hook.get Flag_parsing.sgrep_mode && is_identifier horigin info ->
-        Base.Hashtbl.set retag_lcolon_semgrep ~key:t2 ~data:true
+        Base.Hashtbl.set retag_lcolon_lens ~key:t2 ~data:true
     (* TODO: could check that xs looks like a parameter list
      * TODO what comes after Parens could be a symbol part of a type
      * instead of just a single type like 'int'?
@@ -128,7 +128,7 @@ let fix_tokens_lbody toks =
       when Hook.get Flag_parsing.sgrep_mode
            && is_identifier horigin info
            && is_identifier horigin info2 ->
-        Base.Hashtbl.set retag_lparen_semgrep ~key:l ~data:true
+        Base.Hashtbl.set retag_lparen_lens ~key:l ~data:true
     | _ -> ());
 
     let rec aux env trees =
@@ -207,12 +207,12 @@ let fix_tokens_lbody toks =
     |> List.map (function
       | T.LBRACE info when Base.Hashtbl.mem retag_lbrace info -> T.LBODY info
       | T.LBRACE info when Base.Hashtbl.mem retag_lbrace info -> T.LBODY info
-      | T.LBRACE info when Base.Hashtbl.mem retag_lbrace_semgrep info ->
-          T.LBRACE_SEMGREP info
-      | T.LCOLON info when Base.Hashtbl.mem retag_lcolon_semgrep info ->
-          T.LCOLON_SEMGREP info
-      | T.LPAREN info when Base.Hashtbl.mem retag_lparen_semgrep info ->
-          T.LPAREN_SEMGREP info
+      | T.LBRACE info when Base.Hashtbl.mem retag_lbrace_lens info ->
+          T.LBRACE_LENS info
+      | T.LCOLON info when Base.Hashtbl.mem retag_lcolon_lens info ->
+          T.LCOLON_LENS info
+      | T.LPAREN info when Base.Hashtbl.mem retag_lparen_lens info ->
+          T.LPAREN_LENS info
       | x -> x)
   with
   | Lib_ast_fuzzy.Unclosed (msg, info) ->

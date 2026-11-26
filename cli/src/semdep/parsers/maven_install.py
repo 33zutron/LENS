@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -40,7 +40,7 @@ If it is absent for any reason, dependencies are emitted with `Unknown`
 transitivity rather than a guess.
 
 Coordinate normalization:
-  Semgrep's Maven advisory matching keys on `group:artifact`. Version-3
+  Lens's Maven advisory matching keys on `group:artifact`. Version-3
   artifact keys are already in that shape. Legacy 0.1.0 `coord` values may
   include packaging and/or classifier segments
   (`group:artifact[:packaging[:classifier]]:version`), which we drop.
@@ -55,22 +55,22 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.parsers.util import DependencyFileToParse
 from semdep.parsers.util import DependencyParserError
 from semdep.parsers.util import JSON
 from semdep.parsers.util import json_doc
 from semdep.parsers.util import safe_parse_lockfile_and_manifest
-from semgrep import telemetry
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Direct
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import FoundDependency
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Fpath
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Maven
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ScaParserName
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Transitive
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Unknown
-from semgrep.verbose_logging import getLogger
+from lens import telemetry
+from lens.lens_interfaces.lens_output_v1 import Direct
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import FoundDependency
+from lens.lens_interfaces.lens_output_v1 import Fpath
+from lens.lens_interfaces.lens_output_v1 import Maven
+from lens.lens_interfaces.lens_output_v1 import ScaParserName
+from lens.lens_interfaces.lens_output_v1 import Transitive
+from lens.lens_interfaces.lens_output_v1 import Unknown
+from lens.verbose_logging import getLogger
 
 logger = getLogger(__name__)
 
@@ -84,7 +84,7 @@ def _split_gav_coord(coord: str) -> Optional[Tuple[str, str]]:
       group:artifact:packaging:version
       group:artifact:packaging:classifier:version
 
-    Semgrep's Maven advisories key on "group:artifact"; packaging/classifier
+    Lens's Maven advisories key on "group:artifact"; packaging/classifier
     are dropped. Returns None for unparseable coordinates.
     """
     parts = coord.split(":")
@@ -167,7 +167,7 @@ def _normalize_v3_artifact_key(key: str) -> Optional[str]:
 
     Real rules_jvm_external v3 lockfiles key the `artifacts` map by
     `group:artifact` or `group:artifact:packaging` (Android `aar` deps, for
-    example, appear as `androidx.core:core:aar`). Semgrep's Maven advisories
+    example, appear as `androidx.core:core:aar`). Lens's Maven advisories
     match on the two-segment `group:artifact` shape, so drop any trailing
     packaging/classifier segments. `__INPUT_ARTIFACTS_HASH` keys are always
     already in the two-segment shape, so the same normalization is used for

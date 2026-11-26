@@ -3,7 +3,7 @@
 # This script only exists to satisfy the requirements of the benchmark
 # runner.
 #
-# Uses sh because bash is not installed within the semgrep docker container.
+# Uses sh because bash is not installed within the lens docker container.
 #
 set -eu
 

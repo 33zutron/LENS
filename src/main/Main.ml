@@ -11,22 +11,22 @@
 (* Prelude *)
 (*****************************************************************************)
 (* A SEMantic GREP.
- * See https://semgrep.dev/ for more information.
+ * See https://lens.dev/ for more information.
  *
- * This is the entry point of the semgrep-core program used internally
- * by pysemgrep, the entry point of osemgrep, and currently also the entry point
- * of semgrep for windows. See also the ../../cli/bin/semgrep python wrapper
- * script which is currently the real entry point of semgrep.
- * LATER: when osemgrep is fully done we can just get rid of semgrep-core,
- * osemgrep, the wrapper script, and have a single binary called 'semgrep'.
+ * This is the entry point of the lens-core program used internally
+ * by pylens, the entry point of olens, and currently also the entry point
+ * of lens for windows. See also the ../../cli/bin/lens python wrapper
+ * script which is currently the real entry point of lens.
+ * LATER: when olens is fully done we can just get rid of lens-core,
+ * olens, the wrapper script, and have a single binary called 'lens'.
  *
  * Related work using code patterns (from oldest to newest):
  *  - Structural Search and Replace (SSR) in Jetbrains IDEs
  *    http://www.jetbrains.com/idea/documentation/ssr.html
  *    http://tv.jetbrains.net/videocontent/intellij-idea-static-analysis-custom-rules-with-structural-search-replace
- *  - Coccinelle (the precursor of Semgrep) for C
+ *  - Coccinelle (the precursor of Lens) for C
  *    https://coccinelle.gitlabpages.inria.fr/website/
- *  - Sgrep (Syntactical GREP, another precursor of Semgrep) for PHP
+ *  - Sgrep (Syntactical GREP, another precursor of Lens) for PHP
  *    https://github.com/facebook/pfff/wiki/Sgrep
  *  - gogrep and ruleguard for Go
  *    https://github.com/mvdan/gogrep/
@@ -39,9 +39,9 @@
  *    http://awgn.github.io/cgrep/
  *  - Comby for many languages
  *    https://comby.dev/
- *  - Weggli for C/C++ (inspired by Semgrep)
+ *  - Weggli for C/C++ (inspired by Lens)
  *    https://github.com/weggli-rs/weggli
- *  - ASTgrep (inspired by Semgrep)
+ *  - ASTgrep (inspired by Lens)
  *    https://ast-grep.github.io/
  *
  * related AST search tools:
@@ -98,9 +98,9 @@ let () =
       flush stderr
   | Ok () -> ()
 
-(* We currently use the same binary for semgrep-core and osemgrep. See 'make
+(* We currently use the same binary for lens-core and olens. See 'make
  * core' and './dune' install section. We use the argv[0] trick below to decide
- * whether the user wants the semgrep-core or osemgrep behavior. *)
+ * whether the user wants the lens-core or olens behavior. *)
 let () =
   Pyro_caml_instruments.maybe_with_memprof_sampler @@ fun () ->
   let argv = Sys.argv in
@@ -109,8 +109,8 @@ let () =
     Fpath.v argv.(0) |> Fpath.base |> Fpath.rem_ext |> Fpath.to_string
   in
   match argv0 with
-  (* osemgrep!! *)
-  | "osemgrep" ->
+  (* olens!! *)
+  | "olens" ->
       let exit_code = CLI.main argv in
       if not (Exit_code.Equal.ok exit_code) then
         Logs.info (fun m ->
@@ -118,7 +118,7 @@ let () =
               exit_code.description exit_code.code
               (String.concat " " (Array.to_list argv)));
       Stdlib.exit exit_code.code
-  (* legacy semgrep-core *)
+  (* legacy lens-core *)
   | _else_ ->
       (* Added as part of the upgrade to OCaml 5. Under our typical workloads, this
        * appears to yield similar performance to the default value of space_overhead

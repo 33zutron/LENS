@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -34,7 +34,7 @@ val add_constant_env :
 (* !Note that this assumes Naming_AST.resolve has been called before! *)
 val propagate_basic : Lang.t -> AST_generic.program -> unit
 
-(* This is exposed for DeepSemgrep, so it can control the order
+(* This is exposed for DeepLens, so it can control the order
  * in which functions are analyzed. Generally will perform better
  * if propagate_basic is called first *)
 val propagate_dataflow_one_function :

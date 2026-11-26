@@ -191,7 +191,7 @@ def _single_pattern_to_dict(pattern: str, language: str) -> Dict[str, Any]:
     if len(pattern.split("\n")) > 1:
         pattern = (
             pattern + "\n"
-        )  # make sure multi-line patterns end in new-line otherwise semgrep dies # TODO is this still true?
+        )  # make sure multi-line patterns end in new-line otherwise lens dies # TODO is this still true?
 
     sgrep_config_default: Dict[str, Any] = {
         "rules": [
@@ -214,16 +214,16 @@ def _config_to_string(config: Any) -> str:
     return stream.getvalue()
 
 
-def run_semgrep_on_example(
+def run_lens_on_example(
     lang: str, config_arg_str: str, code_path: str
 ) -> Optional[dict]:
     with tempfile.NamedTemporaryFile("w") as config:
         pattern_text = open(config_arg_str).read()
         config.write(_config_to_string(_single_pattern_to_dict(pattern_text, lang)))
         config.flush()
-        cmd = ["semgrep", "--strict", "--json", f"--config={config.name}", code_path]
+        cmd = ["lens", "--strict", "--json", f"--config={config.name}", code_path]
         print(">>> " + " ".join(cmd))
-        output = subprocess.run(  # nosemgrep: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
+        output = subprocess.run(  # nolens: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
             cmd,
             capture_output=True,
         )
@@ -236,13 +236,13 @@ def run_semgrep_on_example(
             return None
 
 
-def invoke_semgrep_multi(semgrep_path, code_path, lang, category, subcategory):
-    if paths_exist(semgrep_path, code_path):
-        result = run_semgrep_on_example(lang, semgrep_path, code_path)
+def invoke_lens_multi(lens_path, code_path, lang, category, subcategory):
+    if paths_exist(lens_path, code_path):
+        result = run_lens_on_example(lang, lens_path, code_path)
     else:
         result = {}
     return (
-        semgrep_path,
+        lens_path,
         code_path,
         lang,
         category,
@@ -261,7 +261,7 @@ def generate_cheatsheet(root_dir: str, html: bool):
         lambda: collections.defaultdict(lambda: collections.defaultdict(list))
     )
     langs = get_language_directories(root_dir)
-    semgrep_multi_args = [
+    lens_multi_args = [
         (
             find_path(root_dir, lang, category, subcategory, "sgrep"),
             find_path(root_dir, lang, category, subcategory, lang_dir_to_ext(lang)),
@@ -274,9 +274,9 @@ def generate_cheatsheet(root_dir: str, html: bool):
         for subcategory in subcategories
     ]
     with multiprocessing.Pool(multiprocessing.cpu_count()) as pool:
-        results = pool.starmap(invoke_semgrep_multi, semgrep_multi_args)
+        results = pool.starmap(invoke_lens_multi, lens_multi_args)
 
-    for semgrep_path, code_path, lang, category, subcategory, result in results:
+    for lens_path, code_path, lang, category, subcategory, result in results:
         highlights = []
         if result is None:
             raise Exception(
@@ -293,15 +293,15 @@ def generate_cheatsheet(root_dir: str, html: bool):
             )
 
         entry = {
-            "pattern": read_if_exists(semgrep_path),
-            "pattern_path": os.path.relpath(semgrep_path, root_dir),
+            "pattern": read_if_exists(lens_path),
+            "pattern_path": os.path.relpath(lens_path, root_dir),
             "code": read_if_exists(code_path),
             "code_path": os.path.relpath(code_path, root_dir),
             "highlights": highlights,
         }
 
         if html:
-            entry["pattern_path"] = os.path.relpath(semgrep_path)
+            entry["pattern_path"] = os.path.relpath(lens_path)
             entry["code_path"] = os.path.relpath(code_path)
 
         feature_name = VERBOSE_FEATURE_NAME.get(category, category)
@@ -617,7 +617,7 @@ def get_language_directories(dir_name: str) -> List[str]:
 def parse_args():
     p = argparse.ArgumentParser(
         description="""
-        Generate cheatsheet for local viewing and semgrep-app usage.
+        Generate cheatsheet for local viewing and lens-app usage.
         """,
         formatter_class=argparse.RawTextHelpFormatter,
     )

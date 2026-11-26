@@ -17,12 +17,12 @@
 (* Prelude *)
 (*****************************************************************************)
 (* The goal of this module is to make it easy to add lint rules by using
- * semgrep patterns. You just have to store the patterns in a special
+ * lens patterns. You just have to store the patterns in a special
  * YAML file and add the corresponding warnings you want the linter to raise.
  *
  * update: if you need advanced patterns with boolean logic (which used
  * to be partially provided by the hacky OK error keyword), use
- * instead Rule.ml (or the semgrep python wrapper). Rule.ml also uses a YAML
+ * instead Rule.ml (or the lens python wrapper). Rule.ml also uses a YAML
  * file but it has more features, e.g. some pattern-either fields,
  * pattern-inside, metavariable-comparison, etc.
  *)
@@ -42,7 +42,7 @@ type rule = {
   langs : Lang.t list;
   (* at least one element *)
   (* Useful for debugging, to report bad rules. We could rule.id to
-   * report those bad rules, but semgrep-python uses a weird encoding
+   * report those bad rules, but lens-python uses a weird encoding
    * when flattening the pattern-xxx (-and, -either, -not, etc.)
    * patterns in the original rule yaml file, which makes it hard
    * to know what what was the corresponding pattern.

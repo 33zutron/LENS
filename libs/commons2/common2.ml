@@ -233,7 +233,7 @@ let glob pattern =
 
 let unix_diff file1 file2 =
   let cmd = (Cmd.Name "diff", [ "-u"; file1; file2 ]) in
-  (* nosemgrep: forbid-exec *)
+  (* nolens: forbid-exec *)
   match UCmd.lines_of_run ~trim:true cmd with
   | Ok (xs, _status) -> xs
   | Error (`Msg s) -> failwith (spf "unix_diff problem: %s" s)

@@ -1,6 +1,6 @@
 rules:
   - id: regex-capture-groups 
-    message: Semgrep found a match
+    message: Lens found a match
     languages:
       - python
     severity: WARNING

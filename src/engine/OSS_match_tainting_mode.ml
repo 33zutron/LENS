@@ -1,6 +1,6 @@
 (* Iago Abal, Yoann Padioleau
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -24,7 +24,7 @@ module T = Taint
 module Lval_env = OSS_taint_lval_env
 module MV = Metavariable
 module ME = Matching_explanation
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 module Labels = Sets.String_set
 module Log = Log_tainting.Log
 module Effect = OSS_taint_effects.Effect
@@ -104,7 +104,7 @@ let rec convert_taint_call_trace = function
  * relevant one. This is particularly important when using (experimental)
  * taint labels, because not all labels are equally relevant for the finding. *)
 let sources_of_taints ?preferred_label taints =
-  (* We only report actual sources reaching a sink. If users want Semgrep to
+  (* We only report actual sources reaching a sink. If users want Lens to
    * report function parameters reaching a sink without sanitization, then
    * they need to specify the parameters as taint sources. *)
   let taint_sources =
@@ -216,7 +216,7 @@ let matches_of_effect (options : Rule_options.t) (effect_ : Effect.t) =
                 *
                 * Here we tried reporting the match on `f(source)` as "the line to blame"
                 * for the injection bug... but most users seem to be confused about this. They
-                * already expect Semgrep (and DeepSemgrep) to report the match on `sink(x)`.
+                * already expect Lens (and DeepLens) to report the match on `sink(x)`.
             *)
         let taint_trace =
           match traces with
@@ -463,7 +463,7 @@ let check_rules ~matches_hook
      between rules.
 
      In particular, this expects to see big gains due to shared propagators,
-     in Semgrep Pro. There may be some benefit in OSS, but it's low-probability.
+     in Lens Pro. There may be some benefit in OSS, but it's low-probability.
   *)
   let per_file_formula_cache =
     Formula_cache.mk_specialized_formula_cache rules

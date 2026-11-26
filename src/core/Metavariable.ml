@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2023 Semgrep Inc.
+ * Copyright (C) 2019-2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,7 +15,7 @@
 open Common
 module G = AST_generic
 module H = AST_generic_helpers
-module Log = Log_semgrep.Log
+module Log = Log_lens.Log
 
 (*****************************************************************************)
 (* Prelude *)
@@ -35,11 +35,11 @@ type mvar = Mvar.t [@@deriving eq, hash, ord, sexp, show]
  * define a few boilerplate functions like mvalue_to_any below).
  *
  * AST_generic.any is already (ab)used for many things: for representing
- * a semgrep pattern, for being able to dump any AST constructs,
+ * a lens pattern, for being able to dump any AST constructs,
  * for poor's man overloading for visiting, mapping, so there's no
  * need to add an extra thing. It would probably be better to also
  * define our own Pattern.t with just the valid cases, but we don't
- * want code in pfff to depend on semgrep/core/Pattern.ml, hence the
+ * want code in pfff to depend on lens/core/Pattern.ml, hence the
  * use of AST_generic.any for patterns.
  *
  * coupling: if you add a constructor here, you probably also want to

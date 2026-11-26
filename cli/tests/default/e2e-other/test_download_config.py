@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2024 Semgrep Inc.
+# Copyright (c) 2022-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,12 +15,12 @@ import re
 from textwrap import dedent
 
 import pytest
-from tests.semgrep_runner import SemgrepRunner
+from tests.lens_runner import LensRunner
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.cli import cli
-from semgrep.config_resolver import ConfigFile
-from semgrep.config_resolver import ConfigLoader
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.cli import cli
+from lens.config_resolver import ConfigFile
+from lens.config_resolver import ConfigLoader
 
 
 # What is this test really for? The old output was an error due the field
@@ -41,16 +41,16 @@ def test_new_feature_registry_config(monkeypatch, snapshot, mocker, tmp_path):
               severity: ERROR
             """
         ).lstrip(),
-        "https://semgrep.dev/c/p/ci",
+        "https://lens.dev/c/p/ci",
     )
     mocker.patch.object(
         ConfigLoader, "_download_config_from_url", return_value=config_file
     )
 
-    runner = SemgrepRunner(
+    runner = LensRunner(
         env={
-            "SEMGREP_SETTINGS_FILE": str(tmp_path / ".settings.yaml"),
-            "SEMGREP_APP_TOKEN": "",
+            "LENS_SETTINGS_FILE": str(tmp_path / ".settings.yaml"),
+            "LENS_APP_TOKEN": "",
         },
         use_click_runner=True,
     )
@@ -74,7 +74,7 @@ def json_callback(request, context):
 @pytest.mark.quick
 @pytest.mark.osemfail
 def test_fallback_config_works(requests_mock, mocker, tmp_path):
-    requests_mock.post("https://semgrep.dev/api/cli/v2/scans", status_code=401)
+    requests_mock.post("https://lens.dev/api/cli/v2/scans", status_code=401)
 
     patched_fallback_download = mocker.patch.object(
         ConfigLoader,
@@ -82,14 +82,14 @@ def test_fallback_config_works(requests_mock, mocker, tmp_path):
         return_value=ConfigFile(
             None,
             "rules: []",
-            "https://semgrep.dev/c/p/ci",
+            "https://lens.dev/c/p/ci",
         ),
     )
 
-    runner = SemgrepRunner(
+    runner = LensRunner(
         env={
-            "SEMGREP_SETTINGS_FILE": str(tmp_path / ".settings.yaml"),
-            "SEMGREP_APP_TOKEN": "",
+            "LENS_SETTINGS_FILE": str(tmp_path / ".settings.yaml"),
+            "LENS_APP_TOKEN": "",
         },
         use_click_runner=True,
     )
@@ -98,7 +98,7 @@ def test_fallback_config_works(requests_mock, mocker, tmp_path):
     )
 
     assert (
-        "https://fail-open.prod.semgrep.dev/"
+        "https://fail-open.prod.lens.dev/"
         in patched_fallback_download.call_args_list[0].args[0]
     )
     assert "loaded 1 configs" in result.stdout
@@ -116,7 +116,7 @@ def test_fallback_config_works(requests_mock, mocker, tmp_path):
 @pytest.mark.quick
 @pytest.mark.osemfail
 def test_cloud_platform_scan_config(requests_mock, cli_option, tmp_path):
-    requests_mock.post("https://semgrep.dev/api/cli/v2/scans", json=json_callback)
+    requests_mock.post("https://lens.dev/api/cli/v2/scans", json=json_callback)
     requests_mock.get(
         re.compile(r"/api/cli/v2/scans/[^/]+/config"),
         json={
@@ -126,11 +126,11 @@ def test_cloud_platform_scan_config(requests_mock, cli_option, tmp_path):
         },
     )
 
-    runner = SemgrepRunner(
+    runner = LensRunner(
         env={
-            "SEMGREP_SETTINGS_FILE": str(tmp_path / ".settings.yaml"),
-            "SEMGREP_APP_TOKEN": "",
-            "SEMGREP_REPO_NAME": "test-repo",
+            "LENS_SETTINGS_FILE": str(tmp_path / ".settings.yaml"),
+            "LENS_APP_TOKEN": "",
+            "LENS_REPO_NAME": "test-repo",
         },
         use_click_runner=True,
     )

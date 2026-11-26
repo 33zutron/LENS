@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2022-2024 Semgrep Inc.
+ * Copyright (C) 2022-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -130,7 +130,7 @@ let create_dst opt_file =
   | Some out_file ->
       let oc =
         (* This truncates the log file, which is usually what we want for
-           Semgrep. *)
+           Lens. *)
         Stdlib.open_out (Fpath.to_string out_file)
       in
       let key =

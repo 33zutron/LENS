@@ -1,0 +1,30 @@
+{
+  "grammars": [
+    {
+      "name": "dart",
+      "scope": "source.dart",
+      "path": "."
+    }
+  ],
+  "metadata": {
+    "version": "0.0.0",
+    "license": "LGPL-2.1",
+    "description": "Lens-extended dart grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "Lens"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/lens/lens"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": false,
+    "node": false,
+    "python": false,
+    "rust": false,
+    "swift": false
+  }
+}

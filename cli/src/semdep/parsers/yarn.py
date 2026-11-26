@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2025 Semgrep Inc.
+# Copyright (c) 2023-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -31,7 +31,7 @@ from typing import Union
 
 from typing_extensions import NotRequired
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.external.parsy import regex
 from semdep.external.parsy import string
 from semdep.external.parsy import success
@@ -47,14 +47,14 @@ from semdep.parsers.util import quoted
 from semdep.parsers.util import safe_parse_lockfile_and_manifest
 from semdep.parsers.util import transitivity
 from semdep.parsers.util import upto
-from semgrep import telemetry
-from semgrep.semgrep_interfaces.semgrep_output_v1 import DependencyChild
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import FoundDependency
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Fpath
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Npm
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ScaParserName
-from semgrep.verbose_logging import getLogger
+from lens import telemetry
+from lens.lens_interfaces.lens_output_v1 import DependencyChild
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import FoundDependency
+from lens.lens_interfaces.lens_output_v1 import Fpath
+from lens.lens_interfaces.lens_output_v1 import Npm
+from lens.lens_interfaces.lens_output_v1 import ScaParserName
+from lens.verbose_logging import getLogger
 
 logger = getLogger(__name__)
 

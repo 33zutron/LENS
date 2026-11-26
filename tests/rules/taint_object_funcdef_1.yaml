@@ -1,6 +1,6 @@
 rules:
   - id: test
-    message: Semgrep found a match
+    message: Lens found a match
     languages:
       - ts
     severity: WARNING

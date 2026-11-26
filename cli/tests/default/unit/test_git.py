@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -10,15 +10,15 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
 # LICENSE for more details.
 #
-# Testing src/semgrep/git.py
+# Testing src/lens/git.py
 import os
 import subprocess
 
 import pytest
 
-from semgrep.error import SemgrepError
-from semgrep.git import _scrubbed_git_local_env
-from semgrep.git import git_check_output
+from lens.error import LensError
+from lens.git import _scrubbed_git_local_env
+from lens.git import git_check_output
 
 
 class TestScrubbedGitLocalEnv:
@@ -80,7 +80,7 @@ class TestGitCheckOutputRedaction:
             ),
         )
 
-        with pytest.raises(SemgrepError) as exc_info:
+        with pytest.raises(LensError) as exc_info:
             git_check_output(["git", "fetch", url, "main"])
 
         message = str(exc_info.value)

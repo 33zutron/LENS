@@ -255,7 +255,7 @@ rule token = parse
      [' ' '\t']*) as includes)
     (('"' ([^ '"']+) '"' |
      '<' [^ '>']+ '>' |
-      (* semgrep: added $ *)
+      (* lens: added $ *)
       ['A'-'Z''_''$']+
     ) as filename)
       { (* less: generate 2 info so highlight_cpp.ml can colorize the
@@ -454,9 +454,9 @@ rule token = parse
   | "::" { TColCol(tokinfo lexbuf) }
   | "->*" { TPtrOpStar(tokinfo lexbuf) }   | ".*" { TDotStar(tokinfo lexbuf) }
 
-  (* a valid C construct, also used by semgrep! *)
+  (* a valid C construct, also used by lens! *)
   | "..." { TEllipsis(tokinfo lexbuf) }
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | "<..."  { Flag_parsing.sgrep_guard (LDots (tokinfo lexbuf)) }
   | "...>"  { Flag_parsing.sgrep_guard (RDots (tokinfo lexbuf)) }
 

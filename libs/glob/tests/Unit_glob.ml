@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -173,7 +173,7 @@ let tests =
         ~expected_outcome:
           (Should_fail
              "incorrect behavior supported for the time being for backward \
-              compatibility with Semgrepignore v1")
+              compatibility with Lensignore v1")
         "don't normalize path pattern into absolute path"
         (test "./a" "/a" false);
       t "don't normalize path pattern into relative path" (test "./a" "a" false);

@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) 2019-2023 Semgrep, Inc.
+ * Copyright (C) 2019-2023 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -21,7 +21,7 @@ open Legacy_lsp_
 module CN = Client_notification
 module CR = Client_request
 module Conv = Legacy_convert_utils
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 
 (*****************************************************************************)
 (* Helpers *)
@@ -35,20 +35,20 @@ let parse_and_resolve_name (lang : Lang.t) (fpath : Fpath.t) :
   (ast, skipped_tokens)
 
 (*****************************************************************************)
-(* Semgrep helpers *)
+(* Lens helpers *)
 (*****************************************************************************)
 
 (* Relevant here means any matches we actually care about showing the user.
     This means like some matches, such as those that appear in committed
     files/lines, will be filtered out*)
 
-(** [run_semgrep server] runs semgrep on the given server. If [targets] is
-    provided, it will be used as the targets for semgrep. If [rules] is
-    provided, it will be used as the rules for semgrep. Otherwise, the rules
+(** [run_lens server] runs lens on the given server. If [targets] is
+    provided, it will be used as the targets for lens. If [rules] is
+    provided, it will be used as the rules for lens. Otherwise, the rules
     will be read from the config file. If [git_ref] is provided, it will be
     used as the git ref for what matches are filtered out based on git diff.
   *)
-let run_semgrep ?(targets : Fpath.t list option) ?rules ?git_ref
+let run_lens ?(targets : Fpath.t list option) ?rules ?git_ref
     (session : Legacy_session.t) =
   let rules = Option.value ~default:session.cached_session.rules rules in
   match (rules, targets) with
@@ -69,7 +69,7 @@ let run_semgrep ?(targets : Fpath.t list option) ?rules ?git_ref
   | _ ->
       let profiler = Profiler.make () in
       Profiler.start profiler ~name:"total_time";
-      (* !!!Dispatch to the Semgrep engine!!! *)
+      (* !!!Dispatch to the Lens engine!!! *)
       let res =
         let targets =
           (fun () ->
@@ -85,9 +85,9 @@ let run_semgrep ?(targets : Fpath.t list option) ?rules ?git_ref
         let core_run_func =
           let pro_intrafile =
             session.user_settings.pro_intrafile
-            && Semgrep_login.is_logged_in_weak ()
+            && Lens_login.is_logged_in_weak ()
           in
-          match Hook.get Core_runner.hook_mk_pro_core_run_for_osemgrep with
+          match Hook.get Core_runner.hook_mk_pro_core_run_for_olens with
           | Some pro_scan_func when pro_intrafile ->
               (* THINK: files or folders?
                  Note that converting many target files to scanning roots
@@ -138,10 +138,10 @@ let run_semgrep ?(targets : Fpath.t list option) ?rules ?git_ref
                        available, as the user is not logged in, or there is no \
                        pro binary available. Running with the OSS engine \
                        instead.");
-              Core_runner.mk_core_run_for_osemgrep Core_scan.scan
+              Core_runner.mk_core_run_for_olens Core_scan.scan
         in
         Logs.debug (fun m ->
-            m "Running Semgrep with %d rules" (List.length rules));
+            m "Running Lens with %d rules" (List.length rules));
         let res_or_exn =
           (fun () ->
             core_run_func.run runner_conf Find_targets.default_conf (rules, [])
@@ -177,23 +177,23 @@ let run_semgrep ?(targets : Fpath.t list option) ?rules ?git_ref
         |> List.filter_map (fun (e : Out.cli_error) -> e.message)
         |> String.concat "\n"
       in
-      Logs.app (fun m -> m "Semgrep errors: %s" errors);
+      Logs.app (fun m -> m "Lens errors: %s" errors);
       Logs.app (fun m ->
-          m "Semgrep skipped %d rules" (List.length cli_output.skipped_rules));
+          m "Lens skipped %d rules" (List.length cli_output.skipped_rules));
       Logs.app (fun m -> m "Scanned %d files" (List.length scanned));
       Logs.app (fun m -> m "Found %d matches" (List.length matches));
       Legacy_session.send_metrics session ?core_time:res.core.time ~profiler
         ~cli_output;
       (matches, scanned)
 
-let run_semgrep_detached ?targets ?rules ?git_ref (session : Legacy_session.t) =
+let run_lens_detached ?targets ?rules ?git_ref (session : Legacy_session.t) =
   Lwt_platform.detach
-    (fun () -> run_semgrep ?targets ?rules ?git_ref session)
+    (fun () -> run_lens ?targets ?rules ?git_ref session)
     ()
 
 (* This function runs a search by hooking into Match_search_mode, which bypasses
    some of the CLI.
-   We do this instead of using run_semgrep above. Why?
+   We do this instead of using run_lens above. Why?
    We want to support streaming searches. This means that we want a hook which
    can activate on a certain granularity, in our case, the matches associated to
    each file.
@@ -237,7 +237,7 @@ let run_core_search xconf (rule : Rule.search_rule) (file : Fpath.t) =
   else None
 
 let scan_something ?targets session =
-  let%lwt results, files = run_semgrep_detached ?targets session in
+  let%lwt results, files = run_lens_detached ?targets session in
   Legacy_session.record_results session results files;
   (* LSP expects empty diagnostics to clear problems *)
   let files = Legacy_session.scanned_files session in
@@ -249,7 +249,7 @@ let scan_something ?targets session =
 let scan_workspace session =
   Logs.app (fun m -> m "Scanning workspace");
   let packets, token =
-    create_progress "Semgrep Scan in Progress" "Scanning Workspace"
+    create_progress "Lens Scan in Progress" "Scanning Workspace"
   in
   Reply.Later
     (fun send ->
@@ -267,7 +267,7 @@ let scan_open_documents (session : Legacy_session.t) =
     List.filter (fun doc -> List.mem doc open_documents) session_targets
   in
   let packets, token =
-    create_progress "Semgrep Scan in Progress" "Scanning Open Documents"
+    create_progress "Lens Scan in Progress" "Scanning Open Documents"
   in
   Reply.Later
     (fun send ->
@@ -300,7 +300,7 @@ let scan_file session uri =
             Legacy_session.cache_workspace_targets session);
           if List.mem file session_targets then targets else []
         in
-        run_semgrep_detached ~targets session
+        run_lens_detached ~targets session
       in
       Lwt.return
         (List.map (fun (m : Out.cli_match) -> { m with path = file }) results)
@@ -319,14 +319,14 @@ let scan_file session uri =
 
 let refresh_rules session =
   Reply.later (fun send ->
-      let packets, token = create_progress "Semgrep" "Refreshing Rules" in
+      let packets, token = create_progress "Lens" "Refreshing Rules" in
       let%lwt () = Lwt_list.iter_s send packets in
       Logs.app (fun m -> m "Refreshing rules");
       let%lwt () = Legacy_session.cache_session session in
       let%lwt () = send (end_progress token) in
       let%lwt () =
         (* Will always be okay since it's just a string :) *)
-        send (notify_custom "semgrep/rulesRefreshed" |> Result.get_ok)
+        send (notify_custom "lens/rulesRefreshed" |> Result.get_ok)
       in
       Logs.app (fun m -> m "Rules refreshed");
       (* We used to scan ALL files in the workspace *)

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -18,18 +18,18 @@ from pathlib import Path
 
 import pytest
 
-from semgrep.mcp.hooks import stop
-from semgrep.mcp.hooks.stop import append_edited_file_path
-from semgrep.mcp.hooks.stop import cache_file_for
-from semgrep.mcp.hooks.stop import clear_edited_file_paths
-from semgrep.mcp.hooks.stop import load_edited_file_paths
-from semgrep.mcp.hooks.stop import StopHookResponse
-from semgrep.mcp.utilities.utils import ALLOW_SCAN_OUTSIDE_WORKSPACE_ENV_VAR
+from lens.mcp.hooks import stop
+from lens.mcp.hooks.stop import append_edited_file_path
+from lens.mcp.hooks.stop import cache_file_for
+from lens.mcp.hooks.stop import clear_edited_file_paths
+from lens.mcp.hooks.stop import load_edited_file_paths
+from lens.mcp.hooks.stop import StopHookResponse
+from lens.mcp.utilities.utils import ALLOW_SCAN_OUTSIDE_WORKSPACE_ENV_VAR
 
 
 @pytest.fixture(autouse=True)
 def cache_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    cache_dir = tmp_path / "semgrep-mcp"
+    cache_dir = tmp_path / "lens-mcp"
     cache_dir.mkdir()
     monkeypatch.setattr(stop, "CACHE_DIR", cache_dir)
     monkeypatch.setattr(stop, "SHARED_CACHE_FILE", cache_dir / "edited-files.json")

@@ -226,7 +226,7 @@ local merge_base_output = '${{ steps.get-merge-base.outputs.commit }}';
   commit_with_message_output: commit_with_message_output,
   find_merge_base_step: find_merge_base_step,
   merge_base_output: merge_base_output,
-  // See semgrep.libjsonnet cache_opam for inspiration here
+  // See lens.libjsonnet cache_opam for inspiration here
   //
   guard_cache_hit: {
     step(path, key='${{ github.sha}}', bump_cache=1): {

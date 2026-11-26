@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -16,8 +16,8 @@
 from setuptools import setup
 
 setup(
-    name="semgrep_pre_commit_package",
+    name="lens_pre_commit_package",
     version="1.183.0",
-    install_requires=["semgrep==1.183.0"],
+    install_requires=["lens==1.183.0"],
     packages=[],
 )

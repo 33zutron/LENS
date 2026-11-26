@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Austin Theriault
  *
- * Copyright (C) 2022-2025 Semgrep Inc.
+ * Copyright (C) 2022-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@ open Fpath_.Operators
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Small Parmap wrapper with specialized handling for semgrep targets
+(* Small Parmap wrapper with specialized handling for lens targets
  * See: Parmap_.mli for why the entrypoint functions returns a result list!
  *)
 

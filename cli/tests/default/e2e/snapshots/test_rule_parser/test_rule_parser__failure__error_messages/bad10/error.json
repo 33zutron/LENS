@@ -4,7 +4,7 @@
     {
       "code": 4,
       "level": "error",
-      "long_msg": "In semgrep YAML configuration, null values are prohibited",
+      "long_msg": "In lens YAML configuration, null values are prohibited",
       "short_msg": "null values prohibited",
       "spans": [
         {
@@ -38,7 +38,7 @@
       "code": 7,
       "level": "error",
       "message": "invalid configuration file found (1 configs were invalid)",
-      "type": "SemgrepError"
+      "type": "LensError"
     }
   ],
   "paths": {

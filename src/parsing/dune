@@ -1,8 +1,8 @@
 ; This library should not depend on languages/ (parsing_languages/ can though).
 ; This allows to generate a smaller engine.js file.
 (library
- (public_name semgrep.parsing)
- (name semgrep_parsing)
+ (public_name lens.parsing)
+ (name lens_parsing)
  (wrapped false)
  (libraries
    base
@@ -25,11 +25,11 @@
    parser_json.menhir parser_json.ast_generic
    fast_json ; experimental lighter JSON parser with locations
 
-   semgrep_core
-   semgrep.prefiltering
-   semgrep.typing
-   pfff_lang_GENERIC_analyze ; =~ semgrep_analyzing ; Constant_propagation in Parse_target.ml
-   semgrep_targeting ; for Input_to_core.atd
+   lens_core
+   lens.prefiltering
+   lens.typing
+   pfff_lang_GENERIC_analyze ; =~ lens_analyzing ; Constant_propagation in Parse_target.ml
+   lens_targeting ; for Input_to_core.atd
    parallelism
 
    ; has an xxx.ast, xxx.menhir, xxx.tree_sitter, xxx.generic

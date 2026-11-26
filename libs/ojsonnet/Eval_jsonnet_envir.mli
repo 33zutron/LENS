@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2024 Semgrep Inc.
+   Copyright (c) 2022-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
 *)
 (* TODO: at some point we probably would prefer an AST_generic.program
  * which could track the origin of tokens through import, eval, and
- * manifestation and that we could pass to osemgrep to evaluate the rules.
+ * manifestation and that we could pass to olens to evaluate the rules.
  *)
 
 (* entry point; may raise Eval_jsonnet_common.Error *)

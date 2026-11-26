@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,7 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 
 val autofix : bool -> Out.edit list -> int * (int * string list) list
 val format : Out.output_format -> Out.format_context -> Out.cli_output -> string

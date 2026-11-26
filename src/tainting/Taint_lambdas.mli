@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024 Semgrep Inc.
+   Copyright (c) 2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -44,7 +44,7 @@ val find_lambdas_to_analyze_in_node :
       - If the node declares a lambda, and this lambda is not used anywhere.
       - Any other lambda being referenced/used in the node.
 
-    For Semgrep to be able to instantiate a lambda at use site, the lambda
+    For Lens to be able to instantiate a lambda at use site, the lambda
     must have a unique name. In any other case we instante the lambdas at
     declaration site.
  *)

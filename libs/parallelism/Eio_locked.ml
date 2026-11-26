@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -20,7 +20,7 @@ let create data = { data; mutex = Eio.Mutex.create () }
  * I (brandon) thought a little bit about whether or not `read` should
  * be allowed to be unprotected, but was told this was unsafe, per this
  * discussion:
- * https://github.com/semgrep/semgrep-proprietary/pull/4090#discussion_r2164529565
+ * https://github.com/lens/lens-proprietary/pull/4090#discussion_r2164529565
  *)
 
 let with_lock t f =

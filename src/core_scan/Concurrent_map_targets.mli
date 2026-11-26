@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -16,6 +16,6 @@ val map_targets :
   (Target.t -> 'a) ->
   Target.t list ->
   ('a, Target.t * exn) result list
-(** [map_targets] basically wraps {!Concurrent.map} but with some extra Semgrep
+(** [map_targets] basically wraps {!Concurrent.map} but with some extra Lens
     specific tweaks, such as hacks to get telemetry to work across domain
     spawns *)

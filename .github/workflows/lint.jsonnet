@@ -1,18 +1,18 @@
 // The main goal of this workflow is to run pre-commit on every pull requests.
-// Note that we run Semgrep inside pre-commit, so this is also dogfooding
-// and testing how semgrep interact with pre-commit.
+// Note that we run Lens inside pre-commit, so this is also dogfooding
+// and testing how lens interact with pre-commit.
 // We also run some Github Actions (GHA) lint checks.
 
 local actions = import 'libs/actions.libsonnet';
 local gha = import 'libs/gha.libsonnet';
-local semgrep = import 'libs/semgrep.libsonnet';
+local lens = import 'libs/lens.libsonnet';
 local uses = import 'libs/uses.libsonnet';
 // ----------------------------------------------------------------------------
 // The jobs
 // ----------------------------------------------------------------------------
 
 // Note that in a CI context pre-commit runs the hooks with the '--all'
-// flag, so semgrep for example is passed all the files in the repository,
+// flag, so lens for example is passed all the files in the repository,
 // not just the one modifed in the PR (as it is the case when it's ran from
 // git hooks locally). This is why sometimes pre-commit passes locally but
 // fails in CI, for the same PR.
@@ -22,7 +22,7 @@ local uses = import 'libs/uses.libsonnet';
 // pre-commit config. You have been warned!!
 local pre_commit_steps() = [
   actions.setup_python_step(cache=true),
-  semgrep.opam_setup(cache_profile='format'),
+  lens.opam_setup(cache_profile='format'),
   { run: 'opam install -y ocamlformat.0.29.0' },
   {
     name: 'Cache pre-commit hook envs',
@@ -49,7 +49,7 @@ local pre_commit_steps() = [
   },
 ];
 
-// Running pre-commit in CI. See semgrep/.pre-commit-config.yaml for
+// Running pre-commit in CI. See lens/.pre-commit-config.yaml for
 // our pre-commit configuration.
 local pre_commit_job(checkout_steps) = {
   'runs-on': 'ubuntu-latest',
@@ -57,7 +57,7 @@ local pre_commit_job(checkout_steps) = {
     checkout_steps + pre_commit_steps(),
 };
 
-// TODO: we should port those GHA checks to semgrep and add them in semgrep-rules
+// TODO: we should port those GHA checks to lens and add them in lens-rules
 local action_lint_job(checkout_steps, dir='.github/workflows') = {
   'runs-on': 'ubuntu-latest',
   steps: checkout_steps + [
@@ -112,7 +112,7 @@ local jsonnet_gha_job(checkout_steps, dir='.github/workflows') = {
     'jsonnet-gha': jsonnet_gha_job(actions.checkout()),
   },
   export:: {
-    // reused in semgrep-pro
+    // reused in lens-pro
     'github-actions': action_lint_job,
     'jsonnet-gha': jsonnet_gha_job,
     'pre-commit': pre_commit_job,

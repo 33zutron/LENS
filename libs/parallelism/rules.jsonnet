@@ -15,7 +15,7 @@
 
         // Tools won't run in parallel.
         'lsp_legacy/*',
-        'osemgrep/*',
+        'olens/*',
         'tools/*',
       ] },
       languages: ['ocaml'],

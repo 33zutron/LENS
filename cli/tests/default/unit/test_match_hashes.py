@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2025 Semgrep Inc.
+# Copyright (c) 2023-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,17 +15,17 @@ from textwrap import dedent
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.config_resolver import parse_config_string
-from semgrep.dependency_aware_rule import SCA_FINDING_SCHEMA
-from semgrep.rule import Rule
-from semgrep.rule_match import RuleMatch
-from semgrep.rule_match import RuleMatches
-from semgrep.semgrep_interfaces.semgrep_output_v1 import DependencyMatch
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import FoundDependency
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Pypi
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Transitive
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.config_resolver import parse_config_string
+from lens.dependency_aware_rule import SCA_FINDING_SCHEMA
+from lens.rule import Rule
+from lens.rule_match import RuleMatch
+from lens.rule_match import RuleMatches
+from lens.lens_interfaces.lens_output_v1 import DependencyMatch
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import FoundDependency
+from lens.lens_interfaces.lens_output_v1 import Pypi
+from lens.lens_interfaces.lens_output_v1 import Transitive
 
 
 @pytest.fixture
@@ -279,22 +279,22 @@ def test_same_code_hash_for_previous_scan_finding(mocker, foo_contents):
     """
     mocker.patch.object(Path, "open", mocker.mock_open(read_data=foo_contents))
     curr_scan_metadata = {
-        "semgrep.dev": {
+        "lens.dev": {
             "rule": {
                 "rule_id": "rule_id",
                 "version_id": "version1",
-                "url": "https://semgrep.dev/r/python.eqeq-five",
+                "url": "https://lens.dev/r/python.eqeq-five",
                 "shortlink": "https://sg.run/abcd",
             },
             "src": "unchanged",
         }
     }
     prev_scan_metadata = {
-        "semgrep.dev": {
+        "lens.dev": {
             "rule": {
                 "rule_id": "rule_idversion1",
                 "version_id": "version1",
-                "url": "https://semgrep.dev/r/python.eqeq-five",
+                "url": "https://lens.dev/r/python.eqeq-five",
                 "shortlink": "https://sg.run/abcd",
                 "rule_name": "rule_id",
             },

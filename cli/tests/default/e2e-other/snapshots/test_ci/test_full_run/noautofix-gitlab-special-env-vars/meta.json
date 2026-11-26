@@ -4,7 +4,7 @@
     "repository": "project_name/project_name",
     "repo_url": "https://example.com/gitlab-org/gitlab-foss",
     "branch": "some/branch-name",
-    "commit": "sanitized semgrep commit",
+    "commit": "sanitized lens commit",
     "commit_title": "Some other commit/ message",
     "commit_author_email": "test_environment@test.r2c.dev",
     "commit_author_name": "Environment Test",

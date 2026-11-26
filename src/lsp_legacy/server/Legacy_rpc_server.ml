@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) Semgrep, Inc.
+ * Copyright (C) Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -20,13 +20,13 @@
 (* Handle server state (uninitialized, running, stopped etc.) *)
 (*  -> Read STDIN *)
 (*  -> parse message to notification or request *)
-(*  -> Let Semgrep LS handle notif/req *)
-(*  -> If request, get response from Semgrep LS *)
+(*  -> Let Lens LS handle notif/req *)
+(*  -> If request, get response from Lens LS *)
 (*  -> Try and complete any LWT promises *)
 (*  -> Respond if needed *)
 (*  -> loop *)
 (*  *)
-(* The hope here is that anything that isn't Semgrep *)
+(* The hope here is that anything that isn't Lens *)
 (* specific, but Language Server related, goes in here. The other goal *)
 (* is that this contains as much of the Lwt code possible *)
 
@@ -225,7 +225,7 @@ let start ~(handler : handler) server =
               (* Lwt.async is ok ONLY here, because we don't actually care to
                  wait for the current promise holding a possible reply to
                  resolve before processing more messages. For example, the reply
-                 may run a semgrep scan (in a separate thread), before sending
+                 may run a lens scan (in a separate thread), before sending
                  the diagnostic results and then resolving. Anything that needs
                  to mutate the server AFTER sending a response/entering an LWT
                  promise can mutate the session cache which is protected by a

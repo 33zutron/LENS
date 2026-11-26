@@ -1,6 +1,6 @@
 (* Martin Jambon
  *
- * Copyright (C) 2023 Semgrep
+ * Copyright (C) 2023 Lens
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -237,7 +237,7 @@ let run matcher path =
   in
   (* Uncomment to print something in tests when debugging.
      Why not have a permanent log instruction:
-     1. This logs a lot for any basic semgrep operation so it's useless
+     1. This logs a lot for any basic lens operation so it's useless
         outside of unit tests.
      2. It's still too much for some tests e.g. in Unit_gitignore.
      3. The Logs_ module is broken at the moment

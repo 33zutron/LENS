@@ -1,14 +1,14 @@
 // Builds the ocaml-tree-sitter code generator and runs its unit tests
-// Uses the Semgrep root ots-test-ocaml and ots-test-python targets.
-// Reusable from semgrep-proprietary.
+// Uses the Lens root ots-test-ocaml and ots-test-python targets.
+// Reusable from lens-proprietary.
 //
 // Python tests stay in this workflow (not main build-test): they need
 // per-pin tree-sitter CLIs under
-// core/tree-sitter-<v>/ beyond ordinary Semgrep `make setup`. See the
+// core/tree-sitter-<v>/ beyond ordinary Lens `make setup`. See the
 // README "Python / ABI tests" section.
 
 local actions = import 'libs/actions.libsonnet';
-local semgrep = import 'libs/semgrep.libsonnet';
+local lens = import 'libs/lens.libsonnet';
 local lib = import 'ocaml-tree-sitter.libsonnet';
 
 // ----------------------------------------------------------------------------
@@ -40,8 +40,8 @@ local build_job(ots_dir) =
     steps: actions.checkout() + [
              // Same compiler and pinned opam repository; separate grammar cache.
              ots.setup_ocaml_step,
-             // Same uv + Python helper as main Semgrep CI (python_version 3.12).
-             actions.setup_python_step(semgrep.python_version),
+             // Same uv + Python helper as main Lens CI (python_version 3.12).
+             actions.setup_python_step(lens.python_version),
              // tree-sitter's CLI is built from source with cargo.
              // libclang is needed for its Rust bindgen step.
              // m4, pkg-config and cargo are built-into the image
@@ -84,7 +84,7 @@ local build_job(ots_dir) =
 // The Workflow
 // ----------------------------------------------------------------------------
 
-local ots_dir = 'libs/ocaml-tree-sitter-semgrep';
+local ots_dir = 'libs/ocaml-tree-sitter-lens';
 
 {
   name: 'Build and test ocaml tree sitter core',
@@ -99,7 +99,7 @@ local ots_dir = 'libs/ocaml-tree-sitter-semgrep';
     build: build_job(ots_dir),
   },
   export:: {
-    // reused in semgrep-pro
+    // reused in lens-pro
     build: build_job,
     trigger_paths: trigger_paths,
     workflow_paths: workflow_paths,

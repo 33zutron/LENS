@@ -364,7 +364,7 @@ rules:
     pattern: rc4.NewCipher(...)
   - id: go.lang.security.audit.net.dynamic-httptrace-clienttrace.dynamic-httptrace-clienttrace
     message: |
-      Detected a potentially dynamic ClientTrace. This occurred because semgrep could not
+      Detected a potentially dynamic ClientTrace. This occurred because lens could not
       find a static definition for '$TRACE'. Dynamic ClientTraces are dangerous because
       they deserialize function code to run when certain Request events occur, which could lead
       to code being run without your knowledge. Ensure that your ClientTrace is statically defined.
@@ -372,7 +372,7 @@ rules:
       cwe: "CWE-913: Improper Control of Dynamically-Managed Code Resources"
       owasp: "A8: Insecure Deserialization"
       references:
-        - https://github.com/returntocorp/semgrep-rules/issues/518
+        - https://github.com/returntocorp/lens-rules/issues/518
     patterns:
       - pattern-not-inside: |
           ...

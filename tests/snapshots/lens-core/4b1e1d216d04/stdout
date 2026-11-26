@@ -1,0 +1,22 @@
+Test name: with git > basic lensignore
+--- Files added before 'git add' ---
+.lensignore
+a
+b
+--- begin input files ---
+.lensignore
+a
+b
+--- end input files ---
+Initialized empty Git repository in <TMP>/<MASKED>/.git/
+[main (root-commit) <MASKED>] Add files
+ 3 files changed, 1 insertion(+)
+ create mode 100644 .lensignore
+ create mode 100644 a
+ create mode 100644 b
+--- Errors ---
+--- Selected targets ---
+selected .lensignore
+selected a
+--- Skipped targets ---
+ignored b [Lens_output_v1_t.Lensignore_patterns_match]

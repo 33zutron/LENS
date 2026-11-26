@@ -3,7 +3,7 @@
 Python **syntactic** language features (new grammar the parser must accept) and
 the parsing test that covers each. Features without a test show `UNTESTED`.
 
-For matching these features as Semgrep **patterns** (rather than just parsing
+For matching these features as Lens **patterns** (rather than just parsing
 them), see the companion `tests/patterns/python/LANGUAGE_FEATURE_COVERAGE.md`.
 
 Feature names link to the [Python language reference](https://docs.python.org/3/reference/)
@@ -48,11 +48,11 @@ superseded by the language reference.
 
 ## Other parsing tests in this directory
 
-Parsing tests that target parser regressions or Semgrep pattern-syntax parsing
+Parsing tests that target parser regressions or Lens pattern-syntax parsing
 rather than a specific Python version's feature:
 
 | File | Purpose |
 |------|---------|
 | `docstrings.py` | Parsing quotes inside triple-quoted docstrings |
 | `re.py` | Regression for parsing a `re.match` call with `\|` in a string |
-| `ellipsis_in_call_chain.py` | Parsing the Semgrep `...` ellipsis in dot-access chain patterns (gh-11545) |
+| `ellipsis_in_call_chain.py` | Parsing the Lens `...` ellipsis in dot-access chain patterns (gh-11545) |

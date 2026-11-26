@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -32,8 +32,8 @@
 
     See also the Plugin module any optional implementation that once loaded
     cannot be removed or overridden. The Plugin module is suitable for
-    semgrep-proprietary extensions that are meant to be used unconditionally
-    by the open-source semgrep engine.
+    lens-proprietary extensions that are meant to be used unconditionally
+    by the open-source lens engine.
 *)
 
 type 'a t

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -16,7 +16,7 @@ module R = Rule
 module MR = Mini_rule
 module PM = Core_match
 module E = Core_error
-module Out = Semgrep_output_v1_t
+module Out = Lens_output_v1_t
 module TCM = Test_compare_matches
 
 let t = Testo.create
@@ -26,7 +26,7 @@ let t = Testo.create
 (*****************************************************************************)
 (* Tests exercising the engine.
  *
- * Some of those tests exercise just the semgrep patterns part (with the
+ * Some of those tests exercise just the lens patterns part (with the
  * .sgrep), and not the whole rule part (with the .yaml). We could move
  * them in matching/Unit_matcher.ml but matching/ does not depend
  * on parsing/, so it's simpler to put those tests here.
@@ -46,7 +46,7 @@ type fix_type =
 (*****************************************************************************)
 
 (* TODO: move these to the "main" for the test suite. *)
-(* ran from the root of the semgrep repository *)
+(* ran from the root of the lens repository *)
 let tests_path = Fpath.v "tests"
 let tests_path_patterns = tests_path / "patterns"
 let tests_path_autofix = tests_path / "autofix"
@@ -129,14 +129,14 @@ let pack_tests_for_lang
 (* Maturity tests *)
 (*****************************************************************************)
 
-(* coupling: https://semgrep.dev/docs/language-support/
+(* coupling: https://lens.dev/docs/language-support/
  * See also https://r2c.quip.com/FOAuA4ThzULc/How-to-promote-a-language-
  *)
 type maturity_level = GA | Beta | Experimental
 [@@deriving show { with_path = false }]
 
 (* coupling:
- * https://semgrep.dev/docs/language-support/#maturity-definitions
+ * https://lens.dev/docs/language-support/#maturity-definitions
  * ../../scripts/generate-cheatsheet.py
  *)
 let experimental_features =
@@ -290,7 +290,7 @@ let make_maturity_tests ?(lang_exn = language_exceptions) lang dir ext maturity
                     (show_maturity_level maturity)))))
 
 let maturity_tests () =
-  (* coupling: https://semgrep.dev/docs/language-support/ *)
+  (* coupling: https://lens.dev/docs/language-support/ *)
   Testo.categorize_suites "Maturity levels"
     [
       (* GA *)
@@ -338,7 +338,7 @@ let maturity_tests () =
 (*****************************************************************************)
 
 let match_pattern ~lang ~hook ~file ~pattern ~fix =
-  (* TODO? enable the "semgrep.parsing" src level maybe here *)
+  (* TODO? enable the "lens.parsing" src level maybe here *)
   let pattern =
     match Parse_pattern.parse_pattern lang pattern with
     | Ok pat -> pat
@@ -402,7 +402,7 @@ let regression_tests_for_lang ~polyglot_pattern_path files lang =
           in
           let pattern = UFile.read_file sgrep_file in
 
-          (* old: semgrep-core used to support user-defined
+          (* old: lens-core used to support user-defined
            * equivalences, but the feature has been now deprecated.
            *
            * (* Python == is not the same than !(==) *)
@@ -570,8 +570,8 @@ let test_irrelevant_rule_intrafile rule_file target_file =
       | Some prefilter ->
           let content = UFile.read_file target_file in
           let s =
-            Prefiltering.Semgrep_prefilter_j.string_of_formula
-              (Prefiltering.File.to_semgrep_formula prefilter)
+            Prefiltering.Lens_prefilter_j.string_of_formula
+              (Prefiltering.File.to_lens_formula prefilter)
           in
           if Prefiltering.File.check prefilter content then
             Alcotest.fail
@@ -592,7 +592,7 @@ let test_irrelevant_rule_file target_file =
       in
       test_irrelevant_rule_intrafile rules_file target_file)
 
-(* These tests test that semgrep with filter_irrelevant_rules correctly
+(* These tests test that lens with filter_irrelevant_rules correctly
    does not run files when they lack necessary strings.
 
    To test that filter_irrelevant_rules does not mistakenly filter out
@@ -858,7 +858,7 @@ let tainting_test (lang : Lang.t) (rules_file : Fpath.t) (file : Fpath.t) =
         E.
           {
             rule_id = Some m.rule_id.id;
-            typ = Out.SemgrepMatchFound;
+            typ = Out.LensMatchFound;
             loc = Some (fst m.range_loc);
             msg = m.rule_id.message;
             details = None;
@@ -884,7 +884,7 @@ let tainting_tests_for_lang files lang =
           tainting_test lang rules_file file))
 
 (* DEPRECATED: this is redundant because we now have 'make rules-test'
- * which calls 'osemgrep-pro test --pro tests/tainting_rules'
+ * which calls 'olens-pro test --pro tests/tainting_rules'
  *)
 let lang_tainting_tests () =
   let taint_tests_path = tests_path / "tainting_rules" in
@@ -951,7 +951,7 @@ let lang_tainting_tests () =
 (*****************************************************************************)
 
 (* DEPRECATED: this is redundant because we now have 'make rules-test'
- * which calls 'osemgrep-pro test --pro tests/rules tests/rules_v2'
+ * which calls 'olens-pro test --pro tests/rules tests/rules_v2'
  *)
 let full_rule_regression_tests =
   let path = tests_path / "rules" in
@@ -983,25 +983,25 @@ let full_rule_regression_tests =
  * rules that can work for multiple languages (like we have
  * for tests/patterns/POLYGLOT/
  * DEPRECATED: this is redundant because we now have 'make rules-test'
- * which calls 'osemgrep-pro test --pro tests/taint_maturity'
+ * which calls 'olens-pro test --pro tests/taint_maturity'
  *)
 let full_rule_taint_maturity_tests =
   let path = tests_path / "taint_maturity" in
   Testo.categorize "taint maturity" (Test_engine.make_tests [ path ])
 
 (* quite similar to full_rule_regression_tests but prefer to pack_tests
- * with "semgrep-rules repo Java", so one can just run the Java tests
+ * with "lens-rules repo Java", so one can just run the Java tests
  * with ./test Java
- * alt: do like in semgrep-pro and call the toplevel engine
+ * alt: do like in lens-pro and call the toplevel engine
  * in a Unit_runner.ml instead of using Test_engine.make_tests
- * TODO: get rid of this and rely on `osemgrep test` code instead of
+ * TODO: get rid of this and rely on `olens test` code instead of
  * Test_engine.make_tests as they differ sligltly and we're using
- * osemgrep test in the semgrep-rules repo CI, not -test_rules.
+ * olens test in the lens-rules repo CI, not -test_rules.
  * DEPRECATED: this is redundant because we now have 'make rules-test'
- * which calls 'osemgrep-pro test --pro tests/semgrep-rules'
+ * which calls 'olens-pro test --pro tests/lens-rules'
  *)
-let semgrep_rules_repo_tests : Testo.t list =
-  let path = tests_path / "semgrep-rules" in
+let lens_rules_repo_tests : Testo.t list =
+  let path = tests_path / "lens-rules" in
   let expectations_file = tests_path / "rule-expectations.json" in
   let expectations =
     if Sys_.file_exists (Fpath.to_string expectations_file) then
@@ -1025,7 +1025,7 @@ let semgrep_rules_repo_tests : Testo.t list =
                        we're using a languages: [bash,c, ..., python] and a
                        bidy.py target file which cause Test_engine.make_test to
                        parse bidy.py with a bash parser (the first one in the
-                       list) which then cause a parse error. (py|o)semgrep test
+                       list) which then cause a parse error. (py|o)lens test
                        do not have the issue because they use the extension of
                        the file to decide which language to use instead of what
                        is in the rule
@@ -1040,29 +1040,29 @@ let semgrep_rules_repo_tests : Testo.t list =
                     && not @@ Fpath.Set.mem s @@ Fpath.Set.of_list
                        @@ List.map Fpath.v
                        @@ [
-                            "tests/semgrep-rules/apex/lang/best-practice/ncino/tests/UseAssertClass.yaml";
-                            "tests/semgrep-rules/apex/lang/performance/ncino/operationsInLoops/AvoidNativeDmlInLoops.yaml";
-                            "tests/semgrep-rules/apex/lang/performance/ncino/operationsInLoops/AvoidSoqlInLoops.yaml";
-                            "tests/semgrep-rules/apex/lang/performance/ncino/operationsInLoops/AvoidSoslInLoops.yaml";
-                            "tests/semgrep-rules/apex/lang/performance/ncino/operationsInLoops/AvoidOperationsWithLimitsInLoops.yaml";
-                            "tests/semgrep-rules/apex/lang/security/ncino/dml/ApexCSRFStaticConstructor.yaml";
+                            "tests/lens-rules/apex/lang/best-practice/ncino/tests/UseAssertClass.yaml";
+                            "tests/lens-rules/apex/lang/performance/ncino/operationsInLoops/AvoidNativeDmlInLoops.yaml";
+                            "tests/lens-rules/apex/lang/performance/ncino/operationsInLoops/AvoidSoqlInLoops.yaml";
+                            "tests/lens-rules/apex/lang/performance/ncino/operationsInLoops/AvoidSoslInLoops.yaml";
+                            "tests/lens-rules/apex/lang/performance/ncino/operationsInLoops/AvoidOperationsWithLimitsInLoops.yaml";
+                            "tests/lens-rules/apex/lang/security/ncino/dml/ApexCSRFStaticConstructor.yaml";
                           ]
                  (* ?? *)
-                 || s =/~ ".*/yaml/semgrep/consistency/.*" ->
+                 || s =/~ ".*/yaml/lens/consistency/.*" ->
               Some "XFAIL"
           (* not rule files *)
           | s when s =/~ ".*.test.yml" -> None
           (* not languages tests *)
-          | s when s =/~ ".*/semgrep-rules/stats/" -> None
+          | s when s =/~ ".*/lens-rules/stats/" -> None
           (* ok let's keep all the other one with the appropriate group name *)
-          | s when s =/~ ".*/semgrep-rules/\\([a-zA-Z]+\\)/.*" ->
+          | s when s =/~ ".*/lens-rules/\\([a-zA-Z]+\\)/.*" ->
               (* This is confusing because it looks like a programming
                     language from Lang.t but there's no guarantee that
                     it's a valid one.
                     TODO: don't capitalize? leave a slash? *)
               let s = Common.matched1 test.name in
               Some (String.capitalize_ascii s)
-          (* this skips the semgrep-rules/.github entries *)
+          (* this skips the lens-rules/.github entries *)
           | _ ->
               Logs.debug (fun m -> m "skipping %s" test.name);
               None
@@ -1071,7 +1071,7 @@ let semgrep_rules_repo_tests : Testo.t list =
     |> Assoc.group_assoc_bykey_eff
   in
 
-  Testo.categorize_suites "semgrep-rules repo"
+  Testo.categorize_suites "lens-rules repo"
     (groups
     |> List.map (fun (group, tests) ->
         tests
@@ -1083,7 +1083,7 @@ let semgrep_rules_repo_tests : Testo.t list =
                 Testo.update test
                   ~expected_outcome:
                     (Should_fail
-                       "excluded semgrep-rule (see OCaml source file for \
+                       "excluded lens-rule (see OCaml source file for \
                         details)")
             | _ -> test)
         |> Testo.categorize group))
@@ -1182,6 +1182,6 @@ let tests =
       maturity_tests ();
       full_rule_taint_maturity_tests;
       full_rule_regression_tests;
-      semgrep_rules_repo_tests;
+      lens_rules_repo_tests;
       external_expectations_tests;
     ]

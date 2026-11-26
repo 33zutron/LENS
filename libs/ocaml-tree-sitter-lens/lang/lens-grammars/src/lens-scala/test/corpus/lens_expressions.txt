@@ -1,0 +1,23 @@
+========================
+Test1
+========================
+
+__LENS_EXPRESSION $X
+
+---
+
+(compilation_unit
+  (lens_expression
+    (lens_metavariable)))
+
+========================
+Test2
+========================
+
+__LENS_EXPRESSION ...
+
+---
+
+(compilation_unit
+  (lens_expression
+    (lens_ellipsis)))

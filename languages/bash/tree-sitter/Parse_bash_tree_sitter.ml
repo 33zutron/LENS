@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -37,14 +37,14 @@ let str = H.str
    just a metavariable. *)
 let _fresh_metavariable_name =
   (* TODO: this is a false positive in the rule.  Why? *)
-  (* nosemgrep: no-ref-declarations-at-top-scope *)
+  (* nolens: no-ref-declarations-at-top-scope *)
   let counter = ref 0 in
   let get () =
     let n =
       incr counter;
       !counter
     in
-    spf "$__SEMGREP_METAVAR%i" n
+    spf "$__LENS_METAVAR%i" n
   in
   get
 
@@ -343,7 +343,7 @@ let simple_variable_name (env : env) (x : CST.simple_variable_name) :
     variable_name =
   match x with
   | `Semg_meta tok ->
-      (* pattern \$[A-Z_][A-Z_0-9]* *) Var_semgrep_metavar (str env tok)
+      (* pattern \$[A-Z_][A-Z_0-9]* *) Var_lens_metavar (str env tok)
   | `Pat_42e353e tok -> (* pattern \w+ *) Simple_variable_name (str env tok)
 
 let special_variable_name (env : env) (x : CST.special_variable_name) :
@@ -362,7 +362,7 @@ let special_variable_name (env : env) (x : CST.special_variable_name) :
 
 let word (env : env) (tok : CST.word) : expression =
   match str env tok with
-  | "...", tok when env.extra =*= Pattern -> Expr_semgrep_ellipsis tok
+  | "...", tok when env.extra =*= Pattern -> Expr_lens_ellipsis tok
   | x -> Word x
 
 (* An arithmetic operator, kept as its source text e.g. "+" or "<<=" *)
@@ -386,7 +386,7 @@ let split_dollar_bquot (env : env) (tok : ts_tok) : string wrap * tok =
    function identifier. *)
 let extended_word (env : env) (x : CST.extended_word) =
   match x with
-  | `Semg_meta tok -> Var_semgrep_metavar (str env tok)
+  | `Semg_meta tok -> Var_lens_metavar (str env tok)
   | `Word tok -> Simple_variable_name (str env tok)
 
 (* '{1..10}' is expanded at run time into words; we keep it as one word. *)
@@ -406,7 +406,7 @@ let simple_expansion (env : env) (x : CST.simple_expansion) : string_fragment =
       let name_s, name_tok = (* "_" *) str env tok in
       let mv_s = "$" ^ name_s in
       let mv_tok = Tok.combine_toks dollar_tok [ name_tok ] in
-      Frag_semgrep_metavar (mv_s, mv_tok)
+      Frag_lens_metavar (mv_s, mv_tok)
   | `DOLLAR_choice_orig_simple_var_name (v1, v2) -> (
       let dollar_tok =
         token env v1
@@ -431,10 +431,10 @@ let simple_expansion (env : env) (x : CST.simple_expansion) : string_fragment =
             when AST_generic.is_metavar_name ("$" ^ name_s) ->
               let mv_s = "$" ^ name_s in
               let mv_tok = Tok.combine_toks dollar_tok [ name_tok ] in
-              Frag_semgrep_metavar (mv_s, mv_tok)
+              Frag_lens_metavar (mv_s, mv_tok)
           | _ -> Expansion (loc, Simple_expansion (loc, var_name)))
       | Program -> Expansion (loc, Simple_expansion (loc, var_name)))
-  | `Semg_named_ellips tok -> Frag_semgrep_named_ellipsis (str env tok)
+  | `Semg_named_ellips tok -> Frag_lens_named_ellipsis (str env tok)
 
 let simple_expansion_expr (env : env) (x : CST.simple_expansion) : expression =
   let frag = simple_expansion env x in
@@ -943,7 +943,7 @@ and arithmetic_literal (env : env) (x : CST.arithmetic_literal) :
     arithmetic_expression =
   match x with
   | `DOTDOTDOT tok -> A_operand (word env tok)
-  | `Semg_deep_exp x -> A_operand (semgrep_deep_expression env x)
+  | `Semg_deep_exp x -> A_operand (lens_deep_expression env x)
   | `Num x -> A_operand (number env x)
   | `Subs x -> array_cell env x
   | `Simple_expa x -> A_operand (simple_expansion_expr env x)
@@ -969,7 +969,7 @@ and c_expression (env : env) (x : CST.c_expression) : arithmetic_expression =
       let mv, eq_tok = split_metavar_op env v1 ~op_len:1 in
       let lhs =
         match env.extra with
-        | Pattern -> Expr_semgrep_metavar mv
+        | Pattern -> Expr_lens_metavar mv
         | Program -> Word mv
       in
       A_binary
@@ -1258,17 +1258,17 @@ and number (env : env) (x : CST.number) : expression =
       let el = [ base; digits ] in
       Concatenation (Tok_range.of_list AST_bash_loc.expression_loc el, el)
 
-and semgrep_deep_expression (env : env)
-    ((v1, v2, v3) : CST.semgrep_deep_expression) : expression =
+and lens_deep_expression (env : env)
+    ((v1, v2, v3) : CST.lens_deep_expression) : expression =
   let open_ = (* "<..." *) token env v1 in
   let e = literal env v2 in
   let close = (* "...>" *) token env v3 in
   let loc = (open_, close) in
-  Expr_semgrep_deep_ellipsis (loc, (open_, e, close))
+  Expr_lens_deep_ellipsis (loc, (open_, e, close))
 
 and primary_expression (env : env) (x : CST.primary_expression) : expression =
   match x with
-  | `Semg_deep_exp x -> semgrep_deep_expression env x
+  | `Semg_deep_exp x -> lens_deep_expression env x
   | `DOTDOTDOT tok -> word env tok
   | `Choice_word x -> (
       match x with

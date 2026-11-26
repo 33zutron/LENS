@@ -1,16 +1,16 @@
-# Semgrep OSS Codebase Overview
+# Lens OSS Codebase Overview
 
-This is the home of Semgrep CE (Community Edition).
-Semgrep is a fast static analysis tool that searches code,
+This is the home of Lens CE (Community Edition).
+Lens is a fast static analysis tool that searches code,
 finds bugs, and enforces secure guardrails and coding standards.
 
 ## Architecture
 
-Semgrep is divided in two major components:
-1. CLI: a Python command-line interface that handles orchestration, communication with the Semgrep AppSec Platform, and some analysis (notably for Supply Chain). Python code is incrementally being migrated to OCaml via RPC.
-2. core: the OCaml engine that handles parsing, pattern matching, and most analysis (`semgrep-core`).
+Lens is divided in two major components:
+1. CLI: a Python command-line interface that handles orchestration, communication with the Lens AppSec Platform, and some analysis (notably for Supply Chain). Python code is incrementally being migrated to OCaml via RPC.
+2. core: the OCaml engine that handles parsing, pattern matching, and most analysis (`lens-core`).
 
-Semgrep core follows a multi-stage pipeline:
+Lens core follows a multi-stage pipeline:
 1. **Parsing** → Language-specific parsers convert source code to Generic AST
 2. **Analysis** → AST is analyzed and optionally converted to IL (Intermediate Language)
 3. **Matching** → Pattern matching against rules
@@ -23,7 +23,7 @@ Semgrep core follows a multi-stage pipeline:
 
 ### Python-to-OCaml Migration Strategy
 
-The `osemgrep` direct entry point is **deprecated**. The primary entry point for Semgrep is the Python CLI (`semgrep`), which calls into OCaml via RPC. Do not use or rely on `osemgrep` directly.
+The `olens` direct entry point is **deprecated**. The primary entry point for Lens is the Python CLI (`lens`), which calls into OCaml via RPC. Do not use or rely on `olens` directly.
 
 Functionality is incrementally migrated from Python to OCaml via the RPC library (`src/rpc/`). This allows individual components to be ported in isolation without requiring a full rewrite. When migrating a component, ensure a complete project plan is in place that includes deletion of the existing Python code.
 
@@ -82,20 +82,20 @@ Before submitting:
 - Flag any security implications to the security team
 - Ensure no sensitive information is logged at INFO/WARNING/ERROR levels
 
-See [Contributing docs](https://semgrep.dev/docs/contributing/contributing-code/) for detailed guidelines.
+See [Contributing docs](https://lens.dev/docs/contributing/contributing-code/) for detailed guidelines.
 
 ## Development
 
 ### Grammar updates
 
-See [`libs/ocaml-tree-sitter-semgrep/doc/add-or-update-grammar.md`](libs/ocaml-tree-sitter-semgrep/doc/add-or-update-grammar.md):
-edit `libs/ocaml-tree-sitter-semgrep/lang/upstream-grammars.json`, then
+See [`libs/ocaml-tree-sitter-lens/doc/add-or-update-grammar.md`](libs/ocaml-tree-sitter-lens/doc/add-or-update-grammar.md):
+edit `libs/ocaml-tree-sitter-lens/lang/upstream-grammars.json`, then
 `make test-grammar-<name>` and `make regen-grammar-<dest>` from the repo root.
 
 ### Common Commands
 
 **Building:**
-- `make core` - Fast build of semgrep-core (use during active development)
+- `make core` - Fast build of lens-core (use during active development)
 - `make all` - Full build including Python CLI setup
 
 **Testing:**
@@ -120,12 +120,12 @@ For all changes:
 ### Tracing and structured execution logs
 
 - Use OpenTelemetry spans for diagnostic operation timing, parent/child relationships, and failure status. Preserve existing span names and attributes used by telemetry consumers; do not rename spans to supply user-facing messages.
-- Use `semgrep.structured_logging.log` (structlog) for explicit, user-facing scan events and typed metadata: scan configuration, progress, rule and dependency breakdowns, findings summaries, skipped targets, warnings, and outcomes. Span lifecycle records alone do not provide this coverage.
+- Use `lens.structured_logging.log` (structlog) for explicit, user-facing scan events and typed metadata: scan configuration, progress, rule and dependency breakdowns, findings summaries, skipped targets, warnings, and outcomes. Span lifecycle records alone do not provide this coverage.
 - Author meaningful messages at the point where the scan behavior is known. Do not generate user-facing messages from function names, internal span names, or terminal formatting, and do not add a separate event code alongside the message.
 - Use lowercase authored messages and dotted attribute keys; preserve original case in paths, rule IDs, and diagnostic text. Pass the message first and bind shared attributes with native structlog APIs:
 
   ```python
-  from semgrep.structured_logging import log
+  from lens.structured_logging import log
 
   scan_log = log.bind(**{"scan.id": scan_id})
   scan_log.info("uploading scan results")
@@ -133,7 +133,7 @@ For all changes:
 
 - Choose `info`, `warning`, or `error` for the event's meaning. A non-error span status alone does not establish scan success or distinguish warnings.
 - Trace/span IDs may correlate explicit log records with diagnostic spans; correlation must not replace the messages or make structured logging depend on tracing being enabled, sampled, or remotely exported.
-- Keep `SEMGREP_LOG_JSON_FILE` opt-in execution logs independent of terminal text and scan-result output. Optional logging failures must not change scan behavior; use the existing logging pipeline and avoid sensitive payloads.
+- Keep `LENS_LOG_JSON_FILE` opt-in execution logs independent of terminal text and scan-result output. Optional logging failures must not change scan behavior; use the existing logging pipeline and avoid sensitive payloads.
 
 ### Development Tools
 This project uses **make** for build orchestration. **IMPORTANT: Never invoke `dune` directly for building or testing** — always use the Makefile targets above. The Makefiles handle path resolution for the monorepo layout. Direct `dune` usage is only appropriate for documentation generation:

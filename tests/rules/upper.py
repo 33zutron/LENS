@@ -1,2 +1,2 @@
 # ruleid:upper
-upper_test_var = "semgrep"
+upper_test_var = "lens"

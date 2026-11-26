@@ -1,5 +1,5 @@
-# This is mainly for testing osemgrep's sarif output vs
-# pysemgrep. Tags should be de-duplicated and if there's a cwe section
+# This is mainly for testing olens's sarif output vs
+# pylens. Tags should be de-duplicated and if there's a cwe section
 # inside metadata, the security tag is automatically inserted.
 
 rules:

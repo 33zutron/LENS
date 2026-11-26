@@ -1,0 +1,17 @@
+(library
+  (public_name lens.core_runner)
+  (name olens_core_runner)
+  (wrapped false)
+  (libraries
+
+   olens_core
+   olens_configuring
+   olens_reporting ; for scan status report
+   lens.core_scan
+  )
+ (preprocess
+   (pps
+     ppx_deriving.show
+   )
+ )
+)

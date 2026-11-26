@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2020-2025 Semgrep Inc.
+ * Copyright (C) 2020-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,20 +19,20 @@ module E = Core_error
 module ESet = Core_error.ErrorSet
 module MR = Mini_rule
 module R = Rule
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 
 (*****************************************************************************)
 (* Purpose *)
 (*****************************************************************************)
 (* A "Core" scan.
  *
- * ## pysemgrep vs semgrep-core
+ * ## pylens vs lens-core
  *
- * When invoked by `pysemgrep`, `semgrep-core` will always be passed
+ * When invoked by `pylens`, `lens-core` will always be passed
  * `-rules` and `-targets`.
  * While the `rules` file is just the collection of rules, the `targets` file
  * describes the mapping of targets to rules.
- * `semgrep-core` follows the target-to-rulemappings without validation
+ * `lens-core` follows the target-to-rulemappings without validation
  * or filtering.
  *
  * ## Performance
@@ -56,7 +56,7 @@ module Out = Semgrep_output_v1_j
  *
  * ## Memory usage
  *
- * Semgrep uses memory liberally. The main components of memory usage can
+ * Lens uses memory liberally. The main components of memory usage can
  * generally be broken down into:
  *
  * - rule parsing
@@ -110,8 +110,8 @@ module Out = Semgrep_output_v1_j
 (* Types *)
 (*****************************************************************************)
 
-(* The type of the semgrep core scan. We define it here so that
-   semgrep and semgrep-proprietary use the same definition *)
+(* The type of the lens core scan. We define it here so that
+   lens and lens-proprietary use the same definition *)
 type func = Core_scan_config.t -> Core_result.result_or_exn
 
 (* Type of the iter_targets_and_get_matches_and_exn_to_errors callback.
@@ -127,7 +127,7 @@ type func = Core_scan_config.t -> Core_result.result_or_exn
 type target_handler = Target.t -> Core_result.matches_single_file * bool
 
 (*****************************************************************************)
-(* Pysemgrep progress bar *)
+(* Pylens progress bar *)
 (*****************************************************************************)
 (* LATER: remove once osegmrep is fully done *)
 
@@ -192,7 +192,7 @@ let filter_files_with_too_many_matches_and_transform_as_timeout
           |> Assoc.group_assoc_bykey_eff
           |> List.map (fun (k, xs) -> (k, List.length xs))
           |> Assoc.sort_by_val_highfirst
-          (* nosemgrep *)
+          (* nolens *)
         in
         let offending_rules = List.length sorted_offending_rules in
         let biggest_offending_rule =
@@ -229,7 +229,7 @@ let filter_files_with_too_many_matches_and_transform_as_timeout
                      max_match_per_file)
               in
               {
-                Semgrep_output_v1_t.path = file;
+                Lens_output_v1_t.path = file;
                 reason = Too_many_matches;
                 details;
                 rule_id = Some rule_id;
@@ -239,14 +239,14 @@ let filter_files_with_too_many_matches_and_transform_as_timeout
     |> List_.split
   in
   (new_matches, new_errors, List_.flatten new_skipped)
-[@@profiling "Run_semgrep.filter_too_many_matches"] [@@trace]
+[@@profiling "Run_lens.filter_too_many_matches"] [@@trace]
 
 (*****************************************************************************)
 (* File targeting *)
 (*****************************************************************************)
 
 (* In some context, a target passed in might have disappeared, or have been
- * encoded in the wrong way in the semgrep_output_v1.atd code_target (e.g.,
+ * encoded in the wrong way in the lens_output_v1.atd code_target (e.g.,
  * filenames with special unicode bytes in it), in which case
  * Common2.filesize above would fail and crash the whole scan as the
  * raised exn is outside the iter_targets_and_get_matches_and_exn_to_errors
@@ -265,7 +265,7 @@ let filter_existing_targets (targets : Target.t list) :
             Logs.warn (fun m -> m "skipping %s which does not exist" !!path);
             Right
               {
-                Semgrep_output_v1_t.path;
+                Lens_output_v1_t.path;
                 reason = Nonexistent_file;
                 details = Some "File does not exist";
                 rule_id = None;
@@ -273,7 +273,7 @@ let filter_existing_targets (targets : Target.t list) :
         | Git_blob { sha; _ } ->
             Right
               {
-                Semgrep_output_v1_t.path = Target.internal_path target;
+                Lens_output_v1_t.path = Target.internal_path target;
                 reason = Nonexistent_file;
                 details =
                   Some
@@ -282,17 +282,17 @@ let filter_existing_targets (targets : Target.t list) :
                 rule_id = None;
               })
 
-let translate_targeting_conf_from_pysemgrep (par_conf : Parallelism_config.t)
+let translate_targeting_conf_from_pylens (par_conf : Parallelism_config.t)
     (num_jobs : int) (conf : Out.targeting_conf) : Find_targets.conf =
   {
     exclude = conf.exclude;
     include_ = conf.include_;
     max_target_bytes = conf.max_target_bytes;
     respect_gitignore = conf.respect_gitignore;
-    respect_semgrepignore_files = conf.respect_semgrepignore_files;
+    respect_lensignore_files = conf.respect_lensignore_files;
     extra_gitignore_patterns_to_exclude_git_untracked_files =
       conf.extra_gitignore_patterns_to_exclude_git_untracked_files;
-    semgrepignore_filename = conf.semgrepignore_filename;
+    lensignore_filename = conf.lensignore_filename;
     always_select_explicit_targets = conf.always_select_explicit_targets;
     explicit_targets =
       conf.explicit_targets |> List.map Fpath.v
@@ -309,7 +309,7 @@ let translate_targeting_conf_from_pysemgrep (par_conf : Parallelism_config.t)
     exclude_minified_files = conf.exclude_minified_files;
     (* coupling: the wire field is [include_binary_files] (optional, default
      * false, i.e. binaries excluded); Find_targets keeps the
-     * [exclude_binary_files] spelling, so we invert here at the pysemgrep
+     * [exclude_binary_files] spelling, so we invert here at the pylens
      * boundary. *)
     exclude_binary_files = not conf.include_binary_files;
     baseline_commit = conf.baseline_commit;
@@ -318,14 +318,14 @@ let translate_targeting_conf_from_pysemgrep (par_conf : Parallelism_config.t)
   }
 
 (*
-   Get target files from scanning roots obtained from pysemgrep.
+   Get target files from scanning roots obtained from pylens.
 *)
 let targets_of_scanning_roots ~(par_conf : Parallelism_config.t)
     ~(num_jobs : int) ({ root_paths; targeting_conf } : Out.scanning_roots) :
     Fppath.t list * Core_error.t list * Out.skipped_target list =
   let scanning_roots = List.map Scanning_root.of_fpath root_paths in
   let targeting_conf =
-    translate_targeting_conf_from_pysemgrep par_conf num_jobs targeting_conf
+    translate_targeting_conf_from_pylens par_conf num_jobs targeting_conf
   in
   let target_paths, errors, skipped =
     Find_targets.get_targets targeting_conf scanning_roots
@@ -335,7 +335,7 @@ let targets_of_scanning_roots ~(par_conf : Parallelism_config.t)
 let atd_fppath_of_fppath (x : Fppath.t) : Out.fppath =
   { fpath = x.fpath; ppath = x.ppath }
 
-let get_targets_for_pysemgrep ~(par_conf : Parallelism_config.t)
+let get_targets_for_pylens ~(par_conf : Parallelism_config.t)
     ~(num_jobs : int) (scanning_roots : Out.scanning_roots) :
     Out.target_discovery_result =
   let target_paths, errors, skipped =
@@ -346,7 +346,7 @@ let get_targets_for_pysemgrep ~(par_conf : Parallelism_config.t)
   { target_paths; errors; skipped }
 
 (* Compute the set of targets, either by reading what was passed
- * in -targets or passed by osemgrep in Targets.
+ * in -targets or passed by olens in Targets.
  *)
 let targets_of_config (config : Core_scan_config.t) (rules : Rule.t list) :
     Target.t list * Core_error.t list * Out.skipped_target list =
@@ -359,18 +359,18 @@ let targets_of_config (config : Core_scan_config.t) (rules : Rule.t list) :
         Logs.debug (fun m -> m "read targets from file: %s" !!target_file);
         match UFile.read_file target_file |> Out.targets_of_string with
         | `Scanning_roots { root_paths; targeting_conf } ->
-            (* new: use osemgrep's target discovery *)
+            (* new: use olens's target discovery *)
             let scanning_roots = List.map Scanning_root.of_fpath root_paths in
             let targeting_conf =
-              translate_targeting_conf_from_pysemgrep config.par_conf
+              translate_targeting_conf_from_pylens config.par_conf
                 (Core_scan_config.finalize_num_jobs config.num_jobs)
                 targeting_conf
             in
             (* Ideally Core_Scan.scan would not need to do file targeting
              * because all file targeting processing would be done before and
              * just call scan() with prepared Targets. However there is
-             * experimental work to move pysemgrep file targeting to OCaml
-             * and pass scanning_roots to semgrep-core, but because this
+             * experimental work to move pylens file targeting to OCaml
+             * and pass scanning_roots to lens-core, but because this
              * is experimental, let's forge it for now to avoid modifying
              * all the callers.
              *)
@@ -382,7 +382,7 @@ let targets_of_config (config : Core_scan_config.t) (rules : Rule.t list) :
             in
             (targets, errors, skipped)
         | `Targets targets ->
-            (* legacy: receive discovered target paths from pysemgrep *)
+            (* legacy: receive discovered target paths from pylens *)
             targets
             |> List.map Target.target_of_target
             |> filter_existing_targets |> no_error)
@@ -744,8 +744,8 @@ let iter_targets_and_get_matches_and_exn_to_errors (config : Core_scan_config.t)
               ~mem_limit_mb:config.max_memory_mb (fun () ->
                 (* we used to call Time_limit.set_timeout() here, but
                  * this is now done in Match_rules.check() because we
-                 * now timeout per rule, not per file since pysemgrep
-                 * passed all the rules to semgrep-core.
+                 * now timeout per rule, not per file since pylens
+                 * passed all the rules to lens-core.
                  *)
                 let res, was_scanned = handle_target target in
                 (* old: This was to test -max_memory, to give a chance
@@ -775,18 +775,18 @@ let iter_targets_and_get_matches_and_exn_to_errors (config : Core_scan_config.t)
               (* converted in Main_timeout in timeout_function() *)
               (* FIXME:
                           Actually, I managed to get this assert to trigger by
-                          running semgrep -c p/default-v2 on elasticsearch with
+                          running lens -c p/default-v2 on elasticsearch with
                           -timeout 0.01 !
                      *)
               failwith "Time limit exceeded (this shouldn't happen, FIXME)"
           (* convert all other exns (e.g., a parse error in a target file)
            * in an empty match result with errors, so that one error in
            * one target file does not abort the whole scan and the
-           * semgrep-core program.
+           * lens-core program.
            *)
           | exn ->
               let e = Exception.catch exn in
-              if Hook.get Flag_semgrep.fail_fast then Exception.reraise e
+              if Hook.get Flag_lens.fail_fast then Exception.reraise e
               else
                 (* TODO? repeat Parmap_targets.core_error_of_path_exc() *)
                 Logs.err (fun m ->
@@ -832,7 +832,7 @@ let iter_targets_and_get_matches_and_exn_to_errors (config : Core_scan_config.t)
 (* Rule selection *)
 (*****************************************************************************)
 
-(* This is also used by semgrep-proprietary. *)
+(* This is also used by lens-proprietary. *)
 let rules_for_analyzer ~combine_js_with_ts analyzer rules =
   rules
   |> List.filter (fun (r : Rule.t) ->
@@ -868,7 +868,7 @@ let rules_for_analyzer ~combine_js_with_ts analyzer rules =
    filtering: instead, we'd want the origin to be the desired relative path and
    use that.
 
-   [0]: <https://semgrep.dev/docs/writing-rules/rule-syntax/#paths>
+   [0]: <https://lens.dev/docs/writing-rules/rule-syntax/#paths>
  *)
 let origin_satisfy_paths_filter (origin : Origin.t)
     (path_filter : Rule.path_filter) =
@@ -885,7 +885,7 @@ let origin_satisfy_paths_filter (origin : Origin.t)
       |> List.exists (fun (_, (path_at_commit : Fppath.t)) ->
           Filter_target.filter_paths path_filter path_at_commit)
 
-(* This is also used by semgrep-proprietary. *)
+(* This is also used by lens-proprietary. *)
 (* TODO: reduce memory allocation by using only one call to List.filter?
    or something even better to reduce the time spent on each target in
    case we have a high number of rules and a high fraction of irrelevant
@@ -902,8 +902,8 @@ let rules_for_target ~combine_js_with_ts ~respect_rule_paths (target : Target.t)
     rules
     |> List.filter (fun (r : R.rule) ->
         (* Honor per-rule include/exclude.
-         * Note that this also done in pysemgrep, but we need to do it
-         * again here for osemgrep which use a different file targeting
+         * Note that this also done in pylens, but we need to do it
+         * again here for olens which use a different file targeting
          * strategy.
          *)
         match r.paths with
@@ -963,7 +963,7 @@ let mk_target_handler (config : Core_scan_config.t) (valid_rules : Rule.t list)
   let matches : Core_result.matches_single_file =
     match_rules ~matches_hook:Fun.id config prefilter_policy rules xtarget
   in
-  (* So we can display matches incrementally in osemgrep!
+  (* So we can display matches incrementally in olens!
           * Note that this is run in a child process of Parmap, so
           * the hook should not rely on shared memory.
       *)
@@ -1036,7 +1036,7 @@ let scan_exn (config : Core_scan_config.t)
   log_scan_results config res ~scanned_targets ~skipped_targets;
   (* TODO: returning, or not skipped_targets does not seem to have any impact
    * on our testsuite, weird. We need to add more tests. Maybe because
-   * both pysemgrep and osemgrep do their own skip targets management.
+   * both pylens and olens do their own skip targets management.
    *)
   { res with processed_matches; errors; skipped_targets }
 
@@ -1060,7 +1060,7 @@ let post_process_matches (f : post_processor) (res : Core_result.t) :
     res.processed_matches
     |> List.map (fun pm ->
         let pm, errs =
-          (* We don't want a bug in [f] (e.g., a nosemgrep parsing error)
+          (* We don't want a bug in [f] (e.g., a nolens parsing error)
            * to crash the whole scan hence the error management below.
            *)
           try f pm with
@@ -1099,8 +1099,8 @@ let post_autofix pm =
   (pm, errors)
 
 (* callback to post_process_matches *)
-let post_nosemgrep ~strict pm =
-  let pm, errors = Nosemgrep.produce_ignored pm in
+let post_nolens ~strict pm =
+  let pm, errors = Nolens.produce_ignored pm in
   let errors = if strict then errors else [] in
   (pm, errors)
 
@@ -1108,8 +1108,8 @@ let post_nosemgrep ~strict pm =
 (* Entry point *)
 (*****************************************************************************)
 
-(* This is the main function used by pysemgrep right now.
- * This is also now called from osemgrep.
+(* This is the main function used by pylens right now.
+ * This is also now called from olens.
  * It takes a set of rules and a set of targets and iteratively process those
  * targets.
  * coupling: with Pro_scan.scan() which is a copy paste mostly
@@ -1123,12 +1123,12 @@ let scan (config : Core_scan_config.t) : Core_result.result_or_exn =
     Ok
       (res
       |> post_process_matches post_autofix
-      |> post_process_matches (post_nosemgrep ~strict:config.strict))
+      |> post_process_matches (post_nolens ~strict:config.strict))
   with
   | exn ->
       let raw_bt = Printexc.get_raw_backtrace () in
       let e = Exception.catch exn in
-      if Hook.get Flag_semgrep.fail_fast then Exception.reraise e
+      if Hook.get Flag_lens.fail_fast then Exception.reraise e
       else Tracing.record_exn_curr_span exn raw_bt;
       Logs.err (fun m ->
           m "Uncaught exn in Core_scan.scan: %s" (Exception.to_string e));

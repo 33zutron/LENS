@@ -22,7 +22,7 @@ module J = AST_jsonnet
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Jsonnet parser using tree-sitter-lang/semgrep-jsonnet and converting
+(* Jsonnet parser using tree-sitter-lang/lens-jsonnet and converting
  * to AST_jsonnet.ml
  *)
 

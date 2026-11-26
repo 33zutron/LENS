@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2024 Semgrep Inc.
+   Copyright (c) 2023-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
    LICENSE for more details.
 *)
 (* We expose these language-specific functions here because they are needed in
- * Semgrep Pro.
+ * Lens Pro.
  *
  * This lets us avoid having to duplicate the logic of these functions. *)
 val is_js_angular_decorator : string -> bool

@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/3155
+// https://github.com/returntocorp/lens/issues/3155
 @Slow
 @LogLevel("org.apache.solr.handler.ReplicationHandler=DEBUG;org.apache.solr.handler.IndexFetcher=DEBUG")
 public class TestPullReplica extends SolrCloudTestCase {

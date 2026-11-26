@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (c) 2021-2022 Semgrep Inc.
+ * Copyright (c) 2021-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -24,7 +24,7 @@ module H2 = AST_generic_helpers
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Solidity parser using tree-sitter-lang/semgrep-solidity and converting
+(* Solidity parser using tree-sitter-lang/lens-solidity and converting
  * directly to AST_generic.ml
  *
  * related work:
@@ -62,7 +62,7 @@ let left_strip_space (s, t) =
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-solidity/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-solidity/Boilerplate.ml *)
 
 let map_uint (env : env) (x : CST.uint) =
   match x with

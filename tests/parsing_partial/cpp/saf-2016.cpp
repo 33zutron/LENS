@@ -33,7 +33,7 @@
 // A snippet from: https://github.com/NVIDIA/cutlass/blob/3fe62887d8dd75700fdaf57f9c181878701b0802/include/cutlass/conv/conv2d_problem_size.h
 // see saf-2016
 // 
-// at semgrep-proprietary/commit/3685b5ba79a242083c06d12649eb305597a608c8,
+// at lens-proprietary/commit/3685b5ba79a242083c06d12649eb305597a608c8,
 // the CPP parser would inject a self referential type to some of the variables
 // present in this code file (i.e N, K ...). This is an issue, as during AST
 // translation we just loop forever

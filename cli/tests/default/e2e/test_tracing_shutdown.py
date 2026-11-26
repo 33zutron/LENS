@@ -1,4 +1,4 @@
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 """Exercise real core shutdown with a healthy or stalled local OTLP collector."""
 import json
 import os
@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from semgrep.semgrep_core import SemgrepCore
+from lens.lens_core import LensCore
 
 
 @pytest.mark.slow
@@ -48,7 +48,7 @@ def test_tracing_shutdown(tmp_path: Path, collector: str) -> None:
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
         command = [
-            str(SemgrepCore.path()),
+            str(LensCore.path()),
             "-json_nodots",
             "-j",
             "1",

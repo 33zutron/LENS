@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,16 +11,16 @@
 # LICENSE for more details.
 #
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 
-# Depending on the parameters, some tests pass with osemgrep or don't
+# Depending on the parameters, some tests pass with olens or don't
 # The actual test functions are split accordingly and call 'run_test_autofix'.
 #
 def run_test_autofix(
-    run_semgrep_on_copied_files: RunSemgrep,
+    run_lens_on_copied_files: RunLens,
     tmp_path,
     posix_snapshot,
     rule,
@@ -30,9 +30,9 @@ def run_test_autofix(
 ):
     rule = "rules/autofix/" + rule
     target = "autofix/" + target
-    # Use run_semgrep_on_copied_files to prevent alteration of the
+    # Use run_lens_on_copied_files to prevent alteration of the
     # source-controlled test directory
-    semgrep_result = run_semgrep_on_copied_files(
+    lens_result = run_lens_on_copied_files(
         rule,
         target_name=target,
         options=["--autofix", *(["--dryrun"] if dryrun else [])],
@@ -43,14 +43,14 @@ def run_test_autofix(
     else:
         results_file = "results.txt"
     posix_snapshot.assert_match(
-        semgrep_result.stdout,
+        lens_result.stdout,
         results_file,
     )
 
     if output_format == OutputFormat.TEXT:
         # TODO: is this essential?
         posix_snapshot.assert_match(
-            semgrep_result.stderr,
+            lens_result.stderr,
             "stderr.txt",
         )
 
@@ -92,10 +92,10 @@ RULE_TARGET_PAIRS_JSON_OSEMPASS = [
 ]
 
 
-# rule/target pairs for which osemgrep fails to produce the same JSON output
-# as pysemgrep.
+# rule/target pairs for which olens fails to produce the same JSON output
+# as pylens.
 RULE_TARGET_PAIRS_JSON_OSEMFAIL = [
-    # TODO: gives slightly different JSON output with osemgrep
+    # TODO: gives slightly different JSON output with olens
     ("order.yaml", "order.py"),
 ]
 
@@ -110,7 +110,7 @@ RULE_TARGET_PAIRS = RULE_TARGET_PAIRS_JSON_OSEMPASS + RULE_TARGET_PAIRS_JSON_OSE
 @pytest.mark.parametrize("output_format", [OutputFormat.JSON], ids=["json"])
 @pytest.mark.parametrize("rule,target", RULE_TARGET_PAIRS_JSON_OSEMPASS)
 def test_autofix_json_output(
-    run_semgrep_on_copied_files: RunSemgrep,
+    run_lens_on_copied_files: RunLens,
     tmp_path,
     posix_snapshot,
     rule,
@@ -119,7 +119,7 @@ def test_autofix_json_output(
     output_format,
 ):
     run_test_autofix(
-        run_semgrep_on_copied_files,
+        run_lens_on_copied_files,
         tmp_path,
         posix_snapshot,
         rule,
@@ -129,14 +129,14 @@ def test_autofix_json_output(
     )
 
 
-# Same as above but gives different results between pysemgrep and osemgrep
+# Same as above but gives different results between pylens and olens
 @pytest.mark.osemfail
 @pytest.mark.kinda_slow
 @pytest.mark.parametrize("dryrun", [True, False], ids=["dryrun", "not-dryrun"])
 @pytest.mark.parametrize("output_format", [OutputFormat.JSON], ids=["json"])
 @pytest.mark.parametrize("rule,target", RULE_TARGET_PAIRS_JSON_OSEMFAIL)
 def test_autofix_json_output_osemfail(
-    run_semgrep_on_copied_files: RunSemgrep,
+    run_lens_on_copied_files: RunLens,
     tmp_path,
     posix_snapshot,
     rule,
@@ -145,7 +145,7 @@ def test_autofix_json_output_osemfail(
     output_format,
 ):
     run_test_autofix(
-        run_semgrep_on_copied_files,
+        run_lens_on_copied_files,
         tmp_path,
         posix_snapshot,
         rule,
@@ -162,7 +162,7 @@ def test_autofix_json_output_osemfail(
 @pytest.mark.parametrize("output_format", [OutputFormat.TEXT], ids=["text"])
 @pytest.mark.parametrize("rule,target", RULE_TARGET_PAIRS)
 def test_autofix_text_output(
-    run_semgrep_on_copied_files: RunSemgrep,
+    run_lens_on_copied_files: RunLens,
     tmp_path,
     posix_snapshot,
     rule,
@@ -171,7 +171,7 @@ def test_autofix_text_output(
     output_format,
 ):
     run_test_autofix(
-        run_semgrep_on_copied_files,
+        run_lens_on_copied_files,
         tmp_path,
         posix_snapshot,
         rule,

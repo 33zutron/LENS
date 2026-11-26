@@ -1,4 +1,4 @@
-(* Copyright (C) Semgrep, Inc.
+(* Copyright (C) Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,7 +19,7 @@
  * is duplicated here to avoid circular dependencies. *)
 
 let protect ~finally work =
-  (* nosemgrep: no-fun-protect *)
+  (* nolens: no-fun-protect *)
   try Fun.protect ~finally work with
   | Fun.Finally_raised exn ->
       (* old: `catch_and_reraise exn` - this requires pulling in [Exception] *)

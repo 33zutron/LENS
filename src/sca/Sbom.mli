@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,10 +10,10 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-type kind = Semgrep_output_v1_t.sbom_kind = CycloneDXJson
+type kind = Lens_output_v1_t.sbom_kind = CycloneDXJson
 [@@deriving ord, eq, show]
 
-type t = Semgrep_output_v1_t.sbom = {
+type t = Lens_output_v1_t.sbom = {
   kind : kind;
   is_ephemeral : bool;
   path : Fpath.t;

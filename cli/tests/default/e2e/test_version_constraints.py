@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2025 Semgrep Inc.
+# Copyright (c) 2023-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -12,14 +12,14 @@
 #
 import pytest
 from tests.conftest import skip_on_windows
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
 @pytest.mark.kinda_slow
 @skip_on_windows  # better masking
-def test_version_constraints(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
+def test_version_constraints(run_lens_in_tmp: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(
+        run_lens_in_tmp(
             "rules/version-constraints.yaml", target_name="version-constraints/x.py"
         ).stdout,
         "results.json",

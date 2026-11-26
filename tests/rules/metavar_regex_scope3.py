@@ -1,4 +1,4 @@
-# from https://github.com/returntocorp/semgrep/issues/2548
+# from https://github.com/returntocorp/lens/issues/2548
 def a(): return 1
 def b(): return
 def c(): return None

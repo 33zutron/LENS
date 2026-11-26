@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2024 Semgrep Inc.
+   Copyright (c) 2022-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@
  * or None to fall through to the default `local x = import "foo.jsonnet"`
  * file-import behaviour.
  *
- * This callback is useful e.g. in osemgrep to let ojsonnet import yaml
+ * This callback is useful e.g. in olens to let ojsonnet import yaml
  * files (`local x = import 'foo.yaml'`) or rules from the registry
  * (`local x = import 'p/python'`).
  *

@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@ open Common
 (*****************************************************************************)
 (* Small wrapper around Bos.OS.Cmd
  *
- * A few functions contain a 'nosemgrep: forbid-exec' because anyway
+ * A few functions contain a 'nolens: forbid-exec' because anyway
  * those functions will/are also blacklisted in forbid-exec.jsonnet.
  *)
 
@@ -33,7 +33,7 @@ open Common
    something the user wants to know.
 *)
 let log_command cmd =
-  (* nosemgrep: no-logs-in-library *)
+  (* nolens: no-logs-in-library *)
   Logs.info (fun m -> m "Running external command: %s" (Cmd.to_string cmd))
 
 (* Create a new temporary file, invoke the passed function on the temporary
@@ -41,7 +41,7 @@ let log_command cmd =
    before it was closed. *)
 let with_temp_file_out (f : Fpath.t -> 'a) : 'a * string =
   (* This is an internal implementation detail. *)
-  (* nosemgrep: forbid-tmp *)
+  (* nolens: forbid-tmp *)
   UTmp.with_temp_file (fun path ->
       let res = f path in
       let out = UFile.read_file path in
@@ -53,7 +53,7 @@ let with_temp_file_out (f : Fpath.t -> 'a) : 'a * string =
 let with_logging_err_temp_file (f : Fpath.t -> 'a) : 'a =
   let res, err = with_temp_file_out f in
   if err <> "" then
-    (* nosemgrep: no-logs-in-library *)
+    (* nolens: no-logs-in-library *)
     Logs.info (fun m -> m "error output: %s" err);
   res
 
@@ -178,14 +178,14 @@ let process_output_to_list ?(verbose = false) command =
   (* The Windows shell searches the current directory for commands. *)
   if Sys.win32 then
     failwith "UCmd.process_output_to_list: unsupported on Windows";
-  (* nosemgrep: forbid-exec *)
+  (* nolens: forbid-exec *)
   let chan = Unix.open_process_in command in
   let res = ref ([] : string list) in
   let rec process_otl_aux () =
     let e = input_line chan in
     res := e :: !res;
     if verbose then
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.info (fun m -> m "%s" e);
     process_otl_aux ()
   in
@@ -214,7 +214,7 @@ let run_subprocess ?env cmd =
   log_command cmd;
   let env = env_of_env env in
   with_spawn_cmd cmd
-    (* nosemgrep: forbid-exec *)
+    (* nolens: forbid-exec *)
     (Cmd.bos_apply (Bos.OS.Cmd.run_status ?env))
 
 let string_of_run ~trim ?env cmd =
@@ -222,11 +222,11 @@ let string_of_run ~trim ?env cmd =
   let env = env_of_env env in
   with_logging_err_temp_file (fun err_path ->
       with_spawn_cmd cmd (fun cmd ->
-          (* nosemgrep: forbid-exec *)
+          (* nolens: forbid-exec *)
           let out =
             Cmd.bos_apply Bos.OS.Cmd.(run_out ~err:(err_file err_path) ?env) cmd
           in
-          (* nosemgrep: forbid-exec *)
+          (* nolens: forbid-exec *)
           Bos.OS.Cmd.out_string ~trim out))
 
 (* TODO: this is potentially a source of high memory usage if the captured program
@@ -236,11 +236,11 @@ let string_of_run_with_stderr ~trim ?env cmd =
   let env = env_of_env env in
   with_temp_file_out (fun err_path ->
       with_spawn_cmd cmd (fun cmd ->
-          (* nosemgrep: forbid-exec *)
+          (* nolens: forbid-exec *)
           let out =
             Cmd.bos_apply Bos.OS.Cmd.(run_out ~err:(err_file err_path) ?env) cmd
           in
-          (* nosemgrep: forbid-exec *)
+          (* nolens: forbid-exec *)
           Bos.OS.Cmd.out_string ~trim out))
 
 let string_of_run_with_timeout (eio_env : eio_env) ~timeout_seconds ~trim ?env
@@ -262,7 +262,7 @@ let string_of_run_with_timeout (eio_env : eio_env) ~timeout_seconds ~trim ?env
     Eio.Switch.run (fun sw ->
         let stdout_r, stdout_w = Eio_unix.pipe sw in
         let stderr_r, stderr_w = Eio_unix.pipe sw in
-        (* nosemgrep: forbid-exec *)
+        (* nolens: forbid-exec *)
         let proc =
           Eio.Process.spawn ~sw proc_mgr ?env:env_arr
             ~stdout:(stdout_w :> Eio.Flow.sink_ty Eio.Std.r)
@@ -330,20 +330,20 @@ let lines_of_run ~trim ?env cmd =
   let env = env_of_env env in
   with_logging_err_temp_file (fun err_path ->
       with_spawn_cmd cmd (fun cmd ->
-          (* nosemgrep: forbid-exec *)
+          (* nolens: forbid-exec *)
           let out =
             Cmd.bos_apply Bos.OS.Cmd.(run_out ~err:(err_file err_path) ?env) cmd
           in
-          (* nosemgrep: forbid-exec *)
+          (* nolens: forbid-exec *)
           Bos.OS.Cmd.out_lines ~trim out))
 
-(* nosemgrep: forbid-exec *)
+(* nolens: forbid-exec *)
 let status_of_run ?quiet ?env cmd =
   log_command cmd;
   let env = env_of_env env in
   with_logging_err_temp_file (fun err_path ->
       with_spawn_cmd cmd
-        (* nosemgrep: forbid-exec *)
+        (* nolens: forbid-exec *)
         (Cmd.bos_apply
            Bos.OS.Cmd.(run_status ?quiet ~err:(err_file err_path) ?env)))
 

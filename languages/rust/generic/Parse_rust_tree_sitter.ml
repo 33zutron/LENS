@@ -1,6 +1,6 @@
 (* Ruin0x11
  *
- * Copyright (C) 2021 Semgrep Inc.
+ * Copyright (C) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ module G = AST_generic
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Rust parser using tree-sitter-lang/semgrep-rust and converting
+(* Rust parser using tree-sitter-lang/lens-rust and converting
  * directly to AST_generic.ml
  *
  * Some comments are tagged with ruin: to indicate code ruin0x11 wrote
@@ -265,7 +265,7 @@ let type_of_trait_bound = function
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-rust/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-rust/Boilerplate.ml *)
 
 let ident (env : env) (tok : CST.identifier) : G.ident =
   (* pattern [a-zA-Z_]\w* *)
@@ -4650,14 +4650,14 @@ let map_source_file (env : env) (x : CST.source_file) : G.any =
   | `Semg_exp (v1, v2) ->
       let _header =
         token env v1
-        (* "__SEMGREP_EXPRESSION" *)
+        (* "__LENS_EXPRESSION" *)
       in
       let expr = map_expression env v2 in
       G.E expr
   | `Semg_stmt (v1, v2) ->
       let _header =
         token env v1
-        (* "__SEMGREP_STATEMENT" *)
+        (* "__LENS_STATEMENT" *)
       in
       let stmts = map_statements_list env v2 in
       G.Ss stmts
@@ -4679,12 +4679,12 @@ let parse_expression_or_source_file str =
   match res.errors with
   | [] -> res
   | _ -> (
-      let expr_str = "__SEMGREP_EXPRESSION " ^ str in
+      let expr_str = "__LENS_EXPRESSION " ^ str in
       let expr_res = Tree_sitter_rust.Parse.string expr_str in
       match expr_res.errors with
       | [] -> expr_res
       | _ ->
-          let stmt_str = "__SEMGREP_STATEMENT " ^ str in
+          let stmt_str = "__LENS_STATEMENT " ^ str in
           Tree_sitter_rust.Parse.string stmt_str)
 
 (* todo: special mode to convert Ellipsis in the right construct! *)

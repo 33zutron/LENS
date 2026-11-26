@@ -1,6 +1,6 @@
 (* Brandon Wu
  *
- * Copyright (C) 2023-present Semgrep Inc.
+ * Copyright (C) 2023-present Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -22,7 +22,7 @@ module ME = Matching_explanation
    sources, sinks, sanitizers, or propagators.
 
    In particular, because of hardcoded propagators, we expect to see lots of
-   sharing from Semgrep Pro Engine.
+   sharing from Lens Pro Engine.
 *)
 module Formula_tbl = Stdlib.Hashtbl.Make (struct
   type t = R.formula

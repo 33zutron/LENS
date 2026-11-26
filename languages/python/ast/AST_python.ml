@@ -299,7 +299,7 @@ and param_pattern =
  *)
 and type_ = expr
 
-(* This is exposed for `semgrep-proprietary`, which uses this to parse
+(* This is exposed for `lens-proprietary`, which uses this to parse
    type hover information from the Language Server Index Format (https://lsif.dev/).
    Python types do not natively have arrows in them, so we must expose this type to
    get that data out.
@@ -331,7 +331,7 @@ and pattern =
   | PatUnderscore of tok
   | PatComplex of tok option * number * tok * number
   | PatKeyVal of pattern * (* = *) tok * pattern
-  | PatExpr of expr (* semgrep: expression embedded in pattern position *)
+  | PatExpr of expr (* lens: expression embedded in pattern position *)
 [@@deriving show { with_path = false }]
 
 (*****************************************************************************)
@@ -488,7 +488,7 @@ type program = stmt list [@@deriving show] (* with tarzan *)
 (*****************************************************************************)
 (* Any *)
 (*****************************************************************************)
-(* This is mostly for semgrep to represent a pattern *)
+(* This is mostly for lens to represent a pattern *)
 type any =
   | Expr of expr
   | Stmt of stmt

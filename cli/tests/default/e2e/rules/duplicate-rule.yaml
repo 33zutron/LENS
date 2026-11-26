@@ -17,15 +17,15 @@ rules:
       technology:
         - jwt
       license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-      source: https://semgrep.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret
+      source: https://lens.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret
       shortlink: https://sg.run/4xN9
-      semgrep.policy:
+      lens.policy:
         id: 18613
         name: Rule Board - Block column
         slug: rule-board-block
-      semgrep.url: https://semgrep.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret
-      semgrep.ruleset: ci
-      semgrep.ruleset_id: 735
+      lens.url: https://lens.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret
+      lens.ruleset: ci
+      lens.ruleset_id: 735
   - id: duplicate-eq
     pattern: $X == $X
     message: Found redundant comparison
@@ -44,12 +44,12 @@ rules:
       technology:
         - jwt
       license: Commons Clause License Condition v1.0[LGPL-2.1-only]
-      source: https://semgrep.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret
+      source: https://lens.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret
       shortlink: https://sg.run/4xN9
-      semgrep.policy:
+      lens.policy:
         id: 18613
         name: Rule Board - Block column
         slug: rule-board-block
-      semgrep.url: https://semgrep.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret
-      semgrep.ruleset: other
-      semgrep.ruleset_id: 1234
+      lens.url: https://lens.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret
+      lens.ruleset: other
+      lens.ruleset_id: 1234

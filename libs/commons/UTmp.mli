@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -69,16 +69,16 @@ val with_temp_file :
  *
  * This is useful for cache invalidation when we cache information about
  * files. For example, when scanning a repository with a large number of
- * regex rules, Semgrep creates numerous tmp files. For each one, we create
+ * regex rules, Lens creates numerous tmp files. For each one, we create
  * a lookup table to go from offset -> line/col, and cache it keyed on
- * filename. If this cache does not get properly invalidated when Semgrep
+ * filename. If this cache does not get properly invalidated when Lens
  * is done with the tmp file, even though the tmp file does get removed,
  * the next time a tmp file is requested, there is a chance that the
- * randomly-generated filename will collide with a previous one. Semgrep would
+ * randomly-generated filename will collide with a previous one. Lens would
  * rely on the cached lookup table for the previous file with that filename,
  * and chaos ensues.
  *
- * See https://github.com/semgrep/semgrep/issues/5277 for more info.
+ * See https://github.com/lens/lens/issues/5277 for more info.
  *)
 val register_temp_file_cleanup_hook : (Fpath.t -> unit) -> unit
 

@@ -207,7 +207,7 @@ let topseqexpr v1 = mki (TopExpr (seq1 v1))
 (*************************************************************************)
 %start <AST_ocaml.item list> interface
 %start <AST_ocaml.item list> implementation
-%start <AST_ocaml.any> semgrep_pattern
+%start <AST_ocaml.any> lens_pattern
 %start <AST_ocaml.type_> type_for_lsp
 
 %%
@@ -277,8 +277,8 @@ qualified(X, Y):
 interface:      signature EOF              { $1 }
 implementation: structure EOF              { $1 }
 
-(* this is the entry point used by semgrep to parse patterns *)
-semgrep_pattern:
+(* this is the entry point used by lens to parse patterns *)
+lens_pattern:
  | expr                                EOF { E $1 }
  | signature_or_structure_common post_item_attribute* EOF
      { I { i = $1; iattrs = $2 } }
@@ -292,7 +292,7 @@ semgrep_pattern:
  (* partial *)
  | partial EOF { Partial $1 }
 
-(* this is used by semgrep -lsp to parse the types returned by ocamllsp *)
+(* this is used by lens -lsp to parse the types returned by ocamllsp *)
 type_for_lsp: core_type_no_attr EOF { $1 }
 
 signature_or_structure_common:
@@ -317,7 +317,7 @@ partial:
   * get s/r conflicts, so I have to be more general like in the 'expr:'
   * and 'structure:' grammar rules.
   *
-  * Note that semgrep_pattern allows also to search for 'let x = $BODY'
+  * Note that lens_pattern allows also to search for 'let x = $BODY'
   * because this is a valid structure item, and this will actually also match
   * LetIn expressions because of the way LetIn are converted in
   * ml_to_generic.ml in a sequence of VarDef and ExprStmt.

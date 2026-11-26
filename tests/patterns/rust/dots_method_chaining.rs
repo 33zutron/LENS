@@ -2,7 +2,7 @@ use std::process::Command;
 
 fn main() -> io::Result<()> {
     // ERROR: match
-    let proc = Command::new("semgrep-core")
+    let proc = Command::new("lens-core")
         .args(["-l", "rust"])
         .args(["-rules", "test.yaml"])
         .output()

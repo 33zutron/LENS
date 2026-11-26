@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2021 Semgrep Inc.
+ * Copyright (C) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -99,11 +99,11 @@ let parse_program file =
 (*****************************************************************************)
 (* Sub parsers *)
 (*****************************************************************************)
-(* for semgrep *)
+(* for lens *)
 let any_of_string s =
   Hook.with_hook_set Flag_parsing.sgrep_mode true (fun () ->
       let toks = tokens (Parsing_helpers.Str s) in
       (* -------------------------------------------------- *)
       (* Call parser *)
       (* -------------------------------------------------- *)
-      Parser_scala_recursive_descent.semgrep_pattern toks)
+      Parser_scala_recursive_descent.lens_pattern toks)

@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2024 Semgrep Inc.
+ * Copyright (C) 2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -18,8 +18,8 @@ open Fpath_.Operators
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Module to represent and parse semgrep test annotations.
- * See https://semgrep.dev/docs/writing-rules/testing-rules/ for more info.
+(* Module to represent and parse lens test annotations.
+ * See https://lens.dev/docs/writing-rules/testing-rules/ for more info.
  *
  * Note that our docs currently mention just the OSS test annotations but not
  * the pro one (e.g., 'proruleid:', 'deepruleid:').
@@ -31,7 +31,7 @@ open Fpath_.Operators
  * due to inter-procedural analysis being able to spot sanitization via a
  * third-function.
  *
- * TODO: update https://semgrep.dev/docs/writing-rules/testing-rules and add
+ * TODO: update https://lens.dev/docs/writing-rules/testing-rules and add
  * doc for the pro/deep test annotations and remove tests/intrafile/README.
  *)
 
@@ -50,7 +50,7 @@ type kind =
    * The 'ok:' is not that useful (it's mostly a comment) and actually
    * complicates some code during parsing (see the _no_ok regexps below), but
    * the `prook:` and `deepok:` are useful to "negate" a preceding ruleid: when
-   * a legitimate finding in semgrep OSS is actually considered a FP for the
+   * a legitimate finding in lens OSS is actually considered a FP for the
    * pro engine and should not be reported.
    *)
   | Ok
@@ -108,7 +108,7 @@ let (comment_syntaxes : (string * string option) list) =
     ("/*", Some "*/");
     (* in jsx as in
      *       <div>
-     *         {/* ruleid: href-semgrep-app */}
+     *         {/* ruleid: href-lens-app */}
      * where you can't use comment
      *)
     ("{/*", Some "*/}");
@@ -129,8 +129,8 @@ let kind_of_string (str : string) : kind =
 let remove_enclosing_comment_opt (str : string) : string option =
   comment_syntaxes
   |> List.find_map (fun (prefix, suffixopt) ->
-      (* stricter: pysemgrep allows code before the comment, but this
-       * was used only once in semgrep-rules/ and it can be ambiguous as
+      (* stricter: pylens allows code before the comment, but this
+       * was used only once in lens-rules/ and it can be ambiguous as
        * <some code> # ruleid: xxx might make you think the finding is
        * on this line instead of the line after. Forcing the annotation
        * to be alone on its line before the finding is clearer.
@@ -216,7 +216,7 @@ let annotations_of_string (orig_str : string) (file : Fpath.t) (idx : linenb) :
     match res with
     | None ->
         (* some Javascript code has valid code such as { ok: true } that is not
-         * a semgrep annotation hence the use of a no_ok prefilter below
+         * a lens annotation hence the use of a no_ok prefilter below
          *)
         if s =~ prefilter_annotation_regexp_no_ok then
           Logs.err (fun m ->
@@ -251,7 +251,7 @@ let annotations_of_string (orig_str : string) (file : Fpath.t) (idx : linenb) :
   else []
 
 (* Note that this returns the line of the annotation itself. In practice,
- * you must then add +1 to it if you want to compare it to where semgrep
+ * you must then add +1 to it if you want to compare it to where lens
  * report matches.
  *
  * alt: use Core_error.expected_error_lines_of_files but it does not

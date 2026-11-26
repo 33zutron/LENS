@@ -1,6 +1,6 @@
 (* Iago Abal, Yoann Padioleau
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -20,7 +20,7 @@ module ME = Matching_explanation
 module MV = Metavariable
 module R = Rule
 module RM = Range_with_metavars
-module OutJ = Semgrep_output_v1_t
+module OutJ = Lens_output_v1_t
 module TM = Taint_spec_match
 module TP = Taint_spec_preds
 

@@ -152,7 +152,7 @@
  *  - .Net interoperability
  *
  * UPDATE: only the 'v' type remains. For the 't' type see metagen/
- * or prefer to use otarzan and the generic ASC in semgrep.
+ * or prefer to use otarzan and the generic ASC in lens.
  *
  *)
 

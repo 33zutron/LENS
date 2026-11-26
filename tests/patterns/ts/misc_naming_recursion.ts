@@ -1,5 +1,5 @@
 // the number:number used to create a cycle in the AST which
-// made -dump_ast to loop forever and some semgrep queries to
+// made -dump_ast to loop forever and some lens queries to
 // use all memory
 
 export function foobar(

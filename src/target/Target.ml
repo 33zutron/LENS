@@ -1,6 +1,6 @@
 (* Cooper Pierce
  *
- * Copyright (c) 2024, Semgrep Inc.
+ * Copyright (c) 2024, Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
  * LICENSE for more details.
  *)
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 
 (*****************************************************************************)
 (* Prelude *)
@@ -65,7 +65,7 @@ let tempfile_of_git_blob sha =
   let contents = sha |> Git_wrapper.cat_file_blob |> Result.get_ok in
   (* TODO: delete this file when done! For this, use 'with_temp_file'. *)
   let file =
-    (* nosemgrep: forbid-tmp *)
+    (* nolens: forbid-tmp *)
     UTmp.new_temp_file ~prefix:"git-blob-"
       ~suffix:(Git_wrapper.hex_of_hash sha)
       ()
@@ -107,7 +107,7 @@ let mk_unfilterable_lang_target (lang : Lang.t) (file : Fpath.t) : t =
   mk_unfilterable_target (Analyzer.of_lang lang) file
 
 (*****************************************************************************)
-(* Semgrep_output_v1.target -> Target.t *)
+(* Lens_output_v1.target -> Target.t *)
 (*****************************************************************************)
 (* old: used to be Input_to_core.target -> Target.t *)
 
@@ -124,7 +124,7 @@ let target_of_target (input : Out.target) : t =
   | `CodeTarget x -> target_location_of_input_to_core x
   | `DependencySourceTarget _x ->
       failwith
-        "Impossible: pysemgrep should not generate DependencySourceTarget"
+        "Impossible: pylens should not generate DependencySourceTarget"
 
 (*****************************************************************************)
 (* Accessors *)

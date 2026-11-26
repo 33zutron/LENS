@@ -18,7 +18,7 @@ open Lsp
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Custom LSP request for a command which will show the Semgrep
+(* Custom LSP request for a command which will show the Lens
    Generic AST of the given file.
 
    This file largely follows the structure of ocaml-lsp, such as:
@@ -55,7 +55,7 @@ end
 (* Main logic *)
 (*****************************************************************************)
 
-let meth = "semgrep/showAst"
+let meth = "lens/showAst"
 
 let on_request session id (params : Jsonrpc.Structured.t option) =
   let { Request_params.document_uri; named } =

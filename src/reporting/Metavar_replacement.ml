@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -12,8 +12,8 @@
 *)
 open Common
 module MV = Metavariable
-module OutJ = Semgrep_output_v1_j
-module OutUtils = Semgrep_output_utils
+module OutJ = Lens_output_v1_j
+module OutUtils = Lens_output_utils
 module G = AST_generic
 
 (*****************************************************************************)
@@ -103,7 +103,7 @@ let interpolate_metavars ?fmt (text : string) (ctx : replacement_ctx) : string =
        (fun text (mvar, { mval_content; propagated_content }) ->
          (* necessary typing to help the type check disambiguate fields,
           * because of the use of multiple fields with the same
-          * name in semgrep_output_v1.atd *)
+          * name in lens_output_v1.atd *)
 
          (* first value($X), and then $X *)
          text

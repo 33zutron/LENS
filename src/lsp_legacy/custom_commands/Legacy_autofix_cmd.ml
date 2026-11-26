@@ -1,6 +1,6 @@
 (* Austin Theriault
  *
- * Copyright (C) Semgrep, Inc.
+ * Copyright (C) Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -26,7 +26,7 @@ open Types
 (*****************************************************************************)
 (* Types *)
 (*****************************************************************************)
-let command = "semgrep/autofix"
+let command = "lens/autofix"
 let create () = Command.create ~title:"Apply Fix" ~command ()
 
 (*****************************************************************************)

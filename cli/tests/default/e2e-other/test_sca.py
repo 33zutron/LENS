@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2024 Semgrep Inc.
+# Copyright (c) 2023-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,9 +11,9 @@
 # LICENSE for more details.
 #
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 # TODO: merge with test_ssc.py?
 # was in e2e/test_output.py before
@@ -21,8 +21,8 @@ from semgrep.constants import OutputFormat
 
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_sca_output(run_semgrep_on_copied_files: RunSemgrep, snapshot):
-    results, _errors = run_semgrep_on_copied_files(
+def test_sca_output(run_lens_on_copied_files: RunLens, snapshot):
+    results, _errors = run_lens_on_copied_files(
         "rules/dependency_aware/monorepo_with_first_party.yaml",
         target_name="dependency_aware/monorepo",
         output_format=OutputFormat.TEXT,
@@ -35,8 +35,8 @@ def test_sca_output(run_semgrep_on_copied_files: RunSemgrep, snapshot):
 
 @pytest.mark.kinda_slow
 @pytest.mark.osemfail
-def test_sca_lockfile_only_output(run_semgrep_on_copied_files: RunSemgrep, snapshot):
-    results, _errors = run_semgrep_on_copied_files(
+def test_sca_lockfile_only_output(run_lens_on_copied_files: RunLens, snapshot):
+    results, _errors = run_lens_on_copied_files(
         "rules/dependency_aware/lodash-4.17.19.yaml",
         target_name="dependency_aware/unreachable_multiple_copies/yarn.lock",
         output_format=OutputFormat.TEXT,

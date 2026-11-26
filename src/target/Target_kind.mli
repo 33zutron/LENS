@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -36,8 +36,8 @@ val hook_classify_target : (Fpath.t -> t) option ref
 
 val classify_target : Fpath.t -> t
 (** [classify_target path] returns the target kind of [path].
-    If semgrep pro is not loaded, this will always return [Source_file]. *)
+    If lens pro is not loaded, this will always return [Source_file]. *)
 
 val is_dependency_source_file : Fpath.t -> bool
 (** [is_dependency_source_file path] returns true if [path] is a dependency source file.
-    If semgrep pro is not loaded, this will always return [false]. *)
+    If lens pro is not loaded, this will always return [false]. *)

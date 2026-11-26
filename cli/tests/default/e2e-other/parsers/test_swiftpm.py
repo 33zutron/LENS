@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,18 +15,18 @@ from pathlib import Path
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.parsers import swiftpm
 from semdep.parsers.util import json_doc
-from semgrep.semgrep_interfaces.semgrep_output_v1 import DependencyParserError
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import FoundDependency
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Fpath
-from semgrep.semgrep_interfaces.semgrep_output_v1 import PPackageResolved
-from semgrep.semgrep_interfaces.semgrep_output_v1 import ScaParserName
-from semgrep.semgrep_interfaces.semgrep_output_v1 import SwiftPM
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Transitive
-from semgrep.verbose_logging import getLogger
+from lens.lens_interfaces.lens_output_v1 import DependencyParserError
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import FoundDependency
+from lens.lens_interfaces.lens_output_v1 import Fpath
+from lens.lens_interfaces.lens_output_v1 import PPackageResolved
+from lens.lens_interfaces.lens_output_v1 import ScaParserName
+from lens.lens_interfaces.lens_output_v1 import SwiftPM
+from lens.lens_interfaces.lens_output_v1 import Transitive
+from lens.verbose_logging import getLogger
 
 logger = getLogger(__name__)
 
@@ -42,7 +42,7 @@ logger = getLogger(__name__)
         ('url: "https://github.com/user/project5"', "project5"),
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_url_block_parser(original: str, output: str):
@@ -57,7 +57,7 @@ def test_swift_url_block_parser(original: str, output: str):
         ('name:   "project1"', "project1"),
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_name_block_parser(original: str, output: str):
@@ -75,7 +75,7 @@ def test_swift_name_block_parser(original: str, output: str):
         'from: "nightly"',
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_from_block_parser(original: str):
@@ -85,7 +85,7 @@ def test_swift_from_block_parser(original: str):
 
 
 @pytest.mark.parametrize("original", ['"1.2.3"..<"1.2.6"', '"7.2.3"..<"11.2.6"'])
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_range_block_parser(original: str):
@@ -104,7 +104,7 @@ def test_swift_range_block_parser(original: str):
         "exact: Version(1, 2, 3)",
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_exact_block_parser(original: str):
@@ -114,7 +114,7 @@ def test_swift_exact_block_parser(original: str):
 
 
 @pytest.mark.parametrize("original", ['path: "foo/bar"', 'path:  "ahhh"'])
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_path_block_parser(original: str):
@@ -130,7 +130,7 @@ def test_swift_path_block_parser(original: str):
         '.revision("e74b07278b926c9ec6f9643455ea00d1ce04a021")',
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_revision_block_parser(original: str):
@@ -148,7 +148,7 @@ def test_swift_revision_block_parser(original: str):
         '.upToNextMajor(from: "1.0-test")',
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_up_to_next_major_block_parser(original: str):
@@ -166,7 +166,7 @@ def test_swift_up_to_next_major_block_parser(original: str):
         '.upToNextMinor(from: "1.0-test")',
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_up_to_next_minor_block_parser(original: str):
@@ -178,7 +178,7 @@ def test_swift_up_to_next_minor_block_parser(original: str):
 @pytest.mark.parametrize(
     "original", ['.branch("develop")', '.branch("jl/testing-branch")']
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_branch_block_parser(original: str):
@@ -224,7 +224,7 @@ def test_swift_branch_block_parser(original: str):
         ),
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_package_block_parser(original: str, expected: str):
@@ -233,7 +233,7 @@ def test_swift_package_block_parser(original: str, expected: str):
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_manifest_parser():
@@ -286,7 +286,7 @@ def test_swift_manifest_parser():
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_multiple_package_blocks_parser():
@@ -307,7 +307,7 @@ def test_swift_multiple_package_blocks_parser():
     ]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_dependencies_block_parser():
@@ -324,7 +324,7 @@ def test_swift_dependencies_block_parser():
     assert result[0] == [(2, "package_1"), (3, "package_2"), (4, "package_3")]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_lockfile_v1_parser():
@@ -415,7 +415,7 @@ def test_swift_lockfile_v1_parser():
     assert errors == expected_errors
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_swift_lockfile_v2_parser():

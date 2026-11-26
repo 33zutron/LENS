@@ -1,6 +1,6 @@
 rules:
   - id: example_rule
     pattern: print("...")
-    message: Semgrep found a match
+    message: Lens found a match
     languages: [python]
     severity: WARNING

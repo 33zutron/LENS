@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,9 +15,9 @@ import shutil
 
 import pytest
 
-from semgrep.mcp.server import CodeFile
-from semgrep.mcp.server import create_temp_files_from_code_content
-from semgrep.mcp.server import McpError
+from lens.mcp.server import CodeFile
+from lens.mcp.server import create_temp_files_from_code_content
+from lens.mcp.server import McpError
 
 
 @pytest.mark.quick

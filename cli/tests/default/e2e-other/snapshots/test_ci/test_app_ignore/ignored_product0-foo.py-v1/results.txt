@@ -26,7 +26,7 @@
 └────────────────┘
 
   SCAN ENVIRONMENT
-  versions    - semgrep <MASKED> on python <MASKED>
+  versions    - lens <MASKED> on python <MASKED>
   environment - running in environment git, triggering event is unknown
 
   CONNECTION
@@ -50,7 +50,7 @@
 ┌──────────────┐
 │ Scan Summary │
 └──────────────┘
-Semgrep's file targeting is getting a revamp! This scan wouldn't see any changes. To learn about what will be different after version 1.116.0, visit https://semgrep.dev/docs/kb/semgrep-code/semgrepignore-ignored for the new specification.
+Lens's file targeting is getting a revamp! This scan wouldn't see any changes. To learn about what will be different after version 1.116.0, visit https://lens.dev/docs/kb/lens-code/lensignore-ignored for the new specification.
 
 ✅ CI scan completed successfully.
  • Findings: 1 (0 blocking)
@@ -60,12 +60,12 @@ Semgrep's file targeting is getting a revamp! This scan wouldn't see any changes
  • Scan skipped:
    ◦ Matching --exclude patterns: 1
  • Scan was limited to files tracked by git
- • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+ • For a detailed list of skipped files and lines, run lens with the --verbose flag
 CI scan completed successfully.
-  View results in Semgrep Cloud Platform:
-    https://semgrep.dev/orgs/org_name/findings?repo=local_scan/checkout_project_name&ref=some/branch-name
-    https://semgrep.dev/orgs/org_name/supply-chain/vulnerabilities?repo=local_scan/checkout_project_name&ref=some/branch-name
-  semgrep.dev is suggesting a non-zero exit code (Test Reason)
+  View results in Lens Cloud Platform:
+    https://lens.dev/orgs/org_name/findings?repo=local_scan/checkout_project_name&ref=some/branch-name
+    https://lens.dev/orgs/org_name/supply-chain/vulnerabilities?repo=local_scan/checkout_project_name&ref=some/branch-name
+  lens.dev is suggesting a non-zero exit code (Test Reason)
 
 === end of stderr - plain
 

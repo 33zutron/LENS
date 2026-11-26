@@ -1,14 +1,14 @@
 (library
- (public_name semgrep.fixing)
- (name semgrep_fixing)
+ (public_name lens.fixing)
+ (name lens_fixing)
  (wrapped false)
  (libraries
    base
    collections
    commons
-   semgrep.parsing
-   semgrep.printing
-   semgrep.reporting
+   lens.parsing
+   lens.printing
+   lens.reporting
  )
  (inline_tests)
  (preprocess (pps ppx_deriving.show ppx_profiling ppx_inline_test commons.ppx))

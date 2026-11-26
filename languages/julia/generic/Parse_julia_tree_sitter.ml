@@ -24,7 +24,7 @@ module H2 = AST_generic_helpers
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Julia parser using tree-sitter-lang/semgrep-julia and converting
+(* Julia parser using tree-sitter-lang/lens-julia and converting
  * directly to AST_generic.ml
  *
  *)
@@ -99,8 +99,8 @@ let map_trailing_comma env v =
 
 let map_word_identifier (env : env) (tok : CST.word_identifier) = str env tok
 
-let map_semgrep_extended_metavariable (env : env)
-    (tok : CST.semgrep_extended_metavariable) =
+let map_lens_extended_metavariable (env : env)
+    (tok : CST.lens_extended_metavariable) =
   (* pattern \$[A-Z][a-zA-Z0-9]* *)
   str env tok
 
@@ -111,7 +111,7 @@ let map_identifier (env : env) (x : CST.identifier) =
     | `Public tok
     | `Outer tok ->
         str env tok
-    | `Semg_exte_meta x -> map_semgrep_extended_metavariable env x
+    | `Semg_exte_meta x -> map_lens_extended_metavariable env x
   in
   (s, t)
 
@@ -457,7 +457,7 @@ and map_qualified_assignment ?(attrs = []) (env : env) (x : CST.block_form) =
                   },
                   VarDef G.empty_var )
               |> G.s)
-      (* TODO: Neither semgrep ellipsis nor deep expression make much sense here,
+      (* TODO: Neither lens ellipsis nor deep expression make much sense here,
          only metavariables. What *Stmt variant should go here?
       *)
       | _ -> todo env x)
@@ -593,7 +593,7 @@ and map_closed_macro_parameter env x =
   let exp = map_closed_macrocall_expression env x in
   OtherParam (("pattern", fake "pattern"), [ G.E exp ])
 
-(* Fix for semgrep/semgrep#10487
+(* Fix for lens/lens#10487
  * If macrocall is parameter, 99% of the time we only care about the first argument.
  *)
 and map_macro_parameter (env : env) ((v1, v3) : CST.macrocall_expression) =
@@ -1991,7 +1991,7 @@ and map_slurp_parameter (env : env) ((v1, v2) : CST.splat_expression) =
             | `Typed_exp x -> Left (map_typed_parameter_classic env x)
             | _ -> Right (map_operation env x))
         | _ -> Right (map_choice_choice_module_defi env x))
-    (* Semgrep ellipsis doesn't make sense here... *)
+    (* Lens ellipsis doesn't make sense here... *)
     | `Semg_ellips tok -> todo env tok
     | `Deep_exp x -> todo env x
   in

@@ -18,7 +18,7 @@ jobs:
       - env:
           BEFORE_SHA: ${{ github.event.before }}
           EVENT_NAME: ${{ github.event_name }}
-          OTS_DIR: libs/ocaml-tree-sitter-semgrep
+          OTS_DIR: libs/ocaml-tree-sitter-lens
         id: push_or_pull_request
         if: ${{ github.event_name != 'workflow_dispatch' }}
         name: Select languages for push or pull request
@@ -39,7 +39,7 @@ jobs:
             local comparison_base="$1"
             local all_language_changes
             all_language_changes=$(
-              git diff --no-renames --name-only "$comparison_base" HEAD -- ':(top,glob)*.opam' ':(top,glob).github/workflows/libs/actions.libsonnet' ':(top,glob).github/workflows/libs/semgrep.libsonnet' ':(top,glob).github/workflows/libs/uses.libsonnet' ':(top,glob).github/workflows/ocaml-tree-sitter-test-languages.jsonnet' ':(top,glob).github/workflows/ocaml-tree-sitter-test-languages.yml' ':(top,glob).github/workflows/ocaml-tree-sitter.libsonnet' ':(top,glob)Makefile' ':(top,glob)cli/pyproject.toml' ':(top,glob)cli/uv.lock' ':(top,glob)dune-project' ':(top,glob)dune-workspace' ':(top,glob)libs/ocaml-tree-sitter-semgrep/Makefile' ':(top,glob)libs/ocaml-tree-sitter-semgrep/core/**' ':(top,glob)libs/ocaml-tree-sitter-semgrep/dune' ':(top,glob)libs/ocaml-tree-sitter-semgrep/scripts/**' ':(top,glob)opam-lockfiles/*.locked' ':(top,glob)tree-sitter-config.mk' ':(top,glob)tree-sitter-config.sh' ':(top,exclude,glob)libs/ocaml-tree-sitter-semgrep/core/doc/**' ':(top,exclude,glob)libs/ocaml-tree-sitter-semgrep/core/test/**' ':(top,exclude,glob)libs/ocaml-tree-sitter-semgrep/core/README.md' ':(top,exclude,glob)libs/ocaml-tree-sitter-semgrep/scripts/test_*.py'
+              git diff --no-renames --name-only "$comparison_base" HEAD -- ':(top,glob)*.opam' ':(top,glob).github/workflows/libs/actions.libsonnet' ':(top,glob).github/workflows/libs/lens.libsonnet' ':(top,glob).github/workflows/libs/uses.libsonnet' ':(top,glob).github/workflows/ocaml-tree-sitter-test-languages.jsonnet' ':(top,glob).github/workflows/ocaml-tree-sitter-test-languages.yml' ':(top,glob).github/workflows/ocaml-tree-sitter.libsonnet' ':(top,glob)Makefile' ':(top,glob)cli/pyproject.toml' ':(top,glob)cli/uv.lock' ':(top,glob)dune-project' ':(top,glob)dune-workspace' ':(top,glob)libs/ocaml-tree-sitter-lens/Makefile' ':(top,glob)libs/ocaml-tree-sitter-lens/core/**' ':(top,glob)libs/ocaml-tree-sitter-lens/dune' ':(top,glob)libs/ocaml-tree-sitter-lens/scripts/**' ':(top,glob)opam-lockfiles/*.locked' ':(top,glob)tree-sitter-config.mk' ':(top,glob)tree-sitter-config.sh' ':(top,exclude,glob)libs/ocaml-tree-sitter-lens/core/doc/**' ':(top,exclude,glob)libs/ocaml-tree-sitter-lens/core/test/**' ':(top,exclude,glob)libs/ocaml-tree-sitter-lens/core/README.md' ':(top,exclude,glob)libs/ocaml-tree-sitter-lens/scripts/test_*.py'
             )
             if [ -n "$all_language_changes" ]; then
               printf 'Full-matrix trigger paths changed:\n%s\n' "$all_language_changes"
@@ -50,7 +50,7 @@ jobs:
             base_registry=$(mktemp)
             git show "$comparison_base:$OTS_DIR/lang/upstream-grammars.json" \
               > "$base_registry"
-            git diff --no-renames --name-only "$comparison_base" HEAD -- ':(top,glob)libs/ocaml-tree-sitter-semgrep/lang/**' \
+            git diff --no-renames --name-only "$comparison_base" HEAD -- ':(top,glob)libs/ocaml-tree-sitter-lens/lang/**' \
               | sed "s|^$OTS_DIR/||" \
               | "$OTS_DIR/scripts/select_grammar_tests.py" "$base_registry" \
               >> "$GITHUB_OUTPUT"
@@ -86,7 +86,7 @@ jobs:
       - env:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           DISPATCH_MODE: ${{ github.event.inputs.mode }}
-          OTS_DIR: libs/ocaml-tree-sitter-semgrep
+          OTS_DIR: libs/ocaml-tree-sitter-lens
         id: workflow_dispatch
         if: ${{ github.event_name == 'workflow_dispatch' }}
         name: Select languages for manual run
@@ -107,7 +107,7 @@ jobs:
             local comparison_base="$1"
             local all_language_changes
             all_language_changes=$(
-              git diff --no-renames --name-only "$comparison_base" HEAD -- ':(top,glob)*.opam' ':(top,glob).github/workflows/libs/actions.libsonnet' ':(top,glob).github/workflows/libs/semgrep.libsonnet' ':(top,glob).github/workflows/libs/uses.libsonnet' ':(top,glob).github/workflows/ocaml-tree-sitter-test-languages.jsonnet' ':(top,glob).github/workflows/ocaml-tree-sitter-test-languages.yml' ':(top,glob).github/workflows/ocaml-tree-sitter.libsonnet' ':(top,glob)Makefile' ':(top,glob)cli/pyproject.toml' ':(top,glob)cli/uv.lock' ':(top,glob)dune-project' ':(top,glob)dune-workspace' ':(top,glob)libs/ocaml-tree-sitter-semgrep/Makefile' ':(top,glob)libs/ocaml-tree-sitter-semgrep/core/**' ':(top,glob)libs/ocaml-tree-sitter-semgrep/dune' ':(top,glob)libs/ocaml-tree-sitter-semgrep/scripts/**' ':(top,glob)opam-lockfiles/*.locked' ':(top,glob)tree-sitter-config.mk' ':(top,glob)tree-sitter-config.sh' ':(top,exclude,glob)libs/ocaml-tree-sitter-semgrep/core/doc/**' ':(top,exclude,glob)libs/ocaml-tree-sitter-semgrep/core/test/**' ':(top,exclude,glob)libs/ocaml-tree-sitter-semgrep/core/README.md' ':(top,exclude,glob)libs/ocaml-tree-sitter-semgrep/scripts/test_*.py'
+              git diff --no-renames --name-only "$comparison_base" HEAD -- ':(top,glob)*.opam' ':(top,glob).github/workflows/libs/actions.libsonnet' ':(top,glob).github/workflows/libs/lens.libsonnet' ':(top,glob).github/workflows/libs/uses.libsonnet' ':(top,glob).github/workflows/ocaml-tree-sitter-test-languages.jsonnet' ':(top,glob).github/workflows/ocaml-tree-sitter-test-languages.yml' ':(top,glob).github/workflows/ocaml-tree-sitter.libsonnet' ':(top,glob)Makefile' ':(top,glob)cli/pyproject.toml' ':(top,glob)cli/uv.lock' ':(top,glob)dune-project' ':(top,glob)dune-workspace' ':(top,glob)libs/ocaml-tree-sitter-lens/Makefile' ':(top,glob)libs/ocaml-tree-sitter-lens/core/**' ':(top,glob)libs/ocaml-tree-sitter-lens/dune' ':(top,glob)libs/ocaml-tree-sitter-lens/scripts/**' ':(top,glob)opam-lockfiles/*.locked' ':(top,glob)tree-sitter-config.mk' ':(top,glob)tree-sitter-config.sh' ':(top,exclude,glob)libs/ocaml-tree-sitter-lens/core/doc/**' ':(top,exclude,glob)libs/ocaml-tree-sitter-lens/core/test/**' ':(top,exclude,glob)libs/ocaml-tree-sitter-lens/core/README.md' ':(top,exclude,glob)libs/ocaml-tree-sitter-lens/scripts/test_*.py'
             )
             if [ -n "$all_language_changes" ]; then
               printf 'Full-matrix trigger paths changed:\n%s\n' "$all_language_changes"
@@ -118,7 +118,7 @@ jobs:
             base_registry=$(mktemp)
             git show "$comparison_base:$OTS_DIR/lang/upstream-grammars.json" \
               > "$base_registry"
-            git diff --no-renames --name-only "$comparison_base" HEAD -- ':(top,glob)libs/ocaml-tree-sitter-semgrep/lang/**' \
+            git diff --no-renames --name-only "$comparison_base" HEAD -- ':(top,glob)libs/ocaml-tree-sitter-lens/lang/**' \
               | sed "s|^$OTS_DIR/||" \
               | "$OTS_DIR/scripts/select_grammar_tests.py" "$base_registry" \
               >> "$GITHUB_OUTPUT"
@@ -161,9 +161,9 @@ jobs:
           GIT_CONFIG_COUNT: "1"
           GIT_CONFIG_KEY_0: maintenance.auto
           GIT_CONFIG_VALUE_0: "false"
-        uses: semgrep/setup-ocaml@a739c5405d73c42ef15a9dc995efc0f87396cc36
+        uses: lens/setup-ocaml@a739c5405d73c42ef15a9dc995efc0f87396cc36
         with:
-          cache-prefix: v8-grammar-${{ hashFiles('opam-lockfiles/*.locked', '*.opam', 'dev/required.opam', 'libs/ocaml-tree-sitter-semgrep/core/tree-sitter.opam', 'cli/src/semgrep/semgrep_interfaces/semgrep-interfaces.opam', 'OSS/opam-lockfiles/*.locked', 'OSS/*.opam', 'OSS/dev/required.opam', 'OSS/libs/ocaml-tree-sitter-semgrep/core/tree-sitter.opam', 'OSS/cli/src/semgrep/semgrep_interfaces/semgrep-interfaces.opam') }}
+          cache-prefix: v8-grammar-${{ hashFiles('opam-lockfiles/*.locked', '*.opam', 'dev/required.opam', 'libs/ocaml-tree-sitter-lens/core/tree-sitter.opam', 'cli/src/lens/lens_interfaces/lens-interfaces.opam', 'OSS/opam-lockfiles/*.locked', 'OSS/*.opam', 'OSS/dev/required.opam', 'OSS/libs/ocaml-tree-sitter-lens/core/tree-sitter.opam', 'OSS/cli/src/lens/lens_interfaces/lens-interfaces.opam') }}
           ocaml-compiler: ocaml-variants.5.4.0+options,ocaml-option-flambda
           opam-pin: false
           opam-repositories: |
@@ -171,53 +171,53 @@ jobs:
           save-opam-post-run: true
       - id: cache-id
         run: |
-          echo "sha=$(git rev-parse HEAD:libs/ocaml-tree-sitter-semgrep/core)" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD:libs/ocaml-tree-sitter-lens/core)" >> "$GITHUB_OUTPUT"
           echo "ocaml=$(opam exec -- ocamlc -version)" >> "$GITHUB_OUTPUT"
       - id: core-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
-          key: grammar-core-v3-tools-${{ runner.os }}-${{ steps.cache-id.outputs.ocaml }}-${{ steps.cache-id.outputs.sha }}-${{ hashFiles('*.opam', '.github/workflows/libs/actions.libsonnet', '.github/workflows/libs/semgrep.libsonnet', '.github/workflows/libs/uses.libsonnet', 'Makefile', 'cli/pyproject.toml', 'cli/uv.lock', 'dune-project', 'dune-workspace', 'opam-lockfiles/*.locked', 'tree-sitter-config.mk', 'tree-sitter-config.sh') }}
+          key: grammar-core-v3-tools-${{ runner.os }}-${{ steps.cache-id.outputs.ocaml }}-${{ steps.cache-id.outputs.sha }}-${{ hashFiles('*.opam', '.github/workflows/libs/actions.libsonnet', '.github/workflows/libs/lens.libsonnet', '.github/workflows/libs/uses.libsonnet', 'Makefile', 'cli/pyproject.toml', 'cli/uv.lock', 'dune-project', 'dune-workspace', 'opam-lockfiles/*.locked', 'tree-sitter-config.mk', 'tree-sitter-config.sh') }}
           path: |-
             _build
-            libs/ocaml-tree-sitter-semgrep/core/bin
+            libs/ocaml-tree-sitter-lens/core/bin
       - name: Install grammar dependencies
         run: opam exec -- make install-grammar-deps
         working-directory: .
       - name: Build grammar tools
         run: opam exec -- make grammar-tools
-        working-directory: libs/ocaml-tree-sitter-semgrep/../..
+        working-directory: libs/ocaml-tree-sitter-lens/../..
       - if: steps.core-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
-          key: grammar-core-v3-tools-${{ runner.os }}-${{ steps.cache-id.outputs.ocaml }}-${{ steps.cache-id.outputs.sha }}-${{ hashFiles('*.opam', '.github/workflows/libs/actions.libsonnet', '.github/workflows/libs/semgrep.libsonnet', '.github/workflows/libs/uses.libsonnet', 'Makefile', 'cli/pyproject.toml', 'cli/uv.lock', 'dune-project', 'dune-workspace', 'opam-lockfiles/*.locked', 'tree-sitter-config.mk', 'tree-sitter-config.sh') }}
+          key: grammar-core-v3-tools-${{ runner.os }}-${{ steps.cache-id.outputs.ocaml }}-${{ steps.cache-id.outputs.sha }}-${{ hashFiles('*.opam', '.github/workflows/libs/actions.libsonnet', '.github/workflows/libs/lens.libsonnet', '.github/workflows/libs/uses.libsonnet', 'Makefile', 'cli/pyproject.toml', 'cli/uv.lock', 'dune-project', 'dune-workspace', 'opam-lockfiles/*.locked', 'tree-sitter-config.mk', 'tree-sitter-config.sh') }}
           path: |-
             _build
-            libs/ocaml-tree-sitter-semgrep/core/bin
+            libs/ocaml-tree-sitter-lens/core/bin
       - id: ts-versions
         name: Resolve pinned tree-sitter versions
         run: |
           echo "versions=$(./scripts/ts-versions | tr '\n' '-')" >> "$GITHUB_OUTPUT"
-        working-directory: libs/ocaml-tree-sitter-semgrep
+        working-directory: libs/ocaml-tree-sitter-lens
       - id: ts-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           key: tree-sitter-${{ runner.os }}-${{ steps.ts-versions.outputs.versions }}-${{ steps.cache-id.outputs.sha }}
-          path: libs/ocaml-tree-sitter-semgrep/core/tree-sitter-*.*.*
+          path: libs/ocaml-tree-sitter-lens/core/tree-sitter-*.*.*
       - name: Setup tree-sitter versions
         run: ./core/scripts/provision-tree-sitter-all
-        working-directory: libs/ocaml-tree-sitter-semgrep
+        working-directory: libs/ocaml-tree-sitter-lens
       - if: steps.ts-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           key: tree-sitter-${{ runner.os }}-${{ steps.ts-versions.outputs.versions }}-${{ steps.cache-id.outputs.sha }}
-          path: libs/ocaml-tree-sitter-semgrep/core/tree-sitter-*.*.*
+          path: libs/ocaml-tree-sitter-lens/core/tree-sitter-*.*.*
       - name: test-lang ${{ matrix.language }}
         run: |
           set -euo pipefail
           eval "$(opam env)"
           cd lang
           ./test-lang "${{ matrix.language }}"
-        working-directory: libs/ocaml-tree-sitter-semgrep
+        working-directory: libs/ocaml-tree-sitter-lens
     strategy:
       fail-fast: false
       matrix:
@@ -248,7 +248,7 @@ jobs:
             exit 0
           fi
           test "$RESULT" = "success"
-name: Test Grammars in ocaml-tree-sitter-semgrep
+name: Test Grammars in ocaml-tree-sitter-lens
 on:
   pull_request: {}
   push:
@@ -257,7 +257,7 @@ on:
     paths:
       - '*.opam'
       - .github/workflows/libs/actions.libsonnet
-      - .github/workflows/libs/semgrep.libsonnet
+      - .github/workflows/libs/lens.libsonnet
       - .github/workflows/libs/uses.libsonnet
       - .github/workflows/ocaml-tree-sitter-test-languages.jsonnet
       - .github/workflows/ocaml-tree-sitter-test-languages.yml
@@ -267,18 +267,18 @@ on:
       - cli/uv.lock
       - dune-project
       - dune-workspace
-      - libs/ocaml-tree-sitter-semgrep/Makefile
-      - libs/ocaml-tree-sitter-semgrep/core/**
-      - libs/ocaml-tree-sitter-semgrep/dune
-      - libs/ocaml-tree-sitter-semgrep/lang/**
-      - libs/ocaml-tree-sitter-semgrep/scripts/**
+      - libs/ocaml-tree-sitter-lens/Makefile
+      - libs/ocaml-tree-sitter-lens/core/**
+      - libs/ocaml-tree-sitter-lens/dune
+      - libs/ocaml-tree-sitter-lens/lang/**
+      - libs/ocaml-tree-sitter-lens/scripts/**
       - opam-lockfiles/*.locked
       - tree-sitter-config.mk
       - tree-sitter-config.sh
-      - '!libs/ocaml-tree-sitter-semgrep/core/doc/**'
-      - '!libs/ocaml-tree-sitter-semgrep/core/test/**'
-      - '!libs/ocaml-tree-sitter-semgrep/core/README.md'
-      - '!libs/ocaml-tree-sitter-semgrep/scripts/test_*.py'
+      - '!libs/ocaml-tree-sitter-lens/core/doc/**'
+      - '!libs/ocaml-tree-sitter-lens/core/test/**'
+      - '!libs/ocaml-tree-sitter-lens/core/README.md'
+      - '!libs/ocaml-tree-sitter-lens/scripts/test_*.py'
   workflow_dispatch:
     inputs:
       mode:

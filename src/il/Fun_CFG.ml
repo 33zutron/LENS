@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -35,7 +35,7 @@ let check_if_real_pos__warn_once =
   let errored = Atomic.make false in
   fun pos ->
     if Option.is_none pos && Atomic.compare_and_set errored false true then
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.warn (fun m ->
           m
             "BUG: IL.Fun_CFG: Non-unique lambda declarations must have source \

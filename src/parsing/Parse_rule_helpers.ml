@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Emma Jin, Brandon Wu
  *
- * Copyright (C) 2019-2023 Semgrep Inc.
+ * Copyright (C) 2019-2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -17,7 +17,7 @@ module R = Rule
 module G = AST_generic
 module J = JSON
 
-(* alt: use a separate Logs src "semgrep.parsing.rule" *)
+(* alt: use a separate Logs src "lens.parsing.rule" *)
 module Log = Log_parsing.Log
 
 (*****************************************************************************)
@@ -127,7 +127,7 @@ let warn_if_remaining_unparsed_fields (rule_id : Rule_ID.t) (rd : dict) : unit =
    *)
   rd.h |> Hashtbl_.Base.hash_to_list
   |> List.iter (fun (k, _) ->
-      (* nosemgrep: no-logs-in-library *)
+      (* nolens: no-logs-in-library *)
       Logs.warn (fun m ->
           m "Skipping unknown field '%s' in rule %a" k Rule_ID.pp rule_id))
 

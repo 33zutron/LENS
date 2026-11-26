@@ -1,7 +1,7 @@
 (* Yoann Padioleau
  *
  * Copyright (C) 2010 Facebook
- * Copyright (C) 2023 Semgrep Inc.
+ * Copyright (C) 2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -26,10 +26,10 @@ open Sexplib.Std
  * more complicated to allow to annotate tokens with transformation information
  * for Spatch in Coccinelle. However, this is not the case anymore because
  * we use a different approach to transform code
- * (AST-based autofix in Semgrep).
+ * (AST-based autofix in Lens).
  *
  * We use fake tokens because in many of
- * the ASTs/CSTs in Semgrep (including in AST_generic.ml) we store the
+ * the ASTs/CSTs in Lens (including in AST_generic.ml) we store the
  * tokens in the ASTs/CSTs at the leaves, and sometimes the actual
  * token is optional (e.g., a virtual semicolon in Javascript). Moreover,
  * we abuse those tokens at the leaves to compute the range of constructs.
@@ -127,7 +127,7 @@ exception NoTokenLocation of string
 (*****************************************************************************)
 
 (* see also -full_token_info in Meta_AST.ml *)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let pp_full_token_info = ref false
 
 (* for ppx_deriving *)

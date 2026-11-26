@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2025 Semgrep Inc.
+   Copyright (c) 2021-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -18,7 +18,7 @@
    optimization that operates directly on the source files rather than the
    AST. It would be better since it turns out parsing is usually more
    expensive than matching, and that would allow skipping the parsing step.
-   See https://github.com/semgrep/semgrep/issues/3461
+   See https://github.com/lens/lens/issues/3461
 *)
 
 (*

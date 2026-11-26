@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -17,20 +17,20 @@ from typing import List
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Maven
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Pypi
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Unknown
-from semgrep.subproject import ClosestSubprojectFinder
-from semgrep.subproject import find_closest_resolved_subproject
-from semgrep.subproject import find_resolution_failures
-from semgrep.subproject import from_resolved_dependencies
-from semgrep.subproject import get_display_paths
-from semgrep.subproject import make_dependencies_by_source_path
-from semgrep.subproject import subproject_to_stats
-from semgrep.subproject import to_stats_output
-from semgrep.types import Target
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import Maven
+from lens.lens_interfaces.lens_output_v1 import Pypi
+from lens.lens_interfaces.lens_output_v1 import Unknown
+from lens.subproject import ClosestSubprojectFinder
+from lens.subproject import find_closest_resolved_subproject
+from lens.subproject import find_resolution_failures
+from lens.subproject import from_resolved_dependencies
+from lens.subproject import get_display_paths
+from lens.subproject import make_dependencies_by_source_path
+from lens.subproject import subproject_to_stats
+from lens.subproject import to_stats_output
+from lens.types import Target
 
 
 def create_tmp_file(path: Path):
@@ -789,7 +789,7 @@ class TestManifestLockfileDependencySource:
 
 class TestFindResolutionFailures:
     """
-    One test per row of the decision table for `semgrep ci --no-suppress-errors`
+    One test per row of the decision table for `lens ci --no-suppress-errors`
     (SC-3613): which subproject outcomes fail the scan, and which never do.
     """
 
@@ -854,7 +854,7 @@ class TestFindResolutionFailures:
         sub = self._unresolved(reason, [self._cmd_failed()])
         assert find_resolution_failures([sub]) == []
 
-    # Row 4: failed, but only because Semgrep does not support the manifest
+    # Row 4: failed, but only because Lens does not support the manifest
     @pytest.mark.quick
     def test_failed_only_unsupported_manifest_is_not_a_failure(self):
         sub = self._unresolved(

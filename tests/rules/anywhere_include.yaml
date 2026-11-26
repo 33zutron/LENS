@@ -5,7 +5,7 @@ rules:
     message: You're calling bar with an insecure global flag
     metadata:
     patterns:
-    - semgrep-internal-pattern-anywhere:
+    - lens-internal-pattern-anywhere:
         pattern: '#include "legacy-io-header.h"'
     - pattern: "printk(...)"
     severity: ERROR

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2025 Semgrep Inc.
+# Copyright (c) 2021-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,12 +14,12 @@ import re
 import subprocess
 
 import pytest
-from tests.semgrep_runner import mk_semgrep_base_command
+from tests.lens_runner import mk_lens_base_command
 
 
 @pytest.mark.kinda_slow
 def test_version():
-    cmd = mk_semgrep_base_command("--version", ["--disable-version-check"])
+    cmd = mk_lens_base_command("--version", ["--disable-version-check"])
     result = subprocess.check_output(
         cmd,
         encoding="utf-8",

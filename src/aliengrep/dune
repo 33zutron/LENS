@@ -1,4 +1,4 @@
-; New generic mode for Semgrep. Alternative to spacegrep.
+; New generic mode for Lens. Alternative to spacegrep.
 (library
  (public_name aliengrep)
  (libraries

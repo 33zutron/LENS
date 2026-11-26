@@ -5,7 +5,7 @@ rules:
         var $UTIL = require("something_or_other");
         ...
         $UTIL.$FUNC(...)
-    # ruleid: semgrep-metacheck-builtin
+    # ruleid: lens-metacheck-builtin
     - metavariable-regex:
         metavariable: $METHOD
         regex: (a|b|c)

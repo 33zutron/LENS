@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2024 Semgrep, Inc.
+ * Copyright (C) 2024 Lens, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,9 +19,9 @@ let t = Testo.create
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* semgrep-core and osemgrep tests suite entry point.
+(* lens-core and olens tests suite entry point.
  *
- * From the root of the semgrep repo you can do
+ * From the root of the lens repo you can do
  *
  *   $ ./test -s foo
  *
@@ -131,7 +131,7 @@ let tests =
         Collections_tests.tests;
         Unit_list_files.tests ();
         Unit_glob.tests;
-        Unit_semgrepignore.tests;
+        Unit_lensignore.tests;
         Unit_gitignore.tests;
         Unit_include_filter.tests;
         Unit_disk_cache.tests;
@@ -172,7 +172,7 @@ let tests =
         Unit_http_helpers.tests;
         Unit_keepalive_race.tests ~extra_tags:[ Test_tags.flaky ] ();
         Unit_proxy.tests;
-        (* osemgrep unit tests *)
+        (* olens unit tests *)
         Unit_Login.tests;
         Unit_app.tests;
         Unit_Fetching.tests;
@@ -180,16 +180,16 @@ let tests =
         Unit_sarif_output.tests;
         Unit_ci.tests;
         Test_is_blocking_helpers.tests;
-        (* osemgrep e2e subcommand tests *)
+        (* olens e2e subcommand tests *)
         Test_login_subcommand.tests ();
         Unit_test_subcommand.tests ();
         Test_show_subcommand.tests ();
-        Test_osemgrep.tests ();
+        Test_olens.tests ();
         (* Networking tests disabled as they will get rate limited sometimes *)
         (* And the SSL issues they've been testing have been stable *)
         (*Unit_Networking.tests;*)
         Legacy_test_ls_e2e.tests ();
-        (* End osemgrep tests *)
+        (* End olens tests *)
         Spacegrep_tests.Test.tests ();
         Unit_tests.tests;
         Unit_core_json_output.tests;
@@ -225,7 +225,7 @@ let tests_with_delayed_error () =
       ]
 
 let main () =
-  (* find the root of the semgrep repo as many of our tests rely on
+  (* find the root of the lens repo as many of our tests rely on
      'let test_path = "tests/"' to find their test files *)
   let project_root = Legacy_test_ls_e2e.project_root () in
   (* Don't read ~/.gitconfig since it varies from one developer to another,
@@ -237,11 +237,11 @@ let main () =
       Core_CLI.register_exception_printers ();
       Http_helpers.set_client_ref (module Cohttp_lwt_unix.Client);
       (* Show log messages produced when building the list of tests.
-         Log_semgrep.setup prints a lengthy welcome message that we
+         Log_lens.setup prints a lengthy welcome message that we
          don't want in the output of each unit test. *)
-      Log_semgrep.with_setup ~color:On ~level:(Some Info) @@ fun () ->
+      Log_lens.with_setup ~color:On ~level:(Some Info) @@ fun () ->
       (* let's go *)
-      Testo.interpret_argv ~project_name:"semgrep-core" (fun _env ->
+      Testo.interpret_argv ~project_name:"lens-core" (fun _env ->
           tests_with_delayed_error ()))
 
 let () = main ()

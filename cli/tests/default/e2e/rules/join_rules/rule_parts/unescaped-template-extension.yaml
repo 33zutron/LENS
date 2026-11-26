@@ -19,7 +19,7 @@ rules:
       category: security
       technology:
         - flask
-      source: https://semgrep.dev/r/python.flask.security.unescaped-template-extension.unescaped-template-extension
+      source: https://lens.dev/r/python.flask.security.unescaped-template-extension.unescaped-template-extension
     patterns:
       - pattern: flask.render_template("$PATH", ..., $VAR=$VALUE, ...)
       - metavariable-regex:

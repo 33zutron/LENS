@@ -1,5 +1,5 @@
 <?php
-// https://github.com/returntocorp/semgrep/issues/4320
+// https://github.com/returntocorp/lens/issues/4320
 $doc = new DOMDocument();
 // We did not catch the error when the sink was the variable in an l-value,
 // because we assumed that only expressions or instructions could be sinks.

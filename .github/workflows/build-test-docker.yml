@@ -2,7 +2,7 @@
 jobs:
   build-test-docker:
     outputs:
-      digest: ${{ steps.build-semgrep-cli-docker-image.outputs.digest }}
+      digest: ${{ steps.build-lens-cli-docker-image.outputs.digest }}
     permissions:
       contents: read
       id-token: write
@@ -17,7 +17,7 @@ jobs:
           ref: ${{ inputs.ref != '' && inputs.ref || github.sha }}
           submodules: true
       - uses: depot/setup-action@15c09a5f77a0840ad4bce955686522a257853461
-      - id: semgrep-cli-prepare-metadata
+      - id: lens-cli-prepare-metadata
         name: Set tags and labels
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302
         with:
@@ -32,7 +32,7 @@ jobs:
             type=raw,value=sha-${{ inputs.ref != '' && inputs.ref || github.sha }}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
-      - id: build-semgrep-cli-docker-image
+      - id: build-lens-cli-docker-image
         name: 'Build Build Core: Build docker image in Depot'
         uses: depot/build-push-action@98e78adca7817480b8185f474a400b451d74e287
         with:
@@ -42,12 +42,12 @@ jobs:
           buildx-fallback: false
           context: .
           file: Dockerfile
-          labels: ${{ steps.semgrep-cli-prepare-metadata.outputs.labels }}
+          labels: ${{ steps.lens-cli-prepare-metadata.outputs.labels }}
           load: true
           platforms: linux/amd64,linux/arm64
           push: false
-          tags: ${{ steps.semgrep-cli-prepare-metadata.outputs.tags }}
-          target: semgrep-cli
+          tags: ${{ steps.lens-cli-prepare-metadata.outputs.tags }}
+          target: lens-cli
       - env:
           ENV_VARS: ""
         name: Make env file for docker run

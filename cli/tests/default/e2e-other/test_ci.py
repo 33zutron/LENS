@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2025 Semgrep Inc.
+# Copyright (c) 2022-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -13,13 +13,13 @@
 ##############################################################################
 # Prelude
 ##############################################################################
-# Testing 'semgrep ci' "end-to-end".
+# Testing 'lens ci' "end-to-end".
 #
 # TODO: most of the tests in this file rely on use_click_runner=True
 # because of some mocking and monkeypatching. Thus, this is this not
-# a real e2e test because cli/bin/semgrep is not invoked.
+# a real e2e test because cli/bin/lens is not invoked.
 # Try to use environment variables instead of Python monkey patching
-# so that those tests can also pass with osemgrep.
+# so that those tests can also pass with olens.
 import json
 import re
 import shutil
@@ -42,42 +42,42 @@ import pytest
 from requests.exceptions import ConnectionError
 from ruamel.yaml import YAML
 from tests.conftest import load_anonymous_user_id
-from tests.conftest import make_semgrepconfig_file
+from tests.conftest import make_lensconfig_file
 from tests.conftest import make_settings_file
 from tests.conftest import str_containing
 from tests.default.e2e.test_baseline import _git_commit
 from tests.default.e2e.test_baseline import _git_merge
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-import semgrep.run_scan
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.run_scan
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.parsers.util import DependencyParserError
-from semgrep import telemetry
-from semgrep.app.scans import ScanHandler
-from semgrep.constants import OutputFormat
-from semgrep.core_runner import CoreRunner
-from semgrep.engine import EngineType
-from semgrep.error import SemgrepCoreError
-from semgrep.error import SemgrepError
-from semgrep.error_handler import ErrorHandler
-from semgrep.meta import GithubMeta
-from semgrep.meta import GitlabMeta
-from semgrep.meta import GitMeta
-from semgrep.metrics import Metrics
-from semgrep.output import OutputHandler
-from semgrep.output_extra import OutputExtra
-from semgrep.rpc import RpcSession
-from semgrep.rule import Rule
-from semgrep.rule_lang import RuleValidationMode
-from semgrep.rule_match import RuleMatchMap
-from semgrep.settings import generate_anonymous_user_id
-from semgrep.state import get_state
-from semgrep.subproject import DependencyResolutionConfig
-from semgrep.symbol_analysis import SubprojectSymbolAnalysis
-from semgrep.target_manager import SAST_PRODUCT
-from semgrep.target_manager import SECRETS_PRODUCT
-from semgrep.target_manager import TargetManager
-from semgrep.target_mode import TargetModeConfig
+from lens import telemetry
+from lens.app.scans import ScanHandler
+from lens.constants import OutputFormat
+from lens.core_runner import CoreRunner
+from lens.engine import EngineType
+from lens.error import LensCoreError
+from lens.error import LensError
+from lens.error_handler import ErrorHandler
+from lens.meta import GithubMeta
+from lens.meta import GitlabMeta
+from lens.meta import GitMeta
+from lens.metrics import Metrics
+from lens.output import OutputHandler
+from lens.output_extra import OutputExtra
+from lens.rpc import RpcSession
+from lens.rule import Rule
+from lens.rule_lang import RuleValidationMode
+from lens.rule_match import RuleMatchMap
+from lens.settings import generate_anonymous_user_id
+from lens.state import get_state
+from lens.subproject import DependencyResolutionConfig
+from lens.symbol_analysis import SubprojectSymbolAnalysis
+from lens.target_manager import SAST_PRODUCT
+from lens.target_manager import SECRETS_PRODUCT
+from lens.target_manager import TargetManager
+from lens.target_mode import TargetModeConfig
 
 ##############################################################################
 # Constants
@@ -115,7 +115,7 @@ GENERIC_SECRETS_AND_REAL_RULE = dedent(
       pattern: $X
       metadata:
         product: secrets
-        'semgrep.ruleset': 'semgrep-secrets-ai'
+        'lens.ruleset': 'lens-secrets-ai'
     - id: real-rule-example
       message: "this rule should actually display findings in CLI"
       languages: [python]
@@ -131,8 +131,8 @@ DUMMY_APP_TOKEN_BOB = "coolcucumber"
 # GITHUB_ vars the app code uses, so the tests can enforce the env is mocked
 # appropriately.
 # UPDATE: the code below is now commented because it's using `git grep`
-# which prevents to build pysemgrep (cd cli; make build) when not
-# inside a repository (as in pro/.../check-semgrep-oss.jsonnet).
+# which prevents to build pylens (cd cli; make build) when not
+# inside a repository (as in pro/.../check-lens-oss.jsonnet).
 # Instead, we run the commented code below and just copy pasted the
 # output in the USED_GITHUB_VARS below.
 #
@@ -189,7 +189,7 @@ DEFAULT_GITHUB_VARS = {
 
 
 # Can we have this as a repo we can clone with 'git clone' so we can
-# inspect it and try semgrep commands on it?
+# inspect it and try lens commands on it?
 @pytest.fixture
 def git_path_empty_repo(monkeypatch, tmp_path):
     """
@@ -375,20 +375,20 @@ def scan_config():
           languages: [python]
           severity: ERROR
           metadata:
-            source: https://semgrep.dev/r/eqeq-bad
+            source: https://lens.dev/r/eqeq-bad
         - id: eqeq-five
           pattern: $X == 5
           message: "useless comparison to 5"
           languages: [python]
           severity: ERROR
           metadata:
-            dev.semgrep.actions: []
-            source: https://semgrep.dev/r/eqeq-five
-            semgrep.dev:
+            dev.lens.actions: []
+            source: https://lens.dev/r/eqeq-five
+            lens.dev:
                 rule:
                     rule_id: "abcd"
                     version_id: "version1"
-                    url: "https://semgrep.dev/r/python.eqeq-five"
+                    url: "https://lens.dev/r/python.eqeq-five"
                     shortlink: "https://sg.run/abcd"
                 src: unchanged
           fix: $X == 2
@@ -398,13 +398,13 @@ def scan_config():
           languages: [python]
           severity: ERROR
           metadata:
-            dev.semgrep.actions: ["block"]
-            source: https://semgrep.dev/r/eqeq-four
-            semgrep.dev:
+            dev.lens.actions: ["block"]
+            source: https://lens.dev/r/eqeq-four
+            lens.dev:
                 rule:
                     rule_id: abce
                     version_id: version2
-                    url: "https://semgrep.dev/r/python.eqeq-five"
+                    url: "https://lens.dev/r/python.eqeq-five"
                     shortlink: "https://sg.run/abcd"
                 src: new-version
         - id: abceversion1
@@ -413,13 +413,13 @@ def scan_config():
           languages: [python]
           severity: ERROR
           metadata:
-            dev.semgrep.actions: []
-            source: https://semgrep.dev/r/abceversion1
-            semgrep.dev:
+            dev.lens.actions: []
+            source: https://lens.dev/r/abceversion1
+            lens.dev:
                 rule:
                     rule_id: abce
                     version_id: version1
-                    url: "https://semgrep.dev/r/python.eqeq-five"
+                    url: "https://lens.dev/r/python.eqeq-five"
                     shortlink: "https://sg.run/abcd"
                     rule_name: eqeq-four
                 src: previous-scan
@@ -433,13 +433,13 @@ def scan_config():
           pattern-sinks:
             - pattern: sink($X)
           metadata:
-            dev.semgrep.actions: ["block"]
-            source: https://semgrep.dev/r/taint-test
-            semgrep.dev:
+            dev.lens.actions: ["block"]
+            source: https://lens.dev/r/taint-test
+            lens.dev:
                 rule:
                     rule_id: abcf
                     version_id: version1
-                    url: "https://semgrep.dev/r/python.eqeq-five"
+                    url: "https://lens.dev/r/python.eqeq-five"
                     shortlink: "https://sg.run/abcd"
                 src: new-rule
         - id: supply-chain1
@@ -451,8 +451,8 @@ def scan_config():
             package: badlib
             version: == 99.99.99
           metadata:
-            dev.semgrep.actions: []
-            source: https://semgrep.dev/-/advisories/supply-chain1
+            dev.lens.actions: []
+            source: https://lens.dev/-/advisories/supply-chain1
             sca-kind: upgrade-only
         - id: supply-chain2
           message: "found a dependency"
@@ -463,8 +463,8 @@ def scan_config():
             package: badlib
             version: == 99.99.99
           metadata:
-            dev.semgrep.actions: []
-            source: https://semgrep.dev/-/advisories/supply-chain2
+            dev.lens.actions: []
+            source: https://lens.dev/-/advisories/supply-chain2
             sca-kind: upgrade-only
         - id: supply-chain3
           message: "found another dependency but its a bad one >:D"
@@ -475,8 +475,8 @@ def scan_config():
             package: verbadlib
             version: == 99.99.99
           metadata:
-            dev.semgrep.actions: ["block"]
-            source: https://semgrep.dev/-/advisories/supply-chain3
+            dev.lens.actions: ["block"]
+            source: https://lens.dev/-/advisories/supply-chain3
             sca-kind: reachable
         """
     ).lstrip()
@@ -485,7 +485,7 @@ def scan_config():
 @pytest.fixture(autouse=True)
 def automocks(mocker, mock_ci_api):
     """
-    Necessary patches to run `semgrep ci` tests
+    Necessary patches to run `lens ci` tests
     """
     mocker.patch.object(
         GitMeta,
@@ -514,7 +514,7 @@ def always_suppress_errors(mocker):
     mocker.patch.object(ScanHandler, "always_suppress_errors", False)
 
 
-# Defining these fixtures to return functions allows the hostname (SEMGREP_URL) to be set for each test,
+# Defining these fixtures to return functions allows the hostname (LENS_URL) to be set for each test,
 # permitting tests that use different base URLs to succeed using these mocks.
 @pytest.fixture
 def start_scan_mock_maker(
@@ -525,7 +525,7 @@ def start_scan_mock_maker(
 ):
     # TODO: fix the noqa above
     def _start_scan_func(
-        semgrep_url: str = "https://semgrep.dev",
+        lens_url: str = "https://lens.dev",
         product_ignored_files: Mapping[out.Product, List[str]] = {},  # noqa
         project_merge_base: Optional[str] = None,
         enabled_products: Optional[List[str]] = None,
@@ -558,7 +558,7 @@ def start_scan_mock_maker(
 
         # Register v2 endpoints (default path): POST creates scan, GET polls for config
         create_scan_mock = requests_mock.post(
-            f"{semgrep_url}/api/cli/v2/scans",
+            f"{lens_url}/api/cli/v2/scans",
             json={"info": scan_info},
         )
         requests_mock.get(
@@ -576,7 +576,7 @@ def start_scan_mock_maker(
         )
         print(start_scan_response.to_json())
         requests_mock.post(
-            f"{semgrep_url}/api/cli/scans", json=start_scan_response.to_json()
+            f"{lens_url}/api/cli/scans", json=start_scan_response.to_json()
         )
 
         return create_scan_mock
@@ -586,10 +586,10 @@ def start_scan_mock_maker(
 
 @pytest.fixture
 def upload_results_mock_maker(requests_mock, mocked_scan_id, mocked_task_id):
-    def _upload_results_func(semgrep_url: str = "https://semgrep.dev"):
+    def _upload_results_func(lens_url: str = "https://lens.dev"):
         results_response = out.CiScanResultsResponse(errors=[], task_id=mocked_task_id)
         return requests_mock.post(
-            f"{semgrep_url}/api/agent/scans/{mocked_scan_id}/results",
+            f"{lens_url}/api/agent/scans/{mocked_scan_id}/results",
             json=results_response.to_json(),
         )
 
@@ -605,9 +605,9 @@ def mocked_complete_response():
 
 @pytest.fixture
 def complete_scan_mock_maker(requests_mock, mocked_scan_id, mocked_complete_response):
-    def _complete_scan_func(semgrep_url: str = "https://semgrep.dev"):
+    def _complete_scan_func(lens_url: str = "https://lens.dev"):
         return requests_mock.post(
-            f"{semgrep_url}/api/agent/scans/{mocked_scan_id}/complete",
+            f"{lens_url}/api/agent/scans/{mocked_scan_id}/complete",
             json=mocked_complete_response.to_json(),
         )
 
@@ -616,9 +616,9 @@ def complete_scan_mock_maker(requests_mock, mocked_scan_id, mocked_complete_resp
 
 @pytest.fixture
 def scan_failure_mock_maker(requests_mock, mocked_scan_id):
-    def _scan_failure_func(semgrep_url: str = "https://semgrep.dev"):
+    def _scan_failure_func(lens_url: str = "https://lens.dev"):
         return requests_mock.post(
-            f"{semgrep_url}/api/agent/scans/{mocked_scan_id}/error",
+            f"{lens_url}/api/agent/scans/{mocked_scan_id}/error",
             json=json.dumps({"exit_code": 0}),
         )
 
@@ -652,8 +652,8 @@ def mock_autofix(request, mocker, autofix):
     "env",
     [
         {  # Local run with no CI env vars
-            "SEMGREP_APP_TOKEN": "dummy",
-            "SEMGREP_REPO_URL": REMOTE_REPO_URL,
+            "LENS_APP_TOKEN": "dummy",
+            "LENS_REPO_URL": REMOTE_REPO_URL,
         },
         {  # Github full scan
             "CI": "true",
@@ -670,20 +670,20 @@ def mock_autofix(request, mocker, autofix):
             "GITHUB_REF": f"refs/heads/{BRANCH_NAME}",
             "GITHUB_BASE_REF": "",
             "GITHUB_HEAD_REF": "",
-            "SEMGREP_URL": "https://tenantname.semgrep.dev",
+            "LENS_URL": "https://tenantname.lens.dev",
         },
-        {  # Github full scan with SEMGREP env vars set
+        {  # Github full scan with LENS env vars set
             "CI": "true",
             **DEFAULT_GITHUB_VARS,
             "GITHUB_EVENT_NAME": "push",
             "GITHUB_REF": f"refs/heads/{BRANCH_NAME}",
             "GITHUB_BASE_REF": "",
             "GITHUB_HEAD_REF": "",
-            "SEMGREP_REPO_NAME": f"{REPO_DIR_NAME}/{REPO_DIR_NAME}",
-            "SEMGREP_JOB_URL": "customjoburl.com",
-            "SEMGREP_PR_ID": "312",  # should make the event_name `pull_request`
-            "SEMGREP_PR_TITLE": "PR_TITLE",
-            "SEMGREP_BRANCH": BRANCH_NAME,
+            "LENS_REPO_NAME": f"{REPO_DIR_NAME}/{REPO_DIR_NAME}",
+            "LENS_JOB_URL": "customjoburl.com",
+            "LENS_PR_ID": "312",  # should make the event_name `pull_request`
+            "LENS_PR_TITLE": "PR_TITLE",
+            "LENS_BRANCH": BRANCH_NAME,
         },
         {  # github but different server url - full scan
             "CI": "true",
@@ -711,7 +711,7 @@ def mock_autofix(request, mocker, autofix):
             "GITHUB_REF": "refs/pull/123/merge",
             "GITHUB_BASE_REF": MAIN_BRANCH_NAME,
             "GITHUB_HEAD_REF": BRANCH_NAME,
-            "SEMGREP_PROJECT_CONFIG": "tags:\n- tag1\n- tag_key:tag_val\n",
+            "LENS_PROJECT_CONFIG": "tags:\n- tag1\n- tag_key:tag_val\n",
         },
         {  # Gitlab PR
             "CI": "true",
@@ -731,10 +731,10 @@ def mock_autofix(request, mocker, autofix):
             "CI_MERGE_REQUEST_DIFF_BASE_SHA": "unused-commit-test-placeholder",
             "CI_MERGE_REQUEST_TITLE": "unused-merge-request-title-test-placeholder",
         },
-        {  # Gitlab PR but with SEMGREP env vars set
+        {  # Gitlab PR but with LENS env vars set
             "CI": "true",
             "GITLAB_CI": "true",
-            "SEMGREP_REPO_NAME": f"{REPO_DIR_NAME}/{REPO_DIR_NAME}",
+            "LENS_REPO_NAME": f"{REPO_DIR_NAME}/{REPO_DIR_NAME}",
             "CI_PIPELINE_SOURCE": "merge_request_event",  # or push
             "CI_MERGE_REQUEST_TARGET_BRANCH_NAME": MAIN_BRANCH_NAME,
             "CI_MERGE_REQUEST_SOURCE_BRANCH_NAME": BRANCH_NAME,
@@ -742,12 +742,12 @@ def mock_autofix(request, mocker, autofix):
             "CI_MERGE_REQUEST_PROJECT_URL": "https://some.project.url.test.placeholder",
             "CI_JOB_TOKEN": "some-token-test-placeholder",
             "CI_COMMIT_REF_NAME": BRANCH_NAME,
-            "SEMGREP_COMMIT": "unused-commit-test-placeholder",
-            "SEMGREP_REPO_URL": "https://example.com/gitlab-org/gitlab-foss",
-            "SEMGREP_JOB_URL": "https://gitlab.com/gitlab-examples/ci-debug-trace/-/jobs/379424655",
-            "SEMGREP_PR_ID": "unused-iid-test-placeholder",
+            "LENS_COMMIT": "unused-commit-test-placeholder",
+            "LENS_REPO_URL": "https://example.com/gitlab-org/gitlab-foss",
+            "LENS_JOB_URL": "https://gitlab.com/gitlab-examples/ci-debug-trace/-/jobs/379424655",
+            "LENS_PR_ID": "unused-iid-test-placeholder",
             "CI_MERGE_REQUEST_DIFF_BASE_SHA": "unused-commit-test-placeholder",
-            "SEMGREP_PR_TITLE": "unused-merge-request-title-test-placeholder",
+            "LENS_PR_TITLE": "unused-merge-request-title-test-placeholder",
         },
         {  # Gitlab
             "CI": "true",
@@ -774,12 +774,12 @@ def mock_autofix(request, mocker, autofix):
         },
         {  # Circle CI, overwrite autodetected variables
             "CI": "true",
-            "SEMGREP_REPO_NAME": "a/repo/name",
-            "SEMGREP_REPO_URL": "https://random.url.org/some/path",
-            "SEMGREP_BRANCH": "branch/some-other-branch-name",
-            "SEMGREP_JOB_URL": "https://another.random.url.org/some/path",
-            "SEMGREP_COMMIT": "<some_random_commit>",
-            "SEMGREP_PR_ID": "99999",
+            "LENS_REPO_NAME": "a/repo/name",
+            "LENS_REPO_URL": "https://random.url.org/some/path",
+            "LENS_BRANCH": "branch/some-other-branch-name",
+            "LENS_JOB_URL": "https://another.random.url.org/some/path",
+            "LENS_COMMIT": "<some_random_commit>",
+            "LENS_PR_ID": "99999",
             "CIRCLECI": "true",
             "CIRCLE_PROJECT_USERNAME": REPO_DIR_NAME,
             "CIRCLE_PROJECT_REPONAME": REPO_DIR_NAME,
@@ -796,19 +796,19 @@ def mock_autofix(request, mocker, autofix):
         },
         {  # Jenkins, overwrite autodetected variables
             "JENKINS_URL": "some_url",
-            "SEMGREP_REPO_NAME": "a/repo/name",
-            "SEMGREP_REPO_URL": "https://random.url.org/some/path",
-            "SEMGREP_BRANCH": "branch/some-other-branch-name",
-            "SEMGREP_JOB_URL": "https://another.random.url.org/some/path",
-            "SEMGREP_COMMIT": "<some_random_commit>",
+            "LENS_REPO_NAME": "a/repo/name",
+            "LENS_REPO_URL": "https://random.url.org/some/path",
+            "LENS_BRANCH": "branch/some-other-branch-name",
+            "LENS_JOB_URL": "https://another.random.url.org/some/path",
+            "LENS_COMMIT": "<some_random_commit>",
             "GIT_URL": "https://github.com/org/repo.git/",
             "GIT_BRANCH": BRANCH_NAME,
             "BUILD_URL": "https://jenkins.build.url",
         },
         {  # Jenkins, not defined GIT_URL
             "JENKINS_URL": "some_url",
-            "SEMGREP_REPO_URL": "https://random.url.org/some/path",
-            "SEMGREP_REPO_NAME": "a/repo/name",
+            "LENS_REPO_URL": "https://random.url.org/some/path",
+            "LENS_REPO_NAME": "a/repo/name",
             "GIT_BRANCH": BRANCH_NAME,
             "BUILD_URL": "https://jenkins.build.url",
         },
@@ -824,12 +824,12 @@ def mock_autofix(request, mocker, autofix):
         {  # Bitbucket, overwrite autodetected variables
             "CI": "true",
             "BITBUCKET_BUILD_NUMBER": "hi",
-            "SEMGREP_REPO_NAME": "a/repo/name",
-            "SEMGREP_REPO_URL": "https://random.url.org/some/path",
-            "SEMGREP_BRANCH": "branch/some-other-branch-name",
-            "SEMGREP_JOB_URL": "https://another.random.url.org/some/path",
-            "SEMGREP_COMMIT": "<some_random_commit>",
-            "SEMGREP_PR_ID": "99999",
+            "LENS_REPO_NAME": "a/repo/name",
+            "LENS_REPO_URL": "https://random.url.org/some/path",
+            "LENS_BRANCH": "branch/some-other-branch-name",
+            "LENS_JOB_URL": "https://another.random.url.org/some/path",
+            "LENS_COMMIT": "<some_random_commit>",
+            "LENS_PR_ID": "99999",
             "BITBUCKET_REPO_FULL_NAME": f"{REPO_DIR_NAME}/{REPO_DIR_NAME}",
             "BITBUCKET_GIT_HTTP_ORIGIN": f"http://bitbucket.org/{REPO_DIR_NAME}/{REPO_DIR_NAME}",
             "BITBUCKET_BRANCH": BRANCH_NAME,
@@ -848,12 +848,12 @@ def mock_autofix(request, mocker, autofix):
         },
         {  # Azure Pipelines, overwrite autodetected variables
             "BUILD_BUILDID": "some_id",
-            "SEMGREP_REPO_NAME": "a/repo/name",
-            "SEMGREP_REPO_URL": "https://random.url.org/some/path",
-            "SEMGREP_BRANCH": "branch/some-other-branch-name",
-            "SEMGREP_JOB_URL": "https://another.random.url.org/some/path",
-            "SEMGREP_COMMIT": "<some_random_commit>",
-            "SEMGREP_PR_ID": "34566",
+            "LENS_REPO_NAME": "a/repo/name",
+            "LENS_REPO_URL": "https://random.url.org/some/path",
+            "LENS_BRANCH": "branch/some-other-branch-name",
+            "LENS_JOB_URL": "https://another.random.url.org/some/path",
+            "LENS_COMMIT": "<some_random_commit>",
+            "LENS_PR_ID": "34566",
             "BUILD_REPOSITORY_URI": f"https://github.com/{REPO_DIR_NAME}/{REPO_DIR_NAME}.git",
             "SYSTEM_PULLREQUEST_SOURCEBRANCH": BRANCH_NAME,
             "SYSTEM_TEAMFOUNDATIONSERVERURI": "https://azure.pipeline.url/",
@@ -874,12 +874,12 @@ def mock_autofix(request, mocker, autofix):
         },
         {  # Buildkite, overwrite autodetected variables
             "BUILDKITE": "true",
-            "SEMGREP_REPO_NAME": "a/repo/name",
-            "SEMGREP_REPO_URL": "https://random.url.org/some/path",
-            "SEMGREP_BRANCH": "branch/some-other-branch-name",
-            "SEMGREP_JOB_URL": "https://another.random.url.org/some/path",
-            "SEMGREP_COMMIT": "<some_random_commit>",
-            "SEMGREP_PR_ID": "99999",
+            "LENS_REPO_NAME": "a/repo/name",
+            "LENS_REPO_URL": "https://random.url.org/some/path",
+            "LENS_BRANCH": "branch/some-other-branch-name",
+            "LENS_JOB_URL": "https://another.random.url.org/some/path",
+            "LENS_COMMIT": "<some_random_commit>",
+            "LENS_PR_ID": "99999",
             "BUILDKITE_REPO": f"git@github.com/{REPO_DIR_NAME}/{REPO_DIR_NAME}.git",
             "BUILDKITE_BRANCH": BRANCH_NAME,
             "BUILDKITE_BUILD_URL": "https://buildkite.build.url/something",
@@ -901,12 +901,12 @@ def mock_autofix(request, mocker, autofix):
         {  # Travis CI
             "CI": "true",
             "TRAVIS": "true",
-            "SEMGREP_REPO_NAME": "a/repo/name",
-            "SEMGREP_REPO_URL": "https://random.url.org/some/path",
-            "SEMGREP_BRANCH": "branch/some-other-branch-name",
-            "SEMGREP_JOB_URL": "https://another.random.url.org/some/path",
-            "SEMGREP_COMMIT": "<some_random_commit>",
-            "SEMGREP_PR_ID": "99999",
+            "LENS_REPO_NAME": "a/repo/name",
+            "LENS_REPO_URL": "https://random.url.org/some/path",
+            "LENS_BRANCH": "branch/some-other-branch-name",
+            "LENS_JOB_URL": "https://another.random.url.org/some/path",
+            "LENS_COMMIT": "<some_random_commit>",
+            "LENS_PR_ID": "99999",
             "TRAVIS_REPO_SLUG": f"{REPO_DIR_NAME}/{REPO_DIR_NAME}",
             "TRAVIS_PULL_REQUEST_BRANCH": BRANCH_NAME,
             "TRAVIS_JOB_WEB_URL": "https://travis.job.web.url/",
@@ -915,19 +915,19 @@ def mock_autofix(request, mocker, autofix):
         },
         {  # Special SCM with org in path
             "CI": "true",
-            "SEMGREP_REPO_NAME": f"{REPO_ORG_NAME}/{REPO_DIR_NAME}/{REPO_DIR_NAME}",
-            "SEMGREP_REPO_URL": f"https://some.enterprise.url.com/{REPO_ORG_NAME}/{REPO_DIR_NAME}/{REPO_DIR_NAME}",
+            "LENS_REPO_NAME": f"{REPO_ORG_NAME}/{REPO_DIR_NAME}/{REPO_DIR_NAME}",
+            "LENS_REPO_URL": f"https://some.enterprise.url.com/{REPO_ORG_NAME}/{REPO_DIR_NAME}/{REPO_DIR_NAME}",
             # Sent in metadata but no functionality change
-            "SEMGREP_PR_ID": "35",
-            "SEMGREP_BRANCH": BRANCH_NAME,
+            "LENS_PR_ID": "35",
+            "LENS_BRANCH": BRANCH_NAME,
         },
         {  # URL that doesn't parse correctly
             "CI": "true",
-            "SEMGREP_REPO_NAME": f"{REPO_ORG_NAME}/{REPO_DIR_NAME}/{REPO_DIR_NAME}",
-            "SEMGREP_REPO_URL": "https://gitlab.net/foo.bar/a-b/a-b-c-d",
+            "LENS_REPO_NAME": f"{REPO_ORG_NAME}/{REPO_DIR_NAME}/{REPO_DIR_NAME}",
+            "LENS_REPO_URL": "https://gitlab.net/foo.bar/a-b/a-b-c-d",
             # Sent in metadata but no functionality change
-            "SEMGREP_PR_ID": "35",
-            "SEMGREP_BRANCH": BRANCH_NAME,
+            "LENS_PR_ID": "35",
+            "LENS_BRANCH": BRANCH_NAME,
         },
     ],
     ids=[
@@ -937,7 +937,7 @@ def mock_autofix(request, mocker, autofix):
         "github-push-special-env-vars",
         "github-enterprise",
         "github-pr",
-        "github-pr-semgrepconfig",
+        "github-pr-lensconfig",
         "gitlab",
         "gitlab-special-env-vars",
         "gitlab-push",
@@ -968,7 +968,7 @@ def test_full_run(
     git_tmp_path_with_commit,
     snapshot,
     env,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     mock_autofix,
     start_scan_mock_maker,
@@ -1028,23 +1028,23 @@ def test_full_run(
         env["BUILDKITE_COMMIT"] = head_commit
     if env.get("TRAVIS"):
         env["TRAVIS_COMMIT"] = head_commit
-    env["SEMGREP_APP_TOKEN"] = "fake-key-from-tests"
+    env["LENS_APP_TOKEN"] = "fake-key-from-tests"
 
-    if env.get("SEMGREP_PROJECT_CONFIG"):
-        contents = env.get("SEMGREP_PROJECT_CONFIG")
-        make_semgrepconfig_file(repo_copy_base, contents)
+    if env.get("LENS_PROJECT_CONFIG"):
+        contents = env.get("LENS_PROJECT_CONFIG")
+        make_lensconfig_file(repo_copy_base, contents)
 
     start_scan_mock = start_scan_mock_maker(
-        env.get("SEMGREP_URL", "https://semgrep.dev")
+        env.get("LENS_URL", "https://lens.dev")
     )
     upload_results_mock = upload_results_mock_maker(
-        env.get("SEMGREP_URL", "https://semgrep.dev")
+        env.get("LENS_URL", "https://lens.dev")
     )
     complete_scan_mock = complete_scan_mock_maker(
-        env.get("SEMGREP_URL", "https://semgrep.dev")
+        env.get("LENS_URL", "https://lens.dev")
     )
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         strict=False,
@@ -1075,9 +1075,9 @@ def test_full_run(
     prj_meta_json = scan_create_json["project_metadata"]
     scan_meta_json = scan_create_json["scan_metadata"]
 
-    if "SEMGREP_COMMIT" in env:
-        assert prj_meta_json["commit"] == env["SEMGREP_COMMIT"]
-        prj_meta_json["commit"] = "sanitized semgrep commit"
+    if "LENS_COMMIT" in env:
+        assert prj_meta_json["commit"] == env["LENS_COMMIT"]
+        prj_meta_json["commit"] = "sanitized lens commit"
     else:
         assert prj_meta_json["commit"] == head_commit
         prj_meta_json["commit"] = "sanitized"
@@ -1133,7 +1133,7 @@ def test_full_run(
 @pytest.mark.osemfail
 def test_lockfile_parse_failure_reporting(
     git_tmp_path_with_commit,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     snapshot,
     start_scan_mock_maker,
     upload_results_mock_maker,
@@ -1191,16 +1191,16 @@ def test_lockfile_parse_failure_reporting(
         ["git", "rev-parse", "HEAD"], encoding="utf-8"
     ).strip()
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
     snapshot.assert_match(
@@ -1247,14 +1247,14 @@ def test_lockfile_parse_failure_reporting(
 # TODO: flaky test on Linux
 # see https://linear.app/r2c/issue/PA-2461/restore-flaky-e2e-tests
 # def test_github_ci_bad_base_sha(
-#    run_semgrep: RunSemgrep, snapshot, git_tmp_path, tmp_path, monkeypatch, start_scan_mock, upload_results_mock, complete_scan_mock
+#    run_lens: RunLens, snapshot, git_tmp_path, tmp_path, monkeypatch, start_scan_mock, upload_results_mock, complete_scan_mock
 # ):
 #    """
 #    Github PullRequest Event Webhook file's reported base sha is not guaranteed
 #    to be the shahash of the latest commit on the base branch
 #
 #    In particular the following situations can cause the base sha to be stale
-#    (and if we rely on it being latest cause semgrep to incorrectly calculate merge-base):
+#    (and if we rely on it being latest cause lens to incorrectly calculate merge-base):
 #    - If new commits are pushed onto base branch and a githubaction is rerun
 #    - If the base branch latest is merged into some third branch and that third branch
 #      is merged into the PR branch
@@ -1336,7 +1336,7 @@ def test_lockfile_parse_failure_reporting(
 #    event_path = tmp_path / "event_path.json"
 #    event_path.write_text(json.dumps(event))
 #    env["GITHUB_EVENT_PATH"] = str(event_path)
-#    env["SEMGREP_APP_TOKEN"] = "fake-key-from-tests"
+#    env["LENS_APP_TOKEN"] = "fake-key-from-tests"
 #
 #    # Mimic having a remote by having a new repo dir and pointing origin to the repo
 #    # we setup above
@@ -1352,7 +1352,7 @@ def test_lockfile_parse_failure_reporting(
 #    subprocess.run(["git", "fetch", "origin", "--depth", "1", "bar:bar"])
 #    subprocess.run(["git", "checkout", "bar"], check=True, capture_output=True)
 #
-#    result = run_semgrep(
+#    result = run_lens(
 #        options=["ci", "--debug", "--no-force-color", "--no-suppress-errors"],
 #        strict=False,
 #        assert_exit_code=None,
@@ -1365,15 +1365,15 @@ def test_lockfile_parse_failure_reporting(
 #                re.compile(r'GITHUB_EVENT_PATH="(.+?)"'),
 #                re.compile(r"\(<MagicMock name='post\(\)\.json\(\)\.get\(\)' id='\d+'>\)")
 #                # Mask variable debug output
-#                re.compile(r"/(.*)/semgrep-core"),
+#                re.compile(r"/(.*)/lens-core"),
 #                re.compile(r"loaded 1 configs in(.*)"),
-#                re.compile(r".*https://semgrep.dev(.*).*"),
+#                re.compile(r".*https://lens.dev(.*).*"),
 #                re.compile(r"(.*Main\.Dune__exe__Main.*)"),
-#                re.compile(r"(.*Main\.Run_semgrep.*)"),
+#                re.compile(r"(.*Main\.Run_lens.*)"),
 #                re.compile(r"(.*Main\.Common.*)"),
 #                re.compile(r"(.*Main\.Parse_target.*)"),
 #                re.compile(r"(.*Main\.Core_CLI.*)"),
-#                re.compile(r"semgrep ran in (.*) on 1 files"),
+#                re.compile(r"lens ran in (.*) on 1 files"),
 #                re.compile(r"\"total_time\":(.*)"),
 #                re.compile(r"\"commit_date\":(.*)"),
 #                re.compile(r"-targets (.*) -timeout"),
@@ -1395,7 +1395,7 @@ def test_lockfile_parse_failure_reporting(
 @pytest.mark.parametrize("app_project_merge_base", [True, False])
 @pytest.mark.osemfail
 def test_shallow_wrong_merge_base(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     snapshot,
     git_tmp_path,
     tmp_path,
@@ -1497,7 +1497,7 @@ def test_shallow_wrong_merge_base(
     event_path = tmp_path / "event_path.json"
     event_path.write_text(json.dumps(event))
     env["GITHUB_EVENT_PATH"] = str(event_path)
-    env["SEMGREP_APP_TOKEN"] = "fake-key-from-tests"
+    env["LENS_APP_TOKEN"] = "fake-key-from-tests"
 
     # Mimic having a remote by having a new repo dir and pointing origin to the repo
     # we setup above
@@ -1515,13 +1515,13 @@ def test_shallow_wrong_merge_base(
 
     project_merge_base = commits["baz"][-1] if app_project_merge_base else None
     start_scan_mock = start_scan_mock_maker(
-        "https://semgrep.dev", project_merge_base=project_merge_base
+        "https://lens.dev", project_merge_base=project_merge_base
     )
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
     # Scan the wrong thing first and verify we get more findings than expected (2 > 1)
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-force-color", "--no-suppress-errors", "--oss-only"],
         strict=False,
@@ -1543,12 +1543,12 @@ def test_shallow_wrong_merge_base(
     ), "Test might be invalid since we expect this to scan the wrong thing"
 
     # Run again with greater depth
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-force-color", "--no-suppress-errors", "--oss-only"],
         strict=False,
         assert_exit_code=None,
-        env={**env, "SEMGREP_GHA_MIN_FETCH_DEPTH": "100"},
+        env={**env, "LENS_GHA_MIN_FETCH_DEPTH": "100"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
 
@@ -1569,23 +1569,23 @@ def test_shallow_wrong_merge_base(
 
 @pytest.mark.osemfail
 def test_config_run(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     git_tmp_path_with_commit,
     snapshot,
     mock_autofix,
     requests_mock,
     scan_config,
 ):
-    # This test seems to provide coverage over running `semgrep ci --config <registry thing>` while logged out
+    # This test seems to provide coverage over running `lens ci --config <registry thing>` while logged out
     # Not actually sure who uses this, but its explicitly supported in code.
-    requests_mock.get("https://semgrep.dev/c/p/something", text=scan_config)
-    result = run_semgrep(
+    requests_mock.get("https://lens.dev/c/p/something", text=scan_config)
+    result = run_lens(
         "p/something",
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         strict=False,
         assert_exit_code=1,
-        env={"SEMGREP_APP_TOKEN": ""},
+        env={"LENS_APP_TOKEN": ""},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
     snapshot.assert_match(
@@ -1594,28 +1594,28 @@ def test_config_run(
     )
 
 
-# Testing semgrep ci on an empty repo, where the expected behavior
+# Testing lens ci on an empty repo, where the expected behavior
 # is that the run succeeds
 @pytest.mark.osemfail
 def test_empty_repo_run(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     git_path_empty_repo,
     requests_mock,
     scan_config,
 ):
-    requests_mock.get("https://semgrep.dev/c/p/something", text=scan_config)
+    requests_mock.get("https://lens.dev/c/p/something", text=scan_config)
     # Here we only test that the run exits with an exit code of 0
     # i.e the cli succeeding
-    run_semgrep(
+    run_lens(
         "p/something",
         subcommand="ci",
         options=["--no-suppress-errors"],
         strict=False,
         assert_exit_code=0,  # This run must succeed
         env={
-            "SEMGREP_APP_TOKEN": "",
-            "SEMGREP_REPO_URL": REMOTE_REPO_URL,
+            "LENS_APP_TOKEN": "",
+            "LENS_REPO_URL": REMOTE_REPO_URL,
         },
         use_click_runner=True,
     )
@@ -1634,17 +1634,17 @@ def test_outputs(
     snapshot,
     format,
     mock_autofix,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
     events_path = tmp_path / "events.jsonl"
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only", format],
         target_name=None,
@@ -1652,8 +1652,8 @@ def test_outputs(
         assert_exit_code=None,
         output_format=None,
         env={
-            "SEMGREP_APP_TOKEN": "fake_key",
-            "SEMGREP_LOG_JSON_FILE": str(events_path),
+            "LENS_APP_TOKEN": "fake_key",
+            "LENS_LOG_JSON_FILE": str(events_path),
         },
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
@@ -1698,28 +1698,28 @@ def test_app_ignore(
     snapshot,
     ignored_file,
     ignored_product,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
     start_scan_mock = start_scan_mock_maker(
-        "https://semgrep.dev",
+        "https://lens.dev",
         product_ignored_files={
             ignored_product: [ignored_file],
         },
     )
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=None,
         output_format=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
     snapshot.assert_match(
@@ -1733,23 +1733,23 @@ def test_app_ignore(
 def test_sarif_output_with_dataflow_traces(
     git_tmp_path_with_commit,
     snapshot,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--dataflow-traces", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=None,
         output_format=OutputFormat.SARIF,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
     snapshot.assert_match(
@@ -1765,22 +1765,22 @@ def test_nosem(
     snapshot,
     mock_autofix,
     nosem,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only", nosem],
         target_name=None,
         strict=False,
         assert_exit_code=1,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
 
@@ -1792,9 +1792,9 @@ def test_nosem(
 
 @pytest.mark.osemfail
 @pytest.mark.parametrize(
-    ("nosem_flag", "config_nosemgrep_disabled", "expected_disable_nosem"),
+    ("nosem_flag", "config_nolens_disabled", "expected_disable_nosem"),
     [
-        # No flag passed: the app's nosemgrep_disabled config drives behavior.
+        # No flag passed: the app's nolens_disabled config drives behavior.
         (None, True, True),
         (None, False, False),
         # An explicit flag always wins; the config value is ignored.
@@ -1806,44 +1806,44 @@ def test_nosem_config_precedence(
     git_tmp_path_with_commit,
     mocker,
     nosem_flag,
-    config_nosemgrep_disabled,
+    config_nolens_disabled,
     expected_disable_nosem,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
-    """`semgrep ci` honors nosemgrep_disabled from the scan config only when
+    """`lens ci` honors nolens_disabled from the scan config only when
     neither --enable-nosem nor --disable-nosem was passed; an explicit flag
     always wins over the config value."""
-    start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock_maker("https://lens.dev")
 
     # Simulate the org-wide setting the app sends in the scan config.
-    mocker.patch.object(ScanHandler, "nosemgrep_disabled", config_nosemgrep_disabled)
+    mocker.patch.object(ScanHandler, "nolens_disabled", config_nolens_disabled)
 
     # Capture the resolved run_scan args, then short-circuit so we don't need a
-    # real scan to assert how nosemgrep handling was resolved.
+    # real scan to assert how nolens handling was resolved.
     captured: Dict = {}
 
     def fake_run_scan(**kwargs):
         captured.update(kwargs)
-        raise SemgrepError("stop after capturing args", code=2)
+        raise LensError("stop after capturing args", code=2)
 
-    mocker.patch.object(semgrep.run_scan, "run_scan", side_effect=fake_run_scan)
+    mocker.patch.object(lens.run_scan, "run_scan", side_effect=fake_run_scan)
 
     options = ["--no-suppress-errors", "--oss-only"]
     if nosem_flag:
         options.append(nosem_flag)
 
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=options,
         target_name=None,
         strict=False,
         assert_exit_code=2,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
@@ -1868,7 +1868,7 @@ def test_scan_product_telemetry_from_flags_and_app(
     app_products,
     options,
     expected_products,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
 ):
     start_scan_mock_maker(enabled_products=app_products)
@@ -1877,18 +1877,18 @@ def test_scan_product_telemetry_from_flags_and_app(
     mocker.patch.object(EngineType, "get_binary_path", return_value=Path("/tmp/core"))
 
     def fake_run_scan(**kwargs):
-        raise SemgrepError("stop after capturing telemetry", code=2)
+        raise LensError("stop after capturing telemetry", code=2)
 
     product_attrs = mocker.spy(telemetry, "scan_product_attrs")
-    mocker.patch.object(semgrep.run_scan, "run_scan", side_effect=fake_run_scan)
+    mocker.patch.object(lens.run_scan, "run_scan", side_effect=fake_run_scan)
 
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", *options],
         target_name=None,
         strict=False,
         assert_exit_code=2,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
@@ -1926,7 +1926,7 @@ def test_scan_product_telemetry_from_explicit_config(
     git_tmp_path_with_commit,
     tmp_path,
     mocker,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     rule_body,
     options,
     expected_products,
@@ -1946,14 +1946,14 @@ def test_scan_product_telemetry_from_explicit_config(
     def capture_product_attrs(*, code, supply_chain, secrets):
         observed.append((code, supply_chain, secrets))
         if len(observed) == 2:
-            raise SemgrepError("stop after resolving products", code=2)
+            raise LensError("stop after resolving products", code=2)
         return real_product_attrs(code=code, supply_chain=supply_chain, secrets=secrets)
 
     mocker.patch.object(
         telemetry, "scan_product_attrs", side_effect=capture_product_attrs
     )
 
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=[
             "--config",
@@ -1966,7 +1966,7 @@ def test_scan_product_telemetry_from_explicit_config(
         target_name=None,
         strict=False,
         assert_exit_code=2,
-        env={"SEMGREP_APP_TOKEN": ""},
+        env={"LENS_APP_TOKEN": ""},
         use_click_runner=True,
     )
 
@@ -1979,7 +1979,7 @@ def test_nested_join_scan_preserves_ci_product_telemetry(
     git_tmp_path_with_commit,
     tmp_path,
     mocker,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
 ):
     start_scan_mock_maker(enabled_products=["sast", "sca"])
@@ -1996,13 +1996,13 @@ def test_nested_join_scan_preserves_ci_product_telemetry(
         "  languages: [python]\n"
         "  severity: ERROR\n"
     )
-    real_run_scan = semgrep.run_scan.run_scan
+    real_run_scan = lens.run_scan.run_scan
 
     class StopNestedScan(Exception):
         pass
 
     mocker.patch.object(
-        semgrep.run_scan, "add_metrics_part1", side_effect=StopNestedScan
+        lens.run_scan, "add_metrics_part1", side_effect=StopNestedScan
     )
 
     def fake_run_scan(**kwargs):
@@ -2026,43 +2026,43 @@ def test_nested_join_scan_preserves_ci_product_telemetry(
         attrs = resource.attributes
         assert attrs is not None
         assert attrs["scan.product.supply_chain"] == before["scan.product.supply_chain"]
-        raise SemgrepError("stop after checking telemetry", code=2)
+        raise LensError("stop after checking telemetry", code=2)
 
-    mocker.patch.object(semgrep.run_scan, "run_scan", side_effect=fake_run_scan)
+    mocker.patch.object(lens.run_scan, "run_scan", side_effect=fake_run_scan)
 
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=["--no-suppress-errors"],
         target_name=None,
         strict=False,
         assert_exit_code=2,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
 
-# Regression for ENGINE-1824: `semgrep ci --sarif-output` must preserve
-# nosemgrep-suppressed findings in the SARIF file with `suppressions`
+# Regression for ENGINE-1824: `lens ci --sarif-output` must preserve
+# nolens-suppressed findings in the SARIF file with `suppressions`
 # entries, not drop them entirely. The bucketing in commands/ci.py must
 # exclude suppressed matches only from the blocking/nonblocking exit-code
 # counters, while still routing them to OutputHandler so the SARIF
 # formatter (keep_ignores()=True) can emit them.
 @pytest.mark.kinda_slow
-@pytest.mark.osemfail  # osemgrep does not write --sarif-output files
-def test_ci_sarif_output_preserves_nosemgrep_suppressions(
+@pytest.mark.osemfail  # olens does not write --sarif-output files
+def test_ci_sarif_output_preserves_nolens_suppressions(
     git_tmp_path_with_commit,
     mock_autofix,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
-    start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock_maker("https://lens.dev")
 
     sarif_path = "out.sarif"
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=[
             "--no-suppress-errors",
@@ -2074,14 +2074,14 @@ def test_ci_sarif_output_preserves_nosemgrep_suppressions(
         target_name=None,
         strict=False,
         assert_exit_code=1,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
     sarif = json.loads(Path(sarif_path).read_text())
     results = sarif["runs"][0]["results"]
     suppressed = [r for r in results if r.get("suppressions")]
-    # foo.py contains several `# nosemgrep` annotations; the SARIF file
+    # foo.py contains several `# nolens` annotations; the SARIF file
     # must retain those matches with `suppressions` entries rather than
     # dropping them as the pre-fix ci.py path did.
     assert len(suppressed) > 0, results
@@ -2101,22 +2101,22 @@ def test_ci_sarif_output_preserves_nosemgrep_suppressions(
     ],
     ids=["no-sarif", "sarif-output"],
 )
-@pytest.mark.osemfail  # osemgrep does not write --sarif-output files
+@pytest.mark.osemfail  # olens does not write --sarif-output files
 def test_ci_upload_ignores_field_populated_under_sarif(
     git_tmp_path_with_commit,
     mock_autofix,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
     extra_options,
     expect_in_sarif_file,
 ):
-    start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=[
             "--no-suppress-errors",
@@ -2127,7 +2127,7 @@ def test_ci_upload_ignores_field_populated_under_sarif(
         target_name=None,
         strict=False,
         assert_exit_code=1,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
@@ -2149,22 +2149,22 @@ def test_ci_upload_ignores_field_populated_under_sarif(
 def test_generic_secrets_output(
     git_tmp_path_with_commit,
     snapshot,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         target_name=None,
         strict=False,
         assert_exit_code=1,
         options=["--oss-only"],
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
     snapshot.assert_match(
@@ -2197,27 +2197,27 @@ SECRETS_ONLY_CONFIG = dedent(
 @pytest.mark.osemfail
 def test_secrets_only_hides_code_scan_status(
     git_tmp_path_with_commit,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
-    """When the Code product is not enabled, `semgrep ci` should not claim
+    """When the Code product is not enabled, `lens ci` should not claim
     "0 Code rules" and should say code scanning is not enabled rather than print
     an empty code table (ENGINE-2878)."""
     mocker.patch.object(ScanHandler, "enabled_products", ["secrets"])
-    start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         target_name=None,
         strict=False,
         assert_exit_code=None,
         options=["--oss-only"],
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
@@ -2227,10 +2227,10 @@ def test_secrets_only_hides_code_scan_status(
 
 
 @pytest.mark.osemfail
-def test_semgrep_managed_scan_id(run_semgrep: RunSemgrep, requests_mock):
+def test_lens_managed_scan_id(run_lens: RunLens, requests_mock):
     MANAGED_SCAN_ID = "12321"
     scan_create = requests_mock.post(
-        "https://semgrep.dev/api/cli/v2/scans",
+        "https://lens.dev/api/cli/v2/scans",
         json={
             "info": {
                 "id": 12345,
@@ -2244,15 +2244,15 @@ def test_semgrep_managed_scan_id(run_semgrep: RunSemgrep, requests_mock):
         re.compile(r"/api/cli/v2/scans/[^/]+/config"),
         json={"status": "success", "config": {"rules": []}, "engine_params": {}},
     )
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=None,
         env={
-            "SEMGREP_APP_TOKEN": "fake-key-from-tests",
-            "SEMGREP_MANAGED_SCAN_ID": MANAGED_SCAN_ID,
+            "LENS_APP_TOKEN": "fake-key-from-tests",
+            "LENS_MANAGED_SCAN_ID": MANAGED_SCAN_ID,
         },
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
@@ -2267,20 +2267,20 @@ def test_dryrun(
     tmp_path,
     git_tmp_path_with_commit,
     snapshot,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
 ):
     _, base_commit, head_commit = git_tmp_path_with_commit
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--dry-run", "--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
 
@@ -2301,23 +2301,23 @@ def test_dryrun(
     )
 
 
-# this test is flaky with osemgrep since it does not mock any networking
+# this test is flaky with olens since it does not mock any networking
 @pytest.mark.osemfail
 def test_fail_auth_invalid_key(
-    run_semgrep: RunSemgrep, mocker, git_tmp_path_with_commit, requests_mock
+    run_lens: RunLens, mocker, git_tmp_path_with_commit, requests_mock
 ):
     """
     Test that an invalid api key returns exit code 13, even when errors are supressed
     """
-    requests_mock.post("https://semgrep.dev/api/cli/v2/scans", status_code=401)
-    fail_open = requests_mock.post("https://fail-open.prod.semgrep.dev/failure")
-    run_semgrep(
+    requests_mock.post("https://lens.dev/api/cli/v2/scans", status_code=401)
+    fail_open = requests_mock.post("https://fail-open.prod.lens.dev/failure")
+    run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=13,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
     assert not fail_open.called
@@ -2325,27 +2325,27 @@ def test_fail_auth_invalid_key(
 
 @pytest.mark.osemfail
 def test_fail_auth_invalid_key_suppressed_by_default(
-    run_semgrep: RunSemgrep, mocker, git_tmp_path_with_commit, requests_mock
+    run_lens: RunLens, mocker, git_tmp_path_with_commit, requests_mock
 ):
     """
     Test that an invalid api key returns exit code 13, even when errors are supressed
     """
     scan_create = requests_mock.post(
-        "https://semgrep.dev/api/cli/v2/scans", status_code=401
+        "https://lens.dev/api/cli/v2/scans", status_code=401
     )
-    fail_open = requests_mock.post("https://fail-open.prod.semgrep.dev/failure")
-    run_semgrep(
+    fail_open = requests_mock.post("https://fail-open.prod.lens.dev/failure")
+    run_lens(
         subcommand="ci",
         target_name=None,
         strict=False,
         assert_exit_code=0,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
     assert fail_open.called
     assert fail_open.last_request.json() == {
-        "url": "https://semgrep.dev/api/cli/v2/scans",
+        "url": "https://lens.dev/api/cli/v2/scans",
         "method": "POST",
         "status_code": 401,
         "request_id": scan_create.last_request.json()["scan_metadata"]["unique_id"],
@@ -2356,38 +2356,38 @@ def test_fail_auth_invalid_key_suppressed_by_default(
 
 @pytest.mark.osemfail
 def test_fail_auth_invalid_response(
-    run_semgrep: RunSemgrep, mocker, git_tmp_path_with_commit, requests_mock
+    run_lens: RunLens, mocker, git_tmp_path_with_commit, requests_mock
 ):
     """
     Test that and invalid api key returns exit code 13
     """
-    requests_mock.post("https://semgrep.dev/api/cli/v2/scans", status_code=500)
-    run_semgrep(
+    requests_mock.post("https://lens.dev/api/cli/v2/scans", status_code=500)
+    run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=2,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
 
 @pytest.mark.osemfail
 def test_fail_auth_invalid_response_can_be_supressed(
-    run_semgrep: RunSemgrep, mocker, git_tmp_path_with_commit, requests_mock
+    run_lens: RunLens, mocker, git_tmp_path_with_commit, requests_mock
 ):
     """
     Test that failure to authenticate with --suppres-errors returns exit code 0
     """
-    requests_mock.post("https://semgrep.dev/api/cli/v2/scans", status_code=500)
+    requests_mock.post("https://lens.dev/api/cli/v2/scans", status_code=500)
     mock_send = mocker.spy(ErrorHandler, "send")
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         target_name=None,
         strict=False,
         assert_exit_code=0,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
@@ -2395,37 +2395,37 @@ def test_fail_auth_invalid_response_can_be_supressed(
 
 
 @pytest.mark.osemfail
-def test_fail_start_scan(run_semgrep: RunSemgrep, mocker, git_tmp_path_with_commit):
+def test_fail_start_scan(run_lens: RunLens, mocker, git_tmp_path_with_commit):
     """
     Test that failing to start scan does not have exit code 0 or 1
     """
     mocker.patch.object(ScanHandler, "start_scan", side_effect=Exception("Timeout"))
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=2,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
 
 @pytest.mark.osemfail
 def test_fail_start_scan_error_handler(
-    run_semgrep: RunSemgrep, mocker, git_tmp_path_with_commit
+    run_lens: RunLens, mocker, git_tmp_path_with_commit
 ):
     """
     Test that failing to start scan with --suppres-errors returns exit code 0
     """
     mocker.patch.object(ScanHandler, "start_scan", side_effect=Exception("Timeout"))
     mock_send = mocker.spy(ErrorHandler, "send")
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         target_name=None,
         strict=False,
         assert_exit_code=0,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
@@ -2434,27 +2434,27 @@ def test_fail_start_scan_error_handler(
 
 @pytest.mark.osemfail
 def test_fail_open_works_when_backend_is_down(
-    run_semgrep: RunSemgrep, mocker, git_tmp_path_with_commit, requests_mock
+    run_lens: RunLens, mocker, git_tmp_path_with_commit, requests_mock
 ):
     """
     Test that an invalid api key returns exit code 13, even when errors are supressed
     """
     scan_create = requests_mock.post(
-        "https://semgrep.dev/api/cli/v2/scans", exc=ConnectionError
+        "https://lens.dev/api/cli/v2/scans", exc=ConnectionError
     )
-    fail_open = requests_mock.post("https://fail-open.prod.semgrep.dev/failure")
-    run_semgrep(
+    fail_open = requests_mock.post("https://fail-open.prod.lens.dev/failure")
+    run_lens(
         subcommand="ci",
         target_name=None,
         strict=False,
         assert_exit_code=0,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
     assert fail_open.called
     assert fail_open.last_request.json() == {
-        "url": "https://semgrep.dev/api/cli/v2/scans",
+        "url": "https://lens.dev/api/cli/v2/scans",
         "method": "POST",
         "request_id": scan_create.last_request.json()["scan_metadata"]["unique_id"],
         "error": str_containing("requests.exceptions.ConnectionError"),
@@ -2465,7 +2465,7 @@ def test_fail_open_works_when_backend_is_down(
 @pytest.mark.parametrize("scan_config", [BAD_CONFIG], ids=["bad_config"])
 @pytest.mark.osemfail
 def test_bad_config(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     git_tmp_path_with_commit,
     start_scan_mock_maker,
@@ -2477,21 +2477,21 @@ def test_bad_config(
     Test that bad rules has exit code > 1 and we notify the app.
     """
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
-    scan_failure_mock = scan_failure_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
+    scan_failure_mock = scan_failure_mock_maker("https://lens.dev")
 
     # This is the function that notifies the app of the failure.
     report_failure = mocker.patch.object(ScanHandler, "report_failure")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=7,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
     assert "Invalid rule schema" in result.stderr
@@ -2501,7 +2501,7 @@ def test_bad_config(
 @pytest.mark.parametrize("scan_config", [BAD_CONFIG], ids=["bad_config"])
 @pytest.mark.osemfail
 def test_bad_config_error_handler(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     git_tmp_path_with_commit,
     start_scan_mock_maker,
@@ -2517,21 +2517,21 @@ def test_bad_config_error_handler(
     # all commands.
     top_level_error_handler = mocker.spy(ErrorHandler, "send")
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
-    scan_failure_mock = scan_failure_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
+    scan_failure_mock = scan_failure_mock_maker("https://lens.dev")
 
     # This is the function that notifies the app of the failure.
     report_failure = mocker.patch.object(ScanHandler, "report_failure")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=0,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
     assert "Invalid rule schema" in result.stderr
@@ -2541,7 +2541,7 @@ def test_bad_config_error_handler(
 
 @pytest.mark.osemfail
 def test_fail_scan_findings(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     git_tmp_path_with_commit,
     start_scan_mock_maker,
@@ -2555,17 +2555,17 @@ def test_fail_scan_findings(
     """
     mock_send = mocker.spy(ErrorHandler, "send")
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=["--suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=1,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
     mock_send.assert_called_once_with(mocker.ANY, 1)
@@ -2573,25 +2573,25 @@ def test_fail_scan_findings(
 
 
 @pytest.mark.osemfail
-def test_fail_finish_scan(run_semgrep: RunSemgrep, mocker, git_tmp_path_with_commit):
+def test_fail_finish_scan(run_lens: RunLens, mocker, git_tmp_path_with_commit):
     """
     Test failure to send findings has exit code > 1
     """
     mocker.patch.object(ScanHandler, "report_findings", side_effect=Exception)
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=2,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
 
 @pytest.mark.osemfail
 def test_backend_exit_code(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     git_tmp_path_with_commit,
     start_scan_mock_maker,
@@ -2607,17 +2607,17 @@ def test_backend_exit_code(
         return_value=out.CiScanCompleteResponse(True, True, "some reason to fail"),
     )
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=1,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
@@ -2684,7 +2684,7 @@ _REGISTRY_REFUSED = _resolution_error(
 )
 
 # The repo made by `git_tmp_path_with_commit` always has blocking findings, so
-# without a resolution failure `semgrep ci` exits 1. That also lets these tests
+# without a resolution failure `lens ci` exits 1. That also lets these tests
 # check that a resolution failure (exit 2) wins over blocking findings.
 _BLOCKING_FINDINGS_EXIT_CODE = 1
 
@@ -2765,7 +2765,7 @@ _BLOCKING_FINDINGS_EXIT_CODE = 1
     ],
 )
 def test_dependency_resolution_failure_exit_code(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     requests_mock,
     scan_config,
@@ -2781,7 +2781,7 @@ def test_dependency_resolution_failure_exit_code(
 ):
     """
     SC-3613: with --no-suppress-errors (and local builds allowed), a subproject
-    whose dependency resolution failed or came back incomplete makes `semgrep
+    whose dependency resolution failed or came back incomplete makes `lens
     ci` exit 2 and stop saying it completed successfully.
 
     The app is deliberately not told: the /complete request still carries the
@@ -2789,7 +2789,7 @@ def test_dependency_resolution_failure_exit_code(
     for other errors that --no-suppress-errors surfaces.
     """
     mocker.patch.object(
-        semgrep.run_scan,
+        lens.run_scan,
         "resolve_dependencies",
         return_value=(
             [],
@@ -2800,7 +2800,7 @@ def test_dependency_resolution_failure_exit_code(
         ),
     )
 
-    start_scan_mock_maker("https://semgrep.dev")
+    start_scan_mock_maker("https://lens.dev")
     if admin_forces_suppress:
         # The app tells the CLI to suppress errors, in the scan config response
         # (the same way the real app does), not by patching the CLI.
@@ -2816,16 +2816,16 @@ def test_dependency_resolution_failure_exit_code(
                 },
             },
         )
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock_maker("https://semgrep.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=[*options, "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=expected_exit_code,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
@@ -2858,7 +2858,7 @@ def test_dependency_resolution_failure_exit_code(
     ],
 )
 def test_dependency_resolution_failure_skipped_for_managed_scans(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     git_tmp_path_with_commit,
     start_scan_mock_maker,
@@ -2869,17 +2869,17 @@ def test_dependency_resolution_failure_skipped_for_managed_scans(
     expect_failure,
 ):
     """
-    SC-3613: Semgrep Managed Scanning always passes --no-suppress-errors (and
+    SC-3613: Lens Managed Scanning always passes --no-suppress-errors (and
     --allow-local-builds when enabled), so nobody opted in, and it reports any
     exit code other than 0 or 1 as a failed job. A managed scan (recognized by
-    SEMGREP_MANAGED_SCAN_ID) therefore keeps its previous exit code, with the
+    LENS_MANAGED_SCAN_ID) therefore keeps its previous exit code, with the
     same flags and the same failing subproject as the regular CI scan.
     """
     subprojects = [
         _unresolved("bad/build.gradle", out.UnresolvedFailed(), [_CMD_FAILED])
     ]
     mocker.patch.object(
-        semgrep.run_scan,
+        lens.run_scan,
         "resolve_dependencies",
         return_value=(
             [],
@@ -2890,15 +2890,15 @@ def test_dependency_resolution_failure_skipped_for_managed_scans(
         ),
     )
 
-    create_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock_maker("https://semgrep.dev")
+    create_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock_maker("https://lens.dev")
 
-    env = {"SEMGREP_APP_TOKEN": "fake-key-from-tests"}
+    env = {"LENS_APP_TOKEN": "fake-key-from-tests"}
     if managed_scan_id:
-        env["SEMGREP_MANAGED_SCAN_ID"] = managed_scan_id
+        env["LENS_MANAGED_SCAN_ID"] = managed_scan_id
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--allow-local-builds", "--oss-only"],
         target_name=None,
@@ -3021,7 +3021,7 @@ def test_dependency_resolution_failure_skipped_for_managed_scans(
     ],
 )
 def test_dependency_resolution_failure_in_json_output(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     git_tmp_path_with_commit,
     start_scan_mock_maker,
@@ -3038,7 +3038,7 @@ def test_dependency_resolution_failure_in_json_output(
     tell why the scan exited with code 2. When nothing fails the JSON has none.
     """
     mocker.patch.object(
-        semgrep.run_scan,
+        lens.run_scan,
         "resolve_dependencies",
         return_value=(
             [],
@@ -3048,17 +3048,17 @@ def test_dependency_resolution_failure_in_json_output(
             {},
         ),
     )
-    start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=[*options, "--oss-only", "--json"],
         target_name=None,
         strict=False,
         assert_exit_code=expected_exit_code,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
@@ -3070,7 +3070,7 @@ def test_dependency_resolution_failure_in_json_output(
         assert error["code"] == 2
         assert message_part in error["message"]
         if kind is None:
-            assert error["type"] == "SemgrepError"
+            assert error["type"] == "LensError"
         else:
             assert error["type"][0] == "DependencyResolutionError"
             assert error["type"][1][0] == kind
@@ -3078,7 +3078,7 @@ def test_dependency_resolution_failure_in_json_output(
 
 @pytest.mark.osemfail
 def test_dependency_resolution_failure_json_is_redacted_and_bounded(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     git_tmp_path_with_commit,
     start_scan_mock_maker,
@@ -3104,15 +3104,15 @@ def test_dependency_resolution_failure_json_is_redacted_and_bounded(
     )
     subprojects = [_unresolved("bad/setup.py", out.UnresolvedFailed(), [error])]
     mocker.patch.object(
-        semgrep.run_scan,
+        lens.run_scan,
         "resolve_dependencies",
         return_value=([], [error], [], subprojects, {}),
     )
-    start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=[
             "--no-suppress-errors",
@@ -3123,7 +3123,7 @@ def test_dependency_resolution_failure_json_is_redacted_and_bounded(
         target_name=None,
         strict=False,
         assert_exit_code=2,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
@@ -3137,56 +3137,56 @@ def test_dependency_resolution_failure_json_is_redacted_and_bounded(
 
 @pytest.mark.osemfail
 def test_fail_finish_scan_error_handler(
-    run_semgrep: RunSemgrep, mocker, git_tmp_path_with_commit
+    run_lens: RunLens, mocker, git_tmp_path_with_commit
 ):
     """
     Test failure to send findings with --suppres-errors returns exit code 0
     """
     mocker.patch.object(ScanHandler, "report_findings", side_effect=Exception)
     mock_send = mocker.spy(ErrorHandler, "send")
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         target_name=None,
         strict=False,
         assert_exit_code=0,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
     mock_send.assert_called_once_with(mocker.ANY, 2)
 
 
 @pytest.mark.osemfail
-def test_git_failure(run_semgrep: RunSemgrep, git_tmp_path_with_commit, mocker):
+def test_git_failure(run_lens: RunLens, git_tmp_path_with_commit, mocker):
     """
     Test failure from using git has exit code > 1
     """
     mocker.patch.object(GitMeta, "to_project_metadata", side_effect=Exception)
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=2,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
 
 
 @pytest.mark.osemfail
 def test_git_failure_error_handler(
-    run_semgrep: RunSemgrep, git_tmp_path_with_commit, mocker
+    run_lens: RunLens, git_tmp_path_with_commit, mocker
 ):
     """
     Test failure from using git --suppres-errors returns exit code 0
     """
     mocker.patch.object(GitMeta, "to_project_metadata", side_effect=Exception)
     mock_send = mocker.spy(ErrorHandler, "send")
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         target_name=None,
         strict=False,
         assert_exit_code=0,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
     mock_send.assert_called_once_with(mocker.ANY, 2)
@@ -3212,7 +3212,7 @@ def test_git_failure_error_handler(
           package: badlib
           version: == 99.99.99
         metadata:
-          dev.semgrep.actions: [block]
+          dev.lens.actions: [block]
           sca-kind: upgrade-only
     """
         ).lstrip()
@@ -3225,22 +3225,22 @@ def test_query_dependency(
     git_tmp_path_with_commit,
     snapshot,
     mocker,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
     snapshot.assert_match(
@@ -3263,7 +3263,7 @@ def test_query_dependency(
 
 @pytest.mark.osemfail
 def test_metrics_enabled(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     start_scan_mock_maker,
     complete_scan_mock_maker,
@@ -3271,18 +3271,18 @@ def test_metrics_enabled(
 ):
     mock_send = mocker.patch.object(Metrics, "_post_metrics")
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=["--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=1,
         force_metrics_off=False,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         use_click_runner=True,
     )
     mock_send.assert_called_once()
@@ -3303,7 +3303,7 @@ def test_metrics_enabled(
                     package: python-dateutil
                     version: == 2.8.2
                 metadata:
-                    dev.semgrep.actions: [block]
+                    dev.lens.actions: [block]
                     sca-kind: upgrade-only
             """
         ).lstrip()
@@ -3315,24 +3315,24 @@ def test_existing_supply_chain_finding(
     git_tmp_path_with_commit,
     snapshot,
     mocker,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
     repo_copy_base, base_commit, head_commit = git_tmp_path_with_commit
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
     snapshot.assert_match(
@@ -3395,7 +3395,7 @@ def test_existing_supply_chain_finding(
         ["git", "rev-parse", "HEAD"], encoding="utf-8"
     ).strip()
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=[
             "--no-suppress-errors",
@@ -3406,7 +3406,7 @@ def test_existing_supply_chain_finding(
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
     snapshot.assert_match(
@@ -3441,7 +3441,7 @@ def test_subdir(
     git_tmp_path_with_commit,
     snapshot,
     mocker,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
@@ -3450,11 +3450,11 @@ def test_subdir(
 ):
     repo_copy_base, base_commit, head_commit = git_tmp_path_with_commit
 
-    requests_mock.get("https://semgrep.dev/c/p/something", text=scan_config)
+    requests_mock.get("https://lens.dev/c/p/something", text=scan_config)
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
     dir1 = repo_copy_base / "org"
     dir1.mkdir()
@@ -3465,7 +3465,7 @@ def test_subdir(
     pyfile1 = codedir / "foo.py"
     pyfile1.write_text(f"x == 5\n")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=[
             "--subdir",
@@ -3475,7 +3475,7 @@ def test_subdir(
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
     snapshot.assert_match(
@@ -3506,7 +3506,7 @@ def test_subdir(
                     package: python-dateutil
                     version: == 2.8.2
                 metadata:
-                    dev.semgrep.actions: [block]
+                    dev.lens.actions: [block]
                     sca-kind: upgrade-only
               - id: supply-chain-parity-2
                 message: "found another dependency without a pattern"
@@ -3517,7 +3517,7 @@ def test_subdir(
                     package: mypy
                     version: == 0.950
                 metadata:
-                    dev.semgrep.actions: [block]
+                    dev.lens.actions: [block]
                     sca-kind: upgrade-only
               - id: supply-chain-reachable-1
                 message: "found a reachable vulnerability from a dependency"
@@ -3529,7 +3529,7 @@ def test_subdir(
                     package: mypy
                     version: == 0.950
                 metadata:
-                    dev.semgrep.actions: [block]
+                    dev.lens.actions: [block]
             """
         ).lstrip()
     ],
@@ -3540,24 +3540,24 @@ def test_reachable_and_unreachable_diff_scan_findings(
     git_tmp_path_with_commit,
     snapshot,
     mocker,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
     repo_copy_base, base_commit, head_commit = git_tmp_path_with_commit
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
     snapshot.assert_match(
@@ -3587,7 +3587,7 @@ def test_reachable_and_unreachable_diff_scan_findings(
         ["git", "rev-parse", "HEAD"], encoding="utf-8"
     ).strip()
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=[
             "--no-suppress-errors",
@@ -3598,7 +3598,7 @@ def test_reachable_and_unreachable_diff_scan_findings(
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
     snapshot.assert_match(
@@ -3663,7 +3663,7 @@ _SCA_SCAN_CONFIG = dedent(
           package: badlib
           version: == 99.99.99
         metadata:
-          dev.semgrep.actions: [block]
+          dev.lens.actions: [block]
           sca-kind: upgrade-only
     """
 ).lstrip()
@@ -3729,17 +3729,17 @@ class TestChangedDependencySources:
     def upload_results_mock(
         self, start_scan_mock_maker, complete_scan_mock_maker, upload_results_mock_maker
     ):
-        start_scan_mock_maker("https://semgrep.dev")
-        complete_scan_mock_maker("https://semgrep.dev")
-        return upload_results_mock_maker("https://semgrep.dev")
+        start_scan_mock_maker("https://lens.dev")
+        complete_scan_mock_maker("https://lens.dev")
+        return upload_results_mock_maker("https://lens.dev")
 
     @staticmethod
     def _scan(
-        run_semgrep: RunSemgrep,
+        run_lens: RunLens,
         upload_results_mock,
         baseline: Optional[str] = None,
     ) -> Any:
-        """Run `semgrep ci`; return the uploaded /results body.
+        """Run `lens ci`; return the uploaded /results body.
 
         Passing `baseline` makes it a diff scan against that commit; omitting it
         makes it a full scan.
@@ -3747,13 +3747,13 @@ class TestChangedDependencySources:
         options = ["--no-suppress-errors", "--oss-only"]
         if baseline is not None:
             options += ["--baseline-commit", baseline]
-        run_semgrep(
+        run_lens(
             subcommand="ci",
             options=options,
             target_name=None,
             strict=False,
             assert_exit_code=None,
-            env={"SEMGREP_APP_TOKEN": "fake_key"},
+            env={"LENS_APP_TOKEN": "fake_key"},
             use_click_runner=True,
         )
         return upload_results_mock.last_request.json()
@@ -3762,7 +3762,7 @@ class TestChangedDependencySources:
     def test_lockfile_edit_reports_the_lockfile(
         self,
         git_tmp_path_with_commit,
-        run_semgrep: RunSemgrep,
+        run_lens: RunLens,
         upload_results_mock,
     ):
         """A branch that edits a lockfile reports that lockfile."""
@@ -3771,7 +3771,7 @@ class TestChangedDependencySources:
         self._git("checkout", "-B", "branch-a", main_commit)
         self._commit_new_poetry_dependency(repo_copy_base)
 
-        results = self._scan(run_semgrep, upload_results_mock, baseline=main_commit)
+        results = self._scan(run_lens, upload_results_mock, baseline=main_commit)
         assert results["changed_dependency_sources"] == ["poetry.lock"]
         assert results["dependencies"]
 
@@ -3779,7 +3779,7 @@ class TestChangedDependencySources:
     def test_multiple_lockfile_edits_report_every_lockfile(
         self,
         git_tmp_path_with_commit,
-        run_semgrep: RunSemgrep,
+        run_lens: RunLens,
         upload_results_mock,
     ):
         """Every edited dependency source is reported, in alphabetical order."""
@@ -3789,7 +3789,7 @@ class TestChangedDependencySources:
         self._commit_new_yarn_dependency(repo_copy_base)
         self._commit_new_poetry_dependency(repo_copy_base)
 
-        results = self._scan(run_semgrep, upload_results_mock, baseline=main_commit)
+        results = self._scan(run_lens, upload_results_mock, baseline=main_commit)
         assert results["changed_dependency_sources"] == ["poetry.lock", "yarn.lock"]
         assert results["dependencies"]
 
@@ -3797,7 +3797,7 @@ class TestChangedDependencySources:
     def test_deleted_lockfile_is_not_reported(
         self,
         git_tmp_path_with_commit,
-        run_semgrep: RunSemgrep,
+        run_lens: RunLens,
         upload_results_mock,
     ):
         """Deleting a lockfile outright is not reported as a changed source.
@@ -3813,14 +3813,14 @@ class TestChangedDependencySources:
         self._git("checkout", "-B", "branch-a", main_commit)
         self._commit_deleted_poetry_lockfile(repo_copy_base)
 
-        results = self._scan(run_semgrep, upload_results_mock, baseline=main_commit)
+        results = self._scan(run_lens, upload_results_mock, baseline=main_commit)
         assert results["changed_dependency_sources"] == []
 
     @pytest.mark.slow
     def test_stacked_no_change_branch_reports_no_changes(
         self,
         git_tmp_path_with_commit,
-        run_semgrep: RunSemgrep,
+        run_lens: RunLens,
         upload_results_mock,
     ):
         """A branch stacked on a dependency-adding branch reports no changes."""
@@ -3830,13 +3830,13 @@ class TestChangedDependencySources:
         self._commit_new_poetry_dependency(repo_copy_base)
         commit_a = self._head_sha()
 
-        results_a = self._scan(run_semgrep, upload_results_mock, baseline=main_commit)
+        results_a = self._scan(run_lens, upload_results_mock, baseline=main_commit)
         assert results_a["changed_dependency_sources"] == ["poetry.lock"]
 
         self._git("checkout", "-b", "branch-b")
         self._commit_code_edit(repo_copy_base)
 
-        results_b = self._scan(run_semgrep, upload_results_mock, baseline=commit_a)
+        results_b = self._scan(run_lens, upload_results_mock, baseline=commit_a)
         assert results_b["changed_dependency_sources"] == []
         assert results_b["dependencies"]
 
@@ -3844,7 +3844,7 @@ class TestChangedDependencySources:
     def test_dependency_already_merged_to_main_reports_no_changes(
         self,
         git_tmp_path_with_commit,
-        run_semgrep: RunSemgrep,
+        run_lens: RunLens,
         upload_results_mock,
     ):
         """A dependency already merged to main is not reported by later branches."""
@@ -3852,14 +3852,14 @@ class TestChangedDependencySources:
 
         # Full scan of main, before the dependency exists.
         self._git("checkout", "-B", MAIN_BRANCH_NAME, main_commit)
-        results_main = self._scan(run_semgrep, upload_results_mock)
+        results_main = self._scan(run_lens, upload_results_mock)
         assert "changed_dependency_sources" not in results_main
 
         # Branch A adds the dependency, so its diff scan reports the lockfile.
         self._git("checkout", "-b", "branch-a")
         self._commit_new_poetry_dependency(repo_copy_base)
 
-        results_a = self._scan(run_semgrep, upload_results_mock, baseline=main_commit)
+        results_a = self._scan(run_lens, upload_results_mock, baseline=main_commit)
         assert results_a["changed_dependency_sources"] == ["poetry.lock"]
 
         # A merges into main. Main's own diff scan still sees the lockfile edit.
@@ -3868,7 +3868,7 @@ class TestChangedDependencySources:
         main_with_dependency = self._head_sha()
 
         results_merge = self._scan(
-            run_semgrep, upload_results_mock, baseline=main_commit
+            run_lens, upload_results_mock, baseline=main_commit
         )
         assert results_merge["changed_dependency_sources"] == ["poetry.lock"]
 
@@ -3877,7 +3877,7 @@ class TestChangedDependencySources:
         self._commit_code_edit(repo_copy_base)
 
         results_b = self._scan(
-            run_semgrep, upload_results_mock, baseline=main_with_dependency
+            run_lens, upload_results_mock, baseline=main_with_dependency
         )
         assert results_b["changed_dependency_sources"] == []
         assert results_b["dependencies"]
@@ -3886,7 +3886,7 @@ class TestChangedDependencySources:
     def test_stale_lockfile_not_reported_when_branch_did_not_edit_it(
         self,
         git_tmp_path_with_commit,
-        run_semgrep: RunSemgrep,
+        run_lens: RunLens,
         upload_results_mock,
     ):
         """A stale lockfile is not reported as changed if there were no edits to the dependency source."""
@@ -3915,7 +3915,7 @@ class TestChangedDependencySources:
         assert _REQUESTS_LOCKFILE_ENTRY in (repo_copy_base / "poetry.lock").read_text()
 
         results_a = self._scan(
-            run_semgrep, upload_results_mock, baseline=main_without_dependency
+            run_lens, upload_results_mock, baseline=main_without_dependency
         )
         assert results_a["changed_dependency_sources"] == []
         assert results_a["dependencies"]
@@ -3929,7 +3929,7 @@ class TestChangedDependencySources:
 @pytest.mark.osemfail
 def test_enabled_products(
     enabled_products: List[str],
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
     git_tmp_path_with_commit,
     start_scan_mock_maker,
@@ -3941,16 +3941,16 @@ def test_enabled_products(
     """
     mocker.patch.object(ScanHandler, "enabled_products", enabled_products)
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         options=["ci", "--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
@@ -3966,19 +3966,19 @@ def test_enabled_products(
     "env",
     [
         {  # ci run with app token alice
-            "SEMGREP_APP_TOKEN": DUMMY_APP_TOKEN_ALICE,
-            "SEMGREP_SETTINGS_FILE": tempfile.NamedTemporaryFile().name,
-            "EXISTING_SEMGREP_SETTINGS": False,
+            "LENS_APP_TOKEN": DUMMY_APP_TOKEN_ALICE,
+            "LENS_SETTINGS_FILE": tempfile.NamedTemporaryFile().name,
+            "EXISTING_LENS_SETTINGS": False,
         },
         {  # ci run with app token bob
-            "SEMGREP_APP_TOKEN": DUMMY_APP_TOKEN_BOB,
-            "SEMGREP_SETTINGS_FILE": tempfile.NamedTemporaryFile().name,
-            "EXISTING_SEMGREP_SETTINGS": False,
+            "LENS_APP_TOKEN": DUMMY_APP_TOKEN_BOB,
+            "LENS_SETTINGS_FILE": tempfile.NamedTemporaryFile().name,
+            "EXISTING_LENS_SETTINGS": False,
         },
         {  # ci run with app token but existing settings file
-            "SEMGREP_APP_TOKEN": DUMMY_APP_TOKEN_BOB,
-            "SEMGREP_SETTINGS_FILE": tempfile.NamedTemporaryFile().name,
-            "EXISTING_SEMGREP_SETTINGS": True,
+            "LENS_APP_TOKEN": DUMMY_APP_TOKEN_BOB,
+            "LENS_SETTINGS_FILE": tempfile.NamedTemporaryFile().name,
+            "EXISTING_LENS_SETTINGS": True,
         },
     ],
     ids=["token-alice", "token-bob", "existing-settings"],
@@ -3986,7 +3986,7 @@ def test_enabled_products(
 @pytest.mark.osemfail
 def test_ci_uuid(
     env,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     mocker,
 ):
     """
@@ -3995,12 +3995,12 @@ def test_ci_uuid(
     Otherwise, we should continue using the same UUID.
     """
 
-    settings_file = env.get("SEMGREP_SETTINGS_FILE")
+    settings_file = env.get("LENS_SETTINGS_FILE")
     # Check if we should mimic an existing settings file via simulation
-    existing_settings = env.get("EXISTING_SEMGREP_SETTINGS")
-    del env["EXISTING_SEMGREP_SETTINGS"]
+    existing_settings = env.get("EXISTING_LENS_SETTINGS")
+    del env["EXISTING_LENS_SETTINGS"]
 
-    generated_uuid = generate_anonymous_user_id(env.get("SEMGREP_APP_TOKEN"))
+    generated_uuid = generate_anonymous_user_id(env.get("LENS_APP_TOKEN"))
     # Assume we will generate a new UUID from app_token
     expected_uuid: Optional[str] = generated_uuid
 
@@ -4014,7 +4014,7 @@ def test_ci_uuid(
     # first few steps of the scan process (1 sec vs 30 sec for this test suite)
     mocker.patch.object(ScanHandler, "start_scan", side_effect=Exception("Timeout"))
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--dry-run", "--no-suppress-errors", "--oss-only"],
         target_name=None,
@@ -4035,21 +4035,21 @@ def test_ci_uuid(
 
 @pytest.mark.osemfail
 def test_fail_on_historical_scan_without_secrets(
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     snapshot,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--historical-secrets", "--no-suppress-errors", "--oss-only"],
         strict=False,
-        env={"SEMGREP_APP_TOKEN": "fake-key-from-tests"},
+        env={"LENS_APP_TOKEN": "fake-key-from-tests"},
         assert_exit_code=2,
         target_name=None,
         use_click_runner=True,
@@ -4075,7 +4075,7 @@ def test_fail_on_historical_scan_without_secrets(
                     package: python-dateutil
                     version: == 2.8.2
                 metadata:
-                    dev.semgrep.actions: [block]
+                    dev.lens.actions: [block]
                     sca-kind: upgrade-only
               - id: supply-chain-parity-2
                 message: "found another dependency without a pattern"
@@ -4086,7 +4086,7 @@ def test_fail_on_historical_scan_without_secrets(
                     package: mypy
                     version: == 0.950
                 metadata:
-                    dev.semgrep.actions: [block]
+                    dev.lens.actions: [block]
                     sca-kind: upgrade-only
               - id: supply-chain-reachable-1
                 message: "found a reachable vulnerability from a dependency"
@@ -4098,7 +4098,7 @@ def test_fail_on_historical_scan_without_secrets(
                     package: mypy
                     version: == 0.950
                 metadata:
-                    dev.semgrep.actions: [block]
+                    dev.lens.actions: [block]
             """
         ).lstrip()
     ],
@@ -4109,16 +4109,16 @@ def test_existing_reachable_finding_deduplication(
     git_tmp_path_with_commit,
     snapshot,
     mocker,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
     repo_copy_base, _, base_commit = git_tmp_path_with_commit
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
     # Add vulnerability here so that it's already existing when we run a scan later
     pyfile1 = repo_copy_base / "foo.py"
@@ -4134,7 +4134,7 @@ def test_existing_reachable_finding_deduplication(
         ["git", "rev-parse", "HEAD"], encoding="utf-8"
     ).strip()
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=[
             "--no-suppress-errors",
@@ -4145,7 +4145,7 @@ def test_existing_reachable_finding_deduplication(
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
@@ -4178,7 +4178,7 @@ def test_existing_reachable_finding_deduplication(
         ["git", "rev-parse", "HEAD"], encoding="utf-8"
     ).strip()
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=[
             "--no-suppress-errors",
@@ -4189,7 +4189,7 @@ def test_existing_reachable_finding_deduplication(
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,  # TODO: probably because rely on some mocking
     )
 
@@ -4221,7 +4221,7 @@ def test_existing_reachable_finding_deduplication(
                 languages: [python]
                 severity: ERROR
                 metadata:
-                  source: https://semgrep.dev/r/x-equals-two
+                  source: https://lens.dev/r/x-equals-two
             """
         ).lstrip()
     ],
@@ -4232,7 +4232,7 @@ def test_existing_reachable_finding_deduplication(
 def test_finding_suppressed_when_baseline_scan_fails(
     git_tmp_path_with_commit,
     mocker,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
@@ -4242,9 +4242,9 @@ def test_finding_suppressed_when_baseline_scan_fails(
     """
     repo_copy_base, _, base_commit = git_tmp_path_with_commit
 
-    start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
     # base_commit's foo.py is `x = 1` (from git_tmp_path_with_commit). We
     # commit a change that introduces a tip-only match for our rule.
@@ -4257,13 +4257,13 @@ def test_finding_suppressed_when_baseline_scan_fails(
         capture_output=True,
     )
 
-    # Simulate a baseline-only per-file timeout on foo.py (same ``SemgrepCoreError``
+    # Simulate a baseline-only per-file timeout on foo.py (same ``LensCoreError``
     # shape as a real ``--timeout=`` miss). Head and baseline both call ``run_rules``;
     # only ``baseline_run`` passes ``DependencyResolutionConfig`` with
     # ``is_baseline_scan=True`` (see ``run_scan.baseline_run``). We run the real engine
     # first, then append the synthetic error only for that baseline call so the head
     # scan is unchanged.
-    real_run_rules = semgrep.run_scan.run_rules
+    real_run_rules = lens.run_scan.run_rules
 
     def run_rules_except_append_baseline_timeout_on_foo(
         filtered_rules: List[Rule],
@@ -4292,7 +4292,7 @@ def test_finding_suppressed_when_baseline_scan_fails(
         rpc_session: Optional[RpcSession] = None,
     ) -> Tuple[
         RuleMatchMap,
-        List[SemgrepError],
+        List[LensError],
         OutputExtra,
         Dict[str, List[out.FoundDependency]],
         List[DependencyParserError],
@@ -4338,7 +4338,7 @@ def test_finding_suppressed_when_baseline_scan_fails(
             all_subprojects,
             sca_symbol_analysis,
         ) = result
-        baseline_err = SemgrepCoreError(
+        baseline_err = LensCoreError(
             code=2,
             level=out.ErrorSeverity(out.Error_()),
             spans=None,
@@ -4366,11 +4366,11 @@ def test_finding_suppressed_when_baseline_scan_fails(
         )
 
     mocker.patch(
-        "semgrep.run_scan.run_rules",
+        "lens.run_scan.run_rules",
         side_effect=run_rules_except_append_baseline_timeout_on_foo,
     )
 
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=[
             "--no-suppress-errors",
@@ -4381,7 +4381,7 @@ def test_finding_suppressed_when_baseline_scan_fails(
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
@@ -4401,14 +4401,14 @@ def test_finding_suppressed_when_baseline_scan_fails(
                 languages: [python]
                 severity: ERROR
                 metadata:
-                  source: https://semgrep.dev/r/rule-a
+                  source: https://lens.dev/r/rule-a
               - id: rule-b
                 pattern: $X = 3
                 message: "b"
                 languages: [python]
                 severity: ERROR
                 metadata:
-                  source: https://semgrep.dev/r/rule-b
+                  source: https://lens.dev/r/rule-b
             """
         ).lstrip()
     ],
@@ -4419,7 +4419,7 @@ def test_finding_suppressed_when_baseline_scan_fails(
 def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
     git_tmp_path_with_commit,
     mocker,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
@@ -4432,9 +4432,9 @@ def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
     """
     repo_copy_base, _, _ = git_tmp_path_with_commit
 
-    start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
     f1 = repo_copy_base / "f1.py"
     f2 = repo_copy_base / "f2.py"
@@ -4459,7 +4459,7 @@ def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
         capture_output=True,
     )
 
-    real_run_rules = semgrep.run_scan.run_rules
+    real_run_rules = lens.run_scan.run_rules
 
     def run_rules_append_synthetic_baseline_failures(
         filtered_rules: List[Rule],
@@ -4488,7 +4488,7 @@ def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
         rpc_session: Optional[RpcSession] = None,
     ) -> Tuple[
         RuleMatchMap,
-        List[SemgrepError],
+        List[LensError],
         OutputExtra,
         Dict[str, List[out.FoundDependency]],
         List[DependencyParserError],
@@ -4543,7 +4543,7 @@ def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
             start=out.Position(line=1, col=1, offset=0),
             end=out.Position(line=1, col=1, offset=0),
         )
-        err_rule_a_on_f1 = SemgrepCoreError(
+        err_rule_a_on_f1 = LensCoreError(
             code=2,
             level=out.ErrorSeverity(out.Error_()),
             spans=None,
@@ -4556,7 +4556,7 @@ def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
                 rule_id=out.RuleId("rule-a"),
             ),
         )
-        err_unscoped_on_f2 = SemgrepCoreError(
+        err_unscoped_on_f2 = LensCoreError(
             code=2,
             level=out.ErrorSeverity(out.Error_()),
             spans=None,
@@ -4569,7 +4569,7 @@ def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
                 rule_id=None,
             ),
         )
-        extra: List[SemgrepError] = [err_rule_a_on_f1, err_unscoped_on_f2]
+        extra: List[LensError] = [err_rule_a_on_f1, err_unscoped_on_f2]
         return (
             matches,
             list(errors) + extra,
@@ -4582,11 +4582,11 @@ def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
         )
 
     mocker.patch(
-        "semgrep.run_scan.run_rules",
+        "lens.run_scan.run_rules",
         side_effect=run_rules_append_synthetic_baseline_failures,
     )
 
-    run_semgrep(
+    run_lens(
         subcommand="ci",
         options=[
             "--no-suppress-errors",
@@ -4597,7 +4597,7 @@ def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
@@ -4621,7 +4621,7 @@ def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
           languages: [python]
           severity: ERROR
           metadata:
-            source: https://semgrep.dev/r/eqeq-bad
+            source: https://lens.dev/r/eqeq-bad
         - id: pattern-parse-error
           pattern: $X ==
           message: "useless comparison to 5"
@@ -4633,22 +4633,22 @@ def test_baseline_scan_failures_suppress_per_rule_and_whole_file(
 )
 @pytest.mark.osemfail
 def test_always_suppress_errors(
-    run_semgrep_on_copied_files: RunSemgrep,
+    run_lens_on_copied_files: RunLens,
     snapshot,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
     always_suppress_errors,
 ):
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep_on_copied_files(
+    result = run_lens_on_copied_files(
         options=["ci", "--oss-only", "--no-suppress-errors"],
         strict=False,
         assert_exit_code=0 if always_suppress_errors else 2,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
@@ -4691,22 +4691,22 @@ def test_app_blocked_findings(
     git_tmp_path_with_commit,
     snapshot,
     mocker,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=["--no-suppress-errors", "--oss-only"],
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
     snapshot.assert_match(
@@ -4735,13 +4735,13 @@ def test_autofix_never_applies_changes(
     mock_autofix,
     autofix: bool,
     autofix_cli_option: bool,
-    run_semgrep: RunSemgrep,
+    run_lens: RunLens,
     start_scan_mock_maker,
     complete_scan_mock_maker,
     upload_results_mock_maker,
 ):
     """
-    Test that `semgrep ci` never applies autofix changes to disk, regardless of
+    Test that `lens ci` never applies autofix changes to disk, regardless of
     the autofix setting from the app.
 
     When autofix is enabled from the app, the fixed_lines should be included in
@@ -4750,16 +4750,16 @@ def test_autofix_never_applies_changes(
     When autofix is disabled from the app, no fixed_lines should be in the
     response and files should remain unchanged.
 
-    The --autofix CLI flag should have no effect on `semgrep ci` behavior;
+    The --autofix CLI flag should have no effect on `lens ci` behavior;
     autofix behavior is controlled solely by the app setting.
     """
     repo_copy_base, base_commit, head_commit = git_tmp_path_with_commit
 
-    start_scan_mock = start_scan_mock_maker("https://semgrep.dev")
-    complete_scan_mock = complete_scan_mock_maker("https://semgrep.dev")
-    upload_results_mock = upload_results_mock_maker("https://semgrep.dev")
+    start_scan_mock = start_scan_mock_maker("https://lens.dev")
+    complete_scan_mock = complete_scan_mock_maker("https://lens.dev")
+    upload_results_mock = upload_results_mock_maker("https://lens.dev")
 
-    # Read the original file content before running semgrep ci
+    # Read the original file content before running lens ci
     foo_py = repo_copy_base / "foo.py"
     original_content = foo_py.read_text()
 
@@ -4768,7 +4768,7 @@ def test_autofix_never_applies_changes(
         "x == 5" in original_content
     ), "Test setup error: foo.py should contain 'x == 5'"
 
-    result = run_semgrep(
+    result = run_lens(
         subcommand="ci",
         options=[
             "--no-suppress-errors",
@@ -4778,14 +4778,14 @@ def test_autofix_never_applies_changes(
         target_name=None,
         strict=False,
         assert_exit_code=None,
-        env={"SEMGREP_APP_TOKEN": "fake_key"},
+        env={"LENS_APP_TOKEN": "fake_key"},
         use_click_runner=True,
     )
 
     # Verify the file was NOT modified on disk (autofix should never apply in ci)
     current_content = foo_py.read_text()
     assert current_content == original_content, (
-        f"semgrep ci should never modify files on disk, but foo.py was changed.\n"
+        f"lens ci should never modify files on disk, but foo.py was changed.\n"
         f"autofix={autofix}, autofix_cli_option={autofix_cli_option}\n"
         f"Expected 'x == 5' to still be in the file."
     )

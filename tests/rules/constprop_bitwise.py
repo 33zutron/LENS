@@ -122,7 +122,7 @@ def test_bitnot_positive_is_negative():
     sink(z)
 
 # --- Floor division ---
-# Note: semgrep does not reliably match negative integer literals in patterns,
+# Note: lens does not reliably match negative integer literals in patterns,
 # so mixed-sign cases (result is negative) are tested via SCCP below.
 
 def test_floordiv_positive():

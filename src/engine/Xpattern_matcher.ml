@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2022 Semgrep Inc.
+ * Copyright (C) 2019-2022 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -43,7 +43,7 @@ type ('target_content, 'xpattern) t = {
  * was on multiple lines anyway the token_location.str was contain
  * the whole string. However, external programs using a startp/endp
  * expect a different location if the end part is on a different line
- * (e.g., the semgrep Python wrapper), so I now return a pair.
+ * (e.g., the lens Python wrapper), so I now return a pair.
  *)
 and match_range = Tok.location * Tok.location
 
@@ -101,7 +101,7 @@ let (matches_of_matcher :
 let full_convs_cache = SharedMemo.create ()
 
 let () =
-  (* nosemgrep: forbid-tmp *)
+  (* nolens: forbid-tmp *)
   UTmp.register_temp_file_cleanup_hook (fun file ->
       SharedMemo.remove full_convs_cache file)
 

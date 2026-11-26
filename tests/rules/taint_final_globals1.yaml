@@ -14,7 +14,7 @@ rules:
                 '$KEY': $H
               }
           - focus-metavariable: $H
-    message: "Semgrep found a match: $KEY $H"
+    message: "Lens found a match: $KEY $H"
     languages:
       - javascript
       - typescript

@@ -1,6 +1,6 @@
 (library
- (public_name semgrep.legacy_language_server.server)
- (name osemgrep_language_server_server)
+ (public_name lens.legacy_language_server.server)
+ (name olens_language_server_server)
  (wrapped false)
  (libraries
    base
@@ -8,10 +8,10 @@
    lsp
    lwt
 
-   semgrep_core_cli
-   osemgrep_core
-   osemgrep_core_runner
-   osemgrep_networking
+   lens_core_cli
+   olens_core
+   olens_core_runner
+   olens_networking
    ppx_deriving_yojson
  )
  (preprocess

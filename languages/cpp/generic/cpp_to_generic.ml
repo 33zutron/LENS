@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2021 Semgrep Inc.
+ * Copyright (C) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -21,7 +21,7 @@ module G = AST_generic
 module Log = Log_parser_cpp.Log
 
 (* See Parse_cpp_tree_Sitter.recover_when_partial_error *)
-(* nosemgrep: no-ref-declarations-at-top-scope *)
+(* nolens: no-ref-declarations-at-top-scope *)
 let recover_when_partial_error = ref true
 
 (*****************************************************************************)

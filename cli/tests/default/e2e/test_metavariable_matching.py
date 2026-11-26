@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,12 +11,12 @@
 # LICENSE for more details.
 #
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
 @pytest.mark.kinda_slow
-def test_equivalence(run_semgrep_in_tmp: RunSemgrep, posix_snapshot):
+def test_equivalence(run_lens_in_tmp: RunLens, posix_snapshot):
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp("rules/inside.yaml", target_name="basic").stdout,
+        run_lens_in_tmp("rules/inside.yaml", target_name="basic").stdout,
         "results.json",
     )

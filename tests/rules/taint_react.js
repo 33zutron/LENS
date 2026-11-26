@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep/issues/5115
+// https://github.com/returntocorp/lens/issues/5115
 
 const Sources: React.FC<{
   rule: Rule;
@@ -46,7 +46,7 @@ const Sources: React.FC<{
           <SourceLink
             target="_blank"
             rel="noopener noreferrer"
-            //ruleid: href-semgrep-app
+            //ruleid: href-lens-app
             href={rule.source_uri}
           >
             [0] Source for rule
@@ -57,7 +57,7 @@ const Sources: React.FC<{
         <>
           {references.map((url, index) => (
             <div>
-              {/* ruleid: href-semgrep-app */}
+              {/* ruleid: href-lens-app */}
               <SourceLink target="_blank" rel="noopener noreferrer" href={url}>
                 {`[${index + 1}] ${url}`}
               </SourceLink>

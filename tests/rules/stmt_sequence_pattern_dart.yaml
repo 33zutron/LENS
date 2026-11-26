@@ -12,4 +12,4 @@ rules:
     # in between" would need pattern-not-inside / focus-metavariable
     # support around the ellipsis, which is out of scope here. The point
     # of this fixture is just to confirm the multi-statement
-    # __SEMGREP_EXPRESSION path threads through to the engine.
+    # __LENS_EXPRESSION path threads through to the engine.

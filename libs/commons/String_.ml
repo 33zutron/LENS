@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -52,7 +52,7 @@ let show ?(max_len = 200) ?(keep_end = false) str =
         (String.length str)
   else Printf.sprintf "%S" str
 
-(* Adapted from Testo Style.truncate_text: https://github.com/semgrep/testo/blob/c1d8c15007f29f37a4c781516676cf8721133e74/util/lib/Style.ml#L82-L118 *)
+(* Adapted from Testo Style.truncate_text: https://github.com/lens/testo/blob/c1d8c15007f29f37a4c781516676cf8721133e74/util/lib/Style.ml#L82-L118 *)
 let show_ends ?(max_len = 200) str =
   let orig_len = String.length str in
   let max_len = max 0 max_len in

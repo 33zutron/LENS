@@ -1,14 +1,14 @@
 (library
- (public_name semgrep.metachecking)
- (name semgrep_metachecking)
+ (public_name lens.metachecking)
+ (name lens_metachecking)
  (wrapped false)
  (libraries
    pfff-lang_GENERIC-analyze
 
-   semgrep.core
-   semgrep.core_scan
-   semgrep.prefiltering ; for regexp_prefilter stats
-   semgrep.engine.tests
+   lens.core
+   lens.core_scan
+   lens.prefiltering ; for regexp_prefilter stats
+   lens.engine.tests
  )
  (preprocess (pps ppx_profiling))
 )

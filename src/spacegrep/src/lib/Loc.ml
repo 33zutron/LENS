@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2020-2025 Semgrep Inc.
+   Copyright (c) 2020-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -24,7 +24,7 @@ let pp fmt _t =
     then pp_token_mutable fmt t*)
   Format.fprintf fmt "()"
 
-(* we don't care about position information in spacegrep/semgrep *)
+(* we don't care about position information in spacegrep/lens *)
 let equal _ _ = true
 
 module Pos = struct

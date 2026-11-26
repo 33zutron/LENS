@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
 # LICENSE for more details.
 #
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
 @pytest.mark.kinda_slow
@@ -26,13 +26,13 @@ from tests.fixtures import RunSemgrep
     ids=["exclude-binary-files", "no-exclude-binary-files"],
 )
 def test_exclude_binary_files_file_list(
-    run_semgrep_in_test_folder: RunSemgrep, posix_snapshot, options
+    run_lens_in_test_folder: RunLens, posix_snapshot, options
 ):
-    stdout, _stderr = run_semgrep_in_test_folder(
+    stdout, _stderr = run_lens_in_test_folder(
         "rules/eqeq.yaml",  # unused; --x-ls only lists targets
         options=options,
         target_name="binary_files",
-        osemgrep_force_project_root=".",
+        olens_force_project_root=".",
         assert_exit_code=None,
     )
     posix_snapshot.assert_match(stdout, "files.list")

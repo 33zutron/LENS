@@ -1,6 +1,6 @@
 (* Brandon Wu (but really Claude Code)
 
-   Copyright (c) 2026 Semgrep Inc.
+   Copyright (c) 2026 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -27,13 +27,13 @@
 
     - {b Comments are rejected.} The legacy path delegates to the JS lexer,
       which silently accepts [//] line comments. Several test fixtures in
-      [tests/patterns/json/] and [tests/semgrep-rules/json/] rely on this
+      [tests/patterns/json/] and [tests/lens-rules/json/] rely on this
       relaxation. If you parse those files through this module, you will
       get an [Error].
 
     Note that [to_generic] (the translation from [Fast_json.t] to
     [AST_generic.expr]) is {b not} a generic JSON-to-AST and deliberately
-    encodes Semgrep-specific conventions: numeric literals are always
+    encodes Lens-specific conventions: numeric literals are always
     emitted as [G.Float], and object keys that look like metavariables
     (e.g. ["$SINK"]) are emitted as [G.N (G.Id _)] rather than string
     literals. Both match the legacy path's behavior and are required
@@ -81,7 +81,7 @@ val to_generic : t -> AST_generic.expr
 
 val parse_program : Fpath.t -> AST_generic.program
 (** Parse a JSON file directly into an [AST_generic.program] — the typical
-    entry point for integrating with Semgrep's parsing pipeline.
+    entry point for integrating with Lens's parsing pipeline.
 
     On parse failure, raises [Parsing_error.Syntax_error] with a [Tok.t]
     carrying the file, line, column, and a short reason. This matches the

@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Iago Abal
  *
- * Copyright (C) 2019-2025 Semgrep Inc.
+ * Copyright (C) 2019-2025 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -44,7 +44,7 @@ module Effects = OSS_taint_effects.Effects
  *
  * - This is a rudimentary taint analysis in some ways, but rather complex in
  *   other ways... We don't do alias analysis, and inter-procedural support
- *   (for DeepSemgrep) still doesn't cover some common cases. On the other hand,
+ *   (for DeepLens) still doesn't cover some common cases. On the other hand,
  *   almost _anything_ can be a source/sanitizer/sink, we have taint propagators,
  *   etc.
  * - It is a MAY analysis, it finds *potential* bugs (the tainted path could not
@@ -430,7 +430,7 @@ let propagate_taint_to_label replace_labels label (taint : T.taint) =
 (* Potentially produces an effect from incoming taints + call traces to a sink.
    Note that, while this sink has a `requires` and incoming labels,
    we decline to solve this now!
-   We will figure out how many actual Semgrep findings are generated
+   We will figure out how many actual Lens findings are generated
    when this information is used, later.
 *)
 let effects_of_tainted_sink (options : Rule_options.t) taints_with_traces
@@ -1759,7 +1759,7 @@ and fixpoint_aux func ~lambdas ~enter_lval_env ~in_lambda fun_cfg =
   (* THINK: Why I cannot just update mapping here ? if I do, the mapping gets overwritten later on! *)
   (* DataflowX.display_mapping flow init_mapping show_tainted; *)
   let end_mapping, timeout =
-    let fp_timeout = Limits_semgrep.taint_FIXPOINT_TIMEOUT in
+    let fp_timeout = Limits_lens.taint_FIXPOINT_TIMEOUT in
     DataflowX.fixpoint ~timeout:fp_timeout ~eq_env:Lval_env.equal
       ~init:init_mapping ~trans:(transfer env ~fun_cfg) ~forward:true ~flow
   in

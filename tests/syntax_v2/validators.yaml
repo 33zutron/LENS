@@ -12,7 +12,7 @@ rules:
           method: GET
           headers:
             authorization: Bearer $SECRET
-            user-agent: semgrep
+            user-agent: lens
         response:
           - match:
               - status-code: 2

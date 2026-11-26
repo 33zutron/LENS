@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2024 Semgrep Inc.
+# Copyright (c) 2022-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -18,16 +18,16 @@ from pytest_mock import MockerFixture
 from requests.exceptions import ConnectionError
 from tests.conftest import str_containing
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.commands.wrapper import handle_command_errors
-from semgrep.error import FATAL_EXIT_CODE
-from semgrep.error import SemgrepCoreError
-from semgrep.error_handler import ErrorHandler
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.commands.wrapper import handle_command_errors
+from lens.error import FATAL_EXIT_CODE
+from lens.error import LensCoreError
+from lens.error_handler import ErrorHandler
 
 
 FAKE_TOKEN = "abc123"
 FAKE_USER_AGENT = "user-agent"
-FAIL_OPEN_URL = "https://fail-open.semgrep.dev/failure"
+FAIL_OPEN_URL = "https://fail-open.lens.dev/failure"
 
 
 @pytest.fixture
@@ -48,7 +48,7 @@ class NetworkBlockedInTests(Exception):
 
 @pytest.fixture
 def mock_get_token(mocker):
-    mocked = mocker.patch("semgrep.app.auth.get_token", return_value=FAKE_TOKEN)
+    mocked = mocker.patch("lens.app.auth.get_token", return_value=FAKE_TOKEN)
     yield mocked
 
 
@@ -59,14 +59,14 @@ def mocked_state(mocker, error_handler):
     mocked.local_scan_id = uuid4()
     mocked.env.fail_open_url = FAIL_OPEN_URL.replace("/failure", "")
     mocked.error_handler = error_handler
-    mocker.patch("semgrep.state.get_state", return_value=mocked)
+    mocker.patch("lens.state.get_state", return_value=mocked)
     yield mocked
 
 
 @pytest.fixture(autouse=True)
 def mock_broken_request(requests_mock):
     return requests_mock.get(
-        "https://semgrep.dev/api/agent/deployments/current", exc=ConnectionError
+        "https://lens.dev/api/agent/deployments/current", exc=ConnectionError
     )
 
 
@@ -77,7 +77,7 @@ def fail_open_mock(requests_mock):
 
 @handle_command_errors
 def fake_command():
-    requests.get("https://semgrep.dev/api/agent/deployments/current")
+    requests.get("https://lens.dev/api/agent/deployments/current")
 
 
 @pytest.mark.quick
@@ -140,7 +140,7 @@ def test_send_with_scan_id(
 
     error_handler.configure(suppress_errors=True)
     error_handler.push_request(
-        "get", "https://semgrep.dev/api/agent/deployments/current"
+        "get", "https://lens.dev/api/agent/deployments/current"
     )
     scan_id = 1234
     error_handler.append_request(scan_id=scan_id)
@@ -148,7 +148,7 @@ def test_send_with_scan_id(
 
     expected_payload = {
         "method": "get",
-        "url": "https://semgrep.dev/api/agent/deployments/current",
+        "url": "https://lens.dev/api/agent/deployments/current",
         "scan_id": 1234,
         "request_id": str(mocked_state.local_scan_id),
         "exit_code": 2,
@@ -235,11 +235,11 @@ def test_capture_error_redacts_url_credentials(
 def test_capture_error_real_chained_exception_from_git(
     error_handler, mocker: MockerFixture
 ) -> None:
-    """Exercises the real flow (CalledProcessError → SemgrepError →
+    """Exercises the real flow (CalledProcessError → LensError →
     format_exc), so it catches regressions of `from None`."""
     import subprocess
 
-    from semgrep.git import git_check_output
+    from lens.git import git_check_output
 
     url = "https://gitlab-ci-token:glpat-LEAK_ME@gitlab.example.com/foo.git"
     mocker.patch(
@@ -264,8 +264,8 @@ def test_capture_error_real_chained_exception_from_git(
     assert "gitlab.example.com" in captured
 
 
-def make_core_error(message: str, details: str) -> SemgrepCoreError:
-    return SemgrepCoreError(
+def make_core_error(message: str, details: str) -> LensCoreError:
+    return LensCoreError(
         code=2,
         level=out.ErrorSeverity(out.Error_()),
         spans=None,
@@ -307,7 +307,7 @@ def test_capture_error_omits_core_error_text(error_handler, in_flight) -> None:
     assert "hunter2" not in captured
     assert "secret_project.py" not in captured
     assert "Traceback" in captured
-    assert "SemgrepCoreError:" in captured
+    assert "LensCoreError:" in captured
     assert "rules.some-rule" in captured
 
 
@@ -325,4 +325,4 @@ def test_send_core_error_through_wrapper(fail_open_mock) -> None:
 
     payload = fail_open_mock.last_request.json()
     assert "hunter2" not in payload["error"]
-    assert "SemgrepCoreError:" in payload["error"]
+    assert "LensCoreError:" in payload["error"]

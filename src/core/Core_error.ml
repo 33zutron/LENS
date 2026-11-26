@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2021-2024 Semgrep Inc.
+ * Copyright (C) 2021-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -14,19 +14,19 @@
  *)
 open Common
 open Fpath_.Operators
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 module R = Rule
-module Log = Log_semgrep.Log
+module Log = Log_lens.Log
 
 (****************************************************************************)
 (* Prelude *)
 (****************************************************************************)
-(* Error management for semgrep-core.
+(* Error management for lens-core.
  *
  * Note that the "core" errors are translated at some point in
- * Semgrep_output_v1.core_error, then processed in pysemgrep (or osemgrep)
- * and translated again in Semgrep_output_v1.error.
- * There's also Error.ml in osemgrep.
+ * Lens_output_v1.core_error, then processed in pylens (or olens)
+ * and translated again in Lens_output_v1.error.
+ * There's also Error.ml in olens.
  * LATER: it would be good to remove some intermediate types.
  *)
 
@@ -34,8 +34,8 @@ module Log = Log_semgrep.Log
 (* Types and globals *)
 (****************************************************************************)
 
-(* less: we should define everything in semgrep_output_v1.atd, not just typ:
- * coupling: almost identical to semgrep_output_v1.core_error
+(* less: we should define everything in lens_output_v1.atd, not just typ:
+ * coupling: almost identical to lens_output_v1.core_error
  *)
 type t = {
   typ : Out.error_type;
@@ -67,8 +67,8 @@ end)
 (****************************************************************************)
 
 let please_file_issue_text =
-  "An error occurred while invoking the Semgrep engine. Please help us fix \
-   this by creating an issue at https://github.com/semgrep/semgrep"
+  "An error occurred while invoking the Lens engine. Please help us fix \
+   this by creating an issue at https://github.com/lens/lens"
 
 let mk_error ?rule_id ?(msg = "") ?(loc : Tok.location option)
     (err : Out.error_type) : t =
@@ -84,7 +84,7 @@ let mk_error ?rule_id ?(msg = "") ?(loc : Tok.location option)
     | OtherParseError
     | RuleParseError
     | InvalidYaml
-    | SemgrepMatchFound
+    | LensMatchFound
     (* 'Timeout': a rule failed to scan a target in time *)
     | Timeout
     (* 'FixpointTimeout': a dataflow fixpoint could not be reached in time
@@ -98,9 +98,9 @@ let mk_error ?rule_id ?(msg = "") ?(loc : Tok.location option)
       We produce a single 'FixpointTimeout' error per function/method/etc, multiple
       rules timing out on the same code still produce a single error.
 
-      This is a somewhat low-level error that is mainly interesting for Semgrep devs.
+      This is a somewhat low-level error that is mainly interesting for Lens devs.
 
-      See 'Dataflow_core.fixpoint' and 'Limits_semgrep.*_FIXPOINT_TIMEOUT'. *)
+      See 'Dataflow_core.fixpoint' and 'Limits_lens.*_FIXPOINT_TIMEOUT'. *)
     | FixpointTimeout
     | OutOfMemory
     | StackOverflow
@@ -115,8 +115,8 @@ let mk_error ?rule_id ?(msg = "") ?(loc : Tok.location option)
     | PartialParsing _
     | IncompatibleRule _
     | IncompatibleRule0
-    | SemgrepWarning
-    | SemgrepError
+    | LensWarning
+    | LensError
     | InvalidRuleSchemaError
     | UnknownLanguageError
     | MissingPlugin
@@ -197,13 +197,13 @@ let error_of_rule_error (err : Rule_error.t) : t =
         Out.OtherParseError
 
 (*
-   This function converts known exceptions to Semgrep errors.
+   This function converts known exceptions to Lens errors.
    We also use it to register global exception printers for
    'Printexc.to_string' to show useful messages.
 
    See also JSON_report.json_of_exn for non-target related exn handling.
 
-   invariant: every target-related semgrep-specific exn that has a
+   invariant: every target-related lens-specific exn that has a
    Parse_info.t should be captured here for precise location in error
    reporting.
    - TODO: naming exns?
@@ -281,7 +281,7 @@ let exn_to_error ?(file : Fpath.t option) (e : Exception.t) : t =
          * one file was concerned by the error, then we should generate
          * an error with a Warning severity (see severity_of_error() further
          * below) to avoid making the whole scan fail with exit code 2
-         * (see also test_semgrep_core_error.py).
+         * (see also test_lens_core_error.py).
          * TODO: ideally we should introduce a new OtherErrorWithAttachedFile
          * instead of abusing OtherParseError.
          *)
@@ -339,7 +339,7 @@ let () =
 (****************************************************************************)
 
 (* Note that the difference between Error and Warning is important because
- * pysemgrep/osemgrep will return an exit code of 2 for any semgrep-core
+ * pylens/olens will return an exit code of 2 for any lens-core
  * Error happening during a scan (which will make the whole scan fail
  * if used in CI). Warning will generate also an exit code of 2 but only
  * if the user ran a scan with --strict.
@@ -358,17 +358,17 @@ let severity_of_error (typ : Out.error_type) : Out.error_severity =
   | FixpointTimeout
   | OutOfMemory
   | StackOverflow
-  | SemgrepWarning ->
+  | LensWarning ->
       `Warning
   (* Errors *)
-  | SemgrepMatchFound
+  | LensMatchFound
   | AstBuilderError
   | RuleParseError
   | PatternParseError _
   | PatternParseError0
   | TimeoutDuringInterfile
   | OutOfMemoryDuringInterfile
-  | SemgrepError
+  | LensError
   | InvalidRuleSchemaError
   | UnknownLanguageError
   | FatalError ->

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -28,19 +28,19 @@ from pydantic import FileUrl
 def mk_server_params(port: int):
     # Create server parameters for stdio connection
     return StdioServerParameters(
-        command="semgrep",  # Executable
+        command="lens",  # Executable
         args=["mcp", "--port", str(port)],  # Optional command line arguments
         env={
-            "SEMGREP_SEND_METRICS": "off",
-            "SEMGREP_METRICS": "off",
-            "USE_SEMGREP_RPC": "false",
+            "LENS_SEND_METRICS": "off",
+            "LENS_METRICS": "off",
+            "USE_LENS_RPC": "false",
             **os.environ,
         },
     )
 
 
 async def list_roots(context) -> ListRootsResult:
-    # semgrep_scan only reads files inside a workspace root, and the scanned
+    # lens_scan only reads files inside a workspace root, and the scanned
     # file is created in the temp directory.
     return ListRootsResult(
         roots=[Root(uri=FileUrl(Path(gettempdir()).resolve().as_uri()))]
@@ -49,8 +49,8 @@ async def list_roots(context) -> ListRootsResult:
 
 @pytest.mark.slow
 @pytest.mark.skipif(
-    not os.environ.get("SEMGREP_APP_TOKEN"),
-    reason="SEMGREP_APP_TOKEN not set; skipping integration test.",
+    not os.environ.get("LENS_APP_TOKEN"),
+    reason="LENS_APP_TOKEN not set; skipping integration test.",
 )
 async def test_local_scan(available_port):
     async with stdio_client(mk_server_params(available_port)) as (read, write):
@@ -69,9 +69,9 @@ async def test_local_scan(available_port):
 
                 path = tmp.name
 
-                # Scan code for security issues using local semgrep_scan
+                # Scan code for security issues using local lens_scan
                 results = await session.call_tool(
-                    "semgrep_scan",
+                    "lens_scan",
                     {
                         "code_files": [
                             {

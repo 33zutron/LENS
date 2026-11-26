@@ -20,7 +20,7 @@
         "fingerprint": "0x42",
         "fix": "once",
         "lines": "requires login",
-        "message": "Semgrep found a match",
+        "message": "Lens found a match",
         "metadata": {},
         "severity": "WARNING",
         "validation_state": "NO_VALIDATOR"
@@ -44,7 +44,7 @@
         "fingerprint": "0x42",
         "fix": "twice",
         "lines": "requires login",
-        "message": "Semgrep found a match",
+        "message": "Lens found a match",
         "metadata": {},
         "severity": "WARNING",
         "validation_state": "NO_VALIDATOR"

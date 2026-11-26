@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2024 Semgrep Inc.
+# Copyright (c) 2021-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,11 +15,11 @@ import json
 from pprint import pprint
 
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# !!!! TODO refactor this to use `semgrep_output_v1.py` !!!!
+# !!!! TODO refactor this to use `lens_output_v1.py` !!!!
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 parser = argparse.ArgumentParser(description="Read JSON output.")
-parser.add_argument("file", type=str, help="semgrep output object")
+parser.add_argument("file", type=str, help="lens output object")
 
 args = parser.parse_args()
 

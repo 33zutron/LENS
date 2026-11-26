@@ -1,0 +1,20 @@
+Test name: with git > scan symlink to lensignored target
+--- Files added before 'git add' ---
+.lensignore
+lensignored.py
+symlink.py
+--- begin input files ---
+.lensignore
+lensignored.py
+symlink.py
+--- end input files ---
+Initialized empty Git repository in <TMP>/<MASKED>/.git/
+[main (root-commit) <MASKED>] Add files
+ 3 files changed, 2 insertions(+)
+ create mode 100644 .lensignore
+ create mode 100644 lensignored.py
+ create mode 120000 symlink.py
+--- Errors ---
+--- Selected targets ---
+selected symlink.py
+--- Skipped targets ---

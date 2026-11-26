@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2020-2025 Semgrep Inc.
+   Copyright (c) 2020-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -76,9 +76,9 @@ let man =
       "Read an arbitrary program from stdin and print the parse tree\n\
       \      to stdout.";
     `S Manpage.s_authors;
-    `P "Martin Jambon <martin@semgrep.com>";
+    `P "Martin Jambon <martin@lens.com>";
     `S Manpage.s_bugs;
-    `P "Check out bug reports at https://github.com/semgrep/semgrep/issues.";
+    `P "Check out bug reports at https://github.com/lens/lens/issues.";
     `S Manpage.s_see_also;
     `P "spacegrep(1)";
   ]

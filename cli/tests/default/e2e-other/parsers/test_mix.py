@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -14,16 +14,16 @@ from pathlib import Path
 from typing import Tuple
 
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.parsers import mix
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Direct
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Ecosystem
-from semgrep.semgrep_interfaces.semgrep_output_v1 import FoundDependency
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Fpath
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Hex
-from semgrep.semgrep_interfaces.semgrep_output_v1 import Transitive
+from lens.lens_interfaces.lens_output_v1 import Direct
+from lens.lens_interfaces.lens_output_v1 import Ecosystem
+from lens.lens_interfaces.lens_output_v1 import FoundDependency
+from lens.lens_interfaces.lens_output_v1 import Fpath
+from lens.lens_interfaces.lens_output_v1 import Hex
+from lens.lens_interfaces.lens_output_v1 import Transitive
 
 
 @pytest.mark.parametrize(
@@ -33,7 +33,7 @@ from semgrep.semgrep_interfaces.semgrep_output_v1 import Transitive
         ('"1.2.0a-beta"', "1.2.0a-beta"),
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_version_block(original: str, output: str):
@@ -49,7 +49,7 @@ def test_mix_version_block(original: str, output: str):
         (":version2,", "version2"),
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_atom(original: str, output: str):
@@ -66,7 +66,7 @@ def test_mix_atom(original: str, output: str):
         "[:mix, :rebar3]",
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_options_block(original: str):
@@ -117,7 +117,7 @@ def test_mix_options_block(original: str):
         ),
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_package_entry_value_block(original: str, output: Tuple):
@@ -147,7 +147,7 @@ def test_mix_package_entry_value_block(original: str, output: Tuple):
         ),
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_package_entry_git_value_block(original: str, output: Tuple):
@@ -163,7 +163,7 @@ def test_mix_package_entry_git_value_block(original: str, output: Tuple):
         '{:octo_fetch, "~> 0.3", [hex: :octo_fetch, repo: "hexpm", optional: false]}',
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_inner_dependency_block(original: str):
@@ -171,7 +171,7 @@ def test_mix_inner_dependency_block(original: str):
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_many_inner_dependency_blocks():
@@ -180,7 +180,7 @@ def test_mix_many_inner_dependency_blocks():
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_package_key_value_block():
@@ -193,7 +193,7 @@ def test_mix_package_key_value_block():
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_many_package_blocks():
@@ -207,7 +207,7 @@ def test_mix_many_package_blocks():
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_lockfile_parser():
@@ -251,7 +251,7 @@ def test_mix_lockfile_parser():
         ('{:recon, "~> 2.5.1"}', "recon"),
     ],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_manifest_package_parser(original, output):
@@ -260,7 +260,7 @@ def test_mix_manifest_package_parser(original, output):
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_many_manifest_package_parser():
@@ -278,7 +278,7 @@ def test_mix_many_manifest_package_parser():
     "original",
     ["defp deps(profile_info, version) do", "def deps (profile_info, version) do"],
 )
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_manifest_deps_declaration(original):
@@ -286,7 +286,7 @@ def test_mix_manifest_deps_declaration(original):
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_manifest_deps():
@@ -318,7 +318,7 @@ def test_mix_manifest_deps():
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_manifest_parser():
@@ -366,7 +366,7 @@ def test_mix_manifest_parser():
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
 def test_mix_manifest_parser_inline():
@@ -395,10 +395,10 @@ def test_mix_manifest_parser_inline():
     assert not result[1]
 
 
-@pytest.mark.no_semgrep_cli
+@pytest.mark.no_lens_cli
 @pytest.mark.osemfail
 @pytest.mark.quick
-def test_full_mix_parsing(run_semgrep_on_copied_files: RunSemgrep):
+def test_full_mix_parsing(run_lens_on_copied_files: RunLens):
     manifest_path = Path("targets/dependency_aware/mix/mix.exs")
     lockfile_path = Path("targets/dependency_aware/mix/mix.lock")
 

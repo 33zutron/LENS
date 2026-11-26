@@ -1,16 +1,16 @@
 (library
- (public_name semgrep.legacy_language_server.custom_requests)
- (name osemgrep_language_server_custom_requests)
+ (public_name lens.legacy_language_server.custom_requests)
+ (name olens_language_server_custom_requests)
  (wrapped false)
  (libraries
    base
 
-   semgrep.legacy_language_server.util
-   semgrep.legacy_language_server.server
-   semgrep.osemgrep_cli_scan
-   semgrep.legacy_language_server.scan_helpers
+   lens.legacy_language_server.util
+   lens.legacy_language_server.server
+   lens.olens_cli_scan
+   lens.legacy_language_server.scan_helpers
    glob
-   semgrep_core
+   lens_core
  )
  (preprocess
    (pps

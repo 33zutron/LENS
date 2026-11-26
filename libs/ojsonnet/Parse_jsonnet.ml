@@ -31,7 +31,7 @@
 (*****************************************************************************)
 
 (* copy pasted from Parse_target.ml to avoid circular dependencies
- * between ojsonnet and semgrep_parsing
+ * between ojsonnet and lens_parsing
  *)
 let loc_of_tree_sitter_error (err : Tree_sitter_run.Tree_sitter_error.t) =
   let start = err.start_pos in

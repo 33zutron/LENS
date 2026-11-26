@@ -1,5 +1,5 @@
 #
-# Rules that either should be skipped due to an incompatible Semgrep
+# Rules that either should be skipped due to an incompatible Lens
 # version or shouldn't be skipped and produce a match.
 #
 rules:

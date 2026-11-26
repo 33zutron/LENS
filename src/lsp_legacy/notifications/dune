@@ -1,10 +1,10 @@
 (library
- (public_name semgrep.legacy_language_server.notifications)
- (name osemgrep_language_server_notifications)
+ (public_name lens.legacy_language_server.notifications)
+ (name olens_language_server_notifications)
  (wrapped false)
  (libraries
-   semgrep.legacy_language_server.scan_helpers
-   semgrep.legacy_language_server.server
+   lens.legacy_language_server.scan_helpers
+   lens.legacy_language_server.server
  )
   (preprocess
    (pps

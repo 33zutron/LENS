@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -88,8 +88,8 @@ def test_poetry_dep_extra_parser() -> None:
 def test_poetry_source_extra_parser() -> None:
     original = textwrap.dedent(
         """        [[tool.poetry.source]]
-        name = "semgrep"
-        url = "https://artifact.semgrep.com/"
+        name = "lens"
+        url = "https://artifact.lens.com/"
         secondary = False
     """
     )

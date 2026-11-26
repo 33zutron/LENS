@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -10,18 +10,18 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
    LICENSE for more details.
 *)
-let meth = "semgrep/loginStatus"
+let meth = "lens/loginStatus"
 
 let on_request (session : Legacy_session.t) id _params :
     Legacy_session.t * Legacy_lsp_.Reply.t =
-  let settings = Semgrep_settings.load () in
+  let settings = Lens_settings.load () in
   match settings.api_token with
   | None -> (session, Legacy_lsp_.Reply.now (Legacy_lsp_.respond_json id `Null))
   | Some token ->
       ( session,
         Legacy_lsp_.Reply.later (fun send ->
             let%lwt deployment =
-              Semgrep_App.deployment_config_result_async token
+              Lens_App.deployment_config_result_async token
             in
             match deployment with
             | Ok deployment ->
@@ -32,7 +32,7 @@ let on_request (session : Legacy_session.t) id _params :
                 (* Returning null here means the token is invalid, and the user needs to login again *)
                 Logs.warn (fun m ->
                     m
-                      "Invalid Semgrep token detected responding with null to \
+                      "Invalid Lens token detected responding with null to \
                        LoginStatus request");
                 Legacy_lsp_.Reply.apply send
                   (Legacy_lsp_.Reply.now (Legacy_lsp_.respond_json id `Null))

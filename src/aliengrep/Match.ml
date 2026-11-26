@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2025 Semgrep Inc.
+   Copyright (c) 2023-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -41,7 +41,7 @@ let loc_of_substring target_str captures capture_id =
                    Pcre2_.match_of_captures captures i
                    |> Option.map Pcre2_.substring_of_match
                    |> Option.value ~default:"")
-                 (* nosemgrep: ocaml.lang.best-practice.string.ocamllint-useless-sprintf *)
+                 (* nolens: ocaml.lang.best-practice.string.ocamllint-useless-sprintf *)
               |> List.map (Printf.sprintf "%S")
               |> String.concat ";"));
         assert false

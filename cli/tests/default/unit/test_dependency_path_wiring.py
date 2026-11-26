@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -18,10 +18,10 @@ from collections import defaultdict
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.dependency_aware_rule import SubprojectDependencyIndex
-from semgrep.dependency_path import DependencyParentIndex
-from semgrep.subproject import from_resolved_dependencies
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.dependency_aware_rule import SubprojectDependencyIndex
+from lens.dependency_path import DependencyParentIndex
+from lens.subproject import from_resolved_dependencies
 
 
 def _build_test_dep(package, version, *, direct, children=()):

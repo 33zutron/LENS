@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # This script build "wheels", which is a format used by the Pypi package manager
-# to distribute binaries (for us semgrep-core) with regular Python code.
+# to distribute binaries (for us lens-core) with regular Python code.
 # See https://packaging.python.org/en/latest/glossary/#term-Wheel
 # and https://realpython.com/python-wheels/ for more information.
 # This script is called from our GHA build-xxx workflows.
-# It assumes the semgrep-core binary has been copied under cli/src/semgrep/bin
-# for pip to package semgrep correctly. And that `uv` is installed
+# It assumes the lens-core binary has been copied under cli/src/lens/bin
+# for pip to package lens correctly. And that `uv` is installed
 
 set -ex
 

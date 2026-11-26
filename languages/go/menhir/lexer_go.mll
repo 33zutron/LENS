@@ -187,10 +187,10 @@ let octal_byte_value = '\\' octal_digit octal_digit octal_digit
 let hex_byte_value = '\\' 'x' hex_digit hex_digit
 let byte_value = octal_byte_value | hex_byte_value
 
-(* semgrep: we can use regexp in semgrep in strings and we want to
+(* lens: we can use regexp in lens in strings and we want to
  * support any escape characters there, e.g. eval("=~/.*dev\.corp/")
  *)
-let semgrep_escapeseq = '\\' _
+let lens_escapeseq = '\\' _
 
 (*****************************************************************************)
 (* Rule initial *)
@@ -370,7 +370,7 @@ rule token = parse
       { LSTR (s, tokinfo lexbuf) }
   | '"' ((unicode_value_no_double_quote | byte_value)* as s) '"'
       { LSTR (s, tokinfo lexbuf) }
-  | '"' ((unicode_value_no_double_quote | byte_value | semgrep_escapeseq)* as s) '"'
+  | '"' ((unicode_value_no_double_quote | byte_value | lens_escapeseq)* as s) '"'
       { Flag.sgrep_guard (LSTR (s, tokinfo lexbuf)) }
 
   (* ----------------------------------------------------------------------- *)

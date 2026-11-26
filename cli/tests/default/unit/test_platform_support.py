@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 Semgrep Inc.
+# Copyright (c) 2026 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ import pytest
 def test_missing_core_on_intel_macos_explains_alternatives(monkeypatch) -> None:
     # Importing entrypoint appends to PATH; let monkeypatch restore it.
     monkeypatch.setenv("PATH", os.environ.get("PATH", ""))
-    entrypoint = importlib.import_module("semgrep.console_scripts.entrypoint")
+    entrypoint = importlib.import_module("lens.console_scripts.entrypoint")
     monkeypatch.setattr(sys, "platform", "darwin")
     monkeypatch.setattr(platform, "machine", lambda: "x86_64")
 
@@ -34,7 +34,7 @@ def test_missing_core_on_intel_macos_explains_alternatives(monkeypatch) -> None:
     monkeypatch.setattr(shutil, "which", lambda _name: None)
 
     with pytest.raises(entrypoint.CoreNotFound) as excinfo:
-        entrypoint.find_semgrep_core_path()
+        entrypoint.find_lens_core_path()
 
     assert "Intel macOS" in str(excinfo.value)
-    assert "semgrep/semgrep Docker image" in str(excinfo.value)
+    assert "lens/lens Docker image" in str(excinfo.value)

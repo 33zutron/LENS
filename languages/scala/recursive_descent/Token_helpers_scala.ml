@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2021 Semgrep Inc.
+ * Copyright (C) 2021 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -236,7 +236,7 @@ let inLastOfStat x =
   | RBRACKET _
   | RBRACE _
   | DEDENT _
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | Ellipsis _
   | RDots _ ->
       Log.debug (fun m -> m "inLastOfStat: true for %s" (Dumper.dump x));
@@ -446,7 +446,7 @@ let isExprIntro x =
   | LBRACE _
   | QUOTE _
   (* | XMLSTART  *)
-  (* semgrep-ext: *)
+  (* lens-ext: *)
   | Ellipsis _
   | LDots _ ->
       true

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2025 Semgrep Inc.
+# Copyright (c) 2020-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
 # LICENSE for more details.
 #
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
 def _name_of_flag(flag: str) -> str:
@@ -78,15 +78,15 @@ LS = ["--x-ls"]
     ids=idfn,
 )
 def test_exclude_include_file_list(
-    run_semgrep_in_test_folder: RunSemgrep, posix_snapshot, options
+    run_lens_in_test_folder: RunLens, posix_snapshot, options
 ):
-    stdout, stderr = run_semgrep_in_test_folder(
+    stdout, stderr = run_lens_in_test_folder(
         "rules/eqeq.yaml",  # unused
         # adding the new common options here to avoid renaming the
         # snapshot files
         options=options,
         target_name="exclude_include",
-        osemgrep_force_project_root=".",
+        olens_force_project_root=".",
         assert_exit_code=None,
     )
     posix_snapshot.assert_match(stdout, "files.list")

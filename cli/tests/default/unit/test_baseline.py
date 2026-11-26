@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022-2024 Semgrep Inc.
+# Copyright (c) 2022-2024 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from semgrep.git import BaselineHandler
+from lens.git import BaselineHandler
 
 
 @pytest.mark.kinda_slow
@@ -29,7 +29,7 @@ def test_baseline_context(monkeypatch, tmp_path):
 
     # Initialize State
     subprocess.check_call(["git", "init"])
-    subprocess.check_call(["git", "config", "user.email", "baselinetest@semgrep.com"])
+    subprocess.check_call(["git", "config", "user.email", "baselinetest@lens.com"])
     subprocess.check_call(["git", "config", "user.name", "Baseline Test"])
     subprocess.check_call(["git", "checkout", "-B", "main"])
 
@@ -111,7 +111,7 @@ def test_baseline_context_with_relative_git_index_file_env(monkeypatch, tmp_path
     monkeypatch.chdir(tmp_path)
 
     subprocess.check_call(["git", "init"])
-    subprocess.check_call(["git", "config", "user.email", "baselinetest@semgrep.com"])
+    subprocess.check_call(["git", "config", "user.email", "baselinetest@lens.com"])
     subprocess.check_call(["git", "config", "user.name", "Baseline Test"])
     subprocess.check_call(["git", "checkout", "-B", "main"])
 

@@ -1,5 +1,5 @@
 <?php
-// https://github.com/returntocorp/semgrep/issues/3198
+// https://github.com/returntocorp/lens/issues/3198
 
 //ruleid:test-ac-matching
 if (!check1($stuff) && !check2($stuff)) {

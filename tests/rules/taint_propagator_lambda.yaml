@@ -9,7 +9,7 @@ rules:
       to: $Y
   pattern-sources:
     - pattern: request.getParameter(...)
-  message: Semgrep found a match
+  message: Lens found a match
   languages:
     - java
   severity: WARNING

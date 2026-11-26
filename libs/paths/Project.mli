@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024 Semgrep Inc.
+   Copyright (c) 2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -29,7 +29,7 @@ and kind =
   | Darcs_project
   (* A gitignore project is a fake git project. It doesn't have a valid
    *  '.git/' folder but its '.gitignore' files should be read as part
-   * of the semgrepignore mechanism.
+   * of the lensignore mechanism.
    *)
   | Gitignore_project
   (* A no-VCS project is any project for which we don't support the
@@ -37,7 +37,7 @@ and kind =
      ignored with a special option.
      A common case includes untarred project tarballs. The user may
      have to resort to the '--project-root' option to specify/force
-     the project root where a root '.semgrepignore' may exist.
+     the project root where a root '.lensignore' may exist.
   *)
   | No_VCS_project
 [@@deriving show]
@@ -47,14 +47,14 @@ and kind =
  *)
 type scanning_root_info = {
   path : Rfpath.t;
-  (* Path of a Semgrep scanning root express within the project, relative to
+  (* Path of a Lens scanning root express within the project, relative to
      the project root. *)
   inproject_path : Ppath.t;
 }
 [@@deriving show]
 
-(* In many CLI tools (e.g., semgrep), the user can specify a set of
- * starting points to start an analysis (e.g., semgrep foo/ bar/).
+(* In many CLI tools (e.g., lens), the user can specify a set of
+ * starting points to start an analysis (e.g., lens foo/ bar/).
  * We call those starting points "scanning roots".
  *)
 type scanning_roots = {

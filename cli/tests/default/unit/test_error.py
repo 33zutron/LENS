@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -10,16 +10,16 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
 # LICENSE for more details.
 #
-"""Unit tests for semgrep.error module."""
+"""Unit tests for lens.error module."""
 from pathlib import Path
 
 import pytest
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
-from semgrep.error import DependencyResolutionSemgrepError
-from semgrep.error import sanitize_resolution_error_kind
-from semgrep.error import sanitize_resolution_output
-from semgrep.error import SemgrepCoreError
+import lens.lens_interfaces.lens_output_v1 as out
+from lens.error import DependencyResolutionLensError
+from lens.error import sanitize_resolution_error_kind
+from lens.error import sanitize_resolution_output
+from lens.error import LensCoreError
 
 
 def _make_core_error(error_type: out.ErrorType) -> out.CoreError:
@@ -37,10 +37,10 @@ def _make_core_error(error_type: out.ErrorType) -> out.CoreError:
     )
 
 
-def _make_semgrep_core_error(error_type: out.ErrorType) -> SemgrepCoreError:
-    """Helper to create a SemgrepCoreError with the given error type."""
+def _make_lens_core_error(error_type: out.ErrorType) -> LensCoreError:
+    """Helper to create a LensCoreError with the given error type."""
     core_error = _make_core_error(error_type)
-    return SemgrepCoreError(
+    return LensCoreError(
         code=2,  # FATAL_EXIT_CODE
         level=out.ErrorSeverity(out.Error_()),
         spans=None,
@@ -49,7 +49,7 @@ def _make_semgrep_core_error(error_type: out.ErrorType) -> SemgrepCoreError:
 
 
 class TestIsScanFailure:
-    """Tests for SemgrepCoreError.is_scan_failure() method."""
+    """Tests for LensCoreError.is_scan_failure() method."""
 
     @pytest.mark.quick
     @pytest.mark.parametrize(
@@ -73,7 +73,7 @@ class TestIsScanFailure:
     )
     def test_scan_failure_error_types(self, error_type: out.ErrorType):
         """Test that scan failure error types return True."""
-        error = _make_semgrep_core_error(error_type)
+        error = _make_lens_core_error(error_type)
         assert error.is_scan_failure() is True
 
     @pytest.mark.quick
@@ -96,17 +96,17 @@ class TestIsScanFailure:
     )
     def test_non_scan_failure_error_types(self, error_type: out.ErrorType):
         """Test that non-scan-failure error types return False."""
-        error = _make_semgrep_core_error(error_type)
+        error = _make_lens_core_error(error_type)
         assert error.is_scan_failure() is False
 
 
 class TestIsTimeout:
-    """Tests for SemgrepCoreError.is_timeout() method."""
+    """Tests for LensCoreError.is_timeout() method."""
 
     @pytest.mark.quick
     def test_timeout_returns_true(self):
         """Test that Timeout error type returns True."""
-        error = _make_semgrep_core_error(out.ErrorType(out.Timeout()))
+        error = _make_lens_core_error(out.ErrorType(out.Timeout()))
         assert error.is_timeout() is True
 
     @pytest.mark.quick
@@ -121,7 +121,7 @@ class TestIsTimeout:
     )
     def test_other_types_return_false(self, error_type: out.ErrorType):
         """Test that non-Timeout error types return False."""
-        error = _make_semgrep_core_error(error_type)
+        error = _make_lens_core_error(error_type)
         assert error.is_timeout() is False
 
 
@@ -266,7 +266,7 @@ class TestDependencyResolutionCliError:
     @pytest.mark.quick
     def test_message_is_short_and_does_not_repeat_the_command(self):
         command = "gradlew " + "--flag " * 300
-        error = DependencyResolutionSemgrepError(
+        error = DependencyResolutionLensError(
             type_=sanitize_resolution_error_kind(
                 _cmd_failed(command, "x" * 5000 + "\nUnable to locate a Java Runtime.")
             ),
@@ -286,7 +286,7 @@ class TestDependencyResolutionCliError:
 
     @pytest.mark.quick
     def test_message_without_output(self):
-        error = DependencyResolutionSemgrepError(
+        error = DependencyResolutionLensError(
             type_=out.ResolutionErrorKind(out.UnsupportedManifest()),
             dependency_source_file=Path("x/pom.xml"),
         )
@@ -299,7 +299,7 @@ class TestDependencyResolutionCliError:
 class TestLockfileParseError:
     @staticmethod
     def _error(detail):
-        return DependencyResolutionSemgrepError(
+        return DependencyResolutionLensError(
             type_=out.ResolutionErrorKind(
                 out.ScaParseError(out.ScaParserName(out.PPnpmLock()))
             ),

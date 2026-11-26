@@ -31,11 +31,11 @@
           "cwe": "CWE-522: Insufficiently Protected Credentials",
           "license": "Commons Clause License Condition v1.0[LGPL-2.1-only]",
           "owasp": "A2: Broken Authentication",
-          "semgrep.ruleset": "ci",
-          "semgrep.ruleset_id": 735,
-          "semgrep.url": "https://semgrep.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
+          "lens.ruleset": "ci",
+          "lens.ruleset_id": 735,
+          "lens.url": "https://lens.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
           "shortlink": "https://sg.run/4xN9",
-          "source": "https://semgrep.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
+          "source": "https://lens.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
           "source-rule-url": "https://r2c.dev/blog/2020/hardcoded-secrets-unverified-tokens-and-other-common-jwt-mistakes/",
           "technology": [
             "jwt"
@@ -74,11 +74,11 @@
           "cwe": "CWE-522: Insufficiently Protected Credentials",
           "license": "Commons Clause License Condition v1.0[LGPL-2.1-only]",
           "owasp": "A2: Broken Authentication",
-          "semgrep.ruleset": "ci",
-          "semgrep.ruleset_id": 735,
-          "semgrep.url": "https://semgrep.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
+          "lens.ruleset": "ci",
+          "lens.ruleset_id": 735,
+          "lens.url": "https://lens.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
           "shortlink": "https://sg.run/4xN9",
-          "source": "https://semgrep.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
+          "source": "https://lens.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
           "source-rule-url": "https://r2c.dev/blog/2020/hardcoded-secrets-unverified-tokens-and-other-common-jwt-mistakes/",
           "technology": [
             "jwt"
@@ -117,11 +117,11 @@
           "cwe": "CWE-522: Insufficiently Protected Credentials",
           "license": "Commons Clause License Condition v1.0[LGPL-2.1-only]",
           "owasp": "A2: Broken Authentication",
-          "semgrep.ruleset": "ci",
-          "semgrep.ruleset_id": 735,
-          "semgrep.url": "https://semgrep.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
+          "lens.ruleset": "ci",
+          "lens.ruleset_id": 735,
+          "lens.url": "https://lens.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
           "shortlink": "https://sg.run/4xN9",
-          "source": "https://semgrep.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
+          "source": "https://lens.dev/r/javascript.jsonwebtoken.security.jwt-hardcode.hardcoded-jwt-secret",
           "source-rule-url": "https://r2c.dev/blog/2020/hardcoded-secrets-unverified-tokens-and-other-common-jwt-mistakes/",
           "technology": [
             "jwt"

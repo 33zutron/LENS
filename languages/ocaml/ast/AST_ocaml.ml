@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -20,7 +20,7 @@
  *
  * For a Concrete Syntax Tree see either
  *   - old/cst_ml_ml
- *   - ../tree-sitter/semgrep-ocaml/lib/CST.ml
+ *   - ../tree-sitter/lens-ocaml/lib/CST.ml
  *
  * TODO:
  *  - lots of missing xxx bracket, lots of missing tok for correct l/r range
@@ -131,14 +131,14 @@ type expr =
   | Try of Tok.t * expr * match_case list
   | While of Tok.t * expr * expr
   | For of Tok.t * ident * expr * for_direction * expr * expr
-  (* regular construct but also semgrep-ext: for Typed metavariables *)
+  (* regular construct but also lens-ext: for Typed metavariables *)
   | TypedExpr of expr * Tok.t (* : *) * type_
   (* OCaml 4.?? *)
   | LetOpen of Tok.t (* 'let' *) * name * Tok.t (* 'in' *) * expr
   | LocalOpen of name * Tok.t (* '.' *) * expr
   (* In most ASTs, and in most parsers, we get rid of those Paren
    * constructs because they are more useful in CSTs than ASTs. However,
-   * for semgrep, and especially for autofix, parenthesis matter.
+   * for lens, and especially for autofix, parenthesis matter.
    * We used to have 'Tuple of expr list bracket', but this was not enough
    * because in code like Foo (1+2), there are no tuple, but
    * we still want to remember those parenthesis in the AST.

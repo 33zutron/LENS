@@ -1,0 +1,16 @@
+Test name: without git > lensignore file takes precedence over --include
+--- Files not added to git ---
+.lensignore
+c.c
+dir/a.c
+dir/b.c
+--- begin input files ---
+--- end input files ---
+--- '--include' patterns ---
+*.c
+--- Errors ---
+--- Selected targets ---
+selected c.c
+--- Skipped targets ---
+ignored .lensignore [Lens_output_v1_t.Cli_include_flags_do_not_match]
+ignored dir [Lens_output_v1_t.Lensignore_patterns_match]

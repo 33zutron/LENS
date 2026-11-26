@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2024 Semgrep Inc.
+   Copyright (c) 2022-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -23,7 +23,7 @@ val parse_program : Fpath.t -> Ast_js.a_program
 
 (* other parsers *)
 
-(* for semgrep *)
+(* for lens *)
 val any_of_string : string -> Ast_js.any
 
 (* for lsif *)

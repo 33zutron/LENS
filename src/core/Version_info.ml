@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2023-2024 Semgrep Inc.
+   Copyright (c) 2023-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,9 +11,9 @@
    LICENSE for more details.
 *)
 (*
-   Details about the Semgrep version for this build.
+   Details about the Lens version for this build.
 
-   The Semgrep version string comes from a generated file.
+   The Lens version string comes from a generated file.
 
    TODO: merge with Version.ml instead?
 *)
@@ -23,7 +23,7 @@ let version =
   | Some x -> x
   | None ->
       failwith
-        ("Cannot parse the Semgrep version string found in the Version module: "
+        ("Cannot parse the Lens version string found in the Version module: "
        ^ Version.version)
 
 let major, minor, patch = version

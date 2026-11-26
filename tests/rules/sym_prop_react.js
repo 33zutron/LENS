@@ -1,4 +1,4 @@
-// https://github.com/returntocorp/semgrep-app/pull/5203/files
+// https://github.com/returntocorp/lens-app/pull/5203/files
 
 import { useHistory } from "react-router-dom";
 
@@ -22,7 +22,7 @@ const SetupProjectPanelCircleCI = () => {
               </ExternalLink>{" "}
               named{" "}
               <Code inline light>
-                SEMGREP_APP_TOKEN
+                LENS_APP_TOKEN
               </Code>
               .
             </li>

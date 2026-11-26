@@ -21,7 +21,7 @@ module G = AST_generic
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* PHP parser using tree-sitter-lang/semgrep-php and converting
+(* PHP parser using tree-sitter-lang/lens-php and converting
  * to ../ast/ast_php.ml
  *
  * The resulting AST can then be converted to the generic AST by using
@@ -41,7 +41,7 @@ let str = H.str
 (* Boilerplate converter *)
 (*****************************************************************************)
 
-(* This was started by copying tree-sitter-lang/semgrep-php/.../Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-php/.../Boilerplate.ml *)
 
 (* Disable warnings against unused variables *)
 [@@@warning "-26-27"]

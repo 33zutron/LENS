@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2021-2024 Semgrep Inc.
+   Copyright (c) 2021-2024 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -18,7 +18,7 @@
    - this is used to filter candidates for a given language
    - a given file may be in multiple languages
 
-   This will exclude files we don't want to handle with semgrep, such
+   This will exclude files we don't want to handle with lens, such
    as the '.min.js' files (JavaScript minified files which are not human-
    readable and usually really big) or '.d.ts' (TypeScript typed interfaces
    for which we don't have a parser).
@@ -26,7 +26,7 @@
 val inspect_file_p : Lang.t -> Fpath.t -> bool
 
 val inspect_file :
-  Lang.t -> Fpath.t -> (Fpath.t, Semgrep_output_v1_t.skipped_target) result
+  Lang.t -> Fpath.t -> (Fpath.t, Lens_output_v1_t.skipped_target) result
 
 (*
    Split selected files (left) from excluded files (right).
@@ -34,7 +34,7 @@ val inspect_file :
 val inspect_files :
   Lang.t ->
   Fpath.t list ->
-  Fpath.t list * Semgrep_output_v1_t.skipped_target list
+  Fpath.t list * Lens_output_v1_t.skipped_target list
 
 (*
    Get the first 'block_size' bytes of the file, which is ideally obtained

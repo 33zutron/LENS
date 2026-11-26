@@ -1,12 +1,12 @@
 (library
- (public_name semgrep.printing)
- (name semgrep_printing)
+ (public_name lens.printing)
+ (name lens_printing)
  (wrapped false)
  (libraries
    commons
    ast_generic
-   semgrep.il
-   semgrep.core ; Lang
+   lens.il
+   lens.core ; Lang
  )
  (preprocess (pps ppx_deriving.show ppx_profiling))
 )

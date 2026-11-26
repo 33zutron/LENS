@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2020 Semgrep Inc.
+ * Copyright (C) 2020 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -25,7 +25,7 @@ module H = Parse_tree_sitter_helpers
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Ruby parser using tree-sitter-lang/semgrep-ruby and converting
+(* Ruby parser using tree-sitter-lang/lens-ruby and converting
  * to ../ast/ast_ruby.ml
  *
  * The resulting AST can then be converted to the generic AST by using
@@ -60,7 +60,7 @@ let if_in_pattern (env : env) x =
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-ruby/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-ruby/Boilerplate.ml *)
 
 let token2 env x = H.token env x
 let str env x = H.str env x

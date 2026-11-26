@@ -1,0 +1,39 @@
+; Implementation of the 'lens' command-line in OCaml (a.k.a, olens).
+; This builds a library. The executable's entry point is defined in ../main
+(library
+  (public_name lens.olens_cli)
+  (name olens_cli)
+  (wrapped false)
+  (libraries
+    ; External libraries
+    cmdliner
+    ocolor
+    commons
+    cohttp-lwt-unix
+    cohttp-eio
+
+    ; Internal libraries
+    olens_cli_scan
+    olens_cli_ci
+    olens_cli_login
+    olens_cli_lsp
+    olens_cli_install_lens_pro
+    olens_cli_show
+    olens_cli_test
+    olens_configuring
+    olens_cli_mcp
+
+    ; reusing code from Core_cli
+    lens_core_cli
+
+    networking.proxy
+  )
+ (preprocess
+   (pps
+     ppx_profiling
+     ppx_deriving.show
+     ppx_deriving.eq
+     ppx_hash
+   )
+ )
+)

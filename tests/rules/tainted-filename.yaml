@@ -1,4 +1,4 @@
-# from https://github.com/Sjord/semgrep-rules/blob/php-tainted-filename/php/lang/security/injection/tainted-filename.yaml
+# from https://github.com/Sjord/lens-rules/blob/php-tainted-filename/php/lang/security/injection/tainted-filename.yaml
 # this used to cause a stack overflow when running with -filter_irrelevant_rules
 # due to some list explosions when generating the CNF
 rules:

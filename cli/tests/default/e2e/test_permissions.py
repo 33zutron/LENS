@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -15,9 +15,9 @@ import sys
 
 import pytest
 from tests.conftest import skip_on_windows
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
-from semgrep.constants import OutputFormat
+from lens.constants import OutputFormat
 
 
 def skip_test_if_root() -> None:
@@ -31,7 +31,7 @@ def skip_test_if_root() -> None:
 # permissions say otherwise. This results in test failures on files that
 # we want to be unreadable.
 #
-# Note that Semgrep should work properly as root, we just don't have tests
+# Note that Lens should work properly as root, we just don't have tests
 # for it. By properly, we mean that it won't run into files that it can't
 # read and it will scan them happily.
 #
@@ -77,20 +77,20 @@ def teardown_workspace() -> None:
 
 # Check that target files lacking read permission are ignored gracefully.
 #
-# Pysemgrep fails to ignore the target without read permissions and passes
-# it to semgrep-core. This is why --x-ls fails the test. These targets
-# are checked again by semgrep-core which then excludes it correctly
+# Pylens fails to ignore the target without read permissions and passes
+# it to lens-core. This is why --x-ls fails the test. These targets
+# are checked again by lens-core which then excludes it correctly
 @pytest.mark.pysemfail
 @pytest.mark.kinda_slow
 @skip_on_windows  # os.getuid not available on Windows
-def test_permissions_ls(run_semgrep_on_copied_files: RunSemgrep, snapshot):
+def test_permissions_ls(run_lens_on_copied_files: RunLens, snapshot):
     # Giving up on running this as root
     skip_test_if_root()
 
     # We make sure to not run as root since it can read files lacking
     # read permissions. The test would fail to exclude the expected
     # files.
-    stdout, stderr = run_semgrep_on_copied_files(
+    stdout, stderr = run_lens_on_copied_files(
         "rules/eqeq.yaml",  # ignored by --x-ls
         options=["--x-ls"],
         output_format=OutputFormat.TEXT,
@@ -101,18 +101,18 @@ def test_permissions_ls(run_semgrep_on_copied_files: RunSemgrep, snapshot):
     snapshot.assert_match(stdout, "files.list")
 
 
-# End-to-end test. This exercises a regular semgrep scan, in particular
-# one using semgrep-core underneath.
+# End-to-end test. This exercises a regular lens scan, in particular
+# one using lens-core underneath.
 #
 # The '--verbose' option causes the list of skipped targets to be included
 # in the JSON output. It differs between git and non-git projects due to
-# git doing some filtering of its own. Here, we run semgrep on a non-git
-# project and we expect all skipped targets to be reported with osemgrep
-# and pysemgrep.
+# git doing some filtering of its own. Here, we run lens on a non-git
+# project and we expect all skipped targets to be reported with olens
+# and pylens.
 #
 @skip_on_windows  # os.getuid not available on Windows
 def run_test_permissions_scan_full(
-    run_semgrep_on_copied_files: RunSemgrep, snapshot, verbose: bool
+    run_lens_on_copied_files: RunLens, snapshot, verbose: bool
 ):
     # Giving up on running this as root
     skip_test_if_root()
@@ -120,7 +120,7 @@ def run_test_permissions_scan_full(
     options = None
     if verbose:
         options = ["--verbose"]
-    stdout, stderr = run_semgrep_on_copied_files(
+    stdout, stderr = run_lens_on_copied_files(
         "rules/eqeq.yaml",
         options=options,
         output_format=OutputFormat.JSON,
@@ -131,22 +131,22 @@ def run_test_permissions_scan_full(
     snapshot.assert_match(stdout, "results.json")
 
 
-# pysemgrep fails because it doesn't report the skipped folder. This is benign.
+# pylens fails because it doesn't report the skipped folder. This is benign.
 #
 @pytest.mark.pysemfail
 @pytest.mark.kinda_slow
 def test_permissions_scan_full_strict(
-    run_semgrep_on_copied_files: RunSemgrep, snapshot
+    run_lens_on_copied_files: RunLens, snapshot
 ):
-    run_test_permissions_scan_full(run_semgrep_on_copied_files, snapshot, verbose=True)
+    run_test_permissions_scan_full(run_lens_on_copied_files, snapshot, verbose=True)
 
 
 # Less strict: don't care about whether skipped files or folders are reported.
 #
 @pytest.mark.kinda_slow
 @skip_on_windows  # os.getuid not available on Windows
-def test_permissions_scan_full_lax(run_semgrep_on_copied_files: RunSemgrep, snapshot):
-    run_test_permissions_scan_full(run_semgrep_on_copied_files, snapshot, verbose=False)
+def test_permissions_scan_full_lax(run_lens_on_copied_files: RunLens, snapshot):
+    run_test_permissions_scan_full(run_lens_on_copied_files, snapshot, verbose=False)
 
 
 # TODO: test on a git repo

@@ -6,20 +6,20 @@
 
 <!-- insertion point -->
 
-## [1.183.0](https://github.com/semgrep/semgrep/releases/tag/v1.183.0) - 2026-10-29
+## [1.183.0](https://github.com/lens/lens/releases/tag/v1.183.0) - 2026-10-29
 
 ### ### Added
 
-- The `--help` output of `semgrep` subcommands now includes a "THIRD-PARTY
-  LICENSES" section linking to the licenses and notices for Semgrep's open
-  source dependencies at https://semgrep.dev/cli-credits. (cli-credits)
+- The `--help` output of `lens` subcommands now includes a "THIRD-PARTY
+  LICENSES" section linking to the licenses and notices for Lens's open
+  source dependencies at https://lens.dev/cli-credits. (cli-credits)
 - Pro: Supply Chain now records which Go module requires which when dependency paths are enabled and local builds are allowed, so transitive Go findings can show the dependency path. (SC-4268)
 
 ### ### Changed
 
-- Semgrep no longer ships binaries for Intel Macs; 1.182 is the last release that supports them. On Intel Macs, use the `semgrep/semgrep` Docker image; on Apple Silicon, use a native arm64 Python. (drop-intel-macos)
+- Lens no longer ships binaries for Intel Macs; 1.182 is the last release that supports them. On Intel Macs, use the `lens/lens` Docker image; on Apple Silicon, use a native arm64 Python. (drop-intel-macos)
 - Speed up scans with many rules that share file prefilter conditions by checking each condition once per file. (prefilter-predicate-memo)
-- semgrep ci `--no-suppress-errors` now exits with code 2 (instead of 0) when dependency resolution fails for a subproject while local builds are allowed (--allow-local-builds): a build or package manager command fails, a lockfile cannot be parsed at all, or a build succeeds but reports an incomplete dependency list (for example, a registry refused a request). The affected dependency sources are listed in the scan output and the scan no longer reports that it completed successfully. Findings from the other subprojects are still reported. The default behavior, where errors are suppressed, is unchanged, and so is any scan without --allow-local-builds. Semgrep Managed Scanning scans are not affected. (SC-3613)
+- lens ci `--no-suppress-errors` now exits with code 2 (instead of 0) when dependency resolution fails for a subproject while local builds are allowed (--allow-local-builds): a build or package manager command fails, a lockfile cannot be parsed at all, or a build succeeds but reports an incomplete dependency list (for example, a registry refused a request). The affected dependency sources are listed in the scan output and the scan no longer reports that it completed successfully. Findings from the other subprojects are still reported. The default behavior, where errors are suppressed, is unchanged, and so is any scan without --allow-local-builds. Lens Managed Scanning scans are not affected. (SC-3613)
 - bash grammar update (v0.25.1):
 
   - Bash arithmetic (`$(( ))`, `$[ ]`, `(( ))`, C-style `for` headers) is now translated into operator trees with bash precedence, so patterns such as `$(( $X * 2 ))` match structurally. `$((...))` is no longer confused with `$(...)`.
@@ -30,7 +30,7 @@
   (bash-v0.25.1)
 - clojure grammar update (v0.0.13):
 
-  - Clojure source parsing now accepts reader-evaluated metadata, such as ^#=(keyword "a") [1 2], including the legacy #^ prefix. Semgrep does not execute reader evaluation, and metadata remains ignored during matching.
+  - Clojure source parsing now accepts reader-evaluated metadata, such as ^#=(keyword "a") [1 2], including the legacy #^ prefix. Lens does not execute reader evaluation, and metadata remains ignored during matching.
   - Clojure source parsing now supports reader conditionals inside symbolic values, such as ## #?(:clj Inf :cljs NaN), retaining the conditional branches without evaluating them.
 
   (clojure-v0.0.13)
@@ -49,14 +49,14 @@
 
 ### ### Fixed
 
-- The Cursor hooks installed by `semgrep mcp` now track edited files separately for each Cursor conversation, so one window's stop scan no longer scans or discards another conversation's edits. (mcp-hook-cache-per-conversation)
-- The `semgrep mcp` server's `semgrep_scan` tool now only scans files inside the client's workspace root, or the server's working directory when the client reports none. Set `SEMGREP_MCP_ALLOW_SCAN_OUTSIDE_WORKSPACE=true` to scan files outside it. (mcp-scan-workspace-roots)
+- The Cursor hooks installed by `lens mcp` now track edited files separately for each Cursor conversation, so one window's stop scan no longer scans or discards another conversation's edits. (mcp-hook-cache-per-conversation)
+- The `lens mcp` server's `lens_scan` tool now only scans files inside the client's workspace root, or the server's working directory when the client reports none. Set `LENS_MCP_ALLOW_SCAN_OUTSIDE_WORKSPACE=true` to scan files outside it. (mcp-scan-workspace-roots)
 - Interfile scans no longer fail with `Failure: Failed to unmarshal cached
   value: Exception during parallelization: Exception.Timeout(...)` when a
   taint configuration timeout fires at an unlucky moment. The timeout now only
   skips the affected rule and file, as intended. (CODE-9810)
-- The Semgrep source distribution on PyPI is once again published with provenance. (CODE-10070)
-- Update certificate trust in Semgrep and its container images to address the eMudhra certificate authority compromise. Disable curl-based telemetry on macOS and Windows; default telemetry and scanning remain available. (INCID-521)
+- The Lens source distribution on PyPI is once again published with provenance. (CODE-10070)
+- Update certificate trust in Lens and its container images to address the eMudhra certificate authority compromise. Disable curl-based telemetry on macOS and Windows; default telemetry and scanning remain available. (INCID-521)
 - Supply Chain: multi-document pnpm-lock.yaml files (written by pnpm 11+) are
   now parsed instead of reporting zero dependencies. A lockfile that fails to
   parse now marks its subproject as unresolved rather than resolved with zero
@@ -72,18 +72,18 @@
 - Add --override-expectations to the OCaml rule test runner to replace expected finding lines for individual targets, rules, and engines from an external JSON file. (rule-test-expectations)
 
 
-## [1.182.1](https://github.com/semgrep/semgrep/releases/tag/v1.182.1) - 2026-10-22
+## [1.182.1](https://github.com/lens/lens/releases/tag/v1.182.1) - 2026-10-22
 
 ### ### Fixed
 
-- Update certificate trust in Semgrep and its container images to address the eMudhra certificate authority compromise. Disable curl-based telemetry on macOS and Windows; default telemetry and scanning remain available. (INCID-521)
+- Update certificate trust in Lens and its container images to address the eMudhra certificate authority compromise. Disable curl-based telemetry on macOS and Windows; default telemetry and scanning remain available. (INCID-521)
 
 
-## [1.182.0](https://github.com/semgrep/semgrep/releases/tag/v1.182.0) - 2026-10-20
+## [1.182.0](https://github.com/lens/lens/releases/tag/v1.182.0) - 2026-10-20
 
 ### ### Added
 
-- Added Objective-C language support (`objc`, alpha): tree-sitter based parsing of `.m` files with semgrep pattern syntax (metavariables, ellipsis in argument/statement/message-keyword positions, deep ellipsis), enabling search-mode and taint-mode rules on Objective-C code. Message sends, blocks, control flow, class/method definitions, and Objective-C literals are modeled; remaining constructs parse and degrade gracefully. Objective-C++ (`.mm`) support will follow separately. (gh-9265)
+- Added Objective-C language support (`objc`, alpha): tree-sitter based parsing of `.m` files with lens pattern syntax (metavariables, ellipsis in argument/statement/message-keyword positions, deep ellipsis), enabling search-mode and taint-mode rules on Objective-C code. Message sends, blocks, control flow, class/method definitions, and Objective-C literals are modeled; remaining constructs parse and degrade gracefully. Objective-C++ (`.mm`) support will follow separately. (gh-9265)
 
 ### ### Changed
 
@@ -120,18 +120,18 @@
 - Update the bundled Tree-sitter Elixir grammar to v0.3.5 and regenerate its parser with Tree-sitter 0.26.3; no language syntax changes. (elixir-v0.3.5)
 
 
-## [1.181.1](https://github.com/semgrep/semgrep/releases/tag/v1.181.1) - 2026-10-22
+## [1.181.1](https://github.com/lens/lens/releases/tag/v1.181.1) - 2026-10-22
 
 ### ### Fixed
 
-- Update certificate trust in Semgrep and its container images to address the eMudhra certificate authority compromise. Disable curl-based telemetry on macOS and Windows; default telemetry and scanning remain available. (INCID-521)
+- Update certificate trust in Lens and its container images to address the eMudhra certificate authority compromise. Disable curl-based telemetry on macOS and Windows; default telemetry and scanning remain available. (INCID-521)
 
 
-## [1.181.0](https://github.com/semgrep/semgrep/releases/tag/v1.181.0) - 2026-10-14
+## [1.181.0](https://github.com/lens/lens/releases/tag/v1.181.0) - 2026-10-14
 
 ### ### Changed
 
-- `semgrep scan` now uses the same asynchronous configuration generation and retries as `semgrep ci` when fetching platform scan configurations. (CODE-9930)
+- `lens scan` now uses the same asynchronous configuration generation and retries as `lens ci` when fetching platform scan configurations. (CODE-9930)
 - Python only: Supply Chain now reports every package declared in a `requirements.txt`, not only the ones pinned with `==`. A requirement with a version range (`requests>=2.0`, `numpy~=1.26`, `django==2.2.*`, `requests (>=2.0)`) is reported with the declared specifier as its version, and a bare name (`flask`) is reported with an empty version, so they appear in the dependency inventory and SBOM instead of being dropped with a "not pinned to an exact version" parse error. These dependencies have no definitive installed version, so for now they produce no Supply Chain findings. When there is no `requirements.in` manifest to consult, a range or bare-name line is reported as a direct dependency, since it was declared by hand rather than written by a resolver; exact pins keep their previous unknown transitivity. Local path and URL lines are no longer reported as parse errors, while a line whose leading token is not a valid package name (`requests$foo>=1`) is now reported as a parse error instead of being dropped silently. Other ecosystems and other Python manifest formats are unchanged. (SC-3487)
 - pro: Various performance improvements for historical secrets scanning. (SCRT-983-historical-performance)
 - go grammar update (v0.23.4):
@@ -174,7 +174,7 @@
 - Forward optional job context when registering CLI scans. (SMS-3333)
 
 
-## [1.180.0](https://github.com/semgrep/semgrep/releases/tag/v1.180.0) - 2026-10-07
+## [1.180.0](https://github.com/lens/lens/releases/tag/v1.180.0) - 2026-10-07
 
 ### ### Added
 
@@ -191,11 +191,11 @@
   dependencies to versions with fixes for known security advisories. (deps-anyio-urllib3)
 
 
-## [1.179.0](https://github.com/semgrep/semgrep/releases/tag/v1.179.0) - 2026-10-01
+## [1.179.0](https://github.com/lens/lens/releases/tag/v1.179.0) - 2026-10-01
 
 ### ### Added
 
-- Semgrep Supply Chain now parses Bun `bun.lock` lockfiles (text format, `lockfileVersion` 1) paired with a `package.json` manifest, including the dependency relationships between packages. The deprecated binary `bun.lockb` format is still unsupported. (SC-2419)
+- Lens Supply Chain now parses Bun `bun.lock` lockfiles (text format, `lockfileVersion` 1) paired with a `package.json` manifest, including the dependency relationships between packages. The deprecated binary `bun.lockb` format is still unsupported. (SC-2419)
 
 ### ### Changed
 
@@ -245,7 +245,7 @@
 - Python: `except A, B:` and `except A, B, C:` (PEP 758, Python 3.14) and the
   `except*` forms of both are now parsed as a tuple of exception types, like
   `except (A, B):`, rather than as the Python 2 `except A as B:` or a parse
-  error. `except*` is now handled by Semgrep's primary Python parser too, so
+  error. `except*` is now handled by Lens's primary Python parser too, so
   exception groups no longer depend on the fallback parser. Note that Python
   2's `except A, e:` is no longer read as `except A as e:`, even for `python2`.
   One limitation remains: the vendored tree-sitter Python grammar still accepts
@@ -254,12 +254,12 @@
   tree-sitter fallback is reached; upgrading the vendored grammar is follow-up
   work. (gh-11906)
 - Fix Dockerfile parsing for environment-expanded `EXPOSE` ports with TCP/UDP protocols. (gh-11934)
-- Semgrep now allows PyJWT 2.15 and later (`pyjwt[crypto]>=2.15.0,<3`) instead of
+- Lens now allows PyJWT 2.15 and later (`pyjwt[crypto]>=2.15.0,<3`) instead of
   pinning `~=2.13.0`, so installs pick up a PyJWT release with fixes for known
-  vulnerabilities, and projects that require a newer PyJWT can install Semgrep. (gh-11953)
+  vulnerabilities, and projects that require a newer PyJWT can install Lens. (gh-11953)
 
 
-## [1.178.0](https://github.com/semgrep/semgrep/releases/tag/v1.178.0) - 2026-09-23
+## [1.178.0](https://github.com/lens/lens/releases/tag/v1.178.0) - 2026-09-23
 
 ### ### Changed
 
@@ -267,14 +267,14 @@
 
 ### ### Fixed
 
-- Fixed an occasional hang when `semgrep-core` exited on Windows. (windows-hang)
+- Fixed an occasional hang when `lens-core` exited on Windows. (windows-hang)
 
 
-## [1.177.0](https://github.com/semgrep/semgrep/releases/tag/v1.177.0) - 2026-09-10
+## [1.177.0](https://github.com/lens/lens/releases/tag/v1.177.0) - 2026-09-10
 
 ### ### Added
 
-- Added native Supply Chain support for Bazel workspaces using `rules_jvm_external`. Semgrep now recognizes a `maven_install.json` pinned lockfile (versions `0.1.0` and `3`, as emitted by rules_jvm_external 3.x through current) paired with a `MODULE.bazel` (or legacy `WORKSPACE` / `WORKSPACE.bazel`) marker as a Maven-ecosystem subproject, and attributes findings to the workspace root rather than the lockfile's directory. Workspace-declared root artifacts are identified via `__INPUT_ARTIFACTS_HASH` for accurate direct-vs-transitive classification; dependencies are emitted with `Unknown` transitivity when that field is not available. This is the first milestone of native Bazel coverage; broader ecosystem support (`rules_python`, `rules_go`, `rules_js`) and Bazel-aware reachability attribution follow. (SC-2008)
+- Added native Supply Chain support for Bazel workspaces using `rules_jvm_external`. Lens now recognizes a `maven_install.json` pinned lockfile (versions `0.1.0` and `3`, as emitted by rules_jvm_external 3.x through current) paired with a `MODULE.bazel` (or legacy `WORKSPACE` / `WORKSPACE.bazel`) marker as a Maven-ecosystem subproject, and attributes findings to the workspace root rather than the lockfile's directory. Workspace-declared root artifacts are identified via `__INPUT_ARTIFACTS_HASH` for accurate direct-vs-transitive classification; dependencies are emitted with `Unknown` transitivity when that field is not available. This is the first milestone of native Bazel coverage; broader ecosystem support (`rules_python`, `rules_go`, `rules_js`) and Bazel-aware reachability attribution follow. (SC-2008)
 - Several performance improvements for regex-only rules where the underlying
   regex are inefficient to run on our default regex engine (currently PCRE2). For
   example, a rule matching `FOOBAR(a+)\1` will skip any file that does not
@@ -292,15 +292,15 @@
 
 ### ### Fixed
 
-- Speed up `semgrep ci` filtering when a deployment has many triage-ignored findings. (triage-ignored-performance)
-- Semgrep no longer crashes with an OCaml stack trace when a proxy environment
+- Speed up `lens ci` filtering when a deployment has many triage-ignored findings. (triage-ignored-performance)
+- Lens no longer crashes with an OCaml stack trace when a proxy environment
   variable holds an unusable value. `HTTP_PROXY`, `HTTPS_PROXY`, or `ALL_PROXY`
   set to an empty value is now ignored with a warning, and the scan
   proceeds without a proxy. A non-empty value that is not a usable proxy URL
   now exits with an error message, with any credentials in the URL
   redacted, instead of failing inside the HTTP client.
 
-  Semgrep also now adds the missing scheme to a proxy URL supplied
+  Lens also now adds the missing scheme to a proxy URL supplied
   without one; `https` for `HTTPS_PROXY and `http` otherwise. (ENGINE-2208)
 - Supply Chain: lockfileless Gradle scans now report a "Resource Inaccessible"
   resolution error when a repository refuses a request (for example a 401 from a
@@ -312,28 +312,28 @@
 - Improves shutdown time during scans with --trace. (otel-shutdown-flush)
 
 
-## [1.176.0](https://github.com/semgrep/semgrep/releases/tag/v1.176.0) - 2026-09-01
+## [1.176.0](https://github.com/lens/lens/releases/tag/v1.176.0) - 2026-09-01
 
 ### ### Changed
 
-- Homebrew installs of Semgrep are no longer supported on Intel Macs. (ENGINE-2951)
+- Homebrew installs of Lens are no longer supported on Intel Macs. (ENGINE-2951)
 
 
-## [1.175.1](https://github.com/semgrep/semgrep/releases/tag/v1.175.1) - 2026-09-03
+## [1.175.1](https://github.com/lens/lens/releases/tag/v1.175.1) - 2026-09-03
 
 ### ### Fixed
 
 - Fixed scans run with `--trace` that would fail with `Stdlib.Effect.Unhandled(Eio__core__Cancel.Get_context)` when a secret would fail to validate (CODE-9906)
 
 
-## [1.175.0](https://github.com/semgrep/semgrep/releases/tag/v1.175.0) - 2026-08-26
+## [1.175.0](https://github.com/lens/lens/releases/tag/v1.175.0) - 2026-08-26
 
 ### ### Changed
 
-- Semgrep is now built with OCaml 5.4 instead of OCaml 5.3. End users should notice no change. (ocaml-5.4)
+- Lens is now built with OCaml 5.4 instead of OCaml 5.3. End users should notice no change. (ocaml-5.4)
 
 
-## [1.174.0](https://github.com/semgrep/semgrep/releases/tag/v1.174.0) - 2026-08-20
+## [1.174.0](https://github.com/lens/lens/releases/tag/v1.174.0) - 2026-08-20
 
 ### ### Added
 
@@ -343,15 +343,15 @@
 
 - Partial scans (`--x-partial-scan-rule-id`) now resolve dependencies only for
   subprojects whose ecosystem is evaluated by the rules being run. Subprojects in
-  any other ecosystem are skipped and reported to semgrep-app as skipped
+  any other ecosystem are skipped and reported to lens-app as skipped
   subprojects. (SC-3830)
 
 
-## [1.173.0](https://github.com/semgrep/semgrep/releases/tag/v1.173.0) - 2026-08-12
+## [1.173.0](https://github.com/lens/lens/releases/tag/v1.173.0) - 2026-08-12
 
 ### ### Added
 
-- `semgrep-core -version` now reports the git commit that the binary was built
+- `lens-core -version` now reports the git commit that the binary was built
   from. (core-version-git-sha)
 - Pro: Added a `no_disk_cache` memory policy (`--x-mem-policy no_disk_cache`) to trade higher memory usage for not caching intermediary scan data structures on disk. (no-disk-cache-memory-policy)
 
@@ -373,8 +373,8 @@
 
 ### ### Fixed
 
-- When the internal semgrep-core RPC subprocess is terminated by a signal (for
-  example an out-of-memory kill or a segfault), Semgrep now logs a clear error
+- When the internal lens-core RPC subprocess is terminated by a signal (for
+  example an out-of-memory kill or a segfault), Lens now logs a clear error
   naming the signal, instead of the misleading "Expected a number, got ''"
   message. When debug logging is enabled, the tail of the subprocess's stderr is
   included as well. (rpc-subprocess-death-diagnostics)
@@ -393,7 +393,7 @@
 - Fixed an issue where MCP mode could fail to scan UTF-8 files containing multibyte characters, including Japanese text, on systems using a non-UTF-8 locale such as cp932. Files are now read as UTF-8, with undecodable bytes replaced so a single unusual file does not fail the entire scan. (gdn-168)
 
 
-## [1.172.0](https://github.com/semgrep/semgrep/releases/tag/v1.172.0) - 2026-07-28
+## [1.172.0](https://github.com/lens/lens/releases/tag/v1.172.0) - 2026-07-28
 
 ### ### Added
 
@@ -402,15 +402,15 @@
 ### ### Changed
 
 - Updated the Ruby parser to tree-sitter-ruby v0.23.1, improving support for `!=`, case/when expressions with line breaks, and element references that take a block. (LANG-206)
-- The window for collecting git contributor information during `semgrep ci` has been extended from the last 30 days to the last 90 days, to match the updated usage policy. (contributor-window-90-days)
+- The window for collecting git contributor information during `lens ci` has been extended from the last 30 days to the last 90 days, to match the updated usage policy. (contributor-window-90-days)
 
 ### ### Fixed
 
-- Semgrep will now print richer error messages on segfaults when `--debug` is NOT passed, matching the segfault error output when `--debug` is passed (engine-segv)
+- Lens will now print richer error messages on segfaults when `--debug` is NOT passed, matching the segfault error output when `--debug` is passed (engine-segv)
 - Fixed a source of rare, nondeterministic crashes and incorrect results caused
-  by an OCaml compiler bug. Semgrep now builds against a compiler fork that
+  by an OCaml compiler bug. Lens now builds against a compiler fork that
   backports the upstream fix. (ocaml_codegen_fix)
-- Fixed excessive heap growth after explicit major garbage collections. Semgrep
+- Fixed excessive heap growth after explicit major garbage collections. Lens
   now builds against an OCaml compiler that improves garbage collection duty
   cycle pacing. (ocaml_gc_pacing_fix)
 - Improved the `Scan Status` output when no code rules will run (e.g. a
@@ -425,18 +425,18 @@
   now pinned to 1.4.1. (sc-3738)
 
 
-## [1.170.0](https://github.com/semgrep/semgrep/releases/tag/v1.170.0) - 2026-07-15
+## [1.170.0](https://github.com/lens/lens/releases/tag/v1.170.0) - 2026-07-15
 
 ### ### Added
 
 - Pro C/C++ scans now skip code inside statically-dead preprocessor branches
   (for example, `#if 0 ... #else ... #endif`). Patterns that would otherwise
   match against intentionally-disabled code no longer report on it. (cpp-if-zero-filter)
-- Restored obackward: semgrep-core and semgrep-core-proprietary once again print a backtrace when receiving a fatal signal (e.g. SIGSEGV) (obackward)
-- `semgrep install-semgrep-pro` now sends usage metrics so that
+- Restored obackward: lens-core and lens-core-proprietary once again print a backtrace when receiving a fatal signal (e.g. SIGSEGV) (obackward)
+- `lens install-lens-pro` now sends usage metrics so that
   installation errors can be tracked. Metrics can be disabled with
-  `--metrics off` or `SEMGREP_SEND_METRICS=off`. Metrics payloads also
-  now include the method used to install the Semgrep CLI (pip, homebrew,
+  `--metrics off` or `LENS_SEND_METRICS=off`. Metrics payloads also
+  now include the method used to install the Lens CLI (pip, homebrew,
   docker, or unknown), detected heuristically. See metrics.md for
   more details of what exactly is sent. (engine-2858)
 
@@ -452,7 +452,7 @@
 ### ### Fixed
 
 - Fixed a crash at startup (`Fatal error: Failed to allocate signal stack for
-  domain 0`) when running Semgrep on systems with musl 1.2.6 (e.g. Alpine 3.24) on
+  domain 0`) when running Lens on systems with musl 1.2.6 (e.g. Alpine 3.24) on
   recent Intel CPUs whose kernel-reported minimum signal-stack size exceeds musl's
   build-time SIGSTKSZ (notably AMX-capable Xeons). (ENGINE-2863)
 - Dockerfile: Fixed parse errors on `RUN` instructions that use heredoc syntax
@@ -468,14 +468,14 @@
     * Changed paths where tree-sitter versions are installed (lang-591)
 
 
-## [1.169.0](https://github.com/semgrep/semgrep/releases/tag/v1.169.0) - 2026-07-08
+## [1.169.0](https://github.com/lens/lens/releases/tag/v1.169.0) - 2026-07-08
 
 ### ### Infra/Release Changes
 
 - Updated Dart parser to a more recent upstream version. (LANG-579)
 
 
-## [1.168.0](https://github.com/semgrep/semgrep/releases/tag/v1.168.0) - 2026-06-24
+## [1.168.0](https://github.com/lens/lens/releases/tag/v1.168.0) - 2026-06-24
 
 ### ### Added
 
@@ -487,26 +487,26 @@
 
 ### ### Infra/Release Changes
 
-- semgrep-core no longer depends on libpcre 8.x; libpcre2 10.x is now the sole regex engine. (drop-libpcre)
+- lens-core no longer depends on libpcre 8.x; libpcre2 10.x is now the sole regex engine. (drop-libpcre)
 - Aliengrep (generic mode) now uses the maintained libpcre2 10.x regular-expression library instead of the deprecated libpcre 8.x. Matching behavior is unchanged. (aliengrep-pcre2)
 - The `metavariable-regex` and `metavariable-comparison` (`re.match()`) runtimes now use the maintained libpcre2 10.x library instead of the deprecated libpcre 8.x. Matching behavior is unchanged. (eval-generic-pcre2)
 
 
-## [1.167.0](https://github.com/semgrep/semgrep/releases/tag/v1.167.0) - 2026-06-17
+## [1.167.0](https://github.com/lens/lens/releases/tag/v1.167.0) - 2026-06-17
 
 ### ### Added
 
 - Added support for more operators for folding for constant propagation, including subtraction, division, bit ops, bit shifts, comparisons, and more. (const-folding)
-- Added a `nosemgrep_disabled` field to the scan configuration so the platform can disable `nosemgrep` inline ignore comments org-wide for a scan. (APPEX-1122)
-- Semgrep now skips binary files (images, archives, compiled executables,
+- Added a `nolens_disabled` field to the scan configuration so the platform can disable `nolens` inline ignore comments org-wide for a scan. (APPEX-1122)
+- Lens now skips binary files (images, archives, compiled executables,
   etc.) during scanning by default, detected via matching file extensions
   to known file-format magic bytes Pass `--no-exclude-binary-files` to
   scan binary files as before. (ENGINE-2708)
 
 ### ### Fixed
 
-- `semgrep ci` with `--sarif` now correctly populates the output's `ignores`
-  field with nosemgrep-suppressed findings, in accordance with other output
+- `lens ci` with `--sarif` now correctly populates the output's `ignores`
+  field with nolens-suppressed findings, in accordance with other output
   formatters. (gh-6651)
 
 ### ### Infra/Release Changes
@@ -519,7 +519,7 @@
   (ocaml-tree-sitter-core-bump)
 
 
-## [1.166.0](https://github.com/semgrep/semgrep/releases/tag/v1.166.0) - 2026-06-11
+## [1.166.0](https://github.com/lens/lens/releases/tag/v1.166.0) - 2026-06-11
 
 ### ### Added
 
@@ -530,10 +530,10 @@
 
 - Fixed parsing of integer literals with an underscore immediately after the radix prefix (e.g. `0x_dead_beef`, `0o_755`, `0b_1010_1010`). (LANG-533)
 - Python parsing now preserves type parameters on `def` and `class` definitions. (LANG-536)
-- Semgrep no longer stores the API token in  `~/.semgrep/settings.yml`'s stored
-  token when the current scan's token is supplied via the `SEMGREP_APP_TOKEN`
+- Lens no longer stores the API token in  `~/.lens/settings.yml`'s stored
+  token when the current scan's token is supplied via the `LENS_APP_TOKEN`
   envvar. (SEC-2240)
-- `semgrep ci` scans originating from a pre-commit hook will no longer fail with
+- `lens ci` scans originating from a pre-commit hook will no longer fail with
   `Unable to create '<tmp>/.git/index.lock': Not a directory` in certain cases. (engine-2736)
 
 ### ### Infra/Release Changes
@@ -541,7 +541,7 @@
 - Added parsing tests covering Python language features (Python 3.0–3.12). (LANG-531)
 
 
-## [1.165.0](https://github.com/semgrep/semgrep/releases/tag/v1.165.0) - 2026-06-03
+## [1.165.0](https://github.com/lens/lens/releases/tag/v1.165.0) - 2026-06-03
 
 ### ### Added
 
@@ -549,7 +549,7 @@
 
 ### ### Changed
 
-- Replaced `--x-no-python-schema-validation` with a value-taking `--x-rule-validation=full|core-only|none` flag. The default (`full`) preserves existing Python rule validation behavior; `core-only` matches the old flag's semantics (disables Python rule validation and uses semgrep-core RPC validation only); `none` skips both pre-validation passes, surfacing rule errors at scan-time. `--x-no-python-schema-validation` is still accepted as a no-op with a deprecation warning, and will be removed in a future release. (x-rule-validation)
+- Replaced `--x-no-python-schema-validation` with a value-taking `--x-rule-validation=full|core-only|none` flag. The default (`full`) preserves existing Python rule validation behavior; `core-only` matches the old flag's semantics (disables Python rule validation and uses lens-core RPC validation only); `none` skips both pre-validation passes, surfacing rule errors at scan-time. `--x-no-python-schema-validation` is still accepted as a no-op with a deprecation warning, and will be removed in a future release. (x-rule-validation)
 - Python: Updated Python grammar (LANG-201)
 
 ### ### Fixed
@@ -558,7 +558,7 @@
 - Reduce intermittent `validation_error` results on HTTP secret validators (Facebook, Slack, Stripe, Google, Cloudflare, etc.) by retrying transient network failures, mirroring the retry behavior already present for AWS validators. (SCRT-965)
 
 
-## [1.164.0](https://github.com/semgrep/semgrep/releases/tag/v1.164.0) - 2026-05-26
+## [1.164.0](https://github.com/lens/lens/releases/tag/v1.164.0) - 2026-05-26
 
 ### ### Added
 
@@ -570,11 +570,11 @@
 
 - The default memory limit for Pro interfile scans on Linux now adapts to the container's cgroup memory limit (90% of it) instead of the previous fixed 5 GiB, with an 8 GiB fallback when no cgroup limit is detected. (ENGINE-2568)
 - Lower the glibc contraint from `>=2.35` to `>=2.34`, allowing users on distros
-  that ship glibc 2.34 (e.g RHEL 9 & AL2023) to install the semgrep wheel. (gh-11622)
+  that ship glibc 2.34 (e.g RHEL 9 & AL2023) to install the lens wheel. (gh-11622)
 
 ### ### Fixed
 
-- Baseline diff scans (``semgrep ci`` and ``--baseline-commit``) no longer treat every finding on a file as newly introduced when rule(s) failed during the baseline run.
+- Baseline diff scans (``lens ci`` and ``--baseline-commit``) no longer treat every finding on a file as newly introduced when rule(s) failed during the baseline run.
 
   Per-rule failures (for example a timeout for a single rule) on baseline analysis now hide only that rule's matches on that file from the "new vs baseline" comparison.
   Other rules on the same file are still taken in comparison for the "new vs baseline" comparison.
@@ -583,7 +583,7 @@
 - Fixed a yarn.lock parse error on Yarn Berry entries written
   in YAML explicit-key form. Affected lockfiles previously failed to parse. (SC-3479)
 - The (beta) SBT resolver with `--allow-local-builds` now correctly identifies dependencies as part of the Maven ecosystem. (SC-3522)
-- Fix `--sarif-output` and `--sarif` causing nosemgrep-suppressed findings to be reported in CLI scan output and to block scans. Suppressed findings are now correctly excluded from terminal text output, the scan-summary count, and the CLI's exit code. (engine-1824)
+- Fix `--sarif-output` and `--sarif` causing nolens-suppressed findings to be reported in CLI scan output and to block scans. Suppressed findings are now correctly excluded from terminal text output, the scan-summary count, and the CLI's exit code. (engine-1824)
 - Fixed a bug that could cause unreliable target filtering in parallel scans. (gh-6313)
 - Dart: improved parser fidelity for Dart 3 grammar features and routed
   pattern parsing for statements beginning with `await`, `rethrow`, and other
@@ -592,11 +592,11 @@
 
 ### ### Infra/Release Changes
 
-- pro: macOS: Fixed dynamic library lookup for `semgrep-core-proprietary` so the binary works when `semgrep install-semgrep-pro` is invoked, and `semgrep` is installed via Homebrew. (pro-binary-homebrew)
+- pro: macOS: Fixed dynamic library lookup for `lens-core-proprietary` so the binary works when `lens install-lens-pro` is invoked, and `lens` is installed via Homebrew. (pro-binary-homebrew)
 - Pro: Added optional `<case>.named_ast.expect` golden files for `tests/intrafile/maturity/` fixtures, exercised by `Unit_maturity_named_asts`. (LANG-287)
 
 
-## [1.163.0](https://github.com/semgrep/semgrep/releases/tag/v1.163.0) - 2026-05-13
+## [1.163.0](https://github.com/lens/lens/releases/tag/v1.163.0) - 2026-05-13
 
 ### ### Added
 
@@ -604,8 +604,8 @@
 
 ### ### Changed
 
-- Improved `semgrep ci` startup time with App-provided rules by avoiding duplicate semgrep-core rule validation during CLI rule loading while preserving config-style failures for invalid rules. (ci-rule-validation-startup)
-- Semgrep now validates dependency aware rules only on the core side, improving startup time (validate-skip-dep-aware)
+- Improved `lens ci` startup time with App-provided rules by avoiding duplicate lens-core rule validation during CLI rule loading while preserving config-style failures for invalid rules. (ci-rule-validation-startup)
+- Lens now validates dependency aware rules only on the core side, improving startup time (validate-skip-dep-aware)
 - Rule validation now runs in parallel across cores on large rulesets, reducing scan startup time. (gh-6279)
 - Rule parsing now runs in parallel across shards on multi-core machines, reducing scan startup time on large rulesets. (gh-6281)
 
@@ -625,32 +625,32 @@
 - Pro: Fixed a naming resolution bug in Java. (LANG-274)
 
 
-## [1.162.0](https://github.com/semgrep/semgrep/releases/tag/v1.162.0) - 2026-05-07
+## [1.162.0](https://github.com/lens/lens/releases/tag/v1.162.0) - 2026-05-07
 
 ### ### Added
 
 - pro: Improved support for tracking taint through nested functions. (LANG-95)
-- Added indexes to file targeting to improve performance of semgrepignore matching. (gh-27830)
+- Added indexes to file targeting to improve performance of lensignore matching. (gh-27830)
 
 ### ### Changed
 
 - Faster JSON rule parsing: rule files in JSON format now parse roughly 5x faster end-to-end (measured ~134s → ~28s on a 382MB rule pack) by going through a new hand-written RFC 8259 parser instead of the previous JS-parser-based chain. (ENGINE-2725)
 - Scala projects are now identified for Supply Chain only by their root build.sbt, rather than treating each build.sbt as a different subproject. (SC-3293)
-- MCP `semgrep_findings` tool: added a `refs` parameter to filter findings by branch (defaults to the primary branch when not specified), and made `autotriage_verdict` optional so that findings without an AI verdict can also be returned. (engine-2723)
+- MCP `lens_findings` tool: added a `refs` parameter to filter findings by branch (defaults to the primary branch when not specified), and made `autotriage_verdict` optional so that findings without an AI verdict can also be returned. (engine-2723)
 
 ### ### Fixed
 
 - jsonnet: `import` and `importstr` now reject paths that resolve outside the
   rule file's parent directory. (ENGINE-2727)
-- semgrep ci: redact URL-embedded credentials and `Authorization` header
+- lens ci: redact URL-embedded credentials and `Authorization` header
   values from git error messages and from the captured tracebacks sent to
   the fail-open telemetry endpoint, preventing leaks of secrets like
   `CI_JOB_TOKEN` from a failed `git fetch` in GitLab CI. Also closes
   ENGINE-2731 (raw, unsanitized tracebacks in fail-open telemetry). (ENGINE-2728)
-- `semgrep ci` no longer transmits SCM tokens to the Semgrep Platform. (ENGINE-2729)
-- semgrep CLI: the on-disk log file (`~/.semgrep/semgrep.log` or `$SEMGREP_LOG_FILE`) now respects the requested log level instead of always being written at DEBUG. This narrows the surface for credentials to land on disk via CI runner filesystems or job artifacts; pass `--debug` to restore the previous behavior. (ENGINE-2730)
+- `lens ci` no longer transmits SCM tokens to the Lens Platform. (ENGINE-2729)
+- lens CLI: the on-disk log file (`~/.lens/lens.log` or `$LENS_LOG_FILE`) now respects the requested log level instead of always being written at DEBUG. This narrows the surface for credentials to land on disk via CI runner filesystems or job artifacts; pass `--debug` to restore the previous behavior. (ENGINE-2730)
 - jsonnet rules: bound recursion in both rule loading and evaluation so a
-  malicious rule can no longer hang semgrep via mutually-recursive `import`s
+  malicious rule can no longer hang lens via mutually-recursive `import`s
   or runtime function calls that recurse forever. (ENGINE-2727-dos)
 - Scala: Merging consecutive top-level package declarations into a single package path. (LANG-374)
 - Fixed PHP parse errors during highly-parallel parsing. (gh-6197)
@@ -659,7 +659,7 @@
 - Fixed unknown option error when spawning the MCP daemon (gh-11660)
 
 
-## [1.161.0](https://github.com/semgrep/semgrep/releases/tag/v1.161.0) - 2026-04-22
+## [1.161.0](https://github.com/lens/lens/releases/tag/v1.161.0) - 2026-04-22
 
 ### ### Added
 
@@ -667,11 +667,11 @@
 
 ### ### Fixed
 
-- Semgrep's HTTP requests no longer log URLs above the debug level; full request
-  details remain available when running with `SEMGREP_LOG_SRCS=cohttp.client`. (ENGINE-2712)
+- Lens's HTTP requests no longer log URLs above the debug level; full request
+  details remain available when running with `LENS_LOG_SRCS=cohttp.client`. (ENGINE-2712)
 
 
-## [1.160.0](https://github.com/semgrep/semgrep/releases/tag/v1.160.0) - 2026-04-16
+## [1.160.0](https://github.com/lens/lens/releases/tag/v1.160.0) - 2026-04-16
 
 ### ### Added
 
@@ -680,37 +680,37 @@
 
 ### ### Fixed
 
-- Fixed performance issues during parsing Semgrep rules containing emoji or
+- Fixed performance issues during parsing Lens rules containing emoji or
   other non-BMP Unicode characters. (gh-6070)
-- Emit a warning when semgrep-core rule validation fails and falls back to JSON
+- Emit a warning when lens-core rule validation fails and falls back to JSON
   schema validation, alongside details of the failure. (gh-6071)
 
 
-## [1.159.0](https://github.com/semgrep/semgrep/releases/tag/v1.159.0) - 2026-04-10
+## [1.159.0](https://github.com/lens/lens/releases/tag/v1.159.0) - 2026-04-10
 
 ### ### Fixed
 
-- Semgrep now reports an error instead of silently returning zero findings when target file discovery fails (e.g., due to a git ls-files failure). (ENGINE-2626)
+- Lens now reports an error instead of silently returning zero findings when target file discovery fails (e.g., due to a git ls-files failure). (ENGINE-2626)
 
 
-## [1.158.0](https://github.com/semgrep/semgrep/releases/tag/v1.158.0) - 2026-04-09
+## [1.158.0](https://github.com/lens/lens/releases/tag/v1.158.0) - 2026-04-09
 
 ### ### Added
 
-- Added support for a supply chain hook for the Semgrep Plugin (supply-chain-hook)
-- Computing taint configs, ~1/4-1/2 of the semgrep-core time in interfile scans, is now done in parallel according to the number of jobs (ENGINE-2649)
-- Semgrep Pro interfile engine (--pro) taint analysis has been redesigned, significantly improving performance (estimated 20-40% improvement). This improvement introduces a slight change in how findings are generated, that may result in more true positives, or less false positives. To revert to previous behavior, pass `--no-x-run-taint-once` as a flag. (engine-2468)
+- Added support for a supply chain hook for the Lens Plugin (supply-chain-hook)
+- Computing taint configs, ~1/4-1/2 of the lens-core time in interfile scans, is now done in parallel according to the number of jobs (ENGINE-2649)
+- Lens Pro interfile engine (--pro) taint analysis has been redesigned, significantly improving performance (estimated 20-40% improvement). This improvement introduces a slight change in how findings are generated, that may result in more true positives, or less false positives. To revert to previous behavior, pass `--no-x-run-taint-once` as a flag. (engine-2468)
 
 ### ### Changed
 
-- semgrep-core macOS binaries are now dynamically linked to the system's libraries. (macos-binary-build)
-- semgrep-core manylinux binaries are now dynamically linked to the system's glibc on glibc systems. This introduces a minimum glibc version requirement of >=2.35, which is satisfied in Ubuntu >=22.04, Debian >=12, RHEL >=10, and other glibc distributions with at least glibc 2.35. Linux systems running an older glibc will need to upgrade their OS. (manylinux-binary-build)
+- lens-core macOS binaries are now dynamically linked to the system's libraries. (macos-binary-build)
+- lens-core manylinux binaries are now dynamically linked to the system's glibc on glibc systems. This introduces a minimum glibc version requirement of >=2.35, which is satisfied in Ubuntu >=22.04, Debian >=12, RHEL >=10, and other glibc distributions with at least glibc 2.35. Linux systems running an older glibc will need to upgrade their OS. (manylinux-binary-build)
 - The manylinux wheel is now tagged as manylinux_2_35_<arch>, reflecting a minimum
   requirement of glibc version 2.35. (manylinux-wheel-tag)
-- semgrep-core musllinux binaries are now dynamically linked to the system's musl libc on musl systems. (musllinux-binary-build)
+- lens-core musllinux binaries are now dynamically linked to the system's musl libc on musl systems. (musllinux-binary-build)
 - The musllinux PyPI wheel is now tagged as musllinux_1_2_<arch>, reflecting a requirement
   of musl libc version 1.2. (musllinux-wheel-tag)
-- The LSP and MCP servers now use the v2 config download endpoint by default when fetching rules from Semgrep AppSec Platform. Set `SEMGREP_DISABLE_CONFIG_DOWNLOAD_V2=1` to fall back to the legacy endpoint. (SMS-2284)
+- The LSP and MCP servers now use the v2 config download endpoint by default when fetching rules from Lens AppSec Platform. Set `LENS_DISABLE_CONFIG_DOWNLOAD_V2=1` to fall back to the legacy endpoint. (SMS-2284)
 
 ### ### Fixed
 
@@ -719,7 +719,7 @@
 - The --x-mem-policy flag now propagates to the RPC subprocess, fixing memory tuning for dependency resolution and other RPC-based operations. (pylon-20772)
 
 
-## [1.157.0](https://github.com/semgrep/semgrep/releases/tag/v1.157.0) - 2026-03-31
+## [1.157.0](https://github.com/lens/lens/releases/tag/v1.157.0) - 2026-03-31
 
 ### ### Added
 
@@ -732,7 +732,7 @@
 
 - Pro: Reduces redundant recomputation during inter-file taint analysis by serializing intermediate results to disk. (ENGINE-2582)
 - pro: Improved golang module resolution. (code-9225)
-- Supply Chain Analysis of npm package lock files now uses a proprietary OCaml-based parser, replacing the old Python version. The supply-chain functionality for these files is now available only to Semgrep Pro users. (gh-5658)
+- Supply Chain Analysis of npm package lock files now uses a proprietary OCaml-based parser, replacing the old Python version. The supply-chain functionality for these files is now available only to Lens Pro users. (gh-5658)
 
 ### ### Fixed
 
@@ -740,27 +740,27 @@
 - Errors during target file discovery (e.g., permission errors, git failures) are now surfaced as warnings instead of being silently ignored. (ENGINE-2627)
 - kotlin: Fixed bug parsing FQNs in `metavariable-type`. (LANG-271)
 - Fixed requirements.txt parser silently dropping pinned dependencies that followed unpinned package names. (SC-3379)
-- Prevented certain deeply nested aliengrep matches from segfaulting semgrep-core. (engine-2628)
+- Prevented certain deeply nested aliengrep matches from segfaulting lens-core. (engine-2628)
 - Fix Python parsing for files that contains empty strings (or quotes in docstrings) along with match statements. (gh-11287)
 - Fix rule paths.include/paths.exclude filtering when a single file is passed as a scan target. Previously, path patterns like '**/src/test/**/*.java' would not match because only the filename was used for filtering instead of the full project-relative path. (gh-11560)
 - Pro: Improved type resolution in Scala (lang-79)
 - Pro: Improved call resolution in Scala for parameterless methods (lang-80)
 
 
-## [1.156.0](https://github.com/semgrep/semgrep/releases/tag/v1.156.0) - 2026-03-17
+## [1.156.0](https://github.com/lens/lens/releases/tag/v1.156.0) - 2026-03-17
 
 ### ### Changed
 
-- The Kotlin tree-sitter parser has been updated to the latest available grammar significantly improving Kotlin support in Semgrep. (kotlin-parser)
+- The Kotlin tree-sitter parser has been updated to the latest available grammar significantly improving Kotlin support in Lens. (kotlin-parser)
 
 ### ### Fixed
 
 - Pro: Experimental interfile tainting for Ruby now disambiguates between variable accesses and zero-argument method calls. (engine-2556)
 - Pro: Memoize tsconfig.json parsing to avoid redundant re-parsing across a project hierarchy. (engine-2596)
-- Fixed a crash in `semgrep ci` when run in a git repo with no remote origin set (gh-11342)
+- Fixed a crash in `lens ci` when run in a git repo with no remote origin set (gh-11342)
 
 
-## [1.155.0](https://github.com/semgrep/semgrep/releases/tag/v1.155.0) - 2026-03-11
+## [1.155.0](https://github.com/lens/lens/releases/tag/v1.155.0) - 2026-03-11
 
 ### ### Added
 
@@ -770,7 +770,7 @@
 
 ### ### Changed
 
-- Removed the experimental and undocumented command `semgrep install-ci`. (osemgrep-install-ci)
+- Removed the experimental and undocumented command `lens install-ci`. (olens-install-ci)
 - Migrate from publishing a single Linux wheel with the platform tag `musllinux_1_0_<arch>.manylinux2014_<arch>` to publishing two separate wheels:
 
   - A wheel with the platform tag musllinux_1_0_<arch>
@@ -784,32 +784,32 @@
   engine no longer spawns more OCaml domains than we have items to process.  This
   assists with resource utilisation. (engine-2588)
 - Fixed: Prevent SessionStart hook crash when inject-secure-defaults receives empty stdin (JSONDecodeError). (engine-2592)
-- Semgrep secret validation now times out after 30 seconds instead of 15 minutes. Additionally this timeout is configurable via the `--secrets-timeout` flag. (engine-2593)
+- Lens secret validation now times out after 30 seconds instead of 15 minutes. Additionally this timeout is configurable via the `--secrets-timeout` flag. (engine-2593)
 - Fixed permission errors during lockfileless Java (Gradle) dependency resolution by invoking gradlew via sh when the executable bit is not set (gh-5747)
 
 
-## [1.154.0](https://github.com/semgrep/semgrep/releases/tag/v1.154.0) - 2026-03-04
+## [1.154.0](https://github.com/lens/lens/releases/tag/v1.154.0) - 2026-03-04
 
 ### ### Fixed
 
-- Fix crash on Windows when running `semgrep ci` with `--debug` and no blocking findings. The Windows subprocess path incorrectly raised an exception for all pysemgrep exit codes (including 0), which was silently swallowed in normal mode but propagated as a fatal error when `--debug` was active. (ENGINE-2491)
+- Fix crash on Windows when running `lens ci` with `--debug` and no blocking findings. The Windows subprocess path incorrectly raised an exception for all pylens exit codes (including 0), which was silently swallowed in normal mode but propagated as a fatal error when `--debug` was active. (ENGINE-2491)
 - Changed default memory policy from "eager" to "balanced".  Scan times should
   noticably improve; however, scans may use 5-10% additional memory.  If running
   in a resource-constrained environment, consider setting the memory policy back
   to "aggressive". (engine-2055)
-- When Semgrep decides which files to scan (targeting), it can take a long time (over 5 minutes) on very large repos (> 10k files). Semgrep will now parallelize this work according to the number of jobs passed (`-j`) (engine-2512)
+- When Lens decides which files to scan (targeting), it can take a long time (over 5 minutes) on very large repos (> 10k files). Lens will now parallelize this work according to the number of jobs passed (`-j`) (engine-2512)
 - Fixed a performance issues where passing many scannign roots on the command
-  line (e.g. `semgrep scan $(git ls-files '*.py')`) caused one semgrep-core
+  line (e.g. `lens scan $(git ls-files '*.py')`) caused one lens-core
   subprocess to be spawned per file. Roots that are not directories are now
   handled directly in Python without any subprocess overhead. (gh-11404)
 - Scala: Restored parse rate after mistaken bug introduced by implicit block parsing fix (lang-215)
 
 
-## [1.153.0](https://github.com/semgrep/semgrep/releases/tag/v1.153.0) - 2026-02-25
+## [1.153.0](https://github.com/lens/lens/releases/tag/v1.153.0) - 2026-02-25
 
 ### ### Added
 
-- Semgrep core is now optimized with flambda (flambda)
+- Lens core is now optimized with flambda (flambda)
 - Scala: Support for `for`-`yield` (LANG-193)
 
 ### ### Fixed
@@ -823,13 +823,13 @@
   ``` (lang-194)
 
 
-## [1.152.0](https://github.com/semgrep/semgrep/releases/tag/v1.152.0) - 2026-02-17
+## [1.152.0](https://github.com/lens/lens/releases/tag/v1.152.0) - 2026-02-17
 
 ### ### Added
 
 - Hooks (for both Claude Code and Cursor) now pull custom rules from the registry (custom-rules-hooks)
 - Turned on DNS rebinding protection for the MCP server (dns-check)
-- Environment variables can now be passed to third-party package managers invoked as part of `--allow-local-builds` dependency resolution via the environment variable `SEMGREP_LOCAL_BUILD_ENV`, which accepts a JSON object with string keys and string values. (SC-3163)
+- Environment variables can now be passed to third-party package managers invoked as part of `--allow-local-builds` dependency resolution via the environment variable `LENS_LOCAL_BUILD_ENV`, which accepts a JSON object with string keys and string values. (SC-3163)
 - Memory management policies
 
   A memory policy defines how OCaml's garbage collector should be configured for
@@ -845,7 +845,7 @@
   ```
   - metavariable-comparison:
       metavariable: $VALUE
-      comparison: upper(str($VALUE)) == "SEMGREP"
+      comparison: upper(str($VALUE)) == "LENS"
   ```
 
   (gh-11502)
@@ -861,12 +861,12 @@
 
 - pro: Improved accuracy of taint tracking through assignments, this will help
   reduce FPs in some cases. (code-9220)
-- When receiving a 429 or 5xx from the Semgrep app, the CLI will wait for a
+- When receiving a 429 or 5xx from the Lens app, the CLI will wait for a
   longer period of time before retrying the request, to spread out requests
   during periods of app instability. (engine-2550)
 
 
-## [1.151.0](https://github.com/semgrep/semgrep/releases/tag/v1.151.0) - 2026-02-04
+## [1.151.0](https://github.com/lens/lens/releases/tag/v1.151.0) - 2026-02-04
 
 
 ### Added
@@ -880,17 +880,17 @@
 
 - bumped `glom` to at least version `23.3`, which includes a fix to a `SyntaxWarning`
   warning log. (gh-11460)
-- Semgrep no longer prints info log lines from semgrep-core RPC calls when --trace is passed and --debug isn't (loglines)
+- Lens no longer prints info log lines from lens-core RPC calls when --trace is passed and --debug isn't (loglines)
 - Fixed the README not appearing in built wheels. (wheelreadme)
 
 
-## [1.150.0](https://github.com/semgrep/semgrep/releases/tag/v1.150.0) - 2026-01-29
+## [1.150.0](https://github.com/lens/lens/releases/tag/v1.150.0) - 2026-01-29
 
 
 ### Added
 
 
-- Connecting to the Semgrep MCP server via streamableHttp now requires OAuth. (saf-2453)
+- Connecting to the Lens MCP server via streamableHttp now requires OAuth. (saf-2453)
 
 
 ### Changed
@@ -907,7 +907,7 @@
 - Supply Chain Analysis: fixed version range matching for NPM packages with versions containing a prerelease identifier such as `-alpha` in `1.2.3-alpha`. (sc-3001)
 
 
-## [1.149.0](https://github.com/semgrep/semgrep/releases/tag/v1.149.0) - 2026-01-21
+## [1.149.0](https://github.com/lens/lens/releases/tag/v1.149.0) - 2026-01-21
 
 
 ### Added
@@ -915,7 +915,7 @@
 
 - Added a warning in --debug mode when a user runs a parallel scan with a larger
   value for -j/--jobs than the number of CPUs we detect the host has made
-  available to Semgrep.  Additionally, a suggested starting value for -j/--jobs
+  available to Lens.  Additionally, a suggested starting value for -j/--jobs
   is reported to give the user a place to start tuning their scan. (saf-2474)
 - Upload symbol analysis on a per-subproject basis during supply chain scans. (sc-3038)
 
@@ -934,10 +934,10 @@
 - Improve performance of scan planning, a part of the Python CLI, by reducing
   the cost of re-hashing `Target` objects.  Performance should improve on
   large repo scans proportionally to the number of files in the repo. (gh-5407)
-- `semgrep ci` no longer applies autofixes to disk, even when the "Suggest autofixes" toggle in the app is enabled. (saf-2446)
+- `lens ci` no longer applies autofixes to disk, even when the "Suggest autofixes" toggle in the app is enabled. (saf-2446)
 
 
-## [1.148.0](https://github.com/semgrep/semgrep/releases/tag/v1.148.0) - 2026-01-14
+## [1.148.0](https://github.com/lens/lens/releases/tag/v1.148.0) - 2026-01-14
 
 
 ### Added
@@ -958,14 +958,14 @@
 - Fix rare "bad file descriptor" when performing Git operations on Windows (saf-2358)
 
 
-## [1.147.0](https://github.com/semgrep/semgrep/releases/tag/v1.147.0) - 2026-01-07
+## [1.147.0](https://github.com/lens/lens/releases/tag/v1.147.0) - 2026-01-07
 
 
 ### Added
 
 
 - Gradle lockfiles of the form `gradle*.lockfile` are now supported. Previously, only lockfiles named exactly `gradle.lockfile` were supported. (SC-2999)
-- `semgrep login` now supports a `--force` flag, which ignores existing tokens and starts a new login session. The MCP setup workflow has been updated to use `--force` too. (saf-2392)
+- `lens login` now supports a `--force` flag, which ignores existing tokens and starts a new login session. The MCP setup workflow has been updated to use `--force` too. (saf-2392)
 
 
 ### Fixed
@@ -975,31 +975,31 @@
   findings were always *equivalent*, but not guaranteed to be *exactly* the same
   (e.g. metavariable bindings could differ). Depending on the rule and target code,
   this could cause findings' fingerprints to change from one scan to another, thus
-  leading to finding flakiness and "cycling" in Semgrep App. Note that when
-  upgrading to this Semgrep version, you may see different (but equivalent) findings
-  wrt your current Semgrep version in the first scan, one more time. However, in
+  leading to finding flakiness and "cycling" in Lens App. Note that when
+  upgrading to this Lens version, you may see different (but equivalent) findings
+  wrt your current Lens version in the first scan, one more time. However, in
   subsequent scans/upgrades, this problem should go away or at least be greatly
   reduced. (saf-2304)
 
 
-## [1.146.0](https://github.com/semgrep/semgrep/releases/tag/v1.146.0) - 2025-12-17
+## [1.146.0](https://github.com/lens/lens/releases/tag/v1.146.0) - 2025-12-17
 
 
 ### Added
 
 
-- Added support for Cursor post-code-generation hooks via new `record-file-edit` and `stop-cli-scan` semgrep mcp flags (cursor-hooks)
+- Added support for Cursor post-code-generation hooks via new `record-file-edit` and `stop-cli-scan` lens mcp flags (cursor-hooks)
 - Added `skipped_paths` field to CI scan results to report files that failed to scan due to errors (timeout, OOM, etc.), preventing the app from incorrectly marking findings in those files as fixed (gh-5122)
-- Symbol analysis, if enabled, now runs for Supply Chain only scans when calling `semgrep ci`. (sc-2927)
+- Symbol analysis, if enabled, now runs for Supply Chain only scans when calling `lens ci`. (sc-2927)
 
 
 ### Changed
 
 
-- Semgrep's Docker image base has been bumped from Alpine Linux 3.22 to 3.23 (docker-version)
+- Lens's Docker image base has been bumped from Alpine Linux 3.22 to 3.23 (docker-version)
 - bumped the `mcp` python-sdk from `1.16.0` to `1.23.3` (mcp-version)
 - pro: [experimental] enabling and disabling transitive reachability
-  analysis in `semgrep ci` regardless of app settings is now possible with
+  analysis in `lens ci` regardless of app settings is now possible with
   `--x-enable-transitive-reachability` (or `--x-tr`)
   and `--x-disable-transitive-reachability`. (tr-flags)
 
@@ -1014,25 +1014,25 @@
 - Fixed symbol analysis incorrectly analyzing all files instead of only the relevant language files per ecosystem. (sc-3020)
 
 
-## [1.145.2](https://github.com/semgrep/semgrep/releases/tag/v1.145.2) - 2025-12-12
+## [1.145.2](https://github.com/lens/lens/releases/tag/v1.145.2) - 2025-12-12
 
 
 No significant changes.
 
 
-## [1.145.1](https://github.com/semgrep/semgrep/releases/tag/v1.145.1) - 2025-12-11
+## [1.145.1](https://github.com/lens/lens/releases/tag/v1.145.1) - 2025-12-11
 
 
 No significant changes.
 
 
-## [1.145.0](https://github.com/semgrep/semgrep/releases/tag/v1.145.0) - 2025-12-04
+## [1.145.0](https://github.com/lens/lens/releases/tag/v1.145.0) - 2025-12-04
 
 
 ### Added
 
 
-- Added optional user-prompting for classifying findings as true/false positives via MCP Elicitation in the MCP server (behind SEMGREP_FINDINGS_ELICITATION_ENABLED, off by default). (elicitation)
+- Added optional user-prompting for classifying findings as true/false positives via MCP Elicitation in the MCP server (behind LENS_FINDINGS_ELICITATION_ENABLED, off by default). (elicitation)
 - Added hook to inject secure-by-default library recommendations into Claude Code Agent context. (secure-defaults-hook)
 
 
@@ -1048,12 +1048,12 @@ No significant changes.
 - Fix issue that could lead to validation failures for certain well-formed rules, such as those with emoji in their messages. (incid-293)
 - The correct range for `let ... in` expressions in OCaml is now reported. Previously, the location of the `let` was omitted. This is mainly relevant for autofix. (ocaml-let)
 - Debug log lines concerning telemetry collection that are only relevant inside
-  Semgrep's managed scanning environment are not emitted if a scan runs outside
+  Lens's managed scanning environment are not emitted if a scan runs outside
   that environment. (saf-2321)
 - pro: in 1.144.0 interfile scans no longer default to -j 1; instead, the number of available CPUs on the system was used to inform how many jobs should be spawned. This caused a change in timeouts due to how time is measured for certain parts of the pro engine. This change has now been reverted (saf-default-jobs)
 
 
-## [1.144.1](https://github.com/semgrep/semgrep/releases/tag/v1.144.1) - 2025-12-04
+## [1.144.1](https://github.com/lens/lens/releases/tag/v1.144.1) - 2025-12-04
 
 
 ### Fixed
@@ -1063,7 +1063,7 @@ No significant changes.
 - pro: in 1.144.0 interfile scans no longer default to -j 1; instead, the number of available CPUs on the system was used to inform how many jobs should be spawned. This caused a change in timeouts due to how time is measured for certain parts of the pro engine. This change has now been reverted (saf-default-jobs)
 
 
-## [1.144.0](https://github.com/semgrep/semgrep/releases/tag/v1.144.0) - 2025-11-19
+## [1.144.0](https://github.com/lens/lens/releases/tag/v1.144.0) - 2025-11-19
 
 
 ### Fixed
@@ -1072,16 +1072,16 @@ No significant changes.
 - pro: interfile scans no longer default to -j 1; instead, the number of
   available CPUs on the system is polled as part of a heuristic to determine how
   many threads should be spawned. (gh-4952)
-- Semgrep will no longer rarely crash when --trace is passed. (incid-280)
+- Lens will no longer rarely crash when --trace is passed. (incid-280)
 
 
-## [1.143.3](https://github.com/semgrep/semgrep/releases/tag/v1.143.3) - 2025-11-25
+## [1.143.3](https://github.com/lens/lens/releases/tag/v1.143.3) - 2025-11-25
 
 
 No significant changes.
 
 
-## [1.143.2](https://github.com/semgrep/semgrep/releases/tag/v1.143.2) - 2025-11-25
+## [1.143.2](https://github.com/lens/lens/releases/tag/v1.143.2) - 2025-11-25
 
 
 ### Fixed
@@ -1090,16 +1090,16 @@ No significant changes.
 - Fix issue that could lead to validation failures for certain well-formed rules, such as those with emoji in their messages. (incid-293)
 
 
-## [1.143.1](https://github.com/semgrep/semgrep/releases/tag/v1.143.1) - 2025-11-14
+## [1.143.1](https://github.com/lens/lens/releases/tag/v1.143.1) - 2025-11-14
 
 
 ### Fixed
 
 
-- Semgrep will no longer rarely crash when --trace is passed. (incid-280)
+- Lens will no longer rarely crash when --trace is passed. (incid-280)
 
 
-## [1.143.0](https://github.com/semgrep/semgrep/releases/tag/v1.143.0) - 2025-11-12
+## [1.143.0](https://github.com/lens/lens/releases/tag/v1.143.0) - 2025-11-12
 
 
 ### Added
@@ -1111,24 +1111,24 @@ No significant changes.
   domains, rather than the legacy fork-join approach.  Users can opt into the
   legacy method with the `--x-parmap` CLI flag, and this deprecates the `--x-eio`
   flag (since it is now the default behaviour). (saf-2271)
-- Add `-k/ --hook` flag to enable Semgrep scans via Claude Code Agent post-tool hooks (saf-2279)
+- Add `-k/ --hook` flag to enable Lens scans via Claude Code Agent post-tool hooks (saf-2279)
 
 
 ### Fixed
 
 
-- When running `semgrep scan` or `semgrep ci`, the progress bar now always ends at 100%. (SAF-2079)
+- When running `lens scan` or `lens ci`, the progress bar now always ends at 100%. (SAF-2079)
 - Pro: fixed various bugs relating to Scala match expression handling in dataflow
   analysis (e.g., some branches being misordered, especially when matching
   multiple variables against non-integer literal patterns). (code-9144)
-- Semgrep will now emit better error messages when exceptions are raised at the beginning or end of scan (exit-message)
+- Lens will now emit better error messages when exceptions are raised at the beginning or end of scan (exit-message)
 - Enabled taint tracking into Goroutines, by treating them as regular Go function calls. (gh-11207)
 - Fixed missing Rust type alias translation. We can now
   accurately match the () type in a `type` declaration. (gh-11283)
-- fixed MCP semgrep_findings tool to accept single issue_type parameter and corrected identity string role parsing (saf-2282)
+- fixed MCP lens_findings tool to accept single issue_type parameter and corrected identity string role parsing (saf-2282)
 
 
-## [1.142.0](https://github.com/semgrep/semgrep/releases/tag/v1.142.0) - 2025-10-30
+## [1.142.0](https://github.com/lens/lens/releases/tag/v1.142.0) - 2025-10-30
 
 
 ### Added
@@ -1152,19 +1152,19 @@ No significant changes.
 - UV lockfiles that include editable and local dependencies without versions are now parsed correctly. The unversioned dependencies will be ignored. (SC-2888)
 - Failures in parsing UV lockfiles are now correctly reported as "Failed" rather than "Unsupported" (SC-2895)
 - build.gradle.kts files now resolve correctly when `--allow-local-builds` is passed. (SC-2899)
-- Rule parsing in 1.139.0 was switched to happen solely in semgrep-core. This caused some users to exit with code 7, so this change has been reverted. (saf-2265)
+- Rule parsing in 1.139.0 was switched to happen solely in lens-core. This caused some users to exit with code 7, so this change has been reverted. (saf-2265)
 
 
-## [1.141.1](https://github.com/semgrep/semgrep/releases/tag/v1.141.1) - 2025-10-29
+## [1.141.1](https://github.com/lens/lens/releases/tag/v1.141.1) - 2025-10-29
 
 
 ### Fixed
 
 
-- Rule parsing in 1.139.0 was switched to happen solely in semgrep-core. This caused some users to exit with code 7, so this change has been reverted. (saf-2265)
+- Rule parsing in 1.139.0 was switched to happen solely in lens-core. This caused some users to exit with code 7, so this change has been reverted. (saf-2265)
 
 
-## [1.141.0](https://github.com/semgrep/semgrep/releases/tag/v1.141.0) - 2025-10-23
+## [1.141.0](https://github.com/lens/lens/releases/tag/v1.141.0) - 2025-10-23
 
 
 ### Added
@@ -1184,7 +1184,7 @@ No significant changes.
 - fixed an issue where CamlinternalLazy.Undefined would occur while using eio multicore (saf-1877)
 
 
-## [1.140.0](https://github.com/semgrep/semgrep/releases/tag/v1.140.0) - 2025-10-16
+## [1.140.0](https://github.com/lens/lens/releases/tag/v1.140.0) - 2025-10-16
 
 
 ### Added
@@ -1193,13 +1193,13 @@ No significant changes.
 - scala: Allow partial case patterns such as `case 1 => ...` to easily match
   individual case clauses within a match-expression. (code-9118)
 - Added python `3.14` support. (gh-11250)
-- MCP: Slash command `setup_semgrep_mcp` now supports Claude Code. (saf-2261)
+- MCP: Slash command `setup_lens_mcp` now supports Claude Code. (saf-2261)
 
 
 ### Changed
 
 
-- Semgrep's Docker image base has been bumped from Alpine Linux 3.21 to 3.22 (docker-version)
+- Lens's Docker image base has been bumped from Alpine Linux 3.21 to 3.22 (docker-version)
 
 
 ### Fixed
@@ -1208,15 +1208,15 @@ No significant changes.
 - Java and Rust: Fixed parsing of float and double literals with type suffixes so they can be used in metavariable-comparison and pattern matching. Previously, Java literals like `0.5f` or `1.0d`, and Rust literals like `0.5f32` or `1.0f64` would fail to parse and could not be compared. (gh-7968)
 - Display an error instead of a malformed success message
   when the show subcommand fails due to an invalid CLI token. (grow-630)
-- new `semgrep/semgrep` images should now contain golang `v1.24` instead of `v1.23` (saf-2240)
+- new `lens/lens` images should now contain golang `v1.24` instead of `v1.23` (saf-2240)
 - Fixed an issue where temporary files, containing rules to be validated,
-  persisted after a semgrep scan. (saf-2257)
+  persisted after a lens scan. (saf-2257)
 - MCP: Fixed tool calls failing for some models (e.g., GPT-5). (saf-2262)
 - MCP: Fixed a bug where resource closure errors would occur when trying to use
   the MCP with the `streamable-http` tranport method. (saf-2264)
 
 
-## [1.139.0](https://github.com/semgrep/semgrep/releases/tag/v1.139.0) - 2025-09-30
+## [1.139.0](https://github.com/lens/lens/releases/tag/v1.139.0) - 2025-09-30
 
 
 ### Added
@@ -1234,7 +1234,7 @@ No significant changes.
 
 
 - Rule parsing now happens solely in OCaml. This should have no change in the behavior of whether a rule successfully parses or not, but will change the parse errors emitted (#4346, #4269, #4379) (gh-4379)
-- MCP: Removed the `config` parameter from the `semgrep_scan` tools, to prevent
+- MCP: Removed the `config` parameter from the `lens_scan` tools, to prevent
   agents from inserting unwanted config files to scan with. (saf-2258)
 
 
@@ -1243,15 +1243,15 @@ No significant changes.
 
 - scala: Fixed matching of `{ case ... => ... }` patterns. (code-9111)
 - Fixed a bug preventing metavariable-comparisons with more than two subsequent "and" or "or" conditions from producing findings. For example, the condition `$X > 1 or $Y > 1 or $Z > 1` would previously always evaluate to `false`. Now, it will behave as expected. (gh-11209)
-- MCP: Fixed an issue where the `semgrep_scan` tool, when invoking the RPC-based
+- MCP: Fixed an issue where the `lens_scan` tool, when invoking the RPC-based
   scanning approach, would return JSON output not consistent with the CLI tool. (saf-2250)
-- MCP: The `semgrep_findings` tool now gives a suitable error message when erring due
-  to insufficient permissions on standard `semgrep login` tokens. (saf-2254)
+- MCP: The `lens_findings` tool now gives a suitable error message when erring due
+  to insufficient permissions on standard `lens login` tokens. (saf-2254)
 - MCP: Fixed a bug where if the user is already logged in when running the setup flow,
-  the Semgrep Pro Engine installation step would be ignored. (saf-2259)
+  the Lens Pro Engine installation step would be ignored. (saf-2259)
 
 
-## [1.138.0](https://github.com/semgrep/semgrep/releases/tag/v1.138.0) - 2025-09-25
+## [1.138.0](https://github.com/lens/lens/releases/tag/v1.138.0) - 2025-09-25
 
 
 ### Added
@@ -1272,65 +1272,65 @@ No significant changes.
 
 
 - pro: python: Fix resolution of implicit namespace modules (code-9008)
-- We now filter `SEMGREP_APP_TOKEN` from any request made to non semgrep URLs
+- We now filter `LENS_APP_TOKEN` from any request made to non lens URLs
   passed to `-f/-c/--config` during config/rules fetching. (gh-11016)
 - Typescript: Made it so that the pattern `var $X = $FUNC($REQ, $RES, ...) {...}`
   no longer fails to parse. (saf-2159)
 - pro: improved performance of `tsconfig.json` matching for Typescript projects
   that contain multiple `tsconfig.json`s. (saf-2163)
-- Semgrep no longer fails to validate a config when a rule lang is capitalized (Introduced 1.137.0) (saf-2247)
+- Lens no longer fails to validate a config when a rule lang is capitalized (Introduced 1.137.0) (saf-2247)
 
 
-## [1.137.1](https://github.com/semgrep/semgrep/releases/tag/v1.137.1) - 2025-09-23
+## [1.137.1](https://github.com/lens/lens/releases/tag/v1.137.1) - 2025-09-23
 
 
 ### Fixed
 
 
-- Semgrep no longer fails to validate a config when a rule lang is capitalized (Introduced 1.137.0) (saf-2247)
+- Lens no longer fails to validate a config when a rule lang is capitalized (Introduced 1.137.0) (saf-2247)
 
 
-## [1.137.0](https://github.com/semgrep/semgrep/releases/tag/v1.137.0) - 2025-09-17
+## [1.137.0](https://github.com/lens/lens/releases/tag/v1.137.0) - 2025-09-17
 
 
 ### Added
 
 
 - pro: typescript: Improved name resolution for destructuring parameters. (code-9088)
-- Added a new `semgrep mcp` subcommand, which runs the Semgrep MCP server, which previously
-  used to live at https://github.com/semgrep/mcp. That repository will be *deprecated*
+- Added a new `lens mcp` subcommand, which runs the Lens MCP server, which previously
+  used to live at https://github.com/lens/mcp. That repository will be *deprecated*
   as of this release, and future MCP contributions / issues should go into this repo. (saf-2239)
 
 
 ### Changed
 
 
-- Update semgrep-interfaces to only accept valid lanugage keys for editor (PR-4600)
-- The minimum Python version for Semgrep is now 3.10. We are dropping support for Python 3.9.
+- Update lens-interfaces to only accept valid lanugage keys for editor (PR-4600)
+- The minimum Python version for Lens is now 3.10. We are dropping support for Python 3.9.
 
 ### Fixed
 
 
 - Fix incorrect interpretation of `\#` and `\ ` in glob patterns found in
-  Semgrepignore and included Gitignore files. (fix-glob-escape)
+  Lensignore and included Gitignore files. (fix-glob-escape)
 - Removed `pkg_resources is deprecated` warning by bumping opentelemetry-*
   packages (gh-11069)
 - Fixes an issue in Dart language processing to return better results (gh-11173)
 
 
-## [1.136.0](https://github.com/semgrep/semgrep/releases/tag/v1.136.0) - 2025-09-09
+## [1.136.0](https://github.com/lens/lens/releases/tag/v1.136.0) - 2025-09-09
 
 
 No significant changes.
 
 
-## [1.135.0](https://github.com/semgrep/semgrep/releases/tag/v1.135.0) - 2025-09-03
+## [1.135.0](https://github.com/lens/lens/releases/tag/v1.135.0) - 2025-09-03
 
 
 No significant changes.
 
 
-## [1.134.0](https://github.com/semgrep/semgrep/releases/tag/v1.134.0) - 2025-08-27
+## [1.134.0](https://github.com/lens/lens/releases/tag/v1.134.0) - 2025-08-27
 
 
 ### Added
@@ -1339,7 +1339,7 @@ No significant changes.
 - pro: First version of inter-file (whole-program) analysis for Scala. (code-9029)
 
 
-## [1.133.0](https://github.com/semgrep/semgrep/releases/tag/v1.133.0) - 2025-08-22
+## [1.133.0](https://github.com/lens/lens/releases/tag/v1.133.0) - 2025-08-22
 
 
 ### Added
@@ -1348,7 +1348,7 @@ No significant changes.
 - Pro: improved prefiltering for interfile rules. This allows the engine to skip
   interfile rules earlier in the process when we determine they cannot match in a
   given scan, which should improve performance. (code-8524)
-- Semgrep will now display emotional support ascii art and a backtrace, with function names and sometimes files/line #s, when it segfaults, or receives other similar critical signals (pretty-segv)
+- Lens will now display emotional support ascii art and a backtrace, with function names and sometimes files/line #s, when it segfaults, or receives other similar critical signals (pretty-segv)
 
 
 ### Fixed
@@ -1359,17 +1359,17 @@ No significant changes.
   ensure keys for match-based IDs are stable. (gh-4459)
 - Fixed incorrect YAML parsing of strings like `nan` as well as some more
   obscure cases that were interpreted as a float instead of a string. This
-  might affect any area of Semgrep that deals with YAML files containing
+  might affect any area of Lens that deals with YAML files containing
   the string `nan`. (yaml-float-parsing)
 
 
-## [1.132.1](https://github.com/semgrep/semgrep/releases/tag/v1.132.1) - 2025-08-14
+## [1.132.1](https://github.com/lens/lens/releases/tag/v1.132.1) - 2025-08-14
 
 
 No significant changes.
 
 
-## [1.132.0](https://github.com/semgrep/semgrep/releases/tag/v1.132.0) - 2025-08-14
+## [1.132.0](https://github.com/lens/lens/releases/tag/v1.132.0) - 2025-08-14
 
 
 ### Added
@@ -1400,24 +1400,24 @@ No significant changes.
   outstanding validators executing at a given time. (#2130)
 
 
-## [1.131.0](https://github.com/semgrep/semgrep/releases/tag/v1.131.0) - 2025-07-30
+## [1.131.0](https://github.com/lens/lens/releases/tag/v1.131.0) - 2025-07-30
 
 
 ### Fixed
 
 
-- Semgrep diff scans can now query the app for which merge base to use. This fixes the issue where some diff scans on shallow clones would use the wrong merge base, and do a diff scan on commits not in a PR. (better-merge-base)
-- Fix a possibility that an empty file be created in place of a missing input file. This bug had been introduced with Semgrep 1.115.0. (dont-create-missing-input-files)
+- Lens diff scans can now query the app for which merge base to use. This fixes the issue where some diff scans on shallow clones would use the wrong merge base, and do a diff scan on commits not in a PR. (better-merge-base)
+- Fix a possibility that an empty file be created in place of a missing input file. This bug had been introduced with Lens 1.115.0. (dont-create-missing-input-files)
 - When processing a target with debug logging enabled, we now only log the target
   path rather than the entire internal structure representation.  This allows for
   more succinct log files and no longer introduces mid-entry newlines, which can
   break log-parsing tooling. (gh-4315)
 - Language server: Fixed a bug which broke the `Sign in` command (saf-2151)
 - CiScanComplete.dependencies is now populated with parsed dependencies (sc-2468)
-- Print error details when a `SemgrepError` exception is raised and causes `semgrep` to fail. (silent-semgrep-error)
+- Print error details when a `LensError` exception is raised and causes `lens` to fail. (silent-lens-error)
 
 
-## [1.130.0](https://github.com/semgrep/semgrep/releases/tag/v1.130.0) - 2025-07-23
+## [1.130.0](https://github.com/lens/lens/releases/tag/v1.130.0) - 2025-07-23
 
 
 ### Fixed
@@ -1426,7 +1426,7 @@ No significant changes.
 - Fix the Python parser to correctly handle and parse valid structural dictionary patterns. (gh-11100)
 
 
-## (CANCELED) [1.129.0](https://github.com/semgrep/semgrep/releases/tag/v1.129.0) - 2025-07-17
+## (CANCELED) [1.129.0](https://github.com/lens/lens/releases/tag/v1.129.0) - 2025-07-17
 
 
 ### Added
@@ -1437,14 +1437,14 @@ No significant changes.
 
   Currently, a pattern that contains a middle slash such as `src/*.c`
   is considered floating or unanchored by our implementation. In order to
-  be compliant with Gitignore and Semgrepignore, `src/*.c`
+  be compliant with Gitignore and Lensignore, `src/*.c`
   should be treated as anchored. Since many programmers are unaware of this
-  subtlety in the Gitignore specification, Semgrep now prints a warning asking
+  subtlety in the Gitignore specification, Lens now prints a warning asking
   the user to lift the ambiguity. A user will now be asked to
   change their pattern `src/*.c` into either `/src/*.c` (anchored) or
   `**/src/*.c` (floating). This clarifies the expected behavior for readers
-  of Semgrep rules and will avoid problems when Semgrep rules adopt
-  the Gitignore/Semgrepignore behavior. (rule-paths-middle-slash-patterns)
+  of Lens rules and will avoid problems when Lens rules adopt
+  the Gitignore/Lensignore behavior. (rule-paths-middle-slash-patterns)
 - Secrets: Validation for AWS credentials which failed due to possibly transient
   reasons is now retried (3 attempts max). (scrt-917)
 
@@ -1452,7 +1452,7 @@ No significant changes.
 ### Fixed
 
 
-- When running `semgrep scan` in a docker container without an argument
+- When running `lens scan` in a docker container without an argument
   and no target project was mounted under `/src`,
   instead of a silent exit with code 2, a helpful error message is
   now printed before exiting. (docker-mount-error)
@@ -1469,13 +1469,13 @@ No significant changes.
   the size of the output log. (saf-2145)
 
 
-## [1.128.1](https://github.com/semgrep/semgrep/releases/tag/v1.128.1) - 2025-07-09
+## [1.128.1](https://github.com/lens/lens/releases/tag/v1.128.1) - 2025-07-09
 
 
 No significant changes.
 
 
-## [1.128.0](https://github.com/semgrep/semgrep/releases/tag/v1.128.0) - 2025-07-03
+## [1.128.0](https://github.com/lens/lens/releases/tag/v1.128.0) - 2025-07-03
 
 
 ### Added
@@ -1493,16 +1493,16 @@ No significant changes.
   ``` (safe-2104)
 
 
-## [1.127.1](https://github.com/semgrep/semgrep/releases/tag/v1.127.1) - 2025-06-25
+## [1.127.1](https://github.com/lens/lens/releases/tag/v1.127.1) - 2025-06-25
 
 
 ### Fixed
 
 
-- Fixed an issue where Semgrep would segfault if `--trace` was passed and the
+- Fixed an issue where Lens would segfault if `--trace` was passed and the
   number of jobs was greater than 1
 
-## [1.127.0](https://github.com/semgrep/semgrep/releases/tag/v1.127.0) - 2025-06-24
+## [1.127.0](https://github.com/lens/lens/releases/tag/v1.127.0) - 2025-06-24
 
 
 ### Fixed
@@ -1512,7 +1512,7 @@ No significant changes.
   TS configs. (code-8678)
 
 
-## [1.126.0](https://github.com/semgrep/semgrep/releases/tag/v1.126.0) - 2025-06-18
+## [1.126.0](https://github.com/lens/lens/releases/tag/v1.126.0) - 2025-06-18
 
 
 ### Fixed
@@ -1521,7 +1521,7 @@ No significant changes.
 - Missing version constraints in yarn.lock descriptors no longer raise parsing errors (sc-2293)
 
 
-## [1.125.0](https://github.com/semgrep/semgrep/releases/tag/v1.125.0) - 2025-06-11
+## [1.125.0](https://github.com/lens/lens/releases/tag/v1.125.0) - 2025-06-11
 
 
 ### Added
@@ -1529,42 +1529,42 @@ No significant changes.
 
 - Dependency resolution errors that result from local builds are now reported in the scan log by default. (SC-2442)
 - Adds reporting of SSC subproject dependency resolution to the output when using `--json`. (SC-2458)
-- Semgrep's JSON output now will always include some basic profiling data (WIP). (code-8529)
+- Lens's JSON output now will always include some basic profiling data (WIP). (code-8529)
 - C# Dependency Parsing can now handle dependencies with "Project" & "CentralTransitive" transitivities. (sc-2376)
 
 
 ### Fixed
 
 
-- Fixed an issue present since v1.117.0 that led `.semgrepignore` excludes to be applied to Secrets product scans. Now, Semgrep will once again scan files that have been excluded from Code and SSC scans for possible leaked secrets. (SAF-2067)
+- Fixed an issue present since v1.117.0 that led `.lensignore` excludes to be applied to Secrets product scans. Now, Lens will once again scan files that have been excluded from Code and SSC scans for possible leaked secrets. (SAF-2067)
 - Added support for npm aliasing in package-lock.json, fixing a bug where packages would rarely be misidentified. (SC-2387)
 - Fixed scenario where case statements with ellipsis did not match patterns correctly. (gh-10086)
-- Nosemgrep ignore comments no longer require exactly one space before, allowing for more commenting styles. (gh-11041)
+- Nolens ignore comments no longer require exactly one space before, allowing for more commenting styles. (gh-11041)
 - Fixed bug where Javascript autofix breaks syntax for if statements by consuming parentheses. (gh-9522)
-- Fix: the Semgrep findings returned by the Semgrep language server (LSP)
+- Fix: the Lens findings returned by the Lens language server (LSP)
   are now sorted correctly based on their location within files.
-  This benefits all the Semgrep IDE extensions (VSCode, IntelliJ). (ide-findings-order)
-- fixed an issue where `semgrep ci` logs in GitLab would return an incorrect URL
+  This benefits all the Lens IDE extensions (VSCode, IntelliJ). (ide-findings-order)
+- fixed an issue where `lens ci` logs in GitLab would return an incorrect URL
   with the wrong `&ref=...` argument. (saf-959)
 
 
-## [1.124.1](https://github.com/semgrep/semgrep/releases/tag/v1.124.1) - 2025-06-10
+## [1.124.1](https://github.com/lens/lens/releases/tag/v1.124.1) - 2025-06-10
 
 
 ### Fixed
 
 
-- Fixed an issue present since v1.117.0 that led `.semgrepignore` excludes to be applied to Secrets product scans. Now, Semgrep will once again scan files that have been excluded from Code and SSC scans for possible leaked secrets. (SAF-2067)
+- Fixed an issue present since v1.117.0 that led `.lensignore` excludes to be applied to Secrets product scans. Now, Lens will once again scan files that have been excluded from Code and SSC scans for possible leaked secrets. (SAF-2067)
 
 
-## [1.124.0](https://github.com/semgrep/semgrep/releases/tag/v1.124.0) - 2025-06-04
+## [1.124.0](https://github.com/lens/lens/releases/tag/v1.124.0) - 2025-06-04
 
 
 ### Added
 
 
 - Parallelizes rule validation to improve performance when scanning with many rule files. (SAF-2061)
-- Semgrep should now respect `ALL_PROXY`, `HTTP_PROXY`, `HTTPS_PROXY`,
+- Lens should now respect `ALL_PROXY`, `HTTP_PROXY`, `HTTPS_PROXY`,
   `NO_PROXY`, `PROXY_USERNAME` and `PROXY_PASSWORD` for all networking (including
   that done via the OCaml components). Moreover, the environment variable
   `OCAML_EXTRA_CA_CERTS` should now allow additional CA certs to be used for
@@ -1586,7 +1586,7 @@ No significant changes.
   disproportionate amount of time significantly slowing down scans. (saf-1978)
 
 
-## [1.123.0](https://github.com/semgrep/semgrep/releases/tag/v1.123.0) - 2025-05-28
+## [1.123.0](https://github.com/lens/lens/releases/tag/v1.123.0) - 2025-05-28
 
 
 ### Fixed
@@ -1596,7 +1596,7 @@ No significant changes.
 - Fixed documentation to reflect that, for --metrics="auto", pseudoanonymous metrics are sent when the user is logged in. (gh-11028)
 
 
-## [1.122.0](https://github.com/semgrep/semgrep/releases/tag/v1.122.0) - 2025-05-14
+## [1.122.0](https://github.com/lens/lens/releases/tag/v1.122.0) - 2025-05-14
 
 
 ### Added
@@ -1621,7 +1621,7 @@ No significant changes.
 - Fixed bug where direct dev depenencies were not marked as direct when parsing package-lock.json projects. (sc-dev)
 
 
-## [1.121.0](https://github.com/semgrep/semgrep/releases/tag/v1.121.0) - 2025-05-06
+## [1.121.0](https://github.com/lens/lens/releases/tag/v1.121.0) - 2025-05-06
 
 
 ### Added
@@ -1630,7 +1630,7 @@ No significant changes.
 - pro: Improved handling of `tsconfig.json` in instances where multiple
   typescript "projects" (i.e., separately rooted source directories with their
   own configurations *not* joined by a single `tsconfig.json` with project
-  references) are being scanned as one project under semgrep. This should result
+  references) are being scanned as one project under lens. This should result
   in better name/module resolution in TypeScript. (code-7798)
 - pro: Improved handling of `include`, `exclude` and `files` properties in
   `tsconfig.json`. Projects which use more than one tsconfig in a given directory
@@ -1649,30 +1649,30 @@ No significant changes.
 
 
 - Fixed CI output so it shows per-product links depending on what product is enabled in a scan. (pr-3776)
-- CLI: Fixed a bug where `--disable-nosem` was not properly causing nosemgrep'd findings
+- CLI: Fixed a bug where `--disable-nosem` was not properly causing nolens'd findings
   to be uploaded to the App. (saf-1982)
-- Exempt large manifests & lockfiles from being ignored by semgrep's file size filtering.
+- Exempt large manifests & lockfiles from being ignored by lens's file size filtering.
   This fixes a regression introduced in 1.117.0 (sca-1705). (sc-1705)
 
 
-## [1.120.1](https://github.com/semgrep/semgrep/releases/tag/v1.120.1) - 2025-04-25
+## [1.120.1](https://github.com/lens/lens/releases/tag/v1.120.1) - 2025-04-25
 
 
 ### Fixed
 
 
-- Fix bug introduced in Semgrep 1.120.0 causing interfile analyses to run out of memory due to too many parallel jobs. The default setting had been accidentally set to the number of available CPUs which is often too much in interfile mode. It's now back to `-j1` and it can be overridden by the user. (interfile-num-jobs)
+- Fix bug introduced in Lens 1.120.0 causing interfile analyses to run out of memory due to too many parallel jobs. The default setting had been accidentally set to the number of available CPUs which is often too much in interfile mode. It's now back to `-j1` and it can be overridden by the user. (interfile-num-jobs)
 
 
-## [1.120.0](https://github.com/semgrep/semgrep/releases/tag/v1.120.0) - 2025-04-22
+## [1.120.0](https://github.com/lens/lens/releases/tag/v1.120.0) - 2025-04-22
 
 
 ### Added
 
 
-- Added a few new entries in the .semgrepignore default file
-  (e.g., _cargo, _opam, .svn) (semgrepignore)
-- Add an experimental option `--x-semgrepignore-filename` to change the name of `.semgrepignore` files to something else. This can be used to scan a subproject in a separate semgrep invocation as the rest of the containing project. (semgrepignore-filename)
+- Added a few new entries in the .lensignore default file
+  (e.g., _cargo, _opam, .svn) (lensignore)
+- Add an experimental option `--x-lensignore-filename` to change the name of `.lensignore` files to something else. This can be used to scan a subproject in a separate lens invocation as the rest of the containing project. (lensignore-filename)
 
 
 ### Fixed
@@ -1682,19 +1682,19 @@ No significant changes.
 - Fixed the default `-j` setting so as to take into account the cgroup
   CPU quota on Linux. This will affect Docker and other containerized
   environments that share resources on the same host. Use the new command
-  `semgrep show resources --experimental` to show the default setting. (saf-1950)
+  `lens show resources --experimental` to show the default setting. (saf-1950)
 
 
-## [1.119.0](https://github.com/semgrep/semgrep/releases/tag/v1.119.0) - 2025-04-16
+## [1.119.0](https://github.com/lens/lens/releases/tag/v1.119.0) - 2025-04-16
 
 
 ### Added
 
 
-- python: Semgrep will now perform dataflow analysis within and through comprehensions. (saf-1560)
-- A new subcommand `semgrep show project-root` is now provided to display
+- python: Lens will now perform dataflow analysis within and through comprehensions. (saf-1560)
+- A new subcommand `lens show project-root` is now provided to display
   the project root path associated with a scan root. This is useful for
-  troubleshooting Semgrepignore (v2) issues. (saf-1936)
+  troubleshooting Lensignore (v2) issues. (saf-1936)
 
 
 ### Fixed
@@ -1708,11 +1708,11 @@ No significant changes.
 
   Also added `short`/`Short` to the list of integer types recognized by
   `taint_assume_safe_numbers`. (code-8345)
-- IDE: The Semgrep VS Code Extension will no longer hang on `Getting code actions from Semgrep...`
+- IDE: The Lens VS Code Extension will no longer hang on `Getting code actions from Lens...`
   on saving a file, when updating rules. (saf-1954)
 
 
-## [1.118.0](https://github.com/semgrep/semgrep/releases/tag/v1.118.0) - 2025-04-09
+## [1.118.0](https://github.com/lens/lens/releases/tag/v1.118.0) - 2025-04-09
 
 
 ### Fixed
@@ -1725,66 +1725,66 @@ No significant changes.
   any "side-effects". In some cases, this could cause the taint analysis to timeout.
   Some combinations of rules and repos will see a major perf improvement, in other
   cases it may not be noticeable. (code-8288)
-- In a Semgrep rule's `metadata` section, two fields may provide URLs:
+- In a Lens rule's `metadata` section, two fields may provide URLs:
 
-  - `source`: populated dynamically by the Semgrep registry serving the rule, it's a URL that
+  - `source`: populated dynamically by the Lens registry serving the rule, it's a URL that
     offers information about the rule.
   - `source-rule-url`: optional string, a URL for the source of inspiration for the rule.
 
   The SARIF format supports only one URL under the field `helpUri`.
-  Previously, Semgrep populated the SARIF `helpUri` field only with `metadata.source`.
+  Previously, Lens populated the SARIF `helpUri` field only with `metadata.source`.
   This fix is to use `metadata.source` if available, otherwise falling back to `metadata.source-rule-url`.
 
   Contributed by @candrews. (gh-10891)
 
 
-## [1.117.0](https://github.com/semgrep/semgrep/releases/tag/v1.117.0) - 2025-04-02
+## [1.117.0](https://github.com/lens/lens/releases/tag/v1.117.0) - 2025-04-02
 
 
 ### Added
 
 
-- Add temporary backward compatibility in Semgrepignore v2 for patterns
+- Add temporary backward compatibility in Lensignore v2 for patterns
   that start with `./`. For example, the pattern `./*.py` should be written as
   `/*.py` to have the desired effect of excluding the `.py` files
-  located in the same directory as the `.semgrepignore` file containing
+  located in the same directory as the `.lensignore` file containing
   the pattern.
-  To minimize surprises for users switching to Semgrepignore v2,
+  To minimize surprises for users switching to Lensignore v2,
   we'll be interpreting automatically `./*.py` as `/*.py` for the time
-  being so as to match the legacy Semgrepignore v1 behavior. Users should not
-  rely on this since it doesn't comply with the Gitignore/Semgrepignore
-  standard and will be removed in the future. (tolerate-semgrepignore-v1-dotslash)
+  being so as to match the legacy Lensignore v1 behavior. Users should not
+  rely on this since it doesn't comply with the Gitignore/Lensignore
+  standard and will be removed in the future. (tolerate-lensignore-v1-dotslash)
 - Target file selection now uses
-  [Semgrepignore v2](https://semgrep.dev/docs/semgrepignore-v2-reference) by default. This brings the behavior of the Semgrepignore file
+  [Lensignore v2](https://lens.dev/docs/lensignore-v2-reference) by default. This brings the behavior of the Lensignore file
   exclusions closer to Git and `.gitignore` files. There can now
-  be multiple `.semgrepignore` files in the project. The `.semgrepignore` file
+  be multiple `.lensignore` files in the project. The `.lensignore` file
   in the current folder is no longer consulted unless it in the project.
   Negated patterns are now supported such as `!scanme.py` as with Gitignore.
-  Some bugs were fixed. (use-semgrepignore-v2)
+  Some bugs were fixed. (use-lensignore-v2)
 
 
 ### Changed
 
 
-- Upgrade Semgrep from OCaml 5.2.1 to 5.3.0 (#3)
+- Upgrade Lens from OCaml 5.2.1 to 5.3.0 (#3)
 
 
 ### Fixed
 
 
-- In Semgrepignore v2, allow wildcards `*` and `?` to match file names with a leading period. This matches the behavior of Gitignore and Semgrepignore v1. (semgrepignore-dotfiles)
+- In Lensignore v2, allow wildcards `*` and `?` to match file names with a leading period. This matches the behavior of Gitignore and Lensignore v1. (lensignore-dotfiles)
 
 
-## [1.116.0](https://github.com/semgrep/semgrep/releases/tag/v1.116.0) - 2025-03-28
+## [1.116.0](https://github.com/lens/lens/releases/tag/v1.116.0) - 2025-03-28
 
 
 ### Fixed
 
 
-- Use value of $XDG_CACHE_HOME before hardcoded ~/.cache for semgrep_version file (gh-4465)
+- Use value of $XDG_CACHE_HOME before hardcoded ~/.cache for lens_version file (gh-4465)
 
 
-## [1.115.0](https://github.com/semgrep/semgrep/releases/tag/v1.115.0) - 2025-03-26
+## [1.115.0](https://github.com/lens/lens/releases/tag/v1.115.0) - 2025-03-26
 
 
 ### Added
@@ -1809,12 +1809,12 @@ No significant changes.
   `$SINK`, `$OBJ` and `$ARG1` independently, each one having its own condition.
 
   Note that `requires:` is part of the *experimental* taint labels feature. (code-7912)
-- In the text output of `semgrep scan` and `semgrep ci`, a warning message
-  announcing the upcoming Semgrepignore v2 is now displayed. Differences in
-  target selection are shown. (semgrepignore-v2-warning)
+- In the text output of `lens scan` and `lens ci`, a warning message
+  announcing the upcoming Lensignore v2 is now displayed. Differences in
+  target selection are shown. (lensignore-v2-warning)
 
 
-## [1.114.0](https://github.com/semgrep/semgrep/releases/tag/v1.114.0) - 2025-03-19
+## [1.114.0](https://github.com/lens/lens/releases/tag/v1.114.0) - 2025-03-19
 
 
 ### Fixed
@@ -1836,16 +1836,16 @@ No significant changes.
   defined in the local scope, not the global scope. (code-8114)
 
 
-## [1.113.0](https://github.com/semgrep/semgrep/releases/tag/v1.113.0) - 2025-03-17
+## [1.113.0](https://github.com/lens/lens/releases/tag/v1.113.0) - 2025-03-17
 
 
 ### Fixed
 
 
-- Semgrep will no longer fail a diff scan if there is a relative safe directory (saf-1851)
+- Lens will no longer fail a diff scan if there is a relative safe directory (saf-1851)
 
 
-## [1.112.0](https://github.com/semgrep/semgrep/releases/tag/v1.112.0) - 2025-03-13
+## [1.112.0](https://github.com/lens/lens/releases/tag/v1.112.0) - 2025-03-13
 
 
 ### Added
@@ -1860,8 +1860,8 @@ No significant changes.
     ...
   }
   ``` (code-8242)
-- Semgrep will now present more detailed info when a scan is complete, such as what percent of lines were scanned. It is also formatted in a new manner (saf-details)
-- Verbose output will now print additional info about parsing and internal semgrep errors, such as what % of lines were skipped, and the lines they occured on (saf-verbose)
+- Lens will now present more detailed info when a scan is complete, such as what percent of lines were scanned. It is also formatted in a new manner (saf-details)
+- Verbose output will now print additional info about parsing and internal lens errors, such as what % of lines were skipped, and the lines they occured on (saf-verbose)
 
 
 ### Fixed
@@ -1870,22 +1870,22 @@ No significant changes.
 - pro: Fixed bug in (experimental) "at-exit" sinks feature that would prevent
   the identification of a statement like `return foo()` as one such sink. (code-8199)
 - FIX: `--gitlab-secrets` output has been updated to conform to GitLab JSON schema (scrt-849)
-- The behavior of `--semgrepignore-v2` changed to be closer to the legacy
-  Semgrepignore v1. `.gitignore` files are no longer loaded automatically
-  as part of the Semgrepignore v2 exclusion mechanism.
+- The behavior of `--lensignore-v2` changed to be closer to the legacy
+  Lensignore v1. `.gitignore` files are no longer loaded automatically
+  as part of the Lensignore v2 exclusion mechanism.
   Loading a `.gitignore` file must be done
-  by placing `:include .gitignore` in the `.semgrepignore` file
-  as was the case with Semgrepignore v1. (semgrepignore-v1-compat)
+  by placing `:include .gitignore` in the `.lensignore` file
+  as was the case with Lensignore v1. (lensignore-v1-compat)
 
 
-## [1.111.0](https://github.com/semgrep/semgrep/releases/tag/v1.111.0) - 2025-03-04
+## [1.111.0](https://github.com/lens/lens/releases/tag/v1.111.0) - 2025-03-04
 
 
 ### Changed
 
 
-- Removed `.semgrepignore` file lookup using the `SEMGREP_R2C_INTERNAL_EXPLICIT_SEMGREPIGNORE` environment variable. This was used by semgrep-action which
-  has been deprecated. (semgrep-action)
+- Removed `.lensignore` file lookup using the `LENS_R2C_INTERNAL_EXPLICIT_LENSIGNORE` environment variable. This was used by lens-action which
+  has been deprecated. (lens-action)
 
 
 ### Fixed
@@ -1901,7 +1901,7 @@ No significant changes.
   findings when using the --gitlab-secrets flag. (scrt-833)
 
 
-## [1.110.0](https://github.com/semgrep/semgrep/releases/tag/v1.110.0) - 2025-02-26
+## [1.110.0](https://github.com/lens/lens/releases/tag/v1.110.0) - 2025-02-26
 
 
 ### Added
@@ -1922,7 +1922,7 @@ No significant changes.
 ### Changed
 
 
-- Upgrade from OCaml 4.14.0 to OCaml 5.2.1 for our PyPI and Homebrew distributions. Our Docker images have been built with OCaml 5.2.1 since Semgrep 1.107.0. (ocaml5)
+- Upgrade from OCaml 4.14.0 to OCaml 5.2.1 for our PyPI and Homebrew distributions. Our Docker images have been built with OCaml 5.2.1 since Lens 1.107.0. (ocaml5)
 
 
 ### Fixed
@@ -1954,7 +1954,7 @@ No significant changes.
   - You can have .package values with no url, like this: .package(name: "package", path: "foo/bar") (sc-2117)
 
 
-## [1.109.0](https://github.com/semgrep/semgrep/releases/tag/v1.109.0) - 2025-02-19
+## [1.109.0](https://github.com/lens/lens/releases/tag/v1.109.0) - 2025-02-19
 
 
 ### Changed
@@ -1967,31 +1967,31 @@ No significant changes.
 
 
 - pro: taint-mode: Fixed limitation in custom taint propagators.
-  See https://semgrep.dev/playground/s/ReJQO (code-7967)
+  See https://lens.dev/playground/s/ReJQO (code-7967)
 - taint-mode: Disable symbolic-propagation when matching taint propagators
-  to prevent unintended interactions. See https://semgrep.dev/playground/s/7KE0k. (code-8054)
+  to prevent unintended interactions. See https://lens.dev/playground/s/7KE0k. (code-8054)
 - Fixed pattern match deduplication to avoid an O(n^2) worst-case complexity, and
   optimized the matching of ordered `..., PAT, ...` patterns. (saf-682)
 
 
-## [1.108.0](https://github.com/semgrep/semgrep/releases/tag/v1.108.0) - 2025-02-12
+## [1.108.0](https://github.com/lens/lens/releases/tag/v1.108.0) - 2025-02-12
 
 
 ### Added
 
 
-- pro: Semgrep can now dynamically resolve dependencies for Python projects using pip, allowing it to determine transitive dependencies automatically. (sc-2069)
+- pro: Lens can now dynamically resolve dependencies for Python projects using pip, allowing it to determine transitive dependencies automatically. (sc-2069)
 
 
 ### Changed
 
 
 - Bump base Alpine docker image from 3.19 to 3.21. (alpine-version)
-- The semgrep-appsec-platform specific metadata fields "semgrep.dev:" and
-  "semgrep.policy:" are now filtered from the JSON output unless you
-  are logged in with the Semgrep appsec platform.
-  See https://semgrep.dev/docs/semgrep-appsec-platform/json-and-sarif#json for more information. (metadata-filter)
-- The Semgrep Docker image now uses Python 3.12 (bumped from 3.11). (python-version)
+- The lens-appsec-platform specific metadata fields "lens.dev:" and
+  "lens.policy:" are now filtered from the JSON output unless you
+  are logged in with the Lens appsec platform.
+  See https://lens.dev/docs/lens-appsec-platform/json-and-sarif#json for more information. (metadata-filter)
+- The Lens Docker image now uses Python 3.12 (bumped from 3.11). (python-version)
 
 
 ### Fixed
@@ -2003,7 +2003,7 @@ No significant changes.
   and will include more debugging information when it does. (sms-521)
 
 
-## [1.107.0](https://github.com/semgrep/semgrep/releases/tag/v1.107.0) - 2025-02-04
+## [1.107.0](https://github.com/lens/lens/releases/tag/v1.107.0) - 2025-02-04
 
 
 ### Added
@@ -2020,11 +2020,11 @@ No significant changes.
   multiple inheritance. The type that appears later takes precedence when
   resolving fields. For example, in `class A extends B with C with D`, the order
   of precedence is D, C, B, and A. (code-7891)
-- pro: taint: Fixed bug in callback support, see https://semgrep.dev/playground/s/oqobX (code-7976)
+- pro: taint: Fixed bug in callback support, see https://lens.dev/playground/s/oqobX (code-7976)
 - pro: python: Fixed resolution of calls to the implementation of abstract methods.
-  See https://semgrep.dev/playground/s/X5kZ4. (code-7987)
-- Fixed the semgrep ci --help to not include experimental options
-  like --semgrep-branch (saf-1746)
+  See https://lens.dev/playground/s/X5kZ4. (code-7987)
+- Fixed the lens ci --help to not include experimental options
+  like --lens-branch (saf-1746)
 - Peer dependency relationships in package-lock.json files are tracked when parsing a dependency graph (sc-2032)
 - Peer dependency relationships in pnpm-lock.yaml files are tracked when parsing a dependency graph (sc-2033)
 
@@ -2035,19 +2035,19 @@ No significant changes.
 - Upgrade from OCaml 4.14.0 to OCaml 5.2.1 for our Docker images (ocaml5-docker)
 
 
-## [1.106.0](https://github.com/semgrep/semgrep/releases/tag/v1.106.0) - 2025-01-29
+## [1.106.0](https://github.com/lens/lens/releases/tag/v1.106.0) - 2025-01-29
 
 
 No significant changes.
 
 
-## [1.105.0](https://github.com/semgrep/semgrep/releases/tag/v1.105.0) - 2025-01-29
+## [1.105.0](https://github.com/lens/lens/releases/tag/v1.105.0) - 2025-01-29
 
 
 ### Added
 
 
-- Semgrep can dynamically resolve dependencies for C# Solutions denoted by *.csproj (sc-2015)
+- Lens can dynamically resolve dependencies for C# Solutions denoted by *.csproj (sc-2015)
 
 
 ### Changed
@@ -2066,7 +2066,7 @@ No significant changes.
 - Fixed bug where supply chain diff scans of package-lock.json v2 projects incorrectly produced non-new findings (sc-2060)
 
 
-## [1.104.0](https://github.com/semgrep/semgrep/releases/tag/v1.104.0) - 2025-01-22
+## [1.104.0](https://github.com/lens/lens/releases/tag/v1.104.0) - 2025-01-22
 
 
 ### Changed
@@ -2079,7 +2079,7 @@ No significant changes.
 
 
 - pro: Fixed bug in inter-file matching of subtypes. When looking to match some
-  type `A`, Semgrep will match any type `B` that is a subtype of `A`, but in certain
+  type `A`, Lens will match any type `B` that is a subtype of `A`, but in certain
   situations this did not work. (code-7963)
 - taint-mode: Make traces record assignments that transfer taint via shapes.
 
@@ -2094,7 +2094,7 @@ No significant changes.
   Parse rate from 99.8% -> 99.998%. (saf-1810)
 
 
-## [1.103.0](https://github.com/semgrep/semgrep/releases/tag/v1.103.0) - 2025-01-15
+## [1.103.0](https://github.com/lens/lens/releases/tag/v1.103.0) - 2025-01-15
 
 
 ### Added
@@ -2113,7 +2113,7 @@ No significant changes.
       withCallback1(tainted, function (val) {
           sink(val); // finding !
       }); (code-7626)
-- pro: python: Semgrep will now consider top-level lambdas like `x` below for
+- pro: python: Lens will now consider top-level lambdas like `x` below for
   inter-procedural analysis:
 
       x = lambda s: sink(s) # now we get a finding !
@@ -2124,7 +2124,7 @@ No significant changes.
 ### Changed
 
 
-- Removed `pip` from the Semgrep Docker image. If you need it, you may install it by running `apk add py3-pip`. (saf-1774)
+- Removed `pip` from the Lens Docker image. If you need it, you may install it by running `apk add py3-pip`. (saf-1774)
 
 
 ### Fixed
@@ -2138,10 +2138,10 @@ No significant changes.
   ):
     pass
   ``` (saf-1802)
-- Semgrep will now truncate error messages that are produced when they are very long (saf-333)
+- Lens will now truncate error messages that are produced when they are very long (saf-333)
 
 
-## [1.102.0](https://github.com/semgrep/semgrep/releases/tag/v1.102.0) - 2025-01-08
+## [1.102.0](https://github.com/lens/lens/releases/tag/v1.102.0) - 2025-01-08
 
 
 ### Added
@@ -2156,27 +2156,27 @@ No significant changes.
 ### Fixed
 
 
-- The `semgrep test` and `semgrep validate` commands have been
-  correctly documented as EXPERIMENTAL (in semgrep --help).
+- The `lens test` and `lens validate` commands have been
+  correctly documented as EXPERIMENTAL (in lens --help).
   Those commands are not GA yet and people should still
-  use the `semgrep scan --test` and `semgrep scan --validate` (or
+  use the `lens scan --test` and `lens scan --validate` (or
   the variants without the implicit "scan") commands (unless
   they want to experiment with getting results faster and are ok
-  with incomplete coverage of the legacy `semgrep --test`
-  and `semgrep --validate`). (experimental)
-- Improve error handling for functionality ancillary to a scan (such as looking for nosemgrep comments and rendering autofixes) to reduce the likelihood of an unexpected error in such a component bringing down the entire scan. (saf-1737)
-- Fix the behavior of semgrep when running into broken symlinks.
+  with incomplete coverage of the legacy `lens --test`
+  and `lens --validate`). (experimental)
+- Improve error handling for functionality ancillary to a scan (such as looking for nolens comments and rendering autofixes) to reduce the likelihood of an unexpected error in such a component bringing down the entire scan. (saf-1737)
+- Fix the behavior of lens when running into broken symlinks.
   If such a path is passed explicitly as a scanning root on the
   command line, it results in an error. Otherwise if it's a file discovered
   while scanning the file system, it's a warning. (saf-1776)
 - Fixed another crash due to exception in lines_of_file. The code
   should now be more robust and not abort the whole scan when
-  an out of bound line access happens during the nosemgrep analysis
+  an out of bound line access happens during the nolens analysis
   or when outputing the lines of a match. (saf-1778)
 - Direct dev dependencies in yarn/npm lockfiles are now correctly marked as direct (sc-1996)
 
 
-## [1.101.0](https://github.com/semgrep/semgrep/releases/tag/v1.101.0) - 2024-12-18
+## [1.101.0](https://github.com/lens/lens/releases/tag/v1.101.0) - 2024-12-18
 
 
 ### Added
@@ -2188,17 +2188,17 @@ No significant changes.
 ### Changed
 
 
-- Re-ordered some terminal output of `semgrep ci` to allow semgrep-app to block scans based on specific findings (SECW-2740)
+- Re-ordered some terminal output of `lens ci` to allow lens-app to block scans based on specific findings (SECW-2740)
 - A few fields in the JSON output (e.g., "fingerprint", "metavars") require now
   the user to be logged in to see them.
-  See https://semgrep.dev/docs/semgrep-appsec-platform/json-and-sarif#json
+  See https://lens.dev/docs/lens-appsec-platform/json-and-sarif#json
   for more information. (json)
-- We're renaming semgrep OSS to Semgrep Community Edition.
-  See https://semgrep.dev/blog/2024/important-updates-to-semgrep-oss/
+- We're renaming lens OSS to Lens Community Edition.
+  See https://lens.dev/blog/2024/important-updates-to-lens-oss/
   for more information. (rename)
 - A few fields in the SARIF output (e.g., "fingerprints") require now
   the user to be logged in to see them.
-  See https://semgrep.dev/docs/semgrep-appsec-platform/json-and-sarif#sarif
+  See https://lens.dev/docs/lens-appsec-platform/json-and-sarif#sarif
   for more information. (sarif)
 
 
@@ -2225,7 +2225,7 @@ No significant changes.
 - Restored the "rules" field in the SARIF output, even when logged out. (saf-1794)
 
 
-## [1.100.0](https://github.com/semgrep/semgrep/releases/tag/v1.100.0) - 2024-12-12
+## [1.100.0](https://github.com/lens/lens/releases/tag/v1.100.0) - 2024-12-12
 
 
 ### Added
@@ -2239,7 +2239,7 @@ No significant changes.
 ### Changed
 
 
-- The minimum Python version for semgrep is now 3.9.
+- The minimum Python version for lens is now 3.9.
   We are dropping support for Python 3.8 (python)
 
 
@@ -2276,7 +2276,7 @@ No significant changes.
   instead of aborting the whole scan. (gh-10723)
 
 
-## [1.99.0](https://github.com/returntocorp/semgrep/releases/tag/v1.99.0) - 2024-12-05
+## [1.99.0](https://github.com/returntocorp/lens/releases/tag/v1.99.0) - 2024-12-05
 
 
 ### Fixed
@@ -2287,16 +2287,16 @@ No significant changes.
   Thanks to Elias Haeussler for the fix. (saf-1755)
 
 
-## [1.98.0](https://github.com/returntocorp/semgrep/releases/tag/v1.98.0) - 2024-12-04
+## [1.98.0](https://github.com/returntocorp/lens/releases/tag/v1.98.0) - 2024-12-04
 
 
 ### Added
 
 
-- taint-mode: Semgrep will now track invididual fields/keys in record/dict
+- taint-mode: Lens will now track invididual fields/keys in record/dict
   expressions.
 
-  For example, in Semgrep Pro:
+  For example, in Lens Pro:
 
       def foo():
           return { 0: "safe", 1: taint }
@@ -2344,20 +2344,20 @@ No significant changes.
         // note that `log(taint)` is *not* a sink
         sink(() => { log(taint); return "ok" });
       } (code-7758)
-- taint-mode: Semgrep will no longer report an unexpected finding in cases like:
+- taint-mode: Lens will no longer report an unexpected finding in cases like:
 
       var x = [taint];
       x = ["ok"];
       sink(x); // no finding, x is ok
 
   Variable `x` will be correctly cleaned after `x = ["ok"]`. (flow-87)
-- Removed the experimental --use-osemgrep-sarif flag. (saf-1703)
+- Removed the experimental --use-olens-sarif flag. (saf-1703)
 - A single carriage return (CR) is not recognized anymore as a
   newline. This avoids out of bound error when reporting findings
   on old windows files using this old format. (saf-1743)
 
 
-## [1.97.0](https://github.com/returntocorp/semgrep/releases/tag/v1.97.0) - 2024-11-19
+## [1.97.0](https://github.com/returntocorp/lens/releases/tag/v1.97.0) - 2024-11-19
 
 
 ### Added
@@ -2365,7 +2365,7 @@ No significant changes.
 
 - Improved logic for interfile analysis in TypeScript projects using
   [project references](https://www.typescriptlang.org/docs/handbook/project-references.html). (code-7677)
-- Semgrep Pro engine now resolves method invocations on abstract classes. In
+- Lens Pro engine now resolves method invocations on abstract classes. In
   addition to the existing resolution for interface method invocations, this
   change further enhances dataflow tracking accuracy for dynamic method
   invocations. (code-7750)
@@ -2382,11 +2382,11 @@ No significant changes.
 - Target file selection in git projects: files containing special characters
   (according to git) are now scanned correctly instead of being ignored. (saf-1687)
 - Swift: Ellipses and metavariable ellipses can now be used as function parameters in patterns. (saf-1721)
-- Semgrep will no longer freeze when tracing is enabled and it has a low memory limit (saf-1722)
-- osemgrep-pro: Autofix and nosemgrep now work properly (saf-1724)
+- Lens will no longer freeze when tracing is enabled and it has a low memory limit (saf-1722)
+- olens-pro: Autofix and nolens now work properly (saf-1724)
 
 
-## [1.96.0](https://github.com/returntocorp/semgrep/releases/tag/v1.96.0) - 2024-11-07
+## [1.96.0](https://github.com/returntocorp/lens/releases/tag/v1.96.0) - 2024-11-07
 
 
 ### Added
@@ -2427,7 +2427,7 @@ No significant changes.
 ### Changed
 
 
-- Reduced memory allocations while processing nosemgrep comments, improving memory use and time for scans with a large number of findings. (nosem-mem)
+- Reduced memory allocations while processing nolens comments, improving memory use and time for scans with a large number of findings. (nosem-mem)
 
 
 ### Fixed
@@ -2435,8 +2435,8 @@ No significant changes.
 
 - Optimized taint-mode (only in Pro) to scale better when there is a large number
   of matches of sources/propagators/sanitizers/sinks within a function. (flow-83)
-- Fixed a bug in the supply chain scanner's gradle lockfile parser. Previously, semgrep would fail to parse
-  any gradle lockfile which did not start with a specific block comment. Now, semgrep will parse gradle
+- Fixed a bug in the supply chain scanner's gradle lockfile parser. Previously, lens would fail to parse
+  any gradle lockfile which did not start with a specific block comment. Now, lens will parse gradle
   lockfiles correctly by ignoring the comment (allowing any or no comment at all to exist). (gh-10508)
 - Exceptions thrown during the processing of a target should not fail
   the whole scan anymore (regression introduced in 1.94.0). The scan will
@@ -2446,35 +2446,35 @@ No significant changes.
   unclosed braces on the same line. (saf-1667)
 - Fix regexp parsing error occurring during ReDoS analysis when encountering
   a character class starting with `[:` such as `[:a-z]`. (saf-1693)
-- Fix in `semgrep scan`: anchored semgrepignore patterns for folders such
+- Fix in `lens scan`: anchored lensignore patterns for folders such
   as `/tests` are now honored properly. Such patterns had previously no
-  effect of target file filtering. (semgrepignore-anchored-dirs)
+  effect of target file filtering. (lensignore-anchored-dirs)
 
 
-## [1.95.0](https://github.com/returntocorp/semgrep/releases/tag/v1.95.0) - 2024-10-31
+## [1.95.0](https://github.com/returntocorp/lens/releases/tag/v1.95.0) - 2024-10-31
 
 
 ### Changed
 
 
 - Remove deprecated `--enable-experimental-requirements` flag. Functionality has
-  been always enabled since Semgrep 1.93.0. (ssc-1903)
+  been always enabled since Lens 1.93.0. (ssc-1903)
 
 
 ### Fixed
 
 
-- osemgrep: Running `osemgrep` with the Pro Engine now correctly runs rules with proprietary languages (saf-1686)
-- Fixed bug where semgrep would crash if --trace was passed (saf-tracing)
+- olens: Running `olens` with the Pro Engine now correctly runs rules with proprietary languages (saf-1686)
+- Fixed bug where lens would crash if --trace was passed (saf-tracing)
 
 
-## [1.94.0](https://github.com/returntocorp/semgrep/releases/tag/v1.94.0) - 2024-10-30
+## [1.94.0](https://github.com/returntocorp/lens/releases/tag/v1.94.0) - 2024-10-30
 
 
 ### Fixed
 
 
-- pro: taint-mode: Semgrep should no longer confuse a `return` in a lambda with
+- pro: taint-mode: Lens should no longer confuse a `return` in a lambda with
   a `return` in its enclosing function.
 
   E.g. In the example below the return value of `foo` is NOT tainted:
@@ -2487,15 +2487,15 @@ No significant changes.
   `Foo.bar ...` will now correctly match code such as `let open Foo in bar 1`
   or `Foo.(bar 1)` in addition to the classic `Foo.bar 1`. (local_open)
 - Project files lacking sufficient read permissions are now skipped gracefully
-  by semgrep. (saf-1598)
-- Semgrep will now print stderr and additional debugging info when semgrep-core
+  by lens. (saf-1598)
+- Lens will now print stderr and additional debugging info when lens-core
   exits with a fatal error code but still returns a json repsonse (finishes
   scanning) (saf-1672)
-- semgrep ci should parse correctly git logs to compute the set of contributors
+- lens ci should parse correctly git logs to compute the set of contributors
   even if some authors have special characters in their names. (saf-1681)
 
 
-## [1.93.0](https://github.com/returntocorp/semgrep/releases/tag/v1.93.0) - 2024-10-23
+## [1.93.0](https://github.com/returntocorp/lens/releases/tag/v1.93.0) - 2024-10-23
 
 
 ### Added
@@ -2505,10 +2505,10 @@ No significant changes.
   expression contexts. Notably, in-line use of `require` should now be linked to
   the correct module. For instance, the pattern `foo.bar` should now match
   against `require('foo').bar` and taint is likewise similarily tracked. (code-7485)
-- Secrets: `semgrep ci` output now includes a list of all secrets rules which
+- Secrets: `lens ci` output now includes a list of all secrets rules which
   generated at least one blocking finding (similar to Code) (code-7663)
-- Added experimental support via `--allow-dynamic-dependency-resolution` for dynamic resolution of Maven and Gradle dependencies for projects that do not have lockfiles (in Semgrep Pro only). (gh-2389)
-- Expanded support for pip requirement lockfiles is now available by default. Semgrep will now
+- Added experimental support via `--allow-dynamic-dependency-resolution` for dynamic resolution of Maven and Gradle dependencies for projects that do not have lockfiles (in Lens Pro only). (gh-2389)
+- Expanded support for pip requirement lockfiles is now available by default. Lens will now
   find any *requirement*.txt file and lockfiles in a requirements folder (**/requirements/*.txt).
   The existing experimental flag `--enable-experimental-requirements` is now deprecated and
   will be removed in a future release. (gh-2441)
@@ -2518,24 +2518,24 @@ No significant changes.
 
 
 - Removed support for Vue. The tree-sitter grammar has not been updated in 3 years,
-  there was no community rules added and semgrep-vue is causing linking conflicts
-  when compiling semgrep under Windows so just simpler to remove support for Vue.
+  there was no community rules added and lens-vue is causing linking conflicts
+  when compiling lens under Windows so just simpler to remove support for Vue.
   In theory, extract mode could be a good substitute to parse Vue files. (vue)
 
 
 ### Fixed
 
 
-- semgrep will now print exit codes if a segfault/OOM/other terminating signal happens in semgrep-core, or any of semgrep-core's child processes (saf-1646)
+- lens will now print exit codes if a segfault/OOM/other terminating signal happens in lens-core, or any of lens-core's child processes (saf-1646)
 
 
-## [1.92.0](https://github.com/returntocorp/semgrep/releases/tag/v1.92.0) - 2024-10-17
+## [1.92.0](https://github.com/returntocorp/lens/releases/tag/v1.92.0) - 2024-10-17
 
 
 ### Added
 
 
-- Pro: taint-mode: Semgrep has now basic support to track taint through callbacks,
+- Pro: taint-mode: Lens has now basic support to track taint through callbacks,
   when they lead to a sink, e.g.:
 
       function unsafe_callback(x) {
@@ -2547,11 +2547,11 @@ No significant changes.
       }
 
       withCallback(taint, unsafe_callback); (code-7476)
-- New subcommand `dump-cst` for tree-sitter languages available via `semgrep
+- New subcommand `dump-cst` for tree-sitter languages available via `lens
   show`. This shows the concrete syntax tree for a given file. (code-7653)
 - Pro only: Updated C# parser supporting all versions of the language up to 13.0 (.NET 9) (saf-1610)
 - Added support for the Move-on-sui language! (sui)
-- Pro-only: semgrep test now supports the --pro flag to not only use pro languages
+- Pro-only: lens test now supports the --pro flag to not only use pro languages
   but also run the tests with the --pro-intrafile engine flag. If a finding
   is detected only by the pro engine, please use `proruleid:` instead of `ruleid:`
   and if an OSS finding is actually a false positive for the pro engine, please
@@ -2563,15 +2563,15 @@ No significant changes.
 
 - pro: dataflow: Fixed a bug that could cause a class constructor to not be analyzed
   in the correct dependency order, potentially leading to FNs. (code-7649)
-- Display an ✘ instead of a ✔ in the scan status print out when scanning with Semgrep OSS code
+- Display an ✘ instead of a ✔ in the scan status print out when scanning with Lens OSS code
   is not enabled. (grow-422)
-- semgrep will no longer randomly segfault when --trace is on with -j > 2 (saf-1590)
-- Previously, semgrep fails when --trace-endpoint is specified, but --trace is not.
+- lens will no longer randomly segfault when --trace is on with -j > 2 (saf-1590)
+- Previously, lens fails when --trace-endpoint is specified, but --trace is not.
 
   Now, we relax this requirement a bit. In this case, we disable tracing, print out a warning, and continue to scan. (sms-550)
 
 
-## [1.91.0](https://github.com/returntocorp/semgrep/releases/tag/v1.91.0) - 2024-10-10
+## [1.91.0](https://github.com/returntocorp/lens/releases/tag/v1.91.0) - 2024-10-10
 
 
 ### Added
@@ -2597,13 +2597,13 @@ No significant changes.
   that the scan is still in progress. (sms-502)
 
 
-## [1.90.0](https://github.com/returntocorp/semgrep/releases/tag/v1.90.0) - 2024-09-25
+## [1.90.0](https://github.com/returntocorp/lens/releases/tag/v1.90.0) - 2024-09-25
 
 
 ### Added
 
 
-- Expanded support for requirement lockfiles. Semgrep will now find any `*requirement*.txt`
+- Expanded support for requirement lockfiles. Lens will now find any `*requirement*.txt`
   file and lockfiles in a requirements folder (`**/requirements/*.txt`). This functionality
   will be gated behind the `--enable-experimental-requirements` CLI flag. (sc-1752)
 
@@ -2617,7 +2617,7 @@ No significant changes.
 ### Fixed
 
 
-- Errors that occur in semgrep scans with jobs > 1 will now have more detail (SAF-1628)
+- Errors that occur in lens scans with jobs > 1 will now have more detail (SAF-1628)
 - Dockerfile matching: `CMD $...ARGS` now behaves like `CMD ...` and matches
   any CMD instruction that uses the array syntax such as `CMD ["ls"]`. This
   fix also applies to the other command-like instructions RUN
@@ -2626,7 +2626,7 @@ No significant changes.
   `Foo()` will now be inferred properly to be of type `Foo`. (saf-1537)
 
 
-## [1.89.0](https://github.com/returntocorp/semgrep/releases/tag/v1.89.0) - 2024-09-19
+## [1.89.0](https://github.com/returntocorp/lens/releases/tag/v1.89.0) - 2024-09-19
 
 
 ### Fixed
@@ -2635,7 +2635,7 @@ No significant changes.
 - Fix crash on certain SCA parse errors caused by an access to an unbound variable. (gh-2259)
 
 
-## [1.88.0](https://github.com/returntocorp/semgrep/releases/tag/v1.88.0) - 2024-09-18
+## [1.88.0](https://github.com/returntocorp/lens/releases/tag/v1.88.0) - 2024-09-18
 
 
 ### Added
@@ -2692,16 +2692,16 @@ No significant changes.
 ### Changed
 
 
-- include the exit code that semgrep will emit in the fail-open payload prior to exiting with a failure. (gh-2033)
+- include the exit code that lens will emit in the fail-open payload prior to exiting with a failure. (gh-2033)
 
 
-## [1.87.0](https://github.com/returntocorp/semgrep/releases/tag/v1.87.0) - 2024-09-13
+## [1.87.0](https://github.com/returntocorp/lens/releases/tag/v1.87.0) - 2024-09-13
 
 
 ### Added
 
 
-- Semgrep now infers more accurate type information for class fields in
+- Lens now infers more accurate type information for class fields in
   TypeScript. This improves taint tracking for dependency injection in
   TypeScript, such as in the following example:
 
@@ -2719,7 +2719,7 @@ No significant changes.
       }
   }
   ``` (code-7591)
-- Semgrep's interfile analysis (available with the Pro Engine) now ships with information about Python's standard library, improving its ability to resolve names and types in Python code and therefore its ability to produce findings. (py-libdefs)
+- Lens's interfile analysis (available with the Pro Engine) now ships with information about Python's standard library, improving its ability to resolve names and types in Python code and therefore its ability to produce findings. (py-libdefs)
 - Added support for comparing Golang pre-release versions. With this, strict
   core versions, pseudo-versions and pre-release versions can all be
   compared to each other. (sc-1739)
@@ -2728,7 +2728,7 @@ No significant changes.
 ### Changed
 
 
-- If there is an OOM error during interfile dataflow analysis (`--pro`) Semgrep will
+- If there is an OOM error during interfile dataflow analysis (`--pro`) Lens will
   now try to recover from it and continue the interfile analysis without falling back
   immediately to intrafile analysis. This allows using `--max-memory` with `--pro` in
   a more effective way. (flow-81)
@@ -2749,10 +2749,10 @@ No significant changes.
           t = ("ok", taint)
           y = foo(t)
           sink(y) # now it's found! (code-7486)
-- The Semgrep proprietary engine added a new entropy analyzer `entropy_v2` that supports strictness options. (gh-1641)
+- The Lens proprietary engine added a new entropy analyzer `entropy_v2` that supports strictness options. (gh-1641)
 
 
-## [1.86.0](https://github.com/returntocorp/semgrep/releases/tag/v1.86.0) - 2024-09-04
+## [1.86.0](https://github.com/returntocorp/lens/releases/tag/v1.86.0) - 2024-09-04
 
 
 ### Added
@@ -2822,8 +2822,8 @@ No significant changes.
 ### Changed
 
 
-- Semgrep will now log memory-related warnings/errors when run in `--debug` mode,
-  without the need to set `SEMGREP_LOG_SRCS=process_limits`. (logging)
+- Lens will now log memory-related warnings/errors when run in `--debug` mode,
+  without the need to set `LENS_LOG_SRCS=process_limits`. (logging)
 
 
 ### Fixed
@@ -2835,8 +2835,8 @@ No significant changes.
 - pro: taint-mode: Fixed bug in taint signature instantiation that could cause an
   update to a field in a nested object to not be tracked.
 
-  For example, in the code below, Semgrep knew that `Nested.update` updates the
-  `fld` attribute of a `Nested` object`. But due to this bug, Semgrep would not
+  For example, in the code below, Lens knew that `Nested.update` updates the
+  `fld` attribute of a `Nested` object`. But due to this bug, Lens would not
   know that `Wrapper.update` updated the `fld` attribute of the `nested` object
   attribute in a `Wrapper` object.
 
@@ -2885,13 +2885,13 @@ No significant changes.
   ``` (saf-1497)
 
 
-## [1.85.0](https://github.com/returntocorp/semgrep/releases/tag/v1.85.0) - 2024-08-15
+## [1.85.0](https://github.com/returntocorp/lens/releases/tag/v1.85.0) - 2024-08-15
 
 
 ### Added
 
 
-- Semgrep now recognizes files ending with the extention `.tfvars` as terraform files (saf-1481)
+- Lens now recognizes files ending with the extention `.tfvars` as terraform files (saf-1481)
 
 
 ### Changed
@@ -2899,7 +2899,7 @@ No significant changes.
 
 - The use of --debug will not generate anymore profiling information.
   Use --time instead. (debug)
-- Updated link to the Supply Chain findings page on Semgrep AppSec Platform to filter to the specific repository and ref the findings are detected on. (secw-2395)
+- Updated link to the Supply Chain findings page on Lens AppSec Platform to filter to the specific repository and ref the findings are detected on. (secw-2395)
 
 
 ### Fixed
@@ -2918,13 +2918,13 @@ No significant changes.
   Behavior after fix: we get three bindings [$A/x,$B/y,$C/z] (saf-1480)
 
 
-## [1.84.1](https://github.com/returntocorp/semgrep/releases/tag/v1.84.1) - 2024-08-07
+## [1.84.1](https://github.com/returntocorp/lens/releases/tag/v1.84.1) - 2024-08-07
 
 
 No significant changes.
 
 
-## [1.84.0](https://github.com/returntocorp/semgrep/releases/tag/v1.84.0) - 2024-08-06
+## [1.84.0](https://github.com/returntocorp/lens/releases/tag/v1.84.0) - 2024-08-06
 
 
 ### Changed
@@ -2944,13 +2944,13 @@ No significant changes.
   so that no double counting occurs. (saf-507)
 
 
-## [1.83.0](https://github.com/returntocorp/semgrep/releases/tag/v1.83.0) - 2024-08-02
+## [1.83.0](https://github.com/returntocorp/lens/releases/tag/v1.83.0) - 2024-08-02
 
 
 ### Added
 
 
-- Dockerfile: Allow Semgrep Ellipsis (...) in patterns for HEALTHCHECK commands. (saf-1441)
+- Dockerfile: Allow Lens Ellipsis (...) in patterns for HEALTHCHECK commands. (saf-1441)
 
 
 ### Fixed
@@ -2959,20 +2959,20 @@ No significant changes.
 - The use of --debug should generate now far less log entries.
   Moreover, when the number of ignored files, or rules, or
   other entities exceed a big number, we instead replace them
-  with a <SKIPPED DATA> in the output to keep the output of semgrep
+  with a <SKIPPED DATA> in the output to keep the output of lens
   small. (debuglogs)
 - Fixed a bug introduced in 1.81.0 which caused files ignored for the Code
   product but not the Secrets product to fail to be scanned for secrets.
   Files that were not ignored for either product were not affected. (saf-1459)
 
 
-## [1.82.0](https://github.com/returntocorp/semgrep/releases/tag/v1.82.0) - 2024-07-30
+## [1.82.0](https://github.com/returntocorp/lens/releases/tag/v1.82.0) - 2024-07-30
 
 
 ### Added
 
 
-- Added `testsuite/` as a filepath to the default value for `.semgrepignore`. (gh-1876)
+- Added `testsuite/` as a filepath to the default value for `.lensignore`. (gh-1876)
 
 
 ### Changed
@@ -3002,14 +3002,14 @@ No significant changes.
   string literal. The fix was chainging the equality used. (saf-1061)
 
 
-## [1.81.0](https://github.com/returntocorp/semgrep/releases/tag/v1.81.0) - 2024-07-24
+## [1.81.0](https://github.com/returntocorp/lens/releases/tag/v1.81.0) - 2024-07-24
 
 
 ### Changed
 
 
-- The --debug option will now display logging information from the semgrep-core
-  binary directly, without waiting that the semgrep-core program finish. (incremental_debug)
+- The --debug option will now display logging information from the lens-core
+  binary directly, without waiting that the lens-core program finish. (incremental_debug)
 
 
 ### Fixed
@@ -3017,9 +3017,9 @@ No significant changes.
 
 - C++: Scanning a project with header files (.h) now no longer causes a
   spurious warnings that the file is being skipped, or not analyzed. (code-6899)
-- Semgrep will now be more strict (as it should be) when unifying identifiers.
+- Lens will now be more strict (as it should be) when unifying identifiers.
 
-  Patterns like the one below may not longer work, particularly in Semgrep Pro:
+  Patterns like the one below may not longer work, particularly in Lens Pro:
 
       patterns:
         - pattern-inside: |
@@ -3039,7 +3039,7 @@ No significant changes.
 
   Even if two classes `A` and `B` may both have a method named `foo`, these methods
   are not the same, and their ids are not unifiable via `$F`. The right way of doing
-  this in Semgrep is the following:
+  this in Lens is the following:
 
       patterns:
         - pattern-inside: |
@@ -3069,18 +3069,18 @@ No significant changes.
 - Fixed typo that prevented users from using "--junit-xml-output" flag and added a tests that invokes the flag. (saf-1437)
 
 
-## [1.80.0](https://github.com/returntocorp/semgrep/releases/tag/v1.80.0) - 2024-07-18
+## [1.80.0](https://github.com/returntocorp/lens/releases/tag/v1.80.0) - 2024-07-18
 
 
 ### Added
 
 
-- OSemgrep now can take `--exclude-minified-files` to skip  minified files. Additionally `--no-exclude-minified-files` will disable this option. It is off by default. (cdx-460)
-- Users are now required to login before using semgrep scan --pro.
+- OLens now can take `--exclude-minified-files` to skip  minified files. Additionally `--no-exclude-minified-files` will disable this option. It is off by default. (cdx-460)
+- Users are now required to login before using lens scan --pro.
 
-  Previously, semgrep will tell the users to log in, but the scan will still continue.
+  Previously, lens will tell the users to log in, but the scan will still continue.
 
-  With this change, semgrep will tell the users to log in and stop the scan. (saf-1137)
+  With this change, lens will tell the users to log in and stop the scan. (saf-1137)
 
 
 ### Fixed
@@ -3088,8 +3088,8 @@ No significant changes.
 
 - The language server no longer scans large or minified files (cdx-460)
 - Pro: Improved module resolution for Python. Imports like `from a.b import c` where
-  `c` is a module will now be resolved by Semgrep. And, if a module cannot be found
-  in the search path, Semgrep will try to heuristically resolve the module by matching
+  `c` is a module will now be resolved by Lens. And, if a module cannot be found
+  in the search path, Lens will try to heuristically resolve the module by matching
   the module specifier against the files that are being scanned. (code-7069)
 - A scan can occasionally freeze when using tracing with multiprocesses.
 
@@ -3100,7 +3100,7 @@ No significant changes.
   In reality, a dependency can be installed anywhere, so the parser was made more flexible to recognize alternative locations ("node_modules", "lib", etc). (sc-1576)
 
 
-## [1.79.0](https://github.com/returntocorp/semgrep/releases/tag/v1.79.0) - 2024-07-10
+## [1.79.0](https://github.com/returntocorp/lens/releases/tag/v1.79.0) - 2024-07-10
 
 
 ### Added
@@ -3119,7 +3119,7 @@ No significant changes.
 ### Fixed
 
 
-- tainting: Fixed bug in `--pro-intrafile` that caused Semgrep to confuse a parameter
+- tainting: Fixed bug in `--pro-intrafile` that caused Lens to confuse a parameter
   with a top-level function with no arguments that happened to have the same name:
 
       def foo
@@ -3129,8 +3129,8 @@ No significant changes.
       def bar(foo)
         sink(foo) # no more FP here
       end (code-6923)
-- Fixed fatal errors on files containing nosemgrep annotation without
-  any rule ID after. (nosemgrep_exn)
+- Fixed fatal errors on files containing nolens annotation without
+  any rule ID after. (nolens_exn)
 - Matching explanations: Focus nodes now appear after filter nodes, which is
   the correct order of execution of pattern nodes. Filter nodes are now
   unreversed. (saf-1127)
@@ -3142,7 +3142,7 @@ No significant changes.
   structure). (scrt-630)
 
 
-## [1.78.0](https://github.com/returntocorp/semgrep/releases/tag/v1.78.0) - 2024-06-27
+## [1.78.0](https://github.com/returntocorp/lens/releases/tag/v1.78.0) - 2024-06-27
 
 
 ### Added
@@ -3184,13 +3184,13 @@ No significant changes.
   being ignored for Code analysis but included for Secrets. (scrt-609)
 
 
-## [1.77.0](https://github.com/returntocorp/semgrep/releases/tag/v1.77.0) - 2024-06-24
+## [1.77.0](https://github.com/returntocorp/lens/releases/tag/v1.77.0) - 2024-06-24
 
 
 ### Added
 
 
-- Semgrep will now report the id of the organization associated with logged in users when reporting metrics in the language server (cdx-508)
+- Lens will now report the id of the organization associated with logged in users when reporting metrics in the language server (cdx-508)
 - Pro: taint-mode: Improved index-sensitive taint tracking for tuple/list (un)packing.
 
   Example 1:
@@ -3213,7 +3213,7 @@ No significant changes.
        def test():
             foo(("ok", taint)) (code-6935)
 - Adds traces to help debug the performance of tainting. To send the traces added in the PR, pass
-  `--trace` and also set the environment variable `SEMGREP_TRACE_LEVEL=trace`. To send them to a
+  `--trace` and also set the environment variable `LENS_TRACE_LEVEL=trace`. To send them to a
   local endpoint instead of our default endpoint, use `--trace-endpoint`. (saf-1100)
 
 
@@ -3226,7 +3226,7 @@ No significant changes.
       def test():
           data = taint
           try:
-              # Semgrep assumes that `clean` could raise an exception, but
+              # Lens assumes that `clean` could raise an exception, but
               # even if it does, the tainted `data` will never reach the sink !
               data = clean(data)
           except Exception:
@@ -3234,13 +3234,13 @@ No significant changes.
 
           # `data` must be clean here
           sink(data) # no more FP (flow-78)
-- The language server (and semgrep --experimental) should not report anymore errors from
-  the metrics.semgrep.dev server such as "cannot read property 'map' of undefined". (metrics_error)
-- Fixed a bug in the gemfile.lock parser which causes Semgrep to miss direct
+- The language server (and lens --experimental) should not report anymore errors from
+  the metrics.lens.dev server such as "cannot read property 'map' of undefined". (metrics_error)
+- Fixed a bug in the gemfile.lock parser which causes Lens to miss direct
   dependencies whose package name does not end in a version constraint. (sc-1568)
 
 
-## [1.76.0](https://github.com/returntocorp/semgrep/releases/tag/v1.76.0) - 2024-06-17
+## [1.76.0](https://github.com/returntocorp/lens/releases/tag/v1.76.0) - 2024-06-17
 
 
 ### Added
@@ -3252,20 +3252,20 @@ No significant changes.
   side types are equal, the return type is assumed to be the same. Additionally,
   comparison operators like `>` and `==`, as well as the negation operator `not`,
   are assumed to return a boolean type. (code-6940)
-- Added guidance for resolving token issues for `install-semgrep-pro` in non-interactive environments. (gh-1668)
-- Adds support for a new flag, `--subdir <path>`, for `semgrep ci`, which allows users to pass a
+- Added guidance for resolving token issues for `install-lens-pro` in non-interactive environments. (gh-1668)
+- Adds support for a new flag, `--subdir <path>`, for `lens ci`, which allows users to pass a
   subdirectory to scan instead of the entire directory. The path should be a relative path, and
-  the directory where `semgrep ci` is run should be the root of the repository being scanned.
-  Unless `SEMGREP_REPO_DISPLAY_NAME` is explicitly set, passing the subdirectory
+  the directory where `lens ci` is run should be the root of the repository being scanned.
+  Unless `LENS_REPO_DISPLAY_NAME` is explicitly set, passing the subdirectory
   will cause the results to go to a project specific to that subdirectory.
 
-  The intended use case for `semgrep ci --subdir path/to/dir` is to help users with very large
+  The intended use case for `lens ci --subdir path/to/dir` is to help users with very large
   repos scan the repo in parts. (saf-1056)
 
 
 ### Fixed
 
-- The min-version/max-version rule filtering is now done in pysemgrep too,
+- The min-version/max-version rule filtering is now done in pylens too,
   avoiding previous crash when using new fields (or new enums) in a rule.
 - Language Server will now send error messages properly, and error handling is greatly improved (cdx-502)
 - Pro: Calling a safe method on a tainted object should no longer propagate taint.
@@ -3303,13 +3303,13 @@ No significant changes.
   the same names, in patterns. (saf-1099)
 
 
-## [1.75.0](https://github.com/returntocorp/semgrep/releases/tag/v1.75.0) - 2024-06-03
+## [1.75.0](https://github.com/returntocorp/lens/releases/tag/v1.75.0) - 2024-06-03
 
 
 ### Added
 
 
-- Pro: Semgrep can now track taint through tuple/list (un)packing intra-procedurally
+- Pro: Lens can now track taint through tuple/list (un)packing intra-procedurally
   (i.e., within a single function). For example:
 
   ```python
@@ -3369,21 +3369,21 @@ No significant changes.
           }
       } (saf-1059)
 - [Mostly applicable to Pro Engine] Typed metavariables will now match against the inferred type of a binding even if a constant is propagated for that binding, if we are unable to infer a type from the constant. Previously, we would simply fail to match in this case. (saf-1060)
-- Removed the URLs at the end of the log when semgrep ci --dryrun is ran because dry run doesn't interact with the app so the URLs don't make sense. (saf-924)
+- Removed the URLs at the end of the log when lens ci --dryrun is ran because dry run doesn't interact with the app so the URLs don't make sense. (saf-924)
 
 
-## [1.74.0](https://github.com/returntocorp/semgrep/releases/tag/v1.74.0) - 2024-05-23
+## [1.74.0](https://github.com/returntocorp/lens/releases/tag/v1.74.0) - 2024-05-23
 
 
 ### Fixed
 
 
-- One part of interfile tainting was missing a constant propagation phase, which causes semgrep to miss some true positives in some cases during interfile analysis.
+- One part of interfile tainting was missing a constant propagation phase, which causes lens to miss some true positives in some cases during interfile analysis.
 
   This fix adds the missing constant propagation. (saf-1032)
-- Semgrep now matches YAML tags (e.g. `!number` in `!number 42`) correctly rather
+- Lens now matches YAML tags (e.g. `!number` in `!number 42`) correctly rather
   than ignoring them. (saf-1046)
-- Upgraded Semgrep's Dockerfile parser. This brings in various
+- Upgraded Lens's Dockerfile parser. This brings in various
   [fixes from
   tree-sitter-dockerfile](https://github.com/camdencheek/tree-sitter-dockerfile/releases/tag/v0.2.0)
   including minimal support for heredoc templates, support for variables in keys
@@ -3398,7 +3398,7 @@ No significant changes.
   `LABEL c=d`. (upgrade-dockerfile-parser)
 
 
-## [1.73.0](https://github.com/returntocorp/semgrep/releases/tag/v1.73.0) - 2024-05-16
+## [1.73.0](https://github.com/returntocorp/lens/releases/tag/v1.73.0) - 2024-05-16
 
 
 ### Added
@@ -3417,7 +3417,7 @@ No significant changes.
 - [Pro Engine Only] Tainted values are now tracked through instantiation of React functional components via JSX. (jsx-taint)
 
 
-## [1.72.0](https://github.com/returntocorp/semgrep/releases/tag/v1.72.0) - 2024-05-08
+## [1.72.0](https://github.com/returntocorp/lens/releases/tag/v1.72.0) - 2024-05-08
 
 
 ### Fixed
@@ -3440,7 +3440,7 @@ No significant changes.
       }
   }
   ``` (saf-1001)
-- Osemgrep only:
+- Olens only:
 
   When rules have metavariable-type, they don't show up in the SARIF output. This change fixes that.
 
@@ -3448,7 +3448,7 @@ No significant changes.
 - Fixed bug in rule parsing preventing patternless SCA rules from being validated. (saf-1030)
 
 
-## [1.71.0](https://github.com/returntocorp/semgrep/releases/tag/v1.71.0) - 2024-05-03
+## [1.71.0](https://github.com/returntocorp/lens/releases/tag/v1.71.0) - 2024-05-03
 
 
 ### Added
@@ -3466,7 +3466,7 @@ No significant changes.
     x = bar()
     foo(x) # now also matches pattern `foo("bar")`, previously only `foo("...")`
   ``` (flow-61)
-- Python: const-prop: Semgrep will now recognize "..." * N expression as arbitrary
+- Python: const-prop: Lens will now recognize "..." * N expression as arbitrary
   constant string literals (thus matching the pattern "..."). (flow-75)
 
 
@@ -3479,7 +3479,7 @@ No significant changes.
 ### Fixed
 
 
-- When using semgrep --test --json, we now report in the
+- When using lens --test --json, we now report in the
   config_missing_fixtests field in the JSON output not just rule files
   containing a `fix:` without a corresponding ".fixed" test file; we now also
   report rule files using a `fix-regex:` but without a corresponding a
@@ -3517,31 +3517,31 @@ No significant changes.
   section is present in the rule. Moreover, duplicate tags should be
   de-duped.
 
-  Osemgrep wasn't doing this before, but with this fix, now it does. (saf-991)
+  Olens wasn't doing this before, but with this fix, now it does. (saf-991)
 - Fixed bug in mix.lock parser where it was possible to fail on a python None error. Added handler for arbitrary exceptions during lockfile parsing. (sc-1466)
 - Moved `--historical-secrets` to the "Pro Engine" option group, instead of
   "Output formats", where it was previously (in error). (scrt-570)
 
 
-## [1.70.0](https://github.com/returntocorp/semgrep/releases/tag/v1.70.0) - 2024-04-24
+## [1.70.0](https://github.com/returntocorp/lens/releases/tag/v1.70.0) - 2024-04-24
 
 
 ### Added
 
 
 - Added guidance for resolving API token issues in CI environments. (gh-10133)
-- The osemgrep show command supports 2 new options: `dump-ast` `dump-pattern`.
-  See `osemgrep show --help` for more information. (osemgrep_show)
+- The olens show command supports 2 new options: `dump-ast` `dump-pattern`.
+  See `olens show --help` for more information. (olens_show)
 - Added additional output flags which allow you to write output to multiple files in multiple formats.
 
-  For example, the comand `semgrep ci --text --json-output=result.json --sarif-output=result.sarif.json`
+  For example, the comand `lens ci --text --json-output=result.json --sarif-output=result.sarif.json`
   Displays text output on stdout, writes the output that would be generated by passing the `--json` flag
   to `result.json`, and writes the output that would be generated by passing the `--sarif` to `result.sarif.json`. (saf-341)
-- Added an experimental feature for users to use osemgrep to format
+- Added an experimental feature for users to use olens to format
   SARIF output.
 
-  When both the flags --sarif and --use-osemgrep-sarif are specified,
-  semgrep will use the ocaml implementation to format SARIF.
+  When both the flags --sarif and --use-olens-sarif are specified,
+  lens will use the ocaml implementation to format SARIF.
 
   This flag is experimental and can be removed any time. Users must not
   rely on it being available. (saf-978)
@@ -3560,8 +3560,8 @@ No significant changes.
 ### Fixed
 
 
-- Semgrep LS now waits longer for users to login (gh-10109)
-- When semgrep ci finishes scanning and uploads findings, it tells the
+- Lens LS now waits longer for users to login (gh-10109)
+- When lens ci finishes scanning and uploads findings, it tells the
   app to mark the scan as completed.
 
   For large findings, this may take a while and marking the scan as
@@ -3570,16 +3570,16 @@ No significant changes.
 
   This change increases the timeout (previously 20 minutes) to 30
   minutes. (saf-980)
-- Fix `semgrep ci --oss-only` when secrets product is enabled. (scrt-223)
+- Fix `lens ci --oss-only` when secrets product is enabled. (scrt-223)
 
 
-## [1.69.0](https://github.com/returntocorp/semgrep/releases/tag/v1.69.0) - 2024-04-16
+## [1.69.0](https://github.com/returntocorp/lens/releases/tag/v1.69.0) - 2024-04-16
 
 
 ### Added
 
 
-- Tracing: remove support for SEMGREP_OTEL_ENDPOINT and replace with
+- Tracing: remove support for LENS_OTEL_ENDPOINT and replace with
   `--trace-endpoint <url>`.
   This change is for an internal feature for debugging performance. (saf-885)
 
@@ -3587,9 +3587,9 @@ No significant changes.
 ### Changed
 
 
-- Passing --debug to Semgrep should now print less logs. We do
+- Passing --debug to Lens should now print less logs. We do
   not want --debug's output to be enormous, as it tends not to be useful and yet
-  cause some problems. Note that --debug is mainly intended for Semgrep developers,
+  cause some problems. Note that --debug is mainly intended for Lens developers,
   please ask for help if needed. (gh-10044)
 
 
@@ -3605,14 +3605,14 @@ No significant changes.
   didn't work properly when adding a new file or renaming an existing file. (saf-897)
 
 
-## [1.68.0](https://github.com/returntocorp/semgrep/releases/tag/v1.68.0) - 2024-04-08
+## [1.68.0](https://github.com/returntocorp/lens/releases/tag/v1.68.0) - 2024-04-08
 
 
 ### Added
 
 
 - Scan un-changed lockfiles in diff-aware scans (gh-9899)
-- Languages: Added the QL language (used by CodeQL) to Semgrep (saf-947)
+- Languages: Added the QL language (used by CodeQL) to Lens (saf-947)
 - SwiftPM parser will now report package url and reference. (sc-1218)
 - Add support for Elixir (Mix) SCA parsing for pro engine users. (sc-1303)
 
@@ -3622,10 +3622,10 @@ No significant changes.
 
 - Output for sarif format includes dataflow traces. (gh-10004)
 - The environment variable `LOG_LEVEL` (as well as `PYTEST_LOG_LEVEL`) is
-  no longer consulted by Semgrep to determine the log level. Only
-  `SEMGREP_LOG_LEVEL` is consulted. `PYTEST_SEMGREP_LOG_LEVEL` is also
+  no longer consulted by Lens to determine the log level. Only
+  `LENS_LOG_LEVEL` is consulted. `PYTEST_LENS_LOG_LEVEL` is also
   consulted in the current implementation but should not be used outside of
-  Semgrep's Pytest tests. This is to avoid accidentally affecting Semgrep
+  Lens's Pytest tests. This is to avoid accidentally affecting Lens
   when inheriting the `LOG_LEVEL` destined to another application. (gh-10044)
 - Fixed swiftpm parser to no longer limit the amount of found packages in manifest file. (sc-1364)
 - Fixed incorrect ecosystem being used for Elixir. Hex should be used instead of Mix. (sc-elixir)
@@ -3633,14 +3633,14 @@ No significant changes.
 - Secrets historical scans: fixed a bug where historical scans could run on differential scans. (scrt-545)
 
 
-## [1.67.0](https://github.com/returntocorp/semgrep/releases/tag/v1.67.0) - 2024-03-28
+## [1.67.0](https://github.com/returntocorp/lens/releases/tag/v1.67.0) - 2024-03-28
 
 
 ### Added
 
 
-- `--historical-secrets` flag for running Semgrep Secrets regex rules on git
-  history (requires Semgrep Secrets). This flag is not yet implemented for
+- `--historical-secrets` flag for running Lens Secrets regex rules on git
+  history (requires Lens Secrets). This flag is not yet implemented for
   `--experimental`. (scrt-531)
 
 
@@ -3648,13 +3648,13 @@ No significant changes.
 
 
 - Files with the `.phtml` extension are now treated as PHP files. (gh-10009)
-- [IMPORTANT] Logged in users running `semgrep ci` will now run the pro engine by default! All `semgrep ci` scans will run with our proprietary languages (Apex and Elixir), as well as cross-function taint within a single file, and other single file pro optimizations we have developed. This is equivalent to `semgrep ci --pro-intrafile`. Users will likely see improved results if they are running `semgrep ci` and did not already have additional configuration to enable pro analysis.
+- [IMPORTANT] Logged in users running `lens ci` will now run the pro engine by default! All `lens ci` scans will run with our proprietary languages (Apex and Elixir), as well as cross-function taint within a single file, and other single file pro optimizations we have developed. This is equivalent to `lens ci --pro-intrafile`. Users will likely see improved results if they are running `lens ci` and did not already have additional configuration to enable pro analysis.
 
   The current default engine does not include cross-file analysis. To scan with cross-file analysis, turn on the app toggle or pass in the flag `--pro`. We recommend this unless you have very large repos (talk to our support to get help enabling cross-file analysis on monorepos!)
 
   To revert back to our OSS analysis, pass the flag `--oss-only` (or use `--pro-languages` to continue to receive our proprietary languages).
 
-  Reminder: because we release first to our canary image, this change will only immediately affect you if you are using `semgrep/semgrep:canary`. If you are using `semgrep/semgrep:latest`, it will affect you when we bump canary to latest. (saf-845)
+  Reminder: because we release first to our canary image, this change will only immediately affect you if you are using `lens/lens:canary`. If you are using `lens/lens:latest`, it will affect you when we bump canary to latest. (saf-845)
 
 
 ### Fixed
@@ -3674,13 +3674,13 @@ No significant changes.
   Now it's fixed. (saf-899)
 
 
-## [1.66.2](https://github.com/returntocorp/semgrep/releases/tag/v1.66.2) - 2024-03-26
+## [1.66.2](https://github.com/returntocorp/lens/releases/tag/v1.66.2) - 2024-03-26
 
 
 ### Added
 
 
-- osemgrep now respects HTTP_PROXY and HTTPS_PROXY when making network requests (cdx-253)
+- olens now respects HTTP_PROXY and HTTPS_PROXY when making network requests (cdx-253)
 
 
 ### Changed
@@ -3698,7 +3698,7 @@ No significant changes.
   in Java, C++, and C#. (saf-928)
 
 
-## [1.66.1](https://github.com/returntocorp/semgrep/releases/tag/v1.66.1) - 2024-03-25
+## [1.66.1](https://github.com/returntocorp/lens/releases/tag/v1.66.1) - 2024-03-25
 
 
 ### Fixed
@@ -3706,16 +3706,16 @@ No significant changes.
 
 - Autofix on variable definitions should now handle the semicolon
   in Rust, Cairo, Solidity, Dart. (autofix_vardef)
-- [IMPORTANT] we restored bash, jq, and curl in our semgrep docker image as some
+- [IMPORTANT] we restored bash, jq, and curl in our lens docker image as some
   users were relying on it. We might remove them in the futur but in the
   mean time we restored the packages and if we remove them we will announce
   it more loudly. We also created a new page giving more information
   about our policy for our docker images:
-  https://semgrep.dev/docs/semgrep-ci/packages-in-semgrep-docker/ (docker_bash)
+  https://lens.dev/docs/lens-ci/packages-in-lens-docker/ (docker_bash)
 - Fixed autofix application on lines containing multi-byte characters. (multibyte)
 
 
-## [1.66.0](https://github.com/returntocorp/semgrep/releases/tag/v1.66.0) - 2024-03-19
+## [1.66.0](https://github.com/returntocorp/lens/releases/tag/v1.66.0) - 2024-03-19
 
 
 ### Added
@@ -3730,7 +3730,7 @@ No significant changes.
 ### Changed
 
 
-- osemgrep --remote will no longer clone into a tmp folder, but instead the CWD (cdx-remote)
+- olens --remote will no longer clone into a tmp folder, but instead the CWD (cdx-remote)
 - [IMPORTANT] Inter-file differential scanning is now enabled for all Pro users.
 
   Inter-file differential scanning is now enabled for all Pro users. While it may
@@ -3748,11 +3748,11 @@ No significant changes.
 ### Fixed
 
 
-- The official semgrep docker image does not contain anymore the
+- The official lens docker image does not contain anymore the
   bash, jq, and curl utilities, to reduce its attack surface. (saf-861)
 
 
-## [1.65.0](https://github.com/returntocorp/semgrep/releases/tag/v1.65.0) - 2024-03-11
+## [1.65.0](https://github.com/returntocorp/lens/releases/tag/v1.65.0) - 2024-03-11
 
 
 ### Changed
@@ -3761,16 +3761,16 @@ No significant changes.
 - Removed the extract-mode rules experimental feature. (extract_mode)
 
 
-## [1.64.0](https://github.com/returntocorp/semgrep/releases/tag/v1.64.0) - 2024-03-07
+## [1.64.0](https://github.com/returntocorp/lens/releases/tag/v1.64.0) - 2024-03-07
 
 
 ### Changed
 
 
 - Removed the AST caching experimental feature (--experimental --ast-caching
-  in osemgrep and -parsing_cache_dir in semgrep-core). (ast_caching)
+  in olens and -parsing_cache_dir in lens-core). (ast_caching)
 - Removed the Registry caching experimental feature (--experimental --registry-caching)
-  in osemgrep. (registry_caching)
+  in olens. (registry_caching)
 
 
 ### Fixed
@@ -3782,14 +3782,14 @@ No significant changes.
   when code is). (scrt-455)
 
 
-## [1.63.0](https://github.com/returntocorp/semgrep/releases/tag/v1.63.0) - 2024-02-27
+## [1.63.0](https://github.com/returntocorp/lens/releases/tag/v1.63.0) - 2024-02-27
 
 
 ### Added
 
 
 - Dataflow: Added support for nested record patterns such as `{ body: { param } }`
-  in the LHS of an assignment. Now given `{ body: { param } } = tainted` Semgrep
+  in the LHS of an assignment. Now given `{ body: { param } } = tainted` Lens
   will correctly mark `param` as tainted. (flow-68)
 - Matching: `metavariable-regex` can now match on metavariables of interpolated
   strings which use variables that have known values. (saf-865)
@@ -3800,10 +3800,10 @@ No significant changes.
 
 
 - fix: taint signatures do not capture changes to parameters' fields (flow-70)
-- Scan summary links printed after `semgrep ci` scans now reflect a custom SEMGREP_APP_URL, if one is set. (saf-353)
+- Scan summary links printed after `lens ci` scans now reflect a custom LENS_APP_URL, if one is set. (saf-353)
 
 
-## [1.62.0](https://github.com/returntocorp/semgrep/releases/tag/v1.62.0) - 2024-02-22
+## [1.62.0](https://github.com/returntocorp/lens/releases/tag/v1.62.0) - 2024-02-22
 
 
 ### Added
@@ -3832,10 +3832,10 @@ No significant changes.
   sink(a.tainted)
   ``` (ea-272)
 - Pro: taint-mode: Added basic support for "index sensitivity", that is,
-  Semgrep will track taint on individual indexes of a data structure when
+  Lens will track taint on individual indexes of a data structure when
   these are constant values (integers or strings), and the code uses the
   built-in syntax for array indexing in the corresponding language
-  (typically `E[i]`). For example, in the Python code below Semgrep Pro
+  (typically `E[i]`). For example, in the Python code below Lens Pro
   will _not_ report a finding on `sink(x)` or `sink(x[1])` because it will
   know that only `x[42]` is tainted:
 
@@ -3856,7 +3856,7 @@ No significant changes.
 
 - taint-mode: Added `exact: false` sinks so that one can specify that _anything_
   inside a code region is a sink, e.g. `if (...) { ... }`. This used to be the
-  semantics of sink specifications until Semgrep 1.1.0, when we made sink matching
+  semantics of sink specifications until Lens 1.1.0, when we made sink matching
   more precise by default. Now we allow reverting to the old semantics.
 
   In addition, when `exact: true` (the default), we simplified the heuristic used
@@ -3872,9 +3872,9 @@ No significant changes.
 ### Fixed
 
 
-- taint-mode: experimental: For now Semgrep CLI taint traces are not adapted to
-  support multiple labels, so Semgrep picks one arbitrary label to report, which
-  sometimes it's not the desired one. As a temporary workaround, Semgrep will
+- taint-mode: experimental: For now Lens CLI taint traces are not adapted to
+  support multiple labels, so Lens picks one arbitrary label to report, which
+  sometimes it's not the desired one. As a temporary workaround, Lens will
   look at the `requires` of the sink, and if it has the shape `A and ...`, then
   it will pick `A` as the preferred label and report its trace. (flow-65)
 - Fixed trailing newline parsing in pyproject.toml and poetry.lock files. (gh-9777)
@@ -3883,23 +3883,23 @@ No significant changes.
   to correctly autofix those constructs. (tparams)
 
 
-## [1.61.1](https://github.com/returntocorp/semgrep/releases/tag/v1.61.1) - 2024-02-14
+## [1.61.1](https://github.com/returntocorp/lens/releases/tag/v1.61.1) - 2024-02-14
 
 
 ### Added
 
 
 - Added performance metrics using OpenTelemetry for better visualization.
-  Users wishing to understand the performance of their Semgrep scans or
-  to help optimize Semgrep can configure the backend collector created in
+  Users wishing to understand the performance of their Lens scans or
+  to help optimize Lens can configure the backend collector created in
   `libs/tracing/unix/Tracing.ml`.
 
   This is experimental and both the implementation and flags are likely to
   change. (ea-320)
-- Created a new environment variable SEMGREP_REPO_DISPLAY_NAME for use in semgrep CI.
+- Created a new environment variable LENS_REPO_DISPLAY_NAME for use in lens CI.
   Currently, this does nothing. The goal is to provide a way to override the display
-  name of a repo in the Semgrep App. (gh-8953)
-- The OCaml/C executable (`semgrep-core` or `osemgrep`) is now passed through
+  name of a repo in the Lens App. (gh-8953)
+- The OCaml/C executable (`lens-core` or `olens`) is now passed through
   the `strip` utility, which reduces its size by 10-25% depending on the
   platform. Contribution by Filipe Pina (@fopina). (gh-9471)
 
@@ -3911,7 +3911,7 @@ No significant changes.
   be grouped and reported as a single warning. (ea-842)
 
 
-## [1.60.1](https://github.com/returntocorp/semgrep/releases/tag/v1.60.1) - 2024-02-09
+## [1.60.1](https://github.com/returntocorp/lens/releases/tag/v1.60.1) - 2024-02-09
 
 
 ### Added
@@ -3926,7 +3926,7 @@ No significant changes.
   This will change the behavior of existing rules that use the metavariable
   `$_`, if they rely on unification still happening. This can be fixed by simply
   giving the metavariable a real name like `$A`. (ea-837)
-- Added infrastructure for semgrep supply chain in semgrep-core. Not fully functional yet. (ssc-port)
+- Added infrastructure for lens supply chain in lens-core. Not fully functional yet. (ssc-port)
 
 
 ### Changed
@@ -3943,18 +3943,18 @@ No significant changes.
 ### Fixed
 
 
-- Output: Semgrep CLI now no longer sometimes interpolated metavariables twice, if
+- Output: Lens CLI now no longer sometimes interpolated metavariables twice, if
   the message that was substituted for a metavariable itself contained a valid
   metavariable to be interpolated (ea-838)
 
 
-## [1.59.1](https://github.com/returntocorp/semgrep/releases/tag/v1.59.1) - 2024-02-02
+## [1.59.1](https://github.com/returntocorp/lens/releases/tag/v1.59.1) - 2024-02-02
 
 
 ### Added
 
 
-- taint-mode: Pro: Semgrep can now track taint via static class fields and global
+- taint-mode: Pro: Lens can now track taint via static class fields and global
   variables, such as in the following example:
 
   ```c
@@ -3982,7 +3982,7 @@ No significant changes.
   degradation and continuing with the scan, rather than crashing. (pa-3387)
 
 
-## [1.59.0](https://github.com/returntocorp/semgrep/releases/tag/v1.59.0) - 2024-01-30
+## [1.59.0](https://github.com/returntocorp/lens/releases/tag/v1.59.0) - 2024-01-30
 
 
 ### Added
@@ -4002,7 +4002,7 @@ No significant changes.
   to `taint_focus_on`. Note that `taint_match_on` was experimental, and
   `taint_focus_on` is experimental too. Option `taint_match_on` will continue
   to work but it will be completely removed at some point after 1.63.0. (pa-3272)
-- Added information on product-related flags to help output, especially for Semgrep Secrets. (pa-3383)
+- Added information on product-related flags to help output, especially for Lens Secrets. (pa-3383)
 - taint-mode: Improve inference of best matches for exact-sources, exact-sanitizers,
   and sinks. Now we also avoid FPs in cases such as:
 
@@ -4018,11 +4018,11 @@ No significant changes.
            dangerouslySetInnerHTML={{__html: $X}}
         - focus-metavariable: $X
 
-  Previously Semgrep wrongly considered the individual subexpressions of the
+  Previously Lens wrongly considered the individual subexpressions of the
   conditional as sinks, including the `props` in `props ? ...`, thus producing a
   false positive. Now it will only consider the conditional expression as a whole
   as the sink. (rules-6457)
-- Removed an internal legacy syntax for secrets rules (`mode: semgrep_internal_postprocessor`). (scrt-320)
+- Removed an internal legacy syntax for secrets rules (`mode: lens_internal_postprocessor`). (scrt-320)
 
 
 ### Fixed
@@ -4055,11 +4055,11 @@ No significant changes.
   Invalid_argument: String.sub / Bytes.sub
   ```
 
-  Semgrep should now report this error properly with a file name and line number and
+  Lens should now report this error properly with a file name and line number and
   handle it gracefully. (gh-9628)
 - Fixed Dockerfile parsing bug where multiline comments were parsed incorrectly. (gh-9628-2)
 - The language server will now properly respect findings that have been ignored via the app (lsp-fingerprints)
-- taint-mode: Pro: Semgrep will now propagate taint via instance variables when
+- taint-mode: Pro: Lens will now propagate taint via instance variables when
   calling methods within the same class, making this example work:
 
   ```java
@@ -4108,7 +4108,7 @@ No significant changes.
   }
   ```
 
-  Previously Semgrep will report that taint originated at `this.str = "tainted"`,
+  Previously Lens will report that taint originated at `this.str = "tainted"`,
   but it would not tell you how the control flow got there. Now the taint trace
   will indicate that we get there by calling `setStr()` inside `test()`. (pa-3373)
 - Addressed an issue related to matching top-level identifiers with meta-variable
@@ -4116,7 +4116,7 @@ No significant changes.
   was specific to Pro Engine-enabled scans. (pa-3375)
 
 
-## [1.58.0](https://github.com/returntocorp/semgrep/releases/tag/v1.58.0) - 2024-01-23
+## [1.58.0](https://github.com/returntocorp/lens/releases/tag/v1.58.0) - 2024-01-23
 
 
 ### Added
@@ -4146,7 +4146,7 @@ No significant changes.
   ```
 
   This is now fixed. (pa-3185)
-- OSemgrep can now scan remote git repositories. Pass `--experimental --pro --remote http[s]://<website>/.../<repo>.git` to use this feature (pa-remote)
+- OLens can now scan remote git repositories. Pass `--experimental --pro --remote http[s]://<website>/.../<repo>.git` to use this feature (pa-remote)
 
 
 ### Changed
@@ -4154,13 +4154,13 @@ No significant changes.
 
 - Rules stored under an "hidden" directory (e.g., dir/.hidden/myrule.yml)
   are now processed when using --config <dir>.
-  We used to skip dot files under dir, but keeping rules/.semgrep.yml,
-  but not path/.github/foo.yml, but keeping src/.semgrep/bad_pattern.yml
+  We used to skip dot files under dir, but keeping rules/.lens.yml,
+  but not path/.github/foo.yml, but keeping src/.lens/bad_pattern.yml
   but not ./.pre-commit-config.yaml, ... This was mainly because
-  we used to fetch rules from ~/.semgrep/ implicitely when --config
+  we used to fetch rules from ~/.lens/ implicitely when --config
   was not given, but this feature was removed, so now we can keep it simple. (hidden_rules)
 - Removed support for writing rules using jsonnet. This feature
-  will be restored once we finish the port to OCaml of the semgrep CLI. (jsonnet)
+  will be restored once we finish the port to OCaml of the lens CLI. (jsonnet)
 - The primitive object construct expression will no longer match the new
   expression pattern. For example, the pattern `new $TYPE` will now only match
   `new int`, not `int()`. (pa-3336)
@@ -4179,9 +4179,9 @@ No significant changes.
   ```
   public $F($...ARGS) { ... }
   ``` (gh-9260)
-- Nosemgrep: Fixed a bug where Semgrep would err upon reading a `nosemgrep`
+- Nolens: Fixed a bug where Lens would err upon reading a `nolens`
   comment with multiple rule IDs. (gh-9463)
-- Fixed bugs in gitignore/semgrepignore globbing implementation affecting `--experimental`. (gh-9544)
+- Fixed bugs in gitignore/lensignore globbing implementation affecting `--experimental`. (gh-9544)
 - Fixed rule IDs, descriptions, findings, and autofix text not wrapping as expected.
   Use newline instead of horiziontal separator for findings with a shared file
   but for different rules per design spec. (grow-97)
@@ -4196,24 +4196,24 @@ No significant changes.
   would not be parsed correctly. (sc-1230)
 
 
-## [1.56.0](https://github.com/returntocorp/semgrep/releases/tag/v1.56.0) - 2024-01-10
+## [1.56.0](https://github.com/returntocorp/lens/releases/tag/v1.56.0) - 2024-01-10
 
 
 ### Added
 
 
 - Added a new field that breaks down the number of findings per product
-  in the metrics that are sent out by the CLI. This will help Semgrep
+  in the metrics that are sent out by the CLI. This will help Lens
   understand users better. (pa-3312)
 
 
-## [1.55.2](https://github.com/returntocorp/semgrep/releases/tag/v1.55.2) - 2024-01-05
+## [1.55.2](https://github.com/returntocorp/lens/releases/tag/v1.55.2) - 2024-01-05
 
 
 ### Fixed
 
 
-- taint-mode: Semgrep was missing some sources occurring inside type expressions,
+- taint-mode: Lens was missing some sources occurring inside type expressions,
   for example:
 
   ```cpp
@@ -4221,15 +4221,15 @@ No significant changes.
   sink(x);
   ```
 
-  Now, if `x` is tainted by side-effect, Semgrep will check `x` inside the type
+  Now, if `x` is tainted by side-effect, Lens will check `x` inside the type
   expression `char[...]` and record it as tainting, and generate a finding for
   `sink(x)`. (pa-3313)
 - taint-mode: C/C++: Sanitization by side-effect was not working correctly for
   `ptr->fld` l-values. In particular, if `ptr` is tainted, and then `ptr->fld` is
-  sanitized, Semgrep will now correctly consider `ptr->fld` as clean. (pa-3328)
+  sanitized, Lens will now correctly consider `ptr->fld` as clean. (pa-3328)
 
 
-## [1.55.1](https://github.com/returntocorp/semgrep/releases/tag/v1.55.1) - 2024-01-04
+## [1.55.1](https://github.com/returntocorp/lens/releases/tag/v1.55.1) - 2024-01-04
 
 
 ### Fixed
@@ -4241,7 +4241,7 @@ No significant changes.
 - Fix pipfile manifest parser error (sc-1084)
 
 
-## [1.55.0](https://github.com/returntocorp/semgrep/releases/tag/v1.55.0) - 2024-01-02
+## [1.55.0](https://github.com/returntocorp/lens/releases/tag/v1.55.0) - 2024-01-02
 
 
 ### Changed
@@ -4251,7 +4251,7 @@ No significant changes.
   deprecated and will be removed after the 1.60.0 release. (gh-9496)
 
 
-## [1.54.3](https://github.com/returntocorp/semgrep/releases/tag/v1.54.3) - 2023-12-22
+## [1.54.3](https://github.com/returntocorp/lens/releases/tag/v1.54.3) - 2023-12-22
 
 
 ### Added
@@ -4283,7 +4283,7 @@ No significant changes.
           ...
   ```
 
-  Semgrep will report a finding in the code below since at `print(content)`, after
+  Lens will report a finding in the code below since at `print(content)`, after
   which the control flow reaches the exit of the function, the `file` has not yet
   been closed:
 
@@ -4295,7 +4295,7 @@ No significant changes.
   ``` (pa-3266)
 
 
-## [1.54.2](https://github.com/returntocorp/semgrep/releases/tag/v1.54.2) - 2023-12-21
+## [1.54.2](https://github.com/returntocorp/lens/releases/tag/v1.54.2) - 2023-12-21
 
 
 ### Added
@@ -4312,16 +4312,16 @@ No significant changes.
 ### Fixed
 
 
-- Revise error message when running `semgrep ci` without being logged in to clarify that `--config` is used with `semgrep scan`. (gh-9485)
+- Revise error message when running `lens ci` without being logged in to clarify that `--config` is used with `lens scan`. (gh-9485)
 
 
-## [1.54.1](https://github.com/returntocorp/semgrep/releases/tag/v1.54.1) - 2023-12-20
+## [1.54.1](https://github.com/returntocorp/lens/releases/tag/v1.54.1) - 2023-12-20
 
 
 No significant changes.
 
 
-## [1.54.0](https://github.com/returntocorp/semgrep/releases/tag/v1.54.0) - 2023-12-19
+## [1.54.0](https://github.com/returntocorp/lens/releases/tag/v1.54.0) - 2023-12-19
 
 
 ### Added
@@ -4332,7 +4332,7 @@ No significant changes.
   propagate taint from the second argument of `strcat` to the first, that is,
   `strcat($TO, $FROM)`. Another example, in C++ one can propagate taint from the
   left operand of `>>` to the right one, that is, `$FROM >> $TO`. (pa-3131)
-- Semgrep IDE integrations will now cache workspace targets, so a full traversal of a workspace is no longer needed on every scan (pdx-148)
+- Lens IDE integrations will now cache workspace targets, so a full traversal of a workspace is no longer needed on every scan (pdx-148)
 
 
 ### Changed
@@ -4388,7 +4388,7 @@ No significant changes.
   // OK
   s = "foo";
   ``` (pa-3236)
-- taint-mode: Semgrep will now treat lambdas' parameters as fresh, so a taint rule
+- taint-mode: Lens will now treat lambdas' parameters as fresh, so a taint rule
   that finds double-delete's should not be triggered on the code below:
 
   ```cpp
@@ -4401,17 +4401,17 @@ No significant changes.
 - Fixed bug where empty tables in pyproject.toml files would fail to parse (sc-1196)
 
 
-## [1.53.0](https://github.com/returntocorp/semgrep/releases/tag/v1.53.0) - 2023-12-12
+## [1.53.0](https://github.com/returntocorp/lens/releases/tag/v1.53.0) - 2023-12-12
 
 
 ### Added
 
 
-- Users can now ignore findings locally in Semgrep IDE Extensions, per workspace, and this will persist between restarts (pdx-154)
-- A new subcommand 'semgrep test', which is an alias for 'semgrep scan
-  --test'. This means that if you were running semgrep on a test
-  directory, you will now have to use 'semgrep scan test' otherwise it
-  will be interpreted as the new 'semgrep test' subcommand. (subcommand_test)
+- Users can now ignore findings locally in Lens IDE Extensions, per workspace, and this will persist between restarts (pdx-154)
+- A new subcommand 'lens test', which is an alias for 'lens scan
+  --test'. This means that if you were running lens on a test
+  directory, you will now have to use 'lens scan test' otherwise it
+  will be interpreted as the new 'lens test' subcommand. (subcommand_test)
 
 
 ### Changed
@@ -4463,11 +4463,11 @@ No significant changes.
   parsed. (rust)
 
 
-## [1.52.0](https://github.com/returntocorp/semgrep/releases/tag/v1.52.0) - 2023-12-05
+## [1.52.0](https://github.com/returntocorp/lens/releases/tag/v1.52.0) - 2023-12-05
 
 ### Added
 
-- Java: Semgrep will now recognize `String.format(...)` expressions as constant
+- Java: Lens will now recognize `String.format(...)` expressions as constant
   strings when all their arguments are constant, but it will still not know
   what exact string it is. For example, code `String.format("Abc %s", "123")`
   will match pattern `"..."` but it will _not_ match pattern `"Abc 123"`. (pa-3284)
@@ -4537,17 +4537,17 @@ No significant changes.
 
 - Updated the parser used for Rust (rust)
 
-## [1.51.0](https://github.com/returntocorp/semgrep/releases/tag/v1.51.0) - 2023-11-29
+## [1.51.0](https://github.com/returntocorp/lens/releases/tag/v1.51.0) - 2023-11-29
 
 ### Added
 
 - taint-mode: Added experimental rule option `taint_match_on: source` that makes
-  Semgrep report taint findings on the taint source rather than on the sink. (pa-3272)
+  Lens report taint findings on the taint source rather than on the sink. (pa-3272)
 
 ### Changed
 
 - Elixir got moved to Pro. (elixir_pro)
-- The 'fix_regex' field has been removed from the semgrep JSON output. Instead,
+- The 'fix_regex' field has been removed from the lens JSON output. Instead,
   the 'fix' field contains the content the result of the fix_regex. (fix_regex)
 - taint-mode: Tweaked experimental option `taint_only_propagate_through_assignments`
   so that when it is enabled, `tainted.field` and `tainted(args)` will no longer
@@ -4569,7 +4569,7 @@ No significant changes.
   Now calls are recognized as valid in the left hand of
   assignments. (ea-104)
 
-- Python: `async` statements are now translated into the Dataflow IL so Semgrep
+- Python: `async` statements are now translated into the Dataflow IL so Lens
   will be able to report findings e.g. inside `async with ...` statements. (gh-9182)
 - In gitlab output, use correct url attached to rule instead of generating it.
   This fixes url for supply chain findings. (gitlab)
@@ -4637,14 +4637,14 @@ No significant changes.
   }
   ```
 
-  The `delete v` statement was reported as a double-free, because Semgrep did not
+  The `delete v` statement was reported as a double-free, because Lens did not
   consider that `v = new int` would clean the taint in `v`. (pa-3283)
 
-## [1.50.0](https://github.com/returntocorp/semgrep/releases/tag/v1.50.0) - 2023-11-17
+## [1.50.0](https://github.com/returntocorp/lens/releases/tag/v1.50.0) - 2023-11-17
 
 No significant changes.
 
-## [1.49.0](https://github.com/returntocorp/semgrep/releases/tag/v1.49.0) - 2023-11-15
+## [1.49.0](https://github.com/returntocorp/lens/releases/tag/v1.49.0) - 2023-11-15
 
 ### Added
 
@@ -4707,18 +4707,18 @@ No significant changes.
   This will enable us to measure the performance impact and error rates of new interfile
   languages. (For scans which don't send metrics, there is no change.) See the PRIAVCY.md
   for more information. (ea-251)
-- Removed support for named snippets (`org_name:rule_id`) from `semgrep scan` which were removed from semgrep.dev a few months ago. (gh-9203)
-- Added support for `--config <code|secrets>` to semgrep scan. When using
-  code or secrets, the environment variable `SEMGREP_REPO_NAME` must be set.
+- Removed support for named snippets (`org_name:rule_id`) from `lens scan` which were removed from lens.dev a few months ago. (gh-9203)
+- Added support for `--config <code|secrets>` to lens scan. When using
+  code or secrets, the environment variable `LENS_REPO_NAME` must be set.
 
   For example,
 
   ```
-  $ SEMGREP_REPO_NAME=test_repo semgrep --config secrets
+  $ LENS_REPO_NAME=test_repo lens --config secrets
   ```
 
-  Internally, `semgrep scan --config <product>` now uses the same endpoint as the
-  `semgrep ci` to fetch the scan configuration. (gh-9205)
+  Internally, `lens scan --config <product>` now uses the same endpoint as the
+  `lens ci` to fetch the scan configuration. (gh-9205)
 
 - Improved handling of unused lambdas to reduce false positives
 
@@ -4752,7 +4752,7 @@ No significant changes.
 
 - Fixed a bug where enabling the secret beta causes the default scan mode to be
   set to OSS, even when the Pro flag is turned on in the web UI. (ea-248)
-- Semgrep does not stop a scan anymore for parsing errors due to
+- Lens does not stop a scan anymore for parsing errors due to
   unconventional exceptions (e.g., Failure "not a program") in some
   parsers. Instead, such errors are reported as "Other syntax error". (lang-13)
 - Fix regression for the unused lambda change in react-nextjs-router-push test
@@ -4760,11 +4760,11 @@ No significant changes.
   A lambda expression defined in a return expression is also treated as used at
   the location of the return expression. (pa-3089)
 
-- Updated the Rust parser with miscellaneous improvements. In particular, Semgrep can now parse `yield` expressions in Rust. (rust)
+- Updated the Rust parser with miscellaneous improvements. In particular, Lens can now parse `yield` expressions in Rust. (rust)
 - taint-mode: If an expressions is tainted by multiple labels A and B, with B
   requiring A, the expression will now get boths labels A and B. (taint-labels)
 
-## [1.48.0](https://github.com/returntocorp/semgrep/releases/tag/v1.48.0) - 2023-11-06
+## [1.48.0](https://github.com/returntocorp/lens/releases/tag/v1.48.0) - 2023-11-06
 
 ### Added
 
@@ -4793,28 +4793,28 @@ No significant changes.
   Each update is now correctly applied independently to each finding based on the
   rule's validators. (scrt-231)
 
-## [1.47.0](https://github.com/returntocorp/semgrep/releases/tag/v1.47.0) - 2023-11-01
+## [1.47.0](https://github.com/returntocorp/lens/releases/tag/v1.47.0) - 2023-11-01
 
 ### Added
 
 - taint-mode: Added a Boolean `exact` option to sources and sanitizers to make
   matching stricter (default is `false`).
 
-  If you specify a source such as `foo(...)`, and Semgrep encounters `foo(x)`,
+  If you specify a source such as `foo(...)`, and Lens encounters `foo(x)`,
   by default `foo(x)`, `foo`, and `x`, will all be considered tainted. If you add
   `exact: true` to the source specification, then only `foo(x)` will be regarded
   as tainted, that is the "exact" match for the specification. The same applies
   to "exact" sanitizers. (gh-5897)
 
-- Added `sg` alias for semgrep binary which is functionally equivalent to
+- Added `sg` alias for lens binary which is functionally equivalent to
   ```sh
-  alias sg="/opt/homebrew/bin/semgrep"
+  alias sg="/opt/homebrew/bin/lens"
   ```
   with one fewer step. (gh-9117)
-- secrets: Added independent targeting from other semgrep products.
+- secrets: Added independent targeting from other lens products.
 
   This change allows Secrets to scan all tracked files. In particular, those ignored
-  by semgrepignore will now get scanned. There will be additional changes
+  by lensignore will now get scanned. There will be additional changes
   in the future to allow configuring the files that are scanned secrets. (gh-9125)
 
 - Adds an optional `--no-secrets-validation` flag to skip secrets validation. (no-secrets-validation)
@@ -4830,45 +4830,45 @@ No significant changes.
 
 ### Changed
 
-- For taint rules using labels (experimental) Semgrep now preferably picks a
+- For taint rules using labels (experimental) Lens now preferably picks a
   source without `requires` for the taint trace
 
-  Semgrep now prioritizes taint sources without `requires` condition when
+  Lens now prioritizes taint sources without `requires` condition when
   choosing a representative taint trace from multiple source traces. This helps
   users to more clearly identify the initial taint source when multiple traces
   are involved. (pa-3122)
 
 - Unreachable supply chain findings report only on line dependency was found in (no longer incorrectly including the next line)
   this change could affect syntactic_id generated by said findings (sc-727)
-- When running `semgrep ci --supply-chain`, defaults to using OSS engine even if
-  PRO engine would otherwise be used (turned on in semgrep.dev, or with `--pro` flag) (supply-chain-oss)
+- When running `lens ci --supply-chain`, defaults to using OSS engine even if
+  PRO engine would otherwise be used (turned on in lens.dev, or with `--pro` flag) (supply-chain-oss)
 
 ### Fixed
 
-- - Semgrep no longer supports python 3.7 (gh-8698)
-- Semgrep will now refuse to run incompatible versions of the Pro Engine, rather than crashing with a confusing error message. (gh-8873)
-- Fixed an issue that prevented the use of `semgrep install-semgrep-pro --custom-binary ...` when logged out. (gh-9051)
+- - Lens no longer supports python 3.7 (gh-8698)
+- Lens will now refuse to run incompatible versions of the Pro Engine, rather than crashing with a confusing error message. (gh-8873)
+- Fixed an issue that prevented the use of `lens install-lens-pro --custom-binary ...` when logged out. (gh-9051)
 - The --severity=XXX scan flag is working again. (gh-9062)
-- The --sarif does not crash when semgrep itself encountered errors
+- The --sarif does not crash when lens itself encountered errors
   while processing targets. (gh-9091)
 - Fixed how the end positions assigned to metavariable bindings are computed, in
-  order to handle trailing newlines. This affected Semgrep's JSON output. If a
+  order to handle trailing newlines. This affected Lens's JSON output. If a
   metavariable `$X` was bound to a piece of text containing a trailing newline,
-  such as "a\n", where the starting position was e.g. at line 1, Semgrep reported
+  such as "a\n", where the starting position was e.g. at line 1, Lens reported
   that the end position was at line 2, when in fact the text is entirely within
-  line 1. If the text happened to be at the end of a file, Semgrep could report
+  line 1. If the text happened to be at the end of a file, Lens could report
   an end position that was outside the bounds of the file. (lang-18)
-- - Semgrep Language Server now only scans open files on startup
-  - Semgrep Language Server no longer scans with pro engine rules (ls)
+- - Lens Language Server now only scans open files on startup
+  - Lens Language Server no longer scans with pro engine rules (ls)
 - Rust: `unsafe` blocks are now translated into the Dataflow IL so e.g. it becomes
   possible for taint analysis to track taint from/to an `unsafe` block. (pa-3218)
 - Correctly handle parsing toolchain directive in go.mod files (parsegomode)
 
-## [1.46.0](https://github.com/returntocorp/semgrep/releases/tag/v1.46.0) - 2023-10-24
+## [1.46.0](https://github.com/returntocorp/lens/releases/tag/v1.46.0) - 2023-10-24
 
 ### Added
 
-- `semgrep install-semgrep-pro` now takes an optional `--custom-binary` flag to install the specified `semgrep-core-proprietary` binary rather than downloading it. (custom-pro-binary)
+- `lens install-lens-pro` now takes an optional `--custom-binary` flag to install the specified `lens-core-proprietary` binary rather than downloading it. (custom-pro-binary)
 
 ### Fixed
 
@@ -4900,15 +4900,15 @@ No significant changes.
 
 - Fixed type error in creation of DependencyParserError object in the pnpm-lock.yaml parser (sc-1115)
 
-## [1.45.0](https://github.com/returntocorp/semgrep/releases/tag/v1.45.0) - 2023-10-18
+## [1.45.0](https://github.com/returntocorp/lens/releases/tag/v1.45.0) - 2023-10-18
 
 ### Changed
 
 - Previously, to ignore a finding from rule 'foo.bar.my-rule' we only accepted
-  `nosemgrep: foo.bar.my-rule`, now we also accept `nosemgrep: my-rule`. (pa-3094)
+  `nolens: foo.bar.my-rule`, now we also accept `nolens: my-rule`. (pa-3094)
 - [Breaking Change] Improved Matching of C++ Constructors
 
-  In this update, we've enhanced Semgrep's ability to match C++ constructors more
+  In this update, we've enhanced Lens's ability to match C++ constructors more
   accurately. C++ introduces a syntactic ambiguity between function and variable
   definitions, particularly with constructors. The C++ compiler determines how to
   interpret an expression based on contextual information, such as whether the
@@ -4920,7 +4920,7 @@ No significant changes.
   This commit introduces several workarounds to provide a better solution for
   handling this ambiguity:
 
-  - By default, when parsing a target file, Semgrep will consider an expression
+  - By default, when parsing a target file, Lens will consider an expression
     like `foo bar(x, y, z);` defined within the body of a function as a variable
     definition with a constructor. This is because variable initialization is a
     more common use case within the body of a function.
@@ -4940,7 +4940,7 @@ No significant changes.
   ```
   rules:
     - id: cpp-match-func-def
-      message: Semgrep found a match
+      message: Lens found a match
       options:
         cpp_parsing_pref: as_fundef
       languages:
@@ -4951,7 +4951,7 @@ No significant changes.
         - pattern: foo $X($Y, $Z);
 
     - id: cpp-match-ctor
-      message: Semgrep found a match
+      message: Lens found a match
       options:
         cpp_parsing_pref: as_vardef_with_ctor
       languages:
@@ -4962,7 +4962,7 @@ No significant changes.
         - pattern-not: foo $X(3, ...);
 
     - id: cpp-match-ctor-3
-      message: Semgrep found a match
+      message: Lens found a match
       languages:
         - cpp
       severity: WARNING
@@ -5052,26 +5052,26 @@ No significant changes.
 
 - Do not crash anymore with an Invalid_arg exception when the terminal
   has very few columns (e.g., in some precommit context). (gh-8792)
-- add `--supply-chain` flag to `semgrep ci --help` documentation (gh-8975)
+- add `--supply-chain` flag to `lens ci --help` documentation (gh-8975)
 - Avoid catastrophic `Invalid_argument: index out of bounds` errors
   when reporting the location of findings (#9011) (gh-9011)
-- - The Semgrep Language server will no longer freeze while scanning long files (ls-perf)
+- - The Lens Language server will no longer freeze while scanning long files (ls-perf)
 - Pre-filtering is now less aggressive and tries not to skip files that could be
   matched by a rule due to constant-propagation. Previously, a rule searching for
   the string `"foobar"` would skip a file that did not contain exactly `"foobar"`,
   but that contained e.g. `"foo" + "bar"`. (pa-3110)
-- semgrep ci does not crash anymore when ran from git repositories coming from
+- lens ci does not crash anymore when ran from git repositories coming from
   Azure projects with whitespaces in the name. (pa-3145)
 - The `--test` will now process test target files even if they do not match
   the `paths:` directive of a rule. This is especially useful for rules
   using the `include:` which is now disabled in a test context. (pa-8192)
 
-## [1.44.0](https://github.com/returntocorp/semgrep/releases/tag/v1.44.0) - 2023-10-11
+## [1.44.0](https://github.com/returntocorp/lens/releases/tag/v1.44.0) - 2023-10-11
 
 ### Added
 
 - A new --matching-explanations CLI flag has been added, to get matching
-  explanations. This was internally used by the Semgrep Playground to
+  explanations. This was internally used by the Lens Playground to
   help debug rules, but is now available also directly from the CLI. (explanations)
 - Using C++ tree-sitter as a failsafe pattern parser for C (gh-8905)
 - Allowing multiple type fields in metavariable-type rule syntax
@@ -5113,7 +5113,7 @@ No significant changes.
 - Avoid fatal "missing plugin" exceptions when scanning some Apex rules
   for which no Apex pattern is used by the rule such as a `pattern-regex:`
   and nothing else. (gh-8945)
-- Semgrep can now parse optional assignments in Swift (e.g. `a.b? = 1`). (lang-1)
+- Lens can now parse optional assignments in Swift (e.g. `a.b? = 1`). (lang-1)
 - Sequential tainting is now supported in Elixir.
 
   ````elixir
@@ -5133,12 +5133,12 @@ No significant changes.
 - go.mod parsing now correctly allows arbitrary newlines and whitespace between dependencies (sc-1076)
 - fix: Improve typed metavariable matching against expressions consisting of names only. (type-inference)
 
-## [1.43.0](https://github.com/returntocorp/semgrep/releases/tag/v1.43.0) - 2023-10-03
+## [1.43.0](https://github.com/returntocorp/lens/releases/tag/v1.43.0) - 2023-10-03
 
 ### Added
 
-- Dart: Full Semgrep support for Dart has been added, whereas previously
-  most Semgrep constructs (and Semgrep itself) would not work correctly. (pa-2968)
+- Dart: Full Lens support for Dart has been added, whereas previously
+  most Lens constructs (and Lens itself) would not work correctly. (pa-2968)
 
 ### Changed
 
@@ -5154,7 +5154,7 @@ No significant changes.
 
 - The language server will no longer surface committed findings when a user types but does not save (pdx-ls-git)
 
-## [1.42.0](https://github.com/returntocorp/semgrep/releases/tag/v1.42.0) - 2023-09-29
+## [1.42.0](https://github.com/returntocorp/lens/releases/tag/v1.42.0) - 2023-09-29
 
 ### Added
 
@@ -5217,7 +5217,7 @@ No significant changes.
   ``` (pa-3054)
   ````
 
-- Pro: Semgrep can now derive facts about constants from equality tests.
+- Pro: Lens can now derive facts about constants from equality tests.
 
   For example, pattern `foobar(&nullptr)` will not match here:
 
@@ -5275,7 +5275,7 @@ No significant changes.
         - metavariable-type:
             metavariable: $X
             type: ifstream
-      message: Semgrep found a match
+      message: Lens found a match
       languages:
         - cpp
       severity: WARNING
@@ -5283,7 +5283,7 @@ No significant changes.
   ````
 
 - C/C++: If conditions such as `if (int x = f())` are now correctly translated
-  into the Dataflow IL, so Semgrep can report a finding in the example below:
+  into the Dataflow IL, so Lens can report a finding in the example below:
 
   ````c
   if (const char *tainted_or_null = source("PATH"))
@@ -5296,9 +5296,9 @@ No significant changes.
 
 ### Changed
 
-- The \_comment field in the JSON output of semgrep scan has been removed. (\_comment)
+- The \_comment field in the JSON output of lens scan has been removed. (\_comment)
 - Use config=auto by default for the scan command when other options are not specified (grow-50)
-- Use subprocess.run to get contributions instead of StreamingSemgrepCore so crashes don't affect the actual scan. (os-967)
+- Use subprocess.run to get contributions instead of StreamingLensCore so crashes don't affect the actual scan. (os-967)
 
 ### Fixed
 
@@ -5329,20 +5329,20 @@ No significant changes.
 
 - Add parsing support for various rare Swift constructs (swift-parsing)
 
-## [1.41.0](https://github.com/returntocorp/semgrep/releases/tag/v1.41.0) - 2023-09-19
+## [1.41.0](https://github.com/returntocorp/lens/releases/tag/v1.41.0) - 2023-09-19
 
 ### Changed
 
-- Rule validation no longer fails if a rule contains additional unknown fields. This makes it so older versions of semgrep do not fail rules that contain extra functionality. min-version field should be used to identify rules that should not be run (i.e. the additional functionality is necessary in running the rule) (gh-8712)
+- Rule validation no longer fails if a rule contains additional unknown fields. This makes it so older versions of lens do not fail rules that contain extra functionality. min-version field should be used to identify rules that should not be run (i.e. the additional functionality is necessary in running the rule) (gh-8712)
 - Limit collection of the contributions from git log to the last 30 days of commits. (scp-965)
 
 ### Fixed
 
 - Ruby: Fixed a bug where patterns like `<id> ... do ... end` would not
   match properly. (gh-8714)
-- Show more specific error message if scan cannot complete because user has disabled all rules on semgrep.dev (gh-8716)
-- For the `nonroot` Docker build stage, moved `semgrep-core` to
-  `/home/semgrep/bin` and updated `$PATH` env variable with the
+- Show more specific error message if scan cannot complete because user has disabled all rules on lens.dev (gh-8716)
+- For the `nonroot` Docker build stage, moved `lens-core` to
+  `/home/lens/bin` and updated `$PATH` env variable with the
   new location. This avoids permissions issues when running and
   installing Pro Engine while using the `nonroot` Docker image. (pa-3026)
 - Implemented key path expression parsing in Swift. The following example should
@@ -5356,7 +5356,7 @@ No significant changes.
   backslash character instead of the type name. (pa-3070)
 
 - C++: Translate `for (T var : E)` loops into the Dataflow IL as for-each loops,
-  so that Semgrep reports no finding in the following code:
+  so that Lens reports no finding in the following code:
 
   ```
     for (int *p : set) {
@@ -5368,7 +5368,7 @@ No significant changes.
   Since each `p` is (in principle) a different object, even if `source(p)` taints
   the current `p`, that should not affect the next one. (pa-3090)
 
-- Ruby: Fixed patterns which involve command calls with blocks and Semgrep ellipses,
+- Ruby: Fixed patterns which involve command calls with blocks and Lens ellipses,
   when there are newlines around.
 
   For instance, the pattern
@@ -5381,11 +5381,11 @@ No significant changes.
 
   will now parse properly. (pa-3100)
 
-- Fixes how semgrep identifies the transitivity of dependencies in node v9 (lockfile version 3) and above.
+- Fixes how lens identifies the transitivity of dependencies in node v9 (lockfile version 3) and above.
   Specifically, dependencies that should have been identified as "direct" were being miscategorized as "transitive",
   which should no longer be the case. (sc-1057)
 
-## [1.40.0](https://github.com/returntocorp/semgrep/releases/tag/v1.40.0) - 2023-09-14
+## [1.40.0](https://github.com/returntocorp/lens/releases/tag/v1.40.0) - 2023-09-14
 
 ### Added
 
@@ -5393,12 +5393,12 @@ No significant changes.
   using --verbose and --develop. (dotfiles)
 - Add textual output for secrets findings and scan summary on command line interface. (gh-8666)
 - Skip rules with an informational message if they can't run due to an
-  unavailable plugin such as those provided by the Pro version of Semgrep.
+  unavailable plugin such as those provided by the Pro version of Lens.
   The intended use is for a public rule registry to provide all kinds of rules
   including some that require particular plugins. (gh-8668)
-- Allow Semgrep CI users to specify Code product using `--code` command-line option. This works the same as `--supply-chain` now and fleshes out the product suite. (gh-8679)
-- Semgrep Language Server will now not show findings that have been ignored in Semgrep Code (lang-server)
-- taint-mode: Semgrep will now track taint via globals or class attributes that are
+- Allow Lens CI users to specify Code product using `--code` command-line option. This works the same as `--supply-chain` now and fleshes out the product suite. (gh-8679)
+- Lens Language Server will now not show findings that have been ignored in Lens Code (lang-server)
+- taint-mode: Lens will now track taint via globals or class attributes that are
   _effectively_ `final` (as in Java), e.g.:
 
   ```java
@@ -5411,28 +5411,28 @@ No significant changes.
   }
   ```
 
-  Semgrep will recognize that `x` must be tainted because it is a private class
+  Lens will recognize that `x` must be tainted because it is a private class
   attribute that is initialized to `source()`, and it is not re-defined anywhere
   else. This will also work if `x` is initialized in _the_ constructor (if there
   is only one constructor), or in a `static` block. (pa-1636)
 
-- const-prop: Semgrep can now identify as constants private class attributes
+- const-prop: Lens can now identify as constants private class attributes
   that are assigned just once in a class constructor, e.g.:
-  https://semgrep.dev/playground/s/R1re. (pa-3006)
-- Added `-dump_contributions` flag to semgrep-core and include contributions when posting findings to Scan API. (scp-313)
-- There is a new 'semgrep show' command to display information about
-  semgrep, for example 'semgrep show supported-languages'. The goal is to
-  cleanup 'semgrep scan' which is currently abused to not scan but
-  also display semgrep information (e.g., 'semgrep scan --show-supported-languages).
-  See 'semgrep show --help' for more information. (show)
+  https://lens.dev/playground/s/R1re. (pa-3006)
+- Added `-dump_contributions` flag to lens-core and include contributions when posting findings to Scan API. (scp-313)
+- There is a new 'lens show' command to display information about
+  lens, for example 'lens show supported-languages'. The goal is to
+  cleanup 'lens scan' which is currently abused to not scan but
+  also display lens information (e.g., 'lens scan --show-supported-languages).
+  See 'lens show --help' for more information. (show)
 
 ### Changed
 
-- Further improvements to timeouts and logging for `semgrep ci` (gh-8656)
+- Further improvements to timeouts and logging for `lens ci` (gh-8656)
 
 ### Fixed
 
-- Semgrep LS will no longer duplicate some findings (lang-server)
+- Lens LS will no longer duplicate some findings (lang-server)
 - Output: GitLab SAST output has now been updated to accommodate the new SAST schema
   as of GitLab 16.x, which means that findings in GitLab will now properly display
   descriptions of the findings. (pa-3014)
@@ -5459,9 +5459,9 @@ No significant changes.
 - Constant propagation now handles implicit number-to-string conversions in Java
   and JS/TS. A Java expression such as `"foo" + 123` will now match the string
   pattern "foo123". (pro-169)
-- Add exception handling for dump_contributions core command in pysemgrep (scp-313)
+- Add exception handling for dump_contributions core command in pylens (scp-313)
 
-## [1.39.0](https://github.com/returntocorp/semgrep/releases/tag/v1.39.0) - 2023-09-07
+## [1.39.0](https://github.com/returntocorp/lens/releases/tag/v1.39.0) - 2023-09-07
 
 ### Added
 
@@ -5478,7 +5478,7 @@ No significant changes.
 
 - Ruby: Replaced old Ruby parser with the latest tree-sitter ruby parser,
   meaning that there could be small edge cases of differences in how
-  Semgrep matches Ruby programs. (pa-3017)
+  Lens matches Ruby programs. (pa-3017)
 
 ### Fixed
 
@@ -5500,62 +5500,62 @@ No significant changes.
 
 - Julia: `using` and `import` now match separately, instead of before, where
   if you wrote `using $X`, you would also match to `import`s. (pa-3028)
-- Diagnostics from a full scan through Semgrep LS no longer disappear when file is opened (pa-3046)
+- Diagnostics from a full scan through Lens LS no longer disappear when file is opened (pa-3046)
 
-## [1.38.3](https://github.com/returntocorp/semgrep/releases/tag/v1.38.3) - 2023-09-02
+## [1.38.3](https://github.com/returntocorp/lens/releases/tag/v1.38.3) - 2023-09-02
 
 No significant changes.
 
-## [1.38.2](https://github.com/returntocorp/semgrep/releases/tag/v1.38.2) - 2023-09-01
+## [1.38.2](https://github.com/returntocorp/lens/releases/tag/v1.38.2) - 2023-09-01
 
 ### Fixed
 
 - restore access to the --text option (gh-8610)
 
-## [1.38.1](https://github.com/returntocorp/semgrep/releases/tag/v1.38.1) - 2023-09-01
+## [1.38.1](https://github.com/returntocorp/lens/releases/tag/v1.38.1) - 2023-09-01
 
 ### Fixed
 
 - restored access to the --output flag (gh-8602)
-- Adds an error message clarifying the removal of `python -m semgrep`. This change originated in https://github.com/returntocorp/semgrep/pull/8504. (gh-8605)
+- Adds an error message clarifying the removal of `python -m lens`. This change originated in https://github.com/returntocorp/lens/pull/8504. (gh-8605)
 
-## [1.38.0](https://github.com/returntocorp/semgrep/releases/tag/v1.38.0) - 2023-08-31
+## [1.38.0](https://github.com/returntocorp/lens/releases/tag/v1.38.0) - 2023-08-31
 
 ### Added
 
-- The CLI now returns the commit timestamp when using `semgrep ci` (cli-timestamp)
+- The CLI now returns the commit timestamp when using `lens ci` (cli-timestamp)
 - Add support for `min-version` and `max-version` fields for each rule,
-  specifying a range of compatible Semgrep versions. If a rule is incompatible
-  with the version of Semgrep being used, it is reported in the JSON output at
+  specifying a range of compatible Lens versions. If a rule is incompatible
+  with the version of Lens being used, it is reported in the JSON output at
   the "info" level which doesn't cause an exit failure. (gh-8496)
-- Dependency data is now also sent to the /results endpoint of semgrep app. It is still sent to the /complete endpoint. (sc-async)
+- Dependency data is now also sent to the /results endpoint of lens app. It is still sent to the /complete endpoint. (sc-async)
 
 ### Changed
 
 - Adjust the count printed at the conclusion summary to match the top summary
-  (only printing the count of rules actually run by semgrep and not just the number of rules received from the server). (counts)
-- The option to omit --config and to look for the presence of a .semgrep.yml
-  or .semgrep/.semgrep.yml in the current directory has been removed. You now
-  have to explicitly use --config. (dotsemgrep)
+  (only printing the count of rules actually run by lens and not just the number of rules received from the server). (counts)
+- The option to omit --config and to look for the presence of a .lens.yml
+  or .lens/.lens.yml in the current directory has been removed. You now
+  have to explicitly use --config. (dotlens)
 - The deprecated --enable-metrics and --disable-metrics flags have finally been
   removed. Use --metrics=on or --metrics=off instead (or --metrics=auto). (enable_metrics)
-- The semgrep_main.py module has been renamed to run_scan.py and its
-  invoke_semgrep() function renamed to run_scan_and_return_json().
-  External tools (e.g., semgrep wrappers) using directly those functions
+- The lens_main.py module has been renamed to run_scan.py and its
+  invoke_lens() function renamed to run_scan_and_return_json().
+  External tools (e.g., lens wrappers) using directly those functions
   should be updated. Note that this function will soon disappear as
   part of a migration effort converting Python code to OCaml. Thus,
-  those tools should instead wrap the semgrep CLI and rely on
-  semgrep_output_v1.atd for a more stable official API. (internals)
+  those tools should instead wrap the lens CLI and rely on
+  lens_output_v1.atd for a more stable official API. (internals)
 
 ### Fixed
 
-- Running just `semgrep` now displays the help message. Semgrep does not
-  try anymore to look for a .semgrep.yml config file or .semgrep/ in the
+- Running just `lens` now displays the help message. Lens does not
+  try anymore to look for a .lens.yml config file or .lens/ in the
   current directory, which used to cause issues when running from your
-  home directory which can contain the .semgrep/settings.yml file (which
-  is actually not a semgrep rule). (gh-4457)
+  home directory which can contain the .lens/settings.yml file (which
+  is actually not a lens rule). (gh-4457)
 - Fixed CLI output to display matches from different rules with the same message. (gh-8557)
-- Semgrep PyPI package can now be pip install-ed on aarch64 libmusl platforms (e.g. Alpine) (gh-8565)
+- Lens PyPI package can now be pip install-ed on aarch64 libmusl platforms (e.g. Alpine) (gh-8565)
 - Updated `--max-memory` help description to make it more clear/concise. To say "Defaults to 0 for all CLI scans." implies a different default for non-CLI scans, where in practicality the default is 0 for all scans except when using Pro Engine, where the default is 5000. (max_memory_help)
 - Julia: Fixed a bug where `let end` blocks were not being parsed
   correctly, causing their contents to not strictly match while inside of
@@ -5566,27 +5566,27 @@ No significant changes.
 
 - Fixed bug where dependencies in (pnpm-lock.yaml at version 6.0 or above) files were not parsed. (sc-1033)
 
-## [1.37.0](https://github.com/returntocorp/semgrep/releases/tag/v1.37.0) - 2023-08-25
+## [1.37.0](https://github.com/returntocorp/lens/releases/tag/v1.37.0) - 2023-08-25
 
 ### Added
 
-- `semgrep scan` is now more resilient to failures when fetching config from semgrep.dev. If it can't fetch a config from semgrep.dev it will use backup infrastructure to fetch the most recent successful config for that customers environment. (gh-8459)
+- `lens scan` is now more resilient to failures when fetching config from lens.dev. If it can't fetch a config from lens.dev it will use backup infrastructure to fetch the most recent successful config for that customers environment. (gh-8459)
 - C#: Added experimental NuGet ecosystem parser (gh-8484)
 - metavariable-comparison: You can now use "in" and "not in" for strings
   in the same sense as in Python, for substring checking. (pa-2979)
 - Julia: Added the deep expression operator, so now you can write patterns like
   foo(<... 42 ...>) to find instances of calls to `foo` that contain `42` somewhere
   inside of it. (pa-3018)
-- `semgrep ci` displays enabled products when scans are created and/or when the scan
-  config is generated from Semgrep Cloud Platform. Additionally, if no products are
+- `lens ci` displays enabled products when scans are created and/or when the scan
+  config is generated from Lens Cloud Platform. Additionally, if no products are
   enabled then a friendly error is raised. (scp-432)
 
 ### Changed
 
 - The --dump-ast flag now requires the additional --experimental flag
   and does not require to pass a --config flag anymore.
-  Example of use: `semgrep --experimental --lang python --dump-ast foo.py` (dumpast)
-- The 'semgrep shouldafound' command has been removed. It was not really used
+  Example of use: `lens --experimental --lang python --dump-ast foo.py` (dumpast)
+- The 'lens shouldafound' command has been removed. It was not really used
   and it might be better to offer such a functionality in the IDE instead of
   in the CLI. (shouldafound)
 
@@ -5595,7 +5595,7 @@ No significant changes.
 - Parsing: Some parsing errors involving tree-sitter inserting fake "missing"
   nodes were previously unreported. They are now reported as errors although the
   parse tree is preserved, including the phony node inserted by tree-sitter.
-  This should not result in different Semgrep findings. It results only in more
+  This should not result in different Lens findings. It results only in more
   reports of partial parsing. See the original issue at
   https://github.com/returntocorp/ocaml-tree-sitter-core/issues/8 for technical
   details. (gh-8190)
@@ -5624,11 +5624,11 @@ No significant changes.
   bar(y)
   ```
 
-  Semgrep matched from `foo()` to `bar(y)` and because of that it did not
+  Lens matched from `foo()` to `bar(y)` and because of that it did not
   try to match inside the `if`, thus there was no match from `foo()` to `bar(x)`.
-  However, if we commented out `bar(y)`, then Semgrep did match `bar(x)`.
+  However, if we commented out `bar(y)`, then Lens did match `bar(x)`.
 
-  Semgrep now produces the two expected matches. (pa-2992)
+  Lens now produces the two expected matches. (pa-2992)
 
 - Julia: Type information from declarations can now be used in
   `metavariable-type`. For instance, the program:
@@ -5664,12 +5664,12 @@ No significant changes.
   }
   ```
 
-  Semgrep was considering that `this.x` referred to the parameter `x` of `test2`
+  Lens was considering that `this.x` referred to the parameter `x` of `test2`
   rather than to the class attribute `x`. (pa-3010)
 
 - Fixed bug where packages in build.gradle files had their names incorrectly parsed without their group ID (sc-1012)
 
-## [1.36.0](https://github.com/returntocorp/semgrep/releases/tag/v1.36.0) - 2023-08-14
+## [1.36.0](https://github.com/returntocorp/lens/releases/tag/v1.36.0) - 2023-08-14
 
 ### Added
 
@@ -5679,14 +5679,14 @@ No significant changes.
 
 ### Fixed
 
-- Convert all '@r2c.dev' email addresses to '@semgrep.com'. (gh-8437)
-- Semgrep LSP now compiled with tls, should no longer crash with not compiled with tls error (ls-conduit)
-- Fixed multiprocess testing crash due to new osemgrep entrypoint (pa-2963)
+- Convert all '@r2c.dev' email addresses to '@lens.com'. (gh-8437)
+- Lens LSP now compiled with tls, should no longer crash with not compiled with tls error (ls-conduit)
+- Fixed multiprocess testing crash due to new olens entrypoint (pa-2963)
 - Pro: JS/TS: taint-mode: Fix bug introduced in 1.33.1 that had the side-effect of
   hurting performance of taint rules on JS/TS repos that used destructuring in
   functions formal parameters. (pro-119)
 
-## [1.35.0](https://github.com/returntocorp/semgrep/releases/tag/v1.35.0) - 2023-08-09
+## [1.35.0](https://github.com/returntocorp/lens/releases/tag/v1.35.0) - 2023-08-09
 
 ### Added
 
@@ -5698,7 +5698,7 @@ No significant changes.
 
   "sum by (..., b, a, c, ...) (X)" should match "sum by (a,b,c) (X)" (gh-8399)
 
-## [1.34.1](https://github.com/returntocorp/semgrep/releases/tag/v1.34.1) - 2023-07-28
+## [1.34.1](https://github.com/returntocorp/lens/releases/tag/v1.34.1) - 2023-07-28
 
 ### Added
 
@@ -5715,7 +5715,7 @@ No significant changes.
 
 - fix(yaml): fix captures for sequences that contain mappings (gh-8388)
 
-## [1.34.0](https://github.com/returntocorp/semgrep/releases/tag/v1.34.0) - 2023-07-27
+## [1.34.0](https://github.com/returntocorp/lens/releases/tag/v1.34.0) - 2023-07-27
 
 ### Added
 
@@ -5734,8 +5734,8 @@ No significant changes.
   Metavariable type is supported for Julia. (gh-8367)
 
 - New --legacy flag to force the use of the old Python implementation of
-  Semgrep (also known as 'pysemgrep'). Note that by default most semgrep
-  commands are still using the Python implementation (except 'semgrep
+  Lens (also known as 'pylens'). Note that by default most lens
+  commands are still using the Python implementation (except 'lens
   interactive'), so in practice you don't need to add this flag, but as
   we port more commands to OCaml, the new --legacy flag might be useful
   if you find some regressions. (legacy)
@@ -5758,7 +5758,7 @@ No significant changes.
 
   Such sources taint the "control flow" (or the program counter) so that it is
   possible to implement reachability queries that do not require the flow of any
-  data. Thus, Semgrep reports a finding in the code below, because after `source()`
+  data. Thus, Lens reports a finding in the code below, because after `source()`
   the flow of control will reach `sink()`, even if no data is flowing between both:
 
   ````python
@@ -5775,8 +5775,8 @@ No significant changes.
 
 ### Changed
 
-- Started using ATD to define the schema for data sent to the /complete endpoint of semgrep app (app-4255)
-- Targets in a `.yarn/` directory are now ignored by the default .semgrepignore patterns. (dotyarn)
+- Started using ATD to define the schema for data sent to the /complete endpoint of lens app (app-4255)
+- Targets in a `.yarn/` directory are now ignored by the default .lensignore patterns. (dotyarn)
 
 ### Fixed
 
@@ -5785,14 +5785,14 @@ No significant changes.
 - Fixed stack overflow caused by symbolic propagation. (pa-2933)
 - Rust: Macro calls which involve dereferencing and reference operators
   (such as `foo!(&x)` and `foo!(*x)`) now properly transmit taint (pa-2951)
-- Semgrep no longer crashes when running --test (pa-2963)
+- Lens no longer crashes when running --test (pa-2963)
 - Exceptions raised during parsing of manifest files no longer interrupt general parser execution, which previously prevented lockfile parsing if a manifest failed to parse. (sc-exceptions)
 
-## [1.33.2](https://github.com/returntocorp/semgrep/releases/tag/v1.33.2) - 2023-07-21
+## [1.33.2](https://github.com/returntocorp/lens/releases/tag/v1.33.2) - 2023-07-21
 
 No significant changes.
 
-## [1.33.1](https://github.com/returntocorp/semgrep/releases/tag/v1.33.1) - 2023-07-21
+## [1.33.1](https://github.com/returntocorp/lens/releases/tag/v1.33.1) - 2023-07-21
 
 ### Added
 
@@ -5816,7 +5816,7 @@ No significant changes.
 
 ### Changed
 
-- Updated semgrep-interfaces, changed `api_scans_findings` to `ci_scan_results`, removed `gitlab_token` field and added `ignores` and `renamed_paths` field to `ci_scan_results`. (app-4252)
+- Updated lens-interfaces, changed `api_scans_findings` to `ci_scan_results`, removed `gitlab_token` field and added `ignores` and `renamed_paths` field to `ci_scan_results`. (app-4252)
 
 ### Fixed
 
@@ -5854,11 +5854,11 @@ No significant changes.
   and various other small translation issues that would affect taint. (pa-2936)
 - Fixed bug in gradle.lockfile parser where we would error on `empty=` with nothing after it (sc-987)
 
-## [1.32.0](https://github.com/returntocorp/semgrep/releases/tag/v1.32.0) - 2023-07-13
+## [1.32.0](https://github.com/returntocorp/lens/releases/tag/v1.32.0) - 2023-07-13
 
 ### Added
 
-- feat(docker): Create a semgrep user for our docker container so that people can run it as a non-root user (gh-8116)
+- feat(docker): Create a lens user for our docker container so that people can run it as a non-root user (gh-8116)
 - feat(typed metavar): Typed metavariable support for Rust
 
   Users can create `TypedMetavar` using Rust's type annotation syntax `:`.
@@ -5883,22 +5883,22 @@ No significant changes.
 - Fixed an issue leading to incorrect autofix results involving JS/TS async arrow functions (e.g. `async () => {}`, etc.). (gh-7353)
 - Workaround for rootless containers as git operations may fail due to dubious ownership of /src (gh-8267)
 
-## [1.31.2](https://github.com/returntocorp/semgrep/releases/tag/v1.31.2) - 2023-07-07
+## [1.31.2](https://github.com/returntocorp/lens/releases/tag/v1.31.2) - 2023-07-07
 
 No significant changes.
 
-## [1.31.1](https://github.com/returntocorp/semgrep/releases/tag/v1.31.1) - 2023-07-07
+## [1.31.1](https://github.com/returntocorp/lens/releases/tag/v1.31.1) - 2023-07-07
 
 No significant changes.
 
-## [1.31.0](https://github.com/returntocorp/semgrep/releases/tag/v1.31.0) - 2023-07-07
+## [1.31.0](https://github.com/returntocorp/lens/releases/tag/v1.31.0) - 2023-07-07
 
 ### Added
 
-- Make CLI hit the new endpoint for the reliable fixed status on the Semgrep app. (cod-16)
-- feat(rule syntax): Metavariable Type Extension for Semgrep Rule Syntax 2.0
+- Make CLI hit the new endpoint for the reliable fixed status on the Lens app. (cod-16)
+- feat(rule syntax): Metavariable Type Extension for Lens Rule Syntax 2.0
 
-  This PR introduces the changes made in Semgrep rule syntax 1.0 to version 2.0 as well.
+  This PR introduces the changes made in Lens rule syntax 1.0 to version 2.0 as well.
 
   # rule syntax 2.0
 
@@ -5940,10 +5940,10 @@ No significant changes.
 - Fixed rust attribute patterns to allow matching on simple attribute syntax. (pa-2903)
 - Rust: Fixed a bug where standalone metavariable patterns
   were not matching as expected (pa-2915)
-- Fixed python semgrep pattern parsing to also parse match statements, by chaining in the python tree-sitter parser, and adding metavariable support to the python tree-sitter parser. (pa-6442)
+- Fixed python lens pattern parsing to also parse match statements, by chaining in the python tree-sitter parser, and adding metavariable support to the python tree-sitter parser. (pa-6442)
 - poetry.lock parsing: handle empty toml tables, quoted table keys, and arbitrarily placed comments (sc-834)
 
-## [1.30.0](https://github.com/returntocorp/semgrep/releases/tag/v1.30.0) - 2023-06-28
+## [1.30.0](https://github.com/returntocorp/lens/releases/tag/v1.30.0) - 2023-06-28
 
 ### Added
 
@@ -6004,13 +6004,13 @@ No significant changes.
 ### Fixed
 
 - Language server no longer crashes when a user is logged in and opens a non git repo folder (pa-2886)
-- It is not required anymore to have semgrep (and pysemgrep) in the PATH. (pa-2895)
+- It is not required anymore to have lens (and pylens) in the PATH. (pa-2895)
 
-## [1.29.0](https://github.com/returntocorp/semgrep/releases/tag/v1.29.0) - 2023-06-26
+## [1.29.0](https://github.com/returntocorp/lens/releases/tag/v1.29.0) - 2023-06-26
 
 ### Added
 
-- feat(rule syntax): Metavariable Type Extension for Semgrep Rule Syntax
+- feat(rule syntax): Metavariable Type Extension for Lens Rule Syntax
 
   We've added a dedicated field for annotating the type information of
   metavariables. By adopting this approach, instead of relying solely on
@@ -6059,10 +6059,10 @@ No significant changes.
 
   `metavariable-type` field is now supported for Python too. (gh-8126)
 
-- New --experimental flag to switch to a new implementation of Semgrep entirely
+- New --experimental flag to switch to a new implementation of Lens entirely
   written in OCaml with faster startup time, incremental display of matches,
   AST and registry caching, a new interactive mode and more. Not all
-  features of the legacy Python Semgrep have been ported though. (osemgrep)
+  features of the legacy Python Lens have been ported though. (olens)
 - Matching: Writing a pattern which is a sequence of statements, such as
   ```
   foo();
@@ -6080,7 +6080,7 @@ No significant changes.
 
 ### Fixed
 
-- Added support for post-pip0614 decorators; now semgrep accepts decorators of
+- Added support for post-pip0614 decorators; now lens accepts decorators of
   the form `@ named_expr_test NEWLINE`, so for example with the pattern
   `lambda $X:$X($X)`:
 
@@ -6097,7 +6097,7 @@ No significant changes.
   ``` (gh-4946)
   ````
 
-- Fixed a typing issue with go; where semgrep with the pattern
+- Fixed a typing issue with go; where lens with the pattern
   '($VAR : *tau.rho).$F()` wouldn't produce a match in the
   following:
 
@@ -6152,15 +6152,15 @@ No significant changes.
   ``` (pa-7398)
   ````
 
-## [1.28.0](https://github.com/returntocorp/semgrep/releases/tag/v1.28.0) - 2023-06-21
+## [1.28.0](https://github.com/returntocorp/lens/releases/tag/v1.28.0) - 2023-06-21
 
 ### Added
 
-- Added lone decorators as a valid Python semgrep pattern, so for example `$NAME($X)` will
+- Added lone decorators as a valid Python lens pattern, so for example `$NAME($X)` will
   generate two seperate findings here:
   ````
   @hello("world")
-  @hi("semgrep!")
+  @hi("lens!")
   def shift():
     return "left!"
   ``` (gh-4722)
@@ -6188,8 +6188,8 @@ No significant changes.
   ``` (pa-2675)
   ````
 
-- Semgrep Language Server now supports multi-folder workspaces (pa-2772)
-- New pre-commit hook `semgrep-ci` to use CI rules in pre-commit, which will pull from the rule board + block those in the block column (pa-2795)
+- Lens Language Server now supports multi-folder workspaces (pa-2772)
+- New pre-commit hook `lens-ci` to use CI rules in pre-commit, which will pull from the rule board + block those in the block column (pa-2795)
 - Added support for date comparison and functionality to get current date.
   Currently this requires date strings to be in the format "yyyy-mm-dd" next step is to support other formats. (pa-7992)
 
@@ -6218,25 +6218,25 @@ No significant changes.
   becomes `hello.world.my-rule`. (gh-8057)
 - Diff aware scans now work when git state isn't clean (pa-2795)
 
-## [1.27.0](https://github.com/returntocorp/semgrep/releases/tag/v1.27.0) - 2023-06-13
+## [1.27.0](https://github.com/returntocorp/lens/releases/tag/v1.27.0) - 2023-06-13
 
 ### Added
 
 - PHP: Added composer ecosystem parser (gh-7734)
-- Pro: taint-mode: Java: Semgrep can now relate Java properties and their corresponding
+- Pro: taint-mode: Java: Lens can now relate Java properties and their corresponding
   getters/setters even when these are autogenerated (so the actual getters/setters are
   not declared in the sources). (pa-2833)
 
 ### Fixed
 
-- semgrep-core now validates rule IDs. This should not affect users since rule
+- lens-core now validates rule IDs. This should not affect users since rule
   ID validation is done by the Python wrapper. (gh-8026)
 
-## [1.26.0](https://github.com/returntocorp/semgrep/releases/tag/v1.26.0) - 2023-06-09
+## [1.26.0](https://github.com/returntocorp/lens/releases/tag/v1.26.0) - 2023-06-09
 
 ### Added
 
-- In Java, Semgrep can now track taint through more getters and setters. It could already relate setters to getters (e.g. `o.setX(taint); o.getX()` but now it can relate setters and getters to properties (e.g. `o.setX(taint); o.x`). (getters)
+- In Java, Lens can now track taint through more getters and setters. It could already relate setters to getters (e.g. `o.setX(taint); o.getX()` but now it can relate setters and getters to properties (e.g. `o.setX(taint); o.x`). (getters)
 - taint-mode: Added experimental options `taint_assume_safe_booleans` and
   `taint_assume_safe_numbers` to avoid propagating taint coming from expressions
   with Boolean or number (integer, float) types. (pa-2777)
@@ -6251,13 +6251,13 @@ No significant changes.
 - Fix a recent regression that caused failures to match in certain cases that combined metavariable-regex and typed metavariables which themselves contain metavariables (e.g. in Go `($X: $T)` with a `metavariable-regex` operating on `$T`). (pa-2822)
 - Gomod comments: fix parsing comments that end in ')' (sc-716)
 
-## [1.25.0](https://github.com/returntocorp/semgrep/releases/tag/v1.25.0) - 2023-06-06
+## [1.25.0](https://github.com/returntocorp/lens/releases/tag/v1.25.0) - 2023-06-06
 
 ### Added
 
 - aliengrep: new option 'generic_caseless' to achieve case-insensitive matching (gh-7883)
-- Semgrep now includes heuristics based on the Java standard library and common naming patterns. These allow Semgrep to determine the types of more expressions in Java, for use with typed metavariables (https://semgrep.dev/docs/writing-rules/pattern-syntax/#typed-metavariables). (heuristics)
-- Language server now supports search (and replace) with semgrep patterns through semgrep/search (ls-search)
+- Lens now includes heuristics based on the Java standard library and common naming patterns. These allow Lens to determine the types of more expressions in Java, for use with typed metavariables (https://lens.dev/docs/writing-rules/pattern-syntax/#typed-metavariables). (heuristics)
+- Language server now supports search (and replace) with lens patterns through lens/search (ls-search)
 - Language Server will now notify users of errors, and reason for crash (pa-2791)
 
 ### Fixed
@@ -6267,7 +6267,7 @@ No significant changes.
   at the extremity of a pattern (always) or a line (in single-mode) are now
   anchored to the beginning/end of input/line. For example, `...` in multiline
   mode matches the whole input rather than matching nothing many times. (gh-7881)
-- Fixed bug in constant propagation that made Semgrep fail to compute the value of
+- Fixed bug in constant propagation that made Lens fail to compute the value of
   an integer constant when this was obtained via the multiplication of two other
   constants. (gh-7893)
 - Fix regexps potentially vulnerable to ReDoS attacks in Python code for parsing
@@ -6275,13 +6275,13 @@ No significant changes.
   still perceptibly slow on 5000-byte input. Reported by Sebastian Chnelik,
   PyUp.io. (gh-7943)
 
-## [1.24.1](https://github.com/returntocorp/semgrep/releases/tag/v1.24.1) - 2023-06-01
+## [1.24.1](https://github.com/returntocorp/lens/releases/tag/v1.24.1) - 2023-06-01
 
 ### Fixed
 
 - Yarn v1: fix parsing for package headers without version constraints (sc-749)
 
-## [1.24.0](https://github.com/returntocorp/semgrep/releases/tag/v1.24.0) - 2023-05-31
+## [1.24.0](https://github.com/returntocorp/lens/releases/tag/v1.24.0) - 2023-05-31
 
 ### Added
 
@@ -6302,12 +6302,12 @@ No significant changes.
   }
   ```
 
-  Semgrep knows that an object constructed by `new Obj("tainted", "safe")` has its
+  Lens knows that an object constructed by `new Obj("tainted", "safe")` has its
   `x` attribute tainted, whereas its `y` attribute is safe. (pa-2570)
 
 ### Changed
 
-- Set limits to the amount of taint that is tracked by Semgrep to prevent perf
+- Set limits to the amount of taint that is tracked by Lens to prevent perf
   issues. (pa-2570)
 
 ### Fixed
@@ -6321,13 +6321,13 @@ No significant changes.
   type. For example, the pattern `(List<$T> $X)` would fail to match a value of
   type `List<String>`. (typed-mvar)
 
-## [1.23.0](https://github.com/returntocorp/semgrep/releases/tag/v1.23.0) - 2023-05-24
+## [1.23.0](https://github.com/returntocorp/lens/releases/tag/v1.23.0) - 2023-05-24
 
 ### Added
 
-- On scan complete during logged in `semgrep ci` scans, check returned exit code to
+- On scan complete during logged in `lens ci` scans, check returned exit code to
   see if should block scans. This is to support incoming features that requires
-  information from semgrep.dev (complete)
+  information from lens.dev (complete)
 - Extract mode: users can now choose to include or exclude rules to run on, similar to `paths:`. For example,
   to only run on the rules `example-1` and `example-2`, you would write
 
@@ -6357,8 +6357,8 @@ No significant changes.
 - Kotlin: Added literal metavariables, from patterns like `"$FOO"`.
   You can still match strings that only contain a single interpolated
   ident by using the brace notation, e.g. `"${FOO}"`. (pa-2755)
-- Increase timeout of `semgrep ci` upload findings network calls
-  and make said timeout configurable with env var SEMGREP_UPLOAD_FINDINGS_TIMEOUT (timeout)
+- Increase timeout of `lens ci` upload findings network calls
+  and make said timeout configurable with env var LENS_UPLOAD_FINDINGS_TIMEOUT (timeout)
 
 ### Changed
 
@@ -6394,15 +6394,15 @@ No significant changes.
 - Improve type inference for some simple arithmetic expressions (inference)
 - Fixed bug introduced in 1.19.0 that was causing some stack overflows. (pa-2740)
 
-## [1.22.0](https://github.com/returntocorp/semgrep/releases/tag/v1.22.0) - 2023-05-15
+## [1.22.0](https://github.com/returntocorp/lens/releases/tag/v1.22.0) - 2023-05-15
 
 ### Added
 
 - Add support for language Cairo 1.0 (develop). Thanks to Frostweeds (Romain Jufer) for his contribution! (gh-7757)
-- On logged in `semgrep ci` scans, report lockfile parse errors to display in webUI (lockfileparse)
+- On logged in `lens ci` scans, report lockfile parse errors to display in webUI (lockfileparse)
 - Pro: Java: Taint-mode can now do field-sensitive analysis of class constructors.
   For example, if the default constructor of a class `C` sets its field `x` to a
-  tainted value, given `o = new C()`, Semgrep will know that `o.getX()` is tainted. (pa-2570)
+  tainted value, given `o = new C()`, Lens will know that `o.getX()` is tainted. (pa-2570)
 - Kotlin: Added named ellipses, like $...X (pa-2710)
 - Kotlin: Interpolated identifiers in strings, such as "$foo", are now properly
   able to match explicitly interpolated expressions, like "${...}". (pa-2711)
@@ -6423,7 +6423,7 @@ No significant changes.
 - taint-mode: Fixed bug in taint labels that was causing some fatal errors:
   > Failure "Call AST_utils.with_xxx_equal to avoid this error." (gh-7694)
 
-## [1.21.0](https://github.com/returntocorp/semgrep/releases/tag/v1.21.0) - 2023-05-04
+## [1.21.0](https://github.com/returntocorp/lens/releases/tag/v1.21.0) - 2023-05-04
 
 ### Added
 
@@ -6432,9 +6432,9 @@ No significant changes.
 ### Fixed
 
 - Fixed an issue where parentheses were incorrectly removed when autofixing JS/TS code. (gh-6233)
-- Fixed issue where the semgrep language server would crash with "No such file or directory: 'semgrep-core'" (pa-2745)
+- Fixed issue where the lens language server would crash with "No such file or directory: 'lens-core'" (pa-2745)
 
-## [1.20.0](https://github.com/returntocorp/semgrep/releases/tag/v1.20.0) - 2023-04-28
+## [1.20.0](https://github.com/returntocorp/lens/releases/tag/v1.20.0) - 2023-04-28
 
 ### Added
 
@@ -6443,7 +6443,7 @@ No significant changes.
 
 ### Changed
 
-- Pro: `semgrep --pro` still requires a single target, but this target no longer
+- Pro: `lens --pro` still requires a single target, but this target no longer
   needs to be a directory, it can be an individual file too. (misc-1)
 - Partially analyzed files are no longer reported as skipped by --verbose. And if we
   lack info about what lines have been skipped we no longer report that all lines have
@@ -6455,7 +6455,7 @@ No significant changes.
 ### Fixed
 
 - CLI: Fixed a bug where Git projects with URLs with subgroups would not parse correctly,
-  and produce non-clickable links in Semgrep App. These are such as:
+  and produce non-clickable links in Lens App. These are such as:
   https://gitlab.com/example/group2/group3/test-case.git (pa-2669)
 - Taint: Fixed a bug where the new labeled propagators would sometimes not behave properly (pa-2682)
 - Swift: Made it so that taint correctly propagates into
@@ -6465,7 +6465,7 @@ No significant changes.
   loop. (pro-56)
 - The scan progress bar no longer gets stuck displaying 0% (zero-progress)
 
-## [1.19.0](https://github.com/returntocorp/semgrep/releases/tag/v1.19.0) - 2023-04-21
+## [1.19.0](https://github.com/returntocorp/lens/releases/tag/v1.19.0) - 2023-04-21
 
 ### Added
 
@@ -6498,33 +6498,33 @@ No significant changes.
 
 ### Changed
 
-- The different lists of skipped files output by Semgrep when given --verbose will
+- The different lists of skipped files output by Lens when given --verbose will
   now be sorted, to make it easier to `diff` the outputs of two runs. (pa-2700)
 
 ### Fixed
 
-- CLI: Setting Semgrep-specific environment variables for metadata (like
-  SEMGREP_REPO_NAME, SEMGREP_REPO_URL, SEMGREP_PR_ID, and friends) now
+- CLI: Setting Lens-specific environment variables for metadata (like
+  LENS_REPO_NAME, LENS_REPO_URL, LENS_PR_ID, and friends) now
   properly works on GitHub and GitLab CI scans.
 
   If not set, functionality is same as before. (pa-2644)
 
 - CLI: Fixed a bug where repositories with a dot in the name would cause
-  semgrep ci scans to crash (pa-2655)
+  lens ci scans to crash (pa-2655)
 
-## [1.18.0](https://github.com/returntocorp/semgrep/releases/tag/v1.18.0) - 2023-04-14
+## [1.18.0](https://github.com/returntocorp/lens/releases/tag/v1.18.0) - 2023-04-14
 
 ### Added
 
 - Metavariable comparison: Added support for \*\*, the exponentiation operator. (gh-7474)
-- Pro: Java: Semgrep is now able to track the propagation of taint from the
+- Pro: Java: Lens is now able to track the propagation of taint from the
   arguments of a method, to the object being called. So e.g. given a method
 
       public void foo(int x) {
           this.x = x;
       }
 
-  and a call `o.foo(tainted)`, Semgrep will be able to track that the field
+  and a call `o.foo(tainted)`, Lens will be able to track that the field
   `x` of `o` has been tainted. (pa-2570)
 
 - Kotlin: Class fields will now receive the correct types, and be
@@ -6549,23 +6549,23 @@ No significant changes.
 
   So for instance, a pattern `(int $X)` in Java would match twice to `(int) 5`. (gh-7403)
 
-- taint-mode: Given `x = tainted`, then `x.a = safe`, then `x.a.b = tainted`, Semgrep
-  did not report `sink(x.a.b)`. Because `x.a` was clean, that made Semgrep disregard
+- taint-mode: Given `x = tainted`, then `x.a = safe`, then `x.a.b = tainted`, Lens
+  did not report `sink(x.a.b)`. Because `x.a` was clean, that made Lens disregard
   the tainting of any field of `x.a` such as `x.a.b`. This now works as expected. (pa-2486)
-- When using `metavariable-pattern` to match embedded PHP code, Semgrep was
+- When using `metavariable-pattern` to match embedded PHP code, Lens was
   unconditionally adding the `<?php` opening to the embedded code. When
   `<?php` was already present, this caused parsing errors. (pa-2696)
 - Lockfile-only supply chain findings correctly include line numbers in their match data, improving the appearence of CLI output (sc-658)
-- Increase timeout for `semgrep install-semgrep-pro` to avoid failures when the download is slow. (timeout)
+- Increase timeout for `lens install-lens-pro` to avoid failures when the download is slow. (timeout)
 - Fixed the range reported by findings for YAML files that include an anchor, so that the match does not include the original location of the snippet bound to the anchor. (yaml-alias)
 
-## [1.17.1](https://github.com/returntocorp/semgrep/releases/tag/v1.17.1) - 2023-04-05
+## [1.17.1](https://github.com/returntocorp/lens/releases/tag/v1.17.1) - 2023-04-05
 
 ### Fixed
 
 - Fix an issue that could lead to a crash when printing findings that contain snippets that look like markup to the Rich Python library (rich-markup-crash)
 
-## [1.17.0](https://github.com/returntocorp/semgrep/releases/tag/v1.17.0) - 2023-04-04
+## [1.17.0](https://github.com/returntocorp/lens/releases/tag/v1.17.0) - 2023-04-04
 
 ### Added
 
@@ -6580,17 +6580,17 @@ No significant changes.
 
 ### Fixed
 
-- Fixed an issue where incorrect ranges for expressions containing parentheses could lead Semgrep to generate invalid autofixes in Python. (gh-2902)
-- In rare cases, Semgrep could generate invalid autofixes where Python keyword arguments were placed before positional arguments. When using AST-based autofix, it no longer makes that error. (keywordarg-autofix)
+- Fixed an issue where incorrect ranges for expressions containing parentheses could lead Lens to generate invalid autofixes in Python. (gh-2902)
+- In rare cases, Lens could generate invalid autofixes where Python keyword arguments were placed before positional arguments. When using AST-based autofix, it no longer makes that error. (keywordarg-autofix)
 
-## [1.16.0](https://github.com/returntocorp/semgrep/releases/tag/v1.16.0) - 2023-03-30
+## [1.16.0](https://github.com/returntocorp/lens/releases/tag/v1.16.0) - 2023-03-30
 
 ### Added
 
 - Kotlin: Added support for typed metavariables. You can write a pattern like:
   ($X : String)
   to find all instances of expressions with type String. (pa-2648)
-- Scala: Semgrep can now parse programs that contain quoted expressions, context
+- Scala: Lens can now parse programs that contain quoted expressions, context
   parameter clauses using `using`, and soft modifiers like `inline` and `open`. (pa-2672)
 - Scala: Can now parse programs containing matches on types, such as:
   type t = K match {
@@ -6598,7 +6598,7 @@ No significant changes.
   } (pa-2673)
 - Parsing rules can take multiple seconds at the start of a scan.
   When running in an interactive terminal with more than 500 rules,
-  Semgrep will show a progress bar for this step. (rule-progress)
+  Lens will show a progress bar for this step. (rule-progress)
 
 ### Changed
 
@@ -6606,7 +6606,7 @@ No significant changes.
   that are made of multiple smaller `maven_dep_tree.txt` files concatenated with `cat`. (maven-dep-forest)
 - Findings of a scan are now printed with section headers per group for the following categories:
   Code Blocking, Code Non-blocking, Supply Chain Reachable, Supply Chain Unreachable findings. (results-headings)
-- Switched to using go.mod files to read go dependencies for Semgrep Supply Chain, instead of go.sum files (sc-gomod)
+- Switched to using go.mod files to read go dependencies for Lens Supply Chain, instead of go.sum files (sc-gomod)
 
 ### Fixed
 
@@ -6618,7 +6618,7 @@ No significant changes.
   not using /tmp to parse those patterns. (pa-2597)
 - Pipfiles with a line comment or inline comment will now parse correctly. (sc-664)
 
-## [1.15.0](https://github.com/returntocorp/semgrep/releases/tag/v1.15.0) - 2023-03-15
+## [1.15.0](https://github.com/returntocorp/lens/releases/tag/v1.15.0) - 2023-03-15
 
 ### Added
 
@@ -6652,34 +6652,34 @@ No significant changes.
   the output `label` is specified. (pa-1633)
 
 - taint-mode: Java: Support for basic field sensitivity via getters and setters.
-  Given `obj.setX(tainted)`, Semgrep will identify that a subsequent `obj.getX()`
+  Given `obj.setX(tainted)`, Lens will identify that a subsequent `obj.getX()`
   carries the same taint as `tainted`. It will also differentiate between
-  `obj.getX()` and `obj.getY()`. Note that Semgrep does not examine the definitions
+  `obj.getX()` and `obj.getY()`. Note that Lens does not examine the definitions
   for the getter or setter methods, and it does not know whether e.g. some other
   method `obj.clearX()` clears the taint that `obj.setX(tainted)` adds. (pa-2585)
-- Pro Engine: Semgrep CLI will now download a version of Semgrep Pro Engine
-  compatible with the current version of Semgrep CLI, as opposed to the most
+- Pro Engine: Lens CLI will now download a version of Lens Pro Engine
+  compatible with the current version of Lens CLI, as opposed to the most
   recently released version.
 
-  This behavior is only supported for Semgrep 1.12.1 and later. Previous
+  This behavior is only supported for Lens 1.12.1 and later. Previous
   versions will still download the most recently released version, as before. (pa-2595)
 
 ### Changed
 
-- Pro: `semgrep ci` will run intrafile interprocedural taint analysis by default
+- Pro: `lens ci` will run intrafile interprocedural taint analysis by default
   in differential scans (aka PR scans). (Note that interfile analysis is not run
   in differential scans for performance reasons.) (pa-2565)
-- Remove custom _entrypoint_ for returntocorp/semgrep Docker images, now you must
-  explicitly call semgrep.
+- Remove custom _entrypoint_ for returntocorp/lens Docker images, now you must
+  explicitly call lens.
 
-  This won't work now: `docker run -v $(pwd):/src returntocorp/semgrep scan ...`
-  Must do this instead: `docker run -v $(pwd):/src returntocorp/semgrep semgrep scan ...` (pa-2642)
+  This won't work now: `docker run -v $(pwd):/src returntocorp/lens scan ...`
+  Must do this instead: `docker run -v $(pwd):/src returntocorp/lens lens scan ...` (pa-2642)
 
 - Changed Maven version comparison to more closely reflect usage, so versions with more than 3 increments will not be treated as plain strings (sc-656)
 
 ### Fixed
 
-- The AST dump produced by semgrep-core is now usable from Python
+- The AST dump produced by lens-core is now usable from Python
   with the provided ATD interface and the Python code derived from it with
   atdpy. (gh-7296)
 - Terraform: Nested blocks can now be used as sources and sinks for taint.
@@ -6700,17 +6700,17 @@ No significant changes.
   no rules would run on the extracted targets. Additionally, with multiple rules
   the wrong rule might be run on the extracted target, causing errors. Now, in
   extract mode all the rules for the destination language will be run. (pa-2591)
-- Metrics: logged in `semgrep ci` scans now send metrics, as our Privacy.md indicates
+- Metrics: logged in `lens ci` scans now send metrics, as our Privacy.md indicates
   (previously they incorrectly did not, which made it harder for us to track failure events) (pa-2592)
 - Rust: Basic let-statement bindings (such as `let x = tainted`) now properly
   carry taint. (pa-2605)
 - Improved error reporting for rule parsing by correctly reporting parse errors
   instead of engine errors in certain cases. (pa-2610)
-- Taint: Fixed an issue where an error could be thrown if semgrep-core's output
+- Taint: Fixed an issue where an error could be thrown if lens-core's output
   contained a dataflow trace without a sink. (pa-2625)
 - Julia: Properly allow string literal metavariables like "$A" to be patterns. (pa-2630)
 
-## [1.14.0](https://github.com/returntocorp/semgrep/releases/tag/v1.14.0) - 2023-03-01
+## [1.14.0](https://github.com/returntocorp/lens/releases/tag/v1.14.0) - 2023-03-01
 
 ### Added
 
@@ -6746,7 +6746,7 @@ No significant changes.
 
 ### Fixed
 
-- Fix: Semgrep Pro previously reported a crash for user errors such as
+- Fix: Lens Pro previously reported a crash for user errors such as
   invalid patterns. It will now give a good error message. (gh-7028)
 - Dataflow: Fixed incorrect translation of side-effects inside Boolean expressions,
   this was (for example) causing `if (cond && x = 42) S1; S2` to be interpreted as
@@ -6760,7 +6760,7 @@ No significant changes.
   these issues in version 1.1.0. (pa-2509)
 - metavariable-pattern: Fixed regression introduced in version 1.9.0 that broke
   the use of `pattern-not` within `metavariable-pattern` in some cases. (pa-2510)
-- Make Semgrep parse HTML-style comments in JavaScript code. (pa-2560)
+- Make Lens parse HTML-style comments in JavaScript code. (pa-2560)
 - Reduced peak memory usage during inter-file analysis (pa-2563)
 - Supply Chain scans on a project using Pipenv
   will now detect transitivity from the committed Pipfile,
@@ -6769,7 +6769,7 @@ No significant changes.
   it so that `--oss-only` will invoke the oss engine. Note that `--oss-only true`
   will no longer be supported (pa-2587)
 
-## [1.13.0](https://github.com/returntocorp/semgrep/releases/tag/v1.13.0) - 2023-02-24
+## [1.13.0](https://github.com/returntocorp/lens/releases/tag/v1.13.0) - 2023-02-24
 
 ### Added
 
@@ -6802,15 +6802,15 @@ No significant changes.
 - Matching: Fixed a bug where expressions would not match to explicit type casts of matching expressions (pa-1133)
 - Golang: Fixed a bug where metavariable ellipses as parameters to functions were not working properly (pa-2545)
 - Apex: Fix name resolution of class attributes. Among other things, this will allow
-  Semgrep to perform constant propagation of `final` class attributes.
-  See https://semgrep.dev/s/DG6v. (pa-2551)
+  Lens to perform constant propagation of `final` class attributes.
+  See https://lens.dev/s/DG6v. (pa-2551)
 - Go: Fixed a bug where function arguments in a group that share the same type,
   such as "func foo(x, y, z int)", would parse all arguments after the first as
   having the name ",". For instance, "y" and "z" here would not have the correct
   names. (pa-2558)
 - Fixed bug in comparison of Maven versions where multi digit versions would cause a default to raw string comparison (sc-maven-cmp-bug)
 
-## [1.12.1](https://github.com/returntocorp/semgrep/releases/tag/v1.12.1) - 2023-02-17
+## [1.12.1](https://github.com/returntocorp/lens/releases/tag/v1.12.1) - 2023-02-17
 
 ### Fixed
 
@@ -6820,7 +6820,7 @@ No significant changes.
 - Supply Chain rules now correctly understand Maven version strings, as described in https://docs.oracle.com/middleware/1212/core/MAVEN/maven_version.htm#MAVEN8855 (sc-maven-versions)
 - package-lock.json files which contain `"resolved": false` as a result of a bug in NPM will now parse (sc-npm-bug)
 
-## [1.12.0](https://github.com/returntocorp/semgrep/releases/tag/v1.12.0) - 2023-02-13
+## [1.12.0](https://github.com/returntocorp/lens/releases/tag/v1.12.0) - 2023-02-13
 
 ### Fixed
 
@@ -6832,32 +6832,32 @@ No significant changes.
   results. (quiet-please)
 - Output lines in GitHub Actions logs could appear scrambled, due to GitHub
   Actions mixing together the stdout and stderr streams in non-deterministic
-  order. Semgrep will now log everything only to one stream in GitHub Actions
+  order. Lens will now log everything only to one stream in GitHub Actions
   when using text output mode, which ensures lines no longer appear scrambled.
   (sc-607)
 
-## [1.11.0](https://github.com/returntocorp/semgrep/releases/tag/v1.11.0) - 2023-02-10
+## [1.11.0](https://github.com/returntocorp/lens/releases/tag/v1.11.0) - 2023-02-10
 
 ### Changed
 
 - Pro: Removed already deprecated flags `--deep` (now `--pro`), `--interfile` (now `--pro`),
   and `--interproc` (now `--pro-intrafile`). Also removed already deprecated command
-  `install-deep-semgrep` (now `install-semgrep-pro`). (pa-2518)
+  `install-deep-lens` (now `install-lens-pro`). (pa-2518)
 
 ### Fixed
 
 - Go: Fixed a bug where the location of Go raw string literals were not being reported correctly.
   This could cause issues with Playground range highlighting and autofix (pa-2206)
-- CLI: Progress bar for Semgrep Pro Engine interfile scans now reflects actual progress more faithfully (pa-2313)
+- CLI: Progress bar for Lens Pro Engine interfile scans now reflects actual progress more faithfully (pa-2313)
 - Pro: We now check the downloaded binary before installing it, this should prevent
   installation of corrupted binaries due to errors during the download. (pa-2492)
 - Fix the location associated with metavariables bound inside of
   `metavariable-pattern` clauses, which could lead to matches being incorrectly
   displayed. (extracted-metavar-loc)
-- CLI: Fixed bug with `semgrep --validate` for metavariables like $1, $2.
+- CLI: Fixed bug with `lens --validate` for metavariables like $1, $2.
   Previously, it blocked rules that it shouldn't. (validate-regex-mvar)
 
-## [1.10.0](https://github.com/returntocorp/semgrep/releases/tag/v1.10.0) - 2023-02-08
+## [1.10.0](https://github.com/returntocorp/lens/releases/tag/v1.10.0) - 2023-02-08
 
 ### Added
 
@@ -6871,7 +6871,7 @@ No significant changes.
   `metavariable-pattern` on `$...ARGS` with `language: generic`, and match using
   generic mode against whatever text `$...ARGS` is bound to.
   (metavar-pattern-generic)
-- Print handy links to review results on Semgrep App when a CI scan uploads
+- Print handy links to review results on Lens App when a CI scan uploads
   findings. (sc-564)
 - Allow metavariable ellipsis in template literals, e.g. `$...X${1 + 2}`
   (template-metavar-ellipsis)
@@ -6883,7 +6883,7 @@ No significant changes.
   (and more languages in the future) now use `--pro-languages`. For intra-file analysis
   only now use `--pro-intrafile`. Flags `--interproc` and `--interfile` are now
   deprecated. (pa-2488)
-- The output formatting of semgrep ci is getting revamped in the coming weeks.
+- The output formatting of lens ci is getting revamped in the coming weeks.
   This release includes the first couple changes to the output. (sc-590)
 - Packages from the maven ecosystem are now parsed to include their org slug. This means a log4j rule must now use `org.apache.logging.log4j:log4j-core` instead of just `log4j-core`. This change is backwards incompatible, in that any Java Supply Chain rules not taking into account will stop producing any findings, since the packages parsed from lockfiles will include the org, but the old rules will not. (sc-maven-org)
 - Add the engine requested by the user to the metrics (pa-2427)
@@ -6893,26 +6893,26 @@ No significant changes.
 - Rust: correctly parse the last expression in blocks (gh-7071)
 - Dataflow traces: Findings now always display the separating line with `--dataflow-traces` in the CLI, to reduce
   confusion over where the findings fall between the dataflow traces. (pa-2471)
-- CLI: Added `install-semgrep-pro` to the list of commands in the `semgrep --help` help text. (pa-2505)
+- CLI: Added `install-lens-pro` to the list of commands in the `lens --help` help text. (pa-2505)
 - Fixed bug where gradle.lockfile files would fail to parse if they contained a trailing newline, and bug where an error on a trailing newline would cause our lockfile parse error pretty printing to fail (sc-trailing-newline)
 
-## [1.9.0](https://github.com/returntocorp/semgrep/releases/tag/v1.9.0) - 2023-02-01
+## [1.9.0](https://github.com/returntocorp/lens/releases/tag/v1.9.0) - 2023-02-01
 
 ### Added
 
-- Pro: If the "Semgrep Pro Engine" toggle is enabled in App, `semgrep ci` will add
+- Pro: If the "Lens Pro Engine" toggle is enabled in App, `lens ci` will add
   support for Apex in all scans (including diff scans). (pa-2462)
 
 ### Fixed
 
 - Fix incorrectly reformatted Bitbucket repository URLs (app-3279)
 
-## [1.8.0](https://github.com/returntocorp/semgrep/releases/tag/v1.8.0) - 2023-02-01
+## [1.8.0](https://github.com/returntocorp/lens/releases/tag/v1.8.0) - 2023-02-01
 
 ### Added
 
 - Experimental support for Clojure, Lisp, and Scheme. (gh-3328)
-- Experimental support for Jsonnet (writing semgrep rules to find
+- Experimental support for Jsonnet (writing lens rules to find
   bugs/security-isses/... in jsonnet files). (pa-1849)
 
 ### Fixed
@@ -6922,7 +6922,7 @@ No significant changes.
   not supported by ocaml-re. (gh-6913)
 - Removed new lockfile parsers for all lockfiles except requirements.txt and maven_dep_tree.txt, for performance reasons (sc-557)
 
-## [1.6.0](https://github.com/returntocorp/semgrep/releases/tag/v1.6.0) - 2023-01-27
+## [1.6.0](https://github.com/returntocorp/lens/releases/tag/v1.6.0) - 2023-01-27
 
 ### Added
 
@@ -6940,7 +6940,7 @@ No significant changes.
 - Pro: Add **experimental** flags `--pro` and `--interproc`. Using `--pro` you can
   enable Apex support, and with `--fast-deep` you can enable intra-file inter-procedural
   taint analysis. Also, `--deep` has been renamed to `--interfile`. Note that to use
-  any of the Pro features you must first run `semgrep install-semgrep-pro` while being
+  any of the Pro features you must first run `lens install-lens-pro` while being
   logged in. (pa-2440)
 - New lockfile parsers with better error messages for all supported ecosystems except Rust (sc-495)
 
@@ -6955,14 +6955,14 @@ No significant changes.
 - CLI: No longer fails when running tests against a config file with no rules in it (gh-6954)
 - Fixed a crash that could occur when using the GitHub API to fetch the merge base rather than computing it locally. (merge-base)
 - JS/TS: Object types now support metavariables properly (pa-2414)
-- CLI: No longer reports the wrong command if you are using the `semgrep-core-proprietary` executable. (pa-2417)
-- Pro: Findings that occur due to rules run with the Semgrep Pro Engine are now displayed separately in the CLI. (pa-2432)
-- Fixed bug where Semgrep would generate reachable findings for transitive dependencies, even if a direct dependency at a safe version exists (sc-547)
+- CLI: No longer reports the wrong command if you are using the `lens-core-proprietary` executable. (pa-2417)
+- Pro: Findings that occur due to rules run with the Lens Pro Engine are now displayed separately in the CLI. (pa-2432)
+- Fixed bug where Lens would generate reachable findings for transitive dependencies, even if a direct dependency at a safe version exists (sc-547)
 - Fixed bug in poetry.lock parser where quoted square brackets could cause failures (sc-548)
-- Fixed bug where Semgrep would fail to generate unreachable findings for a particular library if a reachable finding for that library had already been found in the same lockfile, even if there are multiple copies of this library at different vulnerable versions. (sc-549)
+- Fixed bug where Lens would fail to generate unreachable findings for a particular library if a reachable finding for that library had already been found in the same lockfile, even if there are multiple copies of this library at different vulnerable versions. (sc-549)
 - Fixed bug where npm lockfiles with packages that listed multiples hashes would fail to parse (sc-550)
 
-## [1.5.1](https://github.com/returntocorp/semgrep/releases/tag/v1.5.1) - 2023-01-20
+## [1.5.1](https://github.com/returntocorp/lens/releases/tag/v1.5.1) - 2023-01-20
 
 ### Added
 
@@ -6973,10 +6973,10 @@ No significant changes.
 
 ### Changed
 
-- DeepSemgrep is now Semgrep PRO! To install the Semgrep PRO engine run:
-  `semgrep install-semgrep-pro`. This engine is still invoked using the
+- DeepLens is now Lens PRO! To install the Lens PRO engine run:
+  `lens install-lens-pro`. This engine is still invoked using the
   `--deep` flag, but please expect changes to the CLI in the near future.
-  The new Semgrep PRO engine adds support for Apex! (pa-2389)
+  The new Lens PRO engine adds support for Apex! (pa-2389)
 
 ### Fixed
 
@@ -6986,24 +6986,24 @@ No significant changes.
 - Java: Fixed regression introduced in 0.123.0 that could cause a private class
   attribute to be incorrectly regarded as a constant. (gh-6793)
 - Make `$F(x)` match `eval(x)`. Previously, `eval` was special-cased and metavariable function call patterns would not match it. (gh-6877)
-- DeepSemgrep: Enabled `--dataflow-traces` by default when `--deep` is specified (pa-2274)
-- In rare situations, mainly in DeepSemgrep and related to naming bugs, the use of
-  symbolic propagation could make Semgrep fall into an infinite loop during matching.
-  This has been fixed by bounding the number of times that Semgrep can follow
+- DeepLens: Enabled `--dataflow-traces` by default when `--deep` is specified (pa-2274)
+- In rare situations, mainly in DeepLens and related to naming bugs, the use of
+  symbolic propagation could make Lens fall into an infinite loop during matching.
+  This has been fixed by bounding the number of times that Lens can follow
   symbolically-propagated values. (pa-2324)
 - CLI: Made an error message for when two autofix matches overlap have a more helpful message, as well as be displayed as a debug message. (pa-2393)
-- CLI: Made the warning message when using Semgrep Pro more friendly when logged in (pa-2396)
+- CLI: Made the warning message when using Lens Pro more friendly when logged in (pa-2396)
 
-## [1.3.0](https://github.com/returntocorp/semgrep/releases/tag/v1.3.0) - 2023-01-04
+## [1.3.0](https://github.com/returntocorp/lens/releases/tag/v1.3.0) - 2023-01-04
 
 ### Changed
 
-- Removed the poor support for reading dependencies from pom.xml files. Instead semgrep will try to read dependencies from a maven_dep_tree.txt file,
+- Removed the poor support for reading dependencies from pom.xml files. Instead lens will try to read dependencies from a maven_dep_tree.txt file,
   which can be generated using the command `mvn dependency:tree -DoutputFile=maven_dep_tree.txt` (sc-pom)
 
 ### Fixed
 
-- Use the GitHub REST API when possible to compute the merge base for `semgrep ci`, improving performance on shallow clones of large repositories. (gha-mergebase)
+- Use the GitHub REST API when possible to compute the merge base for `lens ci`, improving performance on shallow clones of large repositories. (gha-mergebase)
 - YAML: Fixed a bug where metavariables matching YAML double-quoted strings would not capture the entire range of the string, and would
   not contain the double-quotes. Also added the ability to properly use patterns like `"$FOO"`, which will unpack the contents of the matched string. (pa-2332)
 - Fixed a race condition related to the parsing cache that could lead to internal errors (pa-2335)
@@ -7020,7 +7020,7 @@ No significant changes.
 
 - Julia: Greatly improved parsing support (pa-2362)
 
-## [1.2.1](https://github.com/returntocorp/semgrep/releases/tag/v1.2.1) - 2022-12-16
+## [1.2.1](https://github.com/returntocorp/lens/releases/tag/v1.2.1) - 2022-12-16
 
 ### Fixed
 
@@ -7031,7 +7031,7 @@ No significant changes.
 - Reverted a change which caused findings with different sources (but the same sink) to be deduplicated. This would cause findings which
   looked identical in range and data, but had different taint traces. (pa-2336)
 
-## [1.2.0](https://github.com/returntocorp/semgrep/releases/tag/v1.2.0) - 2022-12-15
+## [1.2.0](https://github.com/returntocorp/lens/releases/tag/v1.2.0) - 2022-12-15
 
 ### Fixed
 
@@ -7048,24 +7048,24 @@ No significant changes.
 - Swift: support complex expression in switch case (gh-6704)
 - Constant propagation: Fixed a bug where constant propagation would only run within functions. Now,
   it runs on the top-level of the program as well. (pa-1656)
-- DeepSemgrep: Fixed a bug where imports which reached type names (among other things) would not resolve properly (pa-2260)
-- DeepSemgrep: Fixed a bug which caused Java functions with interfaces to wipe taint (instead of propagating taint by default) (pa-2265)
+- DeepLens: Fixed a bug where imports which reached type names (among other things) would not resolve properly (pa-2260)
+- DeepLens: Fixed a bug which caused Java functions with interfaces to wipe taint (instead of propagating taint by default) (pa-2265)
 - Fix matching of qualified names. For example, `new $X.Foo()` will now match
   `new a.b.Foo()`. (pa-2296)
-- DeepSemgrep: Fix regression in taint-mode introduced by Semgrep v1.1 that caused
-  some findings to be missed. Also, DeepSemgrep will assume, for now, that a method
+- DeepLens: Fix regression in taint-mode introduced by Lens v1.1 that caused
+  some findings to be missed. Also, DeepLens will assume, for now, that a method
   call on a tainted object is always tainted. (pa-2304)
 - Improved matching behavior on JS `require` calls (require-match)
 
-## [1.1.0](https://github.com/returntocorp/semgrep/releases/tag/v1.1.0) - 2022-12-05
+## [1.1.0](https://github.com/returntocorp/lens/releases/tag/v1.1.0) - 2022-12-05
 
 ### Added
 
-- JSON output: Added a `max_memory_bytes` field to the `semgrep --time` output which corresponds to the amount of memory allocated during the OCaml phase of Semgrep. This is useful for telemetry purposes. (pa-2075)
+- JSON output: Added a `max_memory_bytes` field to the `lens --time` output which corresponds to the amount of memory allocated during the OCaml phase of Lens. This is useful for telemetry purposes. (pa-2075)
 
 ### Changed
 
-- Don't print out summary of blocking rules unless running with semgrep ci subcommand (gh-6651)
+- Don't print out summary of blocking rules unless running with lens ci subcommand (gh-6651)
 
 ### Fixed
 
@@ -7094,31 +7094,31 @@ No significant changes.
 - taint-mode: Fixed matching of `pattern-sinks` to be more precise, so that e.g.
   it will no longer report `sink(ok1 if tainted else ok2)` as a tainted sink, as
   the expression passed to the `sink` is actually not tainted. (pa-2142)
-- CLI: Separated experimental rules from normal rules in `semgrep --debug` output. (pa-2159)
+- CLI: Separated experimental rules from normal rules in `lens --debug` output. (pa-2159)
 - Taint: Fixed an issue where findings with the same sink would be identified as the same, and cause
   only one of them to be reported, even if they had different sources. (pa-2208)
-- DeepSemgrep: When the "DeepSemgrep" setting is enabled in Semgrep App, `semgrep ci`
-  will try to run the analysis using the DeepSemgrep engine. But if this engine was
-  not installed, `semgrep ci` failed. Now `semgrep ci` will automatically try to
-  install DeepSemgrep if it is not already present. Note that, if DeepSemgrep is
-  already installed, `semgrep ci` does not attempt to upgrade it to a newer version. (pa-2226)
-- CLI: Made the number of jobs when using `semgrep --deep` default to 1. (pa-2231)
+- DeepLens: When the "DeepLens" setting is enabled in Lens App, `lens ci`
+  will try to run the analysis using the DeepLens engine. But if this engine was
+  not installed, `lens ci` failed. Now `lens ci` will automatically try to
+  install DeepLens if it is not already present. Note that, if DeepLens is
+  already installed, `lens ci` does not attempt to upgrade it to a newer version. (pa-2226)
+- CLI: Made the number of jobs when using `lens --deep` default to 1. (pa-2231)
 - Autofix: If multiple autofixes are targeting an overlapping range, then one of them is picked arbitrarily to occur, to prevent autofixes which may produce incorrect code. (pa-2276)
-- DeepSemgrep: Time data now outputs properly when running `semgrep --deep --time` (pa-2280)
-- DeepSemgrep: Added a message which suggests that users update their version of DeepSemgrep, if the DeepSemgrep binary crashes (pa-2283)
+- DeepLens: Time data now outputs properly when running `lens --deep --time` (pa-2280)
+- DeepLens: Added a message which suggests that users update their version of DeepLens, if the DeepLens binary crashes (pa-2283)
 - Yarn 2 parse failure on versions like @storybook/react-docgen-typescript-plugin@canary. This is only present as some kind special version range specifier and never appears as a concrete version. It would only be used to check if the dependency was in the manifest file, so we just parse the version as "canary"
   Yarn 2 parse failure on versions like @types/ol-ext@npm:@siedlerchr/types-ol-ext@3.0.6
   Yarn 2 parse failure on versions like resolve@patch:resolve@^1.1.7#~builtin<compat/resolve>. These are now just ignored, as they appear to always come with a non-patch version as well. (sc-406)
 
-## [1.0.0](https://github.com/returntocorp/semgrep/releases/tag/v1.0.0) - 2022-12-01
+## [1.0.0](https://github.com/returntocorp/lens/releases/tag/v1.0.0) - 2022-12-01
 
 ### Added
 
-- DeepSemgrep: If you have a Team tier account in Semgrep App, and you enable the
-  _DeepSemgrep_ setting, then `semgrep ci` will automatically run the DeepSemgrep
+- DeepLens: If you have a Team tier account in Lens App, and you enable the
+  _DeepLens_ setting, then `lens ci` will automatically run the DeepLens
   engine instead of the OSS engine on full scans (but not in PR scans). (pa-2226)
 
-## [0.123.0](https://github.com/returntocorp/semgrep/releases/tag/v0.123.0) - 2022-11-29
+## [0.123.0](https://github.com/returntocorp/lens/releases/tag/v0.123.0) - 2022-11-29
 
 ### Added
 
@@ -7126,18 +7126,18 @@ No significant changes.
 
 ### Changed
 
-- Reachable Supply Chain findings will no longer block pull requests when using `semgrep ci`.
+- Reachable Supply Chain findings will no longer block pull requests when using `lens ci`.
   Note that unreachable findings have been non-blocking already. (sca-nonblocking)
 
 ### Fixed
 
 - Fix matching issue related to JS imports with multiple imported values (gh-5305)
-- DeepSemgrep: Keep only the shortest trace originating from a taint source. This
+- DeepLens: Keep only the shortest trace originating from a taint source. This
   also prevents falling into infinite loops when inferring taint signatures for
   mutually recursive procedures. (pa-2224)
 - taint-mode: Improved taint tracking for array-like accesses. Previously, if
-  `x.a.b[i].c` got tainted, Semgrep would track `x.a.b` as tainted, and thus
-  `x.a.b[i].d` would be incorrectly considered as tainted too. Now Semgrep will
+  `x.a.b[i].c` got tainted, Lens would track `x.a.b` as tainted, and thus
+  `x.a.b[i].d` would be incorrectly considered as tainted too. Now Lens will
   do the right thing and track `x.a.b[*].c` as tainted, and `x.a.b[i].d` will
   not be considered tainted. (pa-2225)
 - Java: `private`, singly-assigned class variables now permit constant propagation (pa-2230)
@@ -7148,14 +7148,14 @@ No significant changes.
   These findings will now be marked as having 'unknown' transitivity. (sc-425)
 - Make `$X(...)` match `this()` and `super()`. (this-match)
 
-## [0.122.0](https://github.com/returntocorp/semgrep/releases/tag/v0.122.0) - 2022-11-16
+## [0.122.0](https://github.com/returntocorp/lens/releases/tag/v0.122.0) - 2022-11-16
 
 ### Fixed
 
-- DeepSemgrep: Added installation path for DeepSemgrep on M1 machines (pa-2153)
+- DeepLens: Added installation path for DeepLens on M1 machines (pa-2153)
 - Correctly handle optional name field in yaml1 lockfiles (parse_yaml)
 
-## [0.121.2](https://github.com/returntocorp/semgrep/releases/tag/v0.121.2) - 2022-11-10
+## [0.121.2](https://github.com/returntocorp/lens/releases/tag/v0.121.2) - 2022-11-10
 
 ### Fixed
 
@@ -7166,15 +7166,15 @@ No significant changes.
 - CLI: Added a fix preventing findings from experimental rules being displayed.
   Experimental rules also now no longer run silently. (pa-2121)
 
-## [0.121.1](https://github.com/returntocorp/semgrep/releases/tag/v0.121.1) - 2022-11-08
+## [0.121.1](https://github.com/returntocorp/lens/releases/tag/v0.121.1) - 2022-11-08
 
 No significant changes.
 
-## [0.121.0](https://github.com/returntocorp/semgrep/releases/tag/v0.121.0) - 2022-11-07
+## [0.121.0](https://github.com/returntocorp/lens/releases/tag/v0.121.0) - 2022-11-07
 
 ### Changed
 
-- taint-mode: Semgrep can now track taint through l-values of the form `this.x`.
+- taint-mode: Lens can now track taint through l-values of the form `this.x`.
   It will also be more precise when tracking taint on l-values involving an
   array access, previously if `x.a[i]` was tainted, then `x` itself was tainted;
   now only `x.a` will be considered tainted. (pa-2086)
@@ -7184,21 +7184,21 @@ No significant changes.
 - JS: correctly parse exported function pattern (gh-6218)
 - Terraform: Can now analyze constant-propagated values of variables with `metavariable-comparison` and friends (pa-2088)
 
-## [0.120.0](https://github.com/returntocorp/semgrep/releases/tag/v0.120.0) - 2022-11-02
+## [0.120.0](https://github.com/returntocorp/lens/releases/tag/v0.120.0) - 2022-11-02
 
 ### Added
 
 - Fail gracefully and print error message when running in unsupported Linux aarch64/arm64 environment (arm-fail)
 - Added 'fingerprints' field to results in sarif output (gh-5729)
 - Add dataflow traces as 'codeFlows' object in SARIF output (gh-6367)
-- Fail immediately if semgrep tries to run a supply chain rule with an invalid version range specifier (ssc-fail-early)
+- Fail immediately if lens tries to run a supply chain rule with an invalid version range specifier (ssc-fail-early)
 - Added Supply Chain support for requirements.txt lockfiles (with requirement.in manifest files) and Yarn 2/3 lockfiles (ssc-yarn-req)
 
 ### Changed
 
-- Change default behavior of CircleCI configurations. If a user manually sets their environment variables (i.e. SEMGREP_REPO_NAME, SEMGREP_REPO_URL, SEMGREP_BRANCH, SEMGREP_JOB_URL, SEMGREP_COMMIT), use it before falling back on autodetection. (app-2434)
-- Change default behavior of Buildkite CI configurations. If a user manually sets their environment variables (i.e. SEMGREP_REPO_NAME, SEMGREP_REPO_URL, SEMGREP_BRANCH, SEMGREP_JOB_URL, SEMGREP_COMMIT), use it before falling back on autodetection. (app-2435)
-- Change default behavior of bitbucket CI configurations. If a user manually sets their environment variables (i.e. SEMGREP_REPO_NAME, SEMGREP_REPO_URL, SEMGREP_BRANCH, SEMGREP_JOB_URL, SEMGREP_COMMIT), use it before falling back on autodetection. (app-2436)
+- Change default behavior of CircleCI configurations. If a user manually sets their environment variables (i.e. LENS_REPO_NAME, LENS_REPO_URL, LENS_BRANCH, LENS_JOB_URL, LENS_COMMIT), use it before falling back on autodetection. (app-2434)
+- Change default behavior of Buildkite CI configurations. If a user manually sets their environment variables (i.e. LENS_REPO_NAME, LENS_REPO_URL, LENS_BRANCH, LENS_JOB_URL, LENS_COMMIT), use it before falling back on autodetection. (app-2435)
+- Change default behavior of bitbucket CI configurations. If a user manually sets their environment variables (i.e. LENS_REPO_NAME, LENS_REPO_URL, LENS_BRANCH, LENS_JOB_URL, LENS_COMMIT), use it before falling back on autodetection. (app-2436)
 
 ### Fixed
 
@@ -7224,9 +7224,9 @@ No significant changes.
 
 ## 0.119.0 - Skipped
 
-Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediately follows version 0.118.0.
+Version 0.119.0 of Lens was intentionally skipped. Version 0.120.0 immediately follows version 0.118.0.
 
-## [0.118.0](https://github.com/returntocorp/semgrep/releases/tag/v0.118.0) - 2022-10-19
+## [0.118.0](https://github.com/returntocorp/lens/releases/tag/v0.118.0) - 2022-10-19
 
 ### Added
 
@@ -7236,35 +7236,35 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   `url` will be marked as tainted during the analysis of `test`. (gh-6298)
 - taint-mode: Added two new rule `options` that help minimizing false positives.
 
-  First one is `taint_assume_safe_indexes`, which makes Semgrep assume that an
+  First one is `taint_assume_safe_indexes`, which makes Lens assume that an
   array-access expression is safe even if the index expression is tainted. Otherwise
-  Semgrep assumes that e.g. `a[i]` is tainted if `i` is tainted, even if `a` is not.
+  Lens assumes that e.g. `a[i]` is tainted if `i` is tainted, even if `a` is not.
   Enabling this option is recommended for high-signal rules, whereas disabling it
   may be preferred for audit rules. Currently, it is disabled by default for pure
   backwards compatibility reasons, but this may change in the near future after some
   evaluation.
 
-  The other one is `taint_assume_safe_functions`, which makes Semgrep assume that
+  The other one is `taint_assume_safe_functions`, which makes Lens assume that
   function calls do _NOT_ propagate taint from their arguments to their output.
-  Otherwise, Semgrep always assumes that functions may propagate taint. This is
+  Otherwise, Lens always assumes that functions may propagate taint. This is
   intended to replace _not conflicting_ sanitizers (added in v0.69.0) in the future.
   This option is still experimental and needs to be complemented by other changes
   to be made in future releases. (pa-1541)
 
 ### Changed
 
-- Ignore the .npm/ directory by default in Semgrep scans (gh-6315)
+- Ignore the .npm/ directory by default in Lens scans (gh-6315)
 - The `--scan-unknown-extensions` option is now set to false by default.
   This means that from now on `--skip-unknown-extensions` is the default.
   This is an important change that prevents many errors when using
-  Semgrep in a pre-commit context or in CI. (pa-1932)
+  Lens in a pre-commit context or in CI. (pa-1932)
 
 ### Fixed
 
-- Add autodetection for pull request numbers for Azure Pipelines. If SEMGREP_PR_ID is set, override the autodetection. (app-2083)
-- Fixed an autofix regression that caused Semgrep to fail to replace metavariables in string literals, e.g. `foo("xyz $X")`. (autofix-string-metavar)
+- Add autodetection for pull request numbers for Azure Pipelines. If LENS_PR_ID is set, override the autodetection. (app-2083)
+- Fixed an autofix regression that caused Lens to fail to replace metavariables in string literals, e.g. `foo("xyz $X")`. (autofix-string-metavar)
 
-## [0.117.0](https://github.com/returntocorp/semgrep/releases/tag/v0.117.0) - 2022-10-12
+## [0.117.0](https://github.com/returntocorp/lens/releases/tag/v0.117.0) - 2022-10-12
 
 ### Added
 
@@ -7280,7 +7280,7 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 
 ### Changed
 
-- Change default behavior of Travis CI configurations. If a user manually sets their environment variables (i.e. SEMGREP_REPO_NAME, SEMGREP_REPO_URL, SEMGREP_BRANCH, SEMGREP_JOB_URL, SEMGREP_COMMIT, SEMGREP_PR_ID), use it before falling back on autodetection.
+- Change default behavior of Travis CI configurations. If a user manually sets their environment variables (i.e. LENS_REPO_NAME, LENS_REPO_URL, LENS_BRANCH, LENS_JOB_URL, LENS_COMMIT, LENS_PR_ID), use it before falling back on autodetection.
 
 ### Fixed
 
@@ -7289,50 +7289,50 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 - Removed Gradle as a separate supply chain ecosystem. Maven rules now work on Gradle projects (sc-256)
 - Lockfiles are no longer subject to size filtering during file targetting, so very large lockfiles can now generate unreachable findings (sc-293)
 
-## [0.116.0](https://github.com/returntocorp/semgrep/releases/tag/v0.116.0) - 2022-10-06
+## [0.116.0](https://github.com/returntocorp/lens/releases/tag/v0.116.0) - 2022-10-06
 
 ### Added
 
-- Added support for named arguments in taint tracking. This is only relevant for DeepSemgrep users. (pa-1886)
+- Added support for named arguments in taint tracking. This is only relevant for DeepLens users. (pa-1886)
 
 ### Changed
 
-- Change default behavior of Jenkins CI configurations. If a user manually sets their environment variables (i.e. SEMGREP_BRANCH, SEMGREP_JOB_URL, SEMGREP_COMMIT), use it before falling back on autodetection. (app-2432)
-- Change default behavior of Azure Pipelines configurations. If a user manually sets their environment variables (i.e. SEMGREP_REPO_NAME, SEMGREP_REPO_URL, SEMGREP_BRANCH, SEMGREP_JOB_URL, SEMGREP_COMMIT), use it before falling back on autodetection. (app-2433)
+- Change default behavior of Jenkins CI configurations. If a user manually sets their environment variables (i.e. LENS_BRANCH, LENS_JOB_URL, LENS_COMMIT), use it before falling back on autodetection. (app-2432)
+- Change default behavior of Azure Pipelines configurations. If a user manually sets their environment variables (i.e. LENS_REPO_NAME, LENS_REPO_URL, LENS_BRANCH, LENS_JOB_URL, LENS_COMMIT), use it before falling back on autodetection. (app-2433)
 - taint-mode: Removed experimental poor-man's support for wrapper functions around
-  taint sources. This was an early experiment to make Semgrep inter-procedural, but
-  it was later abandoned in favor of DeepSemgrep. (pa-1838)
+  taint sources. This was an early experiment to make Lens inter-procedural, but
+  it was later abandoned in favor of DeepLens. (pa-1838)
 - Disabled Bloom filter optimization by default, due to undesired interactions with
   constant and symbolic propagation, while it appears to not provide a net major
   performance benefit (nowadays). If you do notice a significant drop in performance
   after this change, please let us know. (pa-1927)
-- Semgrep-core will no longer accept a rule file containing only one rule object,
+- Lens-core will no longer accept a rule file containing only one rule object,
   rules must be given in an array unde the `rules:` key. This change does not
-  affect Semgrep CLI which never accepted that relaxed format. (pa-1931)
+  affect Lens CLI which never accepted that relaxed format. (pa-1931)
 - Changed command line flag for supply chain scans from `--sca` to `--supply-chain`.
   Correspondinly changed `--config sca` to `--config supply-chain` (sca-ssc)
 
 ### Fixed
 
-- Change default behavior of Jenkins CI configurations. If the SEMGREP_REPO_URL is set, use it. Otherwise, default to autodetection. (app-2406)
+- Change default behavior of Jenkins CI configurations. If the LENS_REPO_URL is set, use it. Otherwise, default to autodetection. (app-2406)
 - fix: Ensure the docker image uses the latest base packages (docker)
 - Fixed symbolic propagation of the `new` operator, that had been broken since
   version 0.98.0. You can again e.g. use the pattern `new A().foo()` to match
   `a.foo()`, with `a = new A()`. (gh-6161)
 - Some crypto code like hashing algorithms can lead to a very large amount of
-  symbolically propageted values, which previously caused Semgrep's Bloom filter
+  symbolically propageted values, which previously caused Lens's Bloom filter
   to hang. (pa-1920)
 - taint-mode: It is now possible for `this` or `this.x` to be a source of taint. (pa-1929)
-- taint-mode: Fixed a bug that made Semgrep miss taint findings when the sink was
+- taint-mode: Fixed a bug that made Lens miss taint findings when the sink was
   located inside an `if` condition or a `throw` (aka `raise`) expression/statement. (pa-1933)
 - Start to use the AST to render autofixes in some specific cases. As this is extended, autofix will become more correct and more powerful. (ast-autofix)
 - Fixed a parser error in some package-lock.json files (sca-parse-error)
 
-## [0.115.0](https://github.com/returntocorp/semgrep/releases/tag/v0.115.0) - 2022-09-27
+## [0.115.0](https://github.com/returntocorp/lens/releases/tag/v0.115.0) - 2022-09-27
 
 ### Added
 
-- Adds support for a .semgrepconfig file. Users can add metadata (such as a list of tags) to the .semgrepconfig YAML file which will automatically be assigned to the project. (app-2112)
+- Adds support for a .lensconfig file. Users can add metadata (such as a list of tags) to the .lensconfig YAML file which will automatically be assigned to the project. (app-2112)
 - Modify the CLI output to separate non-blocking and blocking findings and show a list of the blocking rules that fired. (app-2306)
 
 ### Changed
@@ -7340,30 +7340,30 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 - generic mode: allow text input without human-readable indentation up to 500
   bytes. This value is subject to change. This relaxing is intended to
   facilitate testing where someone might copy-paste a long line without a
-  trailing newline. Semgrep users should not expect files that are not
-  human-readable to be processed in semgrep's generic mode, or in any mode for
+  trailing newline. Lens users should not expect files that are not
+  human-readable to be processed in lens's generic mode, or in any mode for
   the matter. (gh-6071)
 - Changed behavior for renamed files on diff scans (scans in which a baseline ref is provided).
-  Semgrep will not show old issues to developers when they rename a file now. (gh-6157)
+  Lens will not show old issues to developers when they rename a file now. (gh-6157)
 
 ### Fixed
 
 - Fixed nondeterministic failure of test_api test due to invalid settings file by
   configuring home directory to temporary directory. (app-2166)
-- Change default behavior of Jenkins CI configurations. If the SEMGREP_REPO_NAME environment variable is set, use it. Otherwise, default autodetection. (app-2331)
+- Change default behavior of Jenkins CI configurations. If the LENS_REPO_NAME environment variable is set, use it. Otherwise, default autodetection. (app-2331)
 - Dockerfile mode: Fix failure to match where image name and image alias should
   be the same. The problem was due to some names and identifiers being
   fragmented due to parsing rules and not pieced back together. (gh-5229)
 - Scala: add support for ellipsis in match body (e.g., `$X match { ... }`) (gh-6131)
 - Added a fix for a bug involving parsing of TS imports, where they were not allowed to appear as patterns to a rule. (pa-1910)
 
-## [0.114.0](https://github.com/returntocorp/semgrep/releases/tag/v0.114.0) - 2022-09-19
+## [0.114.0](https://github.com/returntocorp/lens/releases/tag/v0.114.0) - 2022-09-19
 
 ### Added
 
 - Add functionality to exclude rules by id passing it by cli flag --exclude-rule (cli-2530)
-- Fixes https://github.com/returntocorp/semgrep/issues/5686.
-  You can now have multiple metavariables under `focus-metavariable`, which allows Semgrep to highlight the
+- Fixes https://github.com/returntocorp/lens/issues/5686.
+  You can now have multiple metavariables under `focus-metavariable`, which allows Lens to highlight the
   values matched by multiple metavariables more easily in certain circumstances.
   See the gist in the description of the original issue for an example. (gh-5686)
 
@@ -7385,13 +7385,13 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   processing failures. (gh-6100)
 - Swift: Fix parsing of statement ellipsis without a preceding semicolon (pa-1809)
 
-## [0.113.0](https://github.com/returntocorp/semgrep/releases/tag/v0.113.0) - 2022-09-15
+## [0.113.0](https://github.com/returntocorp/lens/releases/tag/v0.113.0) - 2022-09-15
 
 ### Added
 
-- Adds backwards-compatibility with older versions of semgrep-app. Only relevant for customers with on-prem versions of the app. (gh-6098)
+- Adds backwards-compatibility with older versions of lens-app. Only relevant for customers with on-prem versions of the app. (gh-6098)
 - taint-mode: Experimental support for basic field-sensitive taint tracking.
-  Semgrep can now track `x.a` and `x.b` separately, so that e.g. `x.a` can be
+  Lens can now track `x.a` and `x.b` separately, so that e.g. `x.a` can be
   tainted at the same time as `x.b` is clean, hence `sink(x.a)` would produce
   a finding but `sink(x.b)` would not. It is also possible for `x` to be tainted
   while `x.a` is clean. We expect this to have an net positive effect by reducing
@@ -7405,19 +7405,19 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   `new Hello.internal_class()`, you can match that with
   `new world.Hello.internal_class()`. (gh-6001)
 - Java: Correctly parse ellipsis in the body of top-level constructor patterns with privacy modifiers (e.g. public Foo() { ... }) (gh-6051)
-- `semgrep --test` now fails when encountering a parsing error in target code. (gh-6068)
+- `lens --test` now fails when encountering a parsing error in target code. (gh-6068)
 - Allowed metavariable-comparison to make use of the `not in` operator. (gh-6072)
 - Fixed parsing of Rust impl definitions (gh-6078)
 - Fixed a `TypeError: unbound method set.intersection() needs an argument` crash
   that occurred when all of a scan's rules were multilang (`regex` or `generic`). (gh-6093)
 
-## [0.112.1](https://github.com/returntocorp/semgrep/releases/tag/v0.112.1) - 2022-09-08
+## [0.112.1](https://github.com/returntocorp/lens/releases/tag/v0.112.1) - 2022-09-08
 
 ### Fixed
 
 - Fixed a regression introduced with the previous release, involving a bug with `pattern-inside`. (gh-6059)
 
-## [0.112.0](https://github.com/returntocorp/semgrep/releases/tag/v0.112.0) - 2022-09-07
+## [0.112.0](https://github.com/returntocorp/lens/releases/tag/v0.112.0) - 2022-09-07
 
 ### Added
 
@@ -7426,7 +7426,7 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 
 ### Changed
 
-- Use new semgrep-app endpoint that combines the two POST requests to upload findings and ignored findings into one POST request. (app-1446)
+- Use new lens-app endpoint that combines the two POST requests to upload findings and ignored findings into one POST request. (app-1446)
 
 ### Fixed
 
@@ -7441,13 +7441,13 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 - Fixed bug in constant propagation that caused incorrect constants to be inferred
   in the presence of subtraction. (pa-1846)
 
-## [0.111.1](https://github.com/returntocorp/semgrep/releases/tag/v0.111.1) - 2022-08-23
+## [0.111.1](https://github.com/returntocorp/lens/releases/tag/v0.111.1) - 2022-08-23
 
 ### Changed
 
 - Previously, the following error message appears when metrics are not uploaded within the set timeout timeframe:
 
-  Error in send: HTTPSConnectionPool(host='metrics.semgrep.dev', port=443): Read timed out. (read timeout=3)
+  Error in send: HTTPSConnectionPool(host='metrics.lens.dev', port=443): Read timed out. (read timeout=3)
 
   As this causes users confusion when running the CLI, the log level of the message is reduced to appear for development and debugging purposes only. Note that metrics are still successfully uploaded, but the success status is not sent in time for the curent timeout set. (app-1398)
 
@@ -7457,7 +7457,7 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   `"some string".concat(x)`. Previously, when `x` was tainted, the `concat`
   expression was not recognized as tainted and this caused false negatives. (pa-1787)
 
-## [0.111.0](https://github.com/returntocorp/semgrep/releases/tag/v0.111.0) - 2022-08-22
+## [0.111.0](https://github.com/returntocorp/lens/releases/tag/v0.111.0) - 2022-08-22
 
 ### Added
 
@@ -7465,24 +7465,24 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 - Add configuration options for using a tree-sitter library installed anywhere
   on the system. (gh-5944)
 - Updated the supply chain finding API:
-  - The API is now typed and defined entirely in semgrep_output_v0.atd
+  - The API is now typed and defined entirely in lens_output_v0.atd
   - Supply chain findings now have only one dependency match, not a list, and only one resolved url
   - Supply chain findings now have a field called reachable and reachability_rule,
     which indicate if the finding is reachable, and whether or not it was generated
-    by a reachability rule (rule that had a semgrep pattern)
+    by a reachability rule (rule that had a lens pattern)
   - Supply chain findings now include a schema version
-  - The complete finding information sent to semgrep app now includes a mapping from lockfile
+  - The complete finding information sent to lens app now includes a mapping from lockfile
     paths to the number of dependencies that were present in that lockfile (sca-197)
 
 ### Fixed
 
-- When a YAML rule file had a string that contained an ISO timestamp, that would be parsed as a datetime object, which would then be rejected by Semgrep's rule schema validator. This is now fixed by keeping strings that contain an ISO timestamp as strings. (app-2157)
+- When a YAML rule file had a string that contained an ISO timestamp, that would be parsed as a datetime object, which would then be rejected by Lens's rule schema validator. This is now fixed by keeping strings that contain an ISO timestamp as strings. (app-2157)
 - When parsing PHP with tree-sitter, parse `$this` similar to pfff, as an IdSpecial. This makes it possible to match `$this` when the pattern is parsed with pfff and the program with tree-sitter. (gh-5594)
 - Parse die() as exit() in tree-sitter PHP. This makes pfff and tree-sitter parse die() in the same way. (gh-5880)
 - All: Applied a fix so that qualified identifiers can unify with metavariables. Notably, this
   affected Python decorators, among others. (pa-1700)
-- Fixed a regression in DeepSemgrep after the experimental taint labels feature
-  was introduced in 0.106.0. This prevented DeepSemgrep from reporting taint
+- Fixed a regression in DeepLens after the experimental taint labels feature
+  was introduced in 0.106.0. This prevented DeepLens from reporting taint
   findings when e.g. the sink was wrapped by another function. (pa-1750)
 - Fixed metavariable unification in JSON when one of the patterns is a single field. (pa-1763)
 - Changed symbolic propagation such that "redundant" matches are no
@@ -7500,7 +7500,7 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 
   This patch changes it so that we do not match on line 3 anymore. (pa-1772)
 
-- Semgrep now passes -j to DeepSemgrep engine so --deep became noticeably faster. (pa-1776)
+- Lens now passes -j to DeepLens engine so --deep became noticeably faster. (pa-1776)
 - taint-mode: Due to a mistake in the instantiation of a visitor, named function
   definitions were being analyzed twice! This is now fixed and you may observe
   significant speed ups in some cases. (pa-1778)
@@ -7516,23 +7516,23 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 - Keep the tree-sitter library inside a local folder rather than requiring
   a global installation. (gh-2956)
 
-## [0.110.0](https://github.com/returntocorp/semgrep/releases/tag/v0.110.0) - 2022-08-15
+## [0.110.0](https://github.com/returntocorp/lens/releases/tag/v0.110.0) - 2022-08-15
 
 ### Changed
 
 - Parse several built-in PHP functions in the same way in pfff and tree-sitter. This makes it possible to match exit, eval, empty and isset, even if the pattern is parsed with pfff and the PHP file with tree-sitter. (gh-5382)
-- Use new semgrep-app endpoints that are pure GET with no side-effects and pure POST (app-2001)
+- Use new lens-app endpoints that are pure GET with no side-effects and pure POST (app-2001)
 
 ### Fixed
 
 - Skip fail-open for exit code 1 (app-2073)
 
-## [0.109.0](https://github.com/returntocorp/semgrep/releases/tag/v0.109.0) - 2022-08-11
+## [0.109.0](https://github.com/returntocorp/lens/releases/tag/v0.109.0) - 2022-08-11
 
 ### Changed
 
-- `semgrep ci` now defaults to fail open and will always exit with exit code 0, which is equivalent to passing `--suppress-errors`.
-  To disable this behavior, you can pass `--no-suppress-errors` and semgrep will behave as it did previously, surfacing any exit codes that may result. (app-1951)
+- `lens ci` now defaults to fail open and will always exit with exit code 0, which is equivalent to passing `--suppress-errors`.
+  To disable this behavior, you can pass `--no-suppress-errors` and lens will behave as it did previously, surfacing any exit codes that may result. (app-1951)
 
 ### Fixed
 
@@ -7547,7 +7547,7 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 
 - GHA runner-image `macos-10.15` is deprecated and will be unsupported by 30AUG2022. We've tested and can upgrade to `macos-12` to avoid issues with brownouts or end of support. (devop-586)
 
-## [0.108.0](https://github.com/returntocorp/semgrep/releases/tag/v0.108.0) - 2022-08-03
+## [0.108.0](https://github.com/returntocorp/lens/releases/tag/v0.108.0) - 2022-08-03
 
 ### Added
 
@@ -7569,17 +7569,17 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 ### Fixed
 
 - Fixed issue when scan fails due to pending changes in submodule. (cli-272)
-- Semgrep CI now accepts more formats of git url for metadata provided to semgrep.dev and lets the user provide a fallback for repo name (SEMGREP_REPO_NAME) and repo url (SEMGREP_REPO_URL) if they are undefined by CI. (cli-280)
+- Lens CI now accepts more formats of git url for metadata provided to lens.dev and lets the user provide a fallback for repo name (LENS_REPO_NAME) and repo url (LENS_REPO_URL) if they are undefined by CI. (cli-280)
 - Fixed a crash that occurred when reporting results when join mode and taint mode were used together (gh-5839)
-- JS: Allowed decorators to appear in Semgrep patterns for class methods and fields. (pa-1677)
+- JS: Allowed decorators to appear in Lens patterns for class methods and fields. (pa-1677)
 - Quick fix for a regression introduced in 0.107.0 (presumably by taint labels)
-  that could cause some taint rules to crash Semgrep with:
+  that could cause some taint rules to crash Lens with:
 
       Invalid_argument "output_value: abstract value (Custom)" (pa-1724)
 
-- Increase timeout for network calls to semgrep.dev from 30s to 60s (timeout-1)
+- Increase timeout for network calls to lens.dev from 30s to 60s (timeout-1)
 
-## [0.107.0](https://github.com/returntocorp/semgrep/releases/tag/v0.107.0) - 2022-07-29
+## [0.107.0](https://github.com/returntocorp/lens/releases/tag/v0.107.0) - 2022-07-29
 
 ### Added
 
@@ -7587,24 +7587,24 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 - Support fail-open in CI: adds --suppress-errors/--no-suppress-errors (defaults to --no-suppress-errors) (cli-254)
 - New language Elixir with experimental support. (gh-3698)
 - Kotlin: support for ellipsis in field access (e.g., `obj. ... .bar()`) (gh-5819)
-- Changed `semgrep-core` so that it can now be run with `-rules` on `.yaml` files which do not have a top-level `rules: ...` key. This means you can now copy paste from the playground editor directly into a `.yaml` file for use with `semgrep-core`. (implicit-rules-sc-core)
+- Changed `lens-core` so that it can now be run with `-rules` on `.yaml` files which do not have a top-level `rules: ...` key. This means you can now copy paste from the playground editor directly into a `.yaml` file for use with `lens-core`. (implicit-rules-sc-core)
 - Add experimental support for _taint labels_, that is the ability to attach labels to
   different kinds of taint. Both sources and sinks can retrict what labels are present
   in the data that passes through them in order to apply. This allows to write more
   complex taint rules that previously required ugly workarounds. Taint labels are also
   useful for writing certain classes of typestate analyses (e.g., check that a file
   descriptor is not used after being closed). (pa-1362)
-- Introduced the `--dataflow-traces` flag, which directs the Semgrep CLI to explain how non-local values lead to a finding. Currently, this only applies to taint mode findings and it will trace the path from the taint source to the taint sink. (pa-1599)
+- Introduced the `--dataflow-traces` flag, which directs the Lens CLI to explain how non-local values lead to a finding. Currently, this only applies to taint mode findings and it will trace the path from the taint source to the taint sink. (pa-1599)
 
 ### Changed
 
 - Made breaking changes to the dataflow_trace JSON output to make it more easily consumable by the App. Added content for taint_source and intermediate_vars, and collapsed the multile taint_source locations into one. (dataflow-trace-json)
-- Removed the unique_id field from the semgrep (and semgrep-core) JSON output
+- Removed the unique_id field from the lens (and lens-core) JSON output
   for metavariables. (unique-id-json)
 
 ### Fixed
 
-- Fixed format of repository urls so links to findings can be properly displayed on semgrep.dev (cli-278)
+- Fixed format of repository urls so links to findings can be properly displayed on lens.dev (cli-278)
 - Scala: Allow metavariables in `import` patterns (gh-5219)
 - Rules reported for LSP metrics now are hashed before sending (lsp-metrixs)
 - `-filter_irrelevant_rules` was incorrectly skipping files when the PCRE engine threw
@@ -7612,7 +7612,7 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   for a file. This has been fixed so that, in case of a PCRE error, we assume that the
   rule could be relevant and we do run it on the file. (pa-1635)
 
-## [0.106.0](https://github.com/returntocorp/semgrep/releases/tag/v0.106.0) - 2022-07-21
+## [0.106.0](https://github.com/returntocorp/lens/releases/tag/v0.106.0) - 2022-07-21
 
 ### Changed
 
@@ -7634,7 +7634,7 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   these two code variables have the same name (e.g. two different variables but both
   named `x`). (pa-1659)
 
-- When running an SCA scan with `semgrep ci --sca`,
+- When running an SCA scan with `lens ci --sca`,
   SCA findings will no longer be considered blocking if they are unreachable. (sca-128)
 
 ### Fixed
@@ -7644,7 +7644,7 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 
   Basically, scoped identifiers were only looking at the last identifier. So something like `A::B::C` would result in something like `C`. (gh-5717)
 
-## [0.105.0](https://github.com/returntocorp/semgrep/releases/tag/v0.105.0) - 2022-07-20
+## [0.105.0](https://github.com/returntocorp/lens/releases/tag/v0.105.0) - 2022-07-20
 
 ### Added
 
@@ -7659,8 +7659,8 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 ### Changed
 
 - Do not store time or skipped targets output unless requested. This reduces memory consumption significantly in large repos (pa-1618)
-- Reduce memory consumption of semgrep by passing the targets in a more condensed
-  structure. Previously, we told semgrep which rules to run on which target by
+- Reduce memory consumption of lens by passing the targets in a more condensed
+  structure. Previously, we told lens which rules to run on which target by
   listing out all the rule_ids each target should run. Now, we have a separate
   rule_id list and for each target we only ilst the rule_id indices. On large
   repos, particularly when run with multiple processes, this has a significant
@@ -7681,22 +7681,22 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   do not properly enter the context. So in our analysis, we would not know that the identifier
   `x` has type `TypeName`, within the body of `ExampleClass`. (gh-5506)
 
-- Fixed the logged message describing the endpoint where rules are fetched from when SEMGREP_URL is set (gh-5753)
+- Fixed the logged message describing the endpoint where rules are fetched from when LENS_URL is set (gh-5753)
 - Fixed what data was used for indexing match results to used match based id data (index)
 
-## [0.104.0](https://github.com/returntocorp/semgrep/releases/tag/v0.104.0) - 2022-07-13
+## [0.104.0](https://github.com/returntocorp/lens/releases/tag/v0.104.0) - 2022-07-13
 
 ### Added
 
-- `semgrep ci` will now not block builds on triage ignored issues (cli-162)
+- `lens ci` will now not block builds on triage ignored issues (cli-162)
 - Add support to cli/scripts/compare.py for podman environments (compare-script-podman)
-- A new experimental 'extract' mode. This mode runs a Semgrep rule on a codebase
+- A new experimental 'extract' mode. This mode runs a Lens rule on a codebase
   and "extracts" code from matches, treating it as a different language. This
   allows users to supplement an existing set of rules, e.g., for JavaScript, by
   writing additional rules to find JavaScript in non-JavaScript files, e.g.,
   JavaScript contained in HTML or template files. While this is somewhat possible
   with metavariable-pattern, this reduces the work from an M \* N problem to an M \+ N one. (gh-4478)
-- Added taint traces as part of Semgrep's JSON output. This helps explain how the sink became tainted. (pa-1271)
+- Added taint traces as part of Lens's JSON output. This helps explain how the sink became tainted. (pa-1271)
 
 ### Changed
 
@@ -7718,7 +7718,7 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   behave the same if that `$OBJ` was `$A` instead. Now, `$OBJ` will try to unify with the value bound
   by `$OBJ` in the pattern-inside. (gh-5060)
 
-- The semgrep test output used to produce expected lines and reported lines which is difficult to read and interpret. This change introduces missed lines and incorrect lines to make it easier for the users to pinpoint the differences in output. (gh-5600)
+- The lens test output used to produce expected lines and reported lines which is difficult to read and interpret. This change introduces missed lines and incorrect lines to make it easier for the users to pinpoint the differences in output. (gh-5600)
 - Separator lines are no longer drawn between findings that have no source code snippet. (sca-ui)
 - Using ellipses in XML/HTML elements is now more permissive of whitespace.
   Previously, in order to have a element with an ellipsis no leading/trailing
@@ -7728,25 +7728,25 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 
 ### Fixed
 
-- Semgrep App's links to repositories, code snippets, and pull requests are no longer broken for projects that run Semgrep in Circle CI, Bitbucket, and Buildkite. (cli-267)
-- When running Semgrep via Docker for Mac,
+- Lens App's links to repositories, code snippets, and pull requests are no longer broken for projects that run Lens in Circle CI, Bitbucket, and Buildkite. (cli-267)
+- When running Lens via Docker for Mac,
   all volume-mounted files were considered executable and thus a candidate for scanning Bash code,
   making target collection take longer, and sometimes targeting more files than intended.
   This was fixed by using `os.stat` instead of `os.access` to determine if a file is executable. (gh-5560)
-- Semgrep used to crash when trying to print findings that match only whitespace, such as when a rule disallows two newlines at the end of a file. This crash is now fixed. (gh-5633)
+- Lens used to crash when trying to print findings that match only whitespace, such as when a rule disallows two newlines at the end of a file. This crash is now fixed. (gh-5633)
 - Memory usage improvement: don't save skipped targets when `--debug` isn't passed
   since it isn't read unless `--debug` is used (pa-1618)
 
 ### Infra/Release Changes
 
 - Updated the GH Release creation to publish the release instead of drafting one - this avoids a failure of validation jobs on release. (cli-243)
-- Using some building blocks from release, set up a workflow to test `semgrep ci` e2e. (cli-253)
+- Using some building blocks from release, set up a workflow to test `lens ci` e2e. (cli-253)
 - Updated our changelog management system to `towncrier` to avoid merge conflicts in changelog on release (cli-77)
-- The opening of PRs in other repos is automated with semgrep release - there is still a manual review required to build confidence. (cli-84)
+- The opening of PRs in other repos is automated with lens release - there is still a manual review required to build confidence. (cli-84)
 
 ## Unreleased
 
-## [0.103.0](https://github.com/returntocorp/semgrep/releases/tag/v0.103.0) - 2022-07-05
+## [0.103.0](https://github.com/returntocorp/lens/releases/tag/v0.103.0) - 2022-07-05
 
 ### Added
 
@@ -7754,8 +7754,8 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   they were a bit deeper in the expression (e.g., `x = foo();`).
   This can now be disabled via rule `options:`
   with `implicit_deep_exprstmt: false` (#5472)
-- The timeout for git commands Semgrep runs is now configurable by setting the
-  `SEMGREP_GIT_COMMAND_TIMEOUT` environment variable.
+- The timeout for git commands Lens runs is now configurable by setting the
+  `LENS_GIT_COMMAND_TIMEOUT` environment variable.
   The unit used is seconds. The default value is 300.
 
 ### Fixed
@@ -7764,16 +7764,16 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   this was fixed so they are now uncolored (and readable!) plain text.
 - Fixed config parsing bug to cut CI scan speeds down significantly
 
-## [0.102.0](https://github.com/returntocorp/semgrep/releases/tag/v0.102.0) - 2022-06-30
+## [0.102.0](https://github.com/returntocorp/lens/releases/tag/v0.102.0) - 2022-06-30
 
 ### Added
 
 - Scala: ellipsis are now allowed in for loop headers, so you can write patterns
   like `for (...; $X <- $Y if $COND; ...) { ... }` to match nested for loops. (#5650)
-- The `SEMGREP_GHA_MIN_FETCH_DEPTH` environment variable which lets you set how many
-  commits `semgrep ci` fetches from the remote at the minimum when calculating the merge-base in GitHub Actions.
-  Having more commits available helps Semgrep determine what changes came from the current pull request,
-  fixing issues where Semgrep would report findings that weren't touched in a given pull request.
+- The `LENS_GHA_MIN_FETCH_DEPTH` environment variable which lets you set how many
+  commits `lens ci` fetches from the remote at the minimum when calculating the merge-base in GitHub Actions.
+  Having more commits available helps Lens determine what changes came from the current pull request,
+  fixing issues where Lens would report findings that weren't touched in a given pull request.
   This value is set to 0 by default (#5664)
 
 ### Fixed
@@ -7791,13 +7791,13 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   `--verbose --time` to display this information.
 - Change timeout for git operations from 100s to 500s
 
-## [0.101.1](https://github.com/returntocorp/semgrep/releases/tag/v0.101.1) - 2022-06-28
+## [0.101.1](https://github.com/returntocorp/lens/releases/tag/v0.101.1) - 2022-06-28
 
 ### Fixed
 
-- `semgrep ci`: CI runs in GitHub Actions failed to checkout the commit assoociated with the head branch, and is fixed here.
+- `lens ci`: CI runs in GitHub Actions failed to checkout the commit assoociated with the head branch, and is fixed here.
 
-## [0.101.0](https://github.com/returntocorp/semgrep/releases/tag/v0.101.0) - 2022-06-27
+## [0.101.0](https://github.com/returntocorp/lens/releases/tag/v0.101.0) - 2022-06-27
 
 ### Added
 
@@ -7807,7 +7807,7 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 
 ### Fixed
 
-- `semgrep ci`: CI runs were failing to checkout the PR head in GitHub Actions, which is
+- `lens ci`: CI runs were failing to checkout the PR head in GitHub Actions, which is
   corrected here.
 - TS: fixed the parsing of type predicates and typeof queries
 - Deep expression matching now works on HTML in JavaScript
@@ -7817,13 +7817,13 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
   `page.getOrderBy()` to `sqlBuilder`.
 - Will no longer print "files were not tracked by git" if not in a git repo
 - Will no longer print "Some files were skipped" if no files were skipped
-- Fixed bug where semgrep would crash in nonexistent directory (#4785)
+- Fixed bug where lens would crash in nonexistent directory (#4785)
 - taint-mode: Correctly propagate taint in for-each loops with typed iteration
   variables (as in Java or C#). If the iterator object is tainted, that taint will
   now be propagated to the iteration variable. This should fix some false negatives
   (i.e., findings not being reported) in the presence of for-each loops. (#5590)
 
-## [0.100.0](https://github.com/returntocorp/semgrep/releases/tag/v0.100.0) - 2022-06-22
+## [0.100.0](https://github.com/returntocorp/lens/releases/tag/v0.100.0) - 2022-06-22
 
 ## Added
 
@@ -7835,12 +7835,12 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 
 ### Changed
 
-- `--config auto` no longer sends the name of the repository being scanned to the Semgrep Registry.
-  As of June 21st, this data is not recorded by the Semgrep Registry backend, even if an old Semgrep version sends it.
-  Also as of June 21st, none of the previously collected repository names are retained by the Semgrep team;
+- `--config auto` no longer sends the name of the repository being scanned to the Lens Registry.
+  As of June 21st, this data is not recorded by the Lens Registry backend, even if an old Lens version sends it.
+  Also as of June 21st, none of the previously collected repository names are retained by the Lens team;
   any historical data has been wiped.
 - Gitlab SAST output is now v14.1.2 compliant
-- Removed the following deprecated `semgrep scan` options:
+- Removed the following deprecated `lens scan` options:
   `--json-stats`, `--json-time`, `--debugging-json`, `--save-test-output-tar`, `--synthesize-patterns`,
   `--generate-config/-g`, `--dangerously-allow-arbitrary-code-execution-from-rules`,
   and `--apply` (which was an easter egg for job applications, not the same as `--autofix`)
@@ -7857,9 +7857,9 @@ Version 0.119.0 of Semgrep was intentionally skipped. Version 0.120.0 immediatel
 
 ## 0.99.0 - Skipped
 
-Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately follows version 0.98.0.
+Version 0.99.0 of Lens was intentionally skipped. Version 0.100.0 immediately follows version 0.98.0.
 
-## [0.98.0](https://github.com/returntocorp/semgrep/releases/tag/v0.98.0) - 2022-06-15
+## [0.98.0](https://github.com/returntocorp/lens/releases/tag/v0.98.0) - 2022-06-15
 
 ### Added
 
@@ -7868,15 +7868,15 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Autodetection of CI env now supports Azure Pipelines, Bitbucket, Buildkite, Circle CI, Jenkins,
   and Travis CI in addition to GitHub and GitLab
 - You can now disable version checks with an environment variable by setting
-  `SEMGREP_ENABLE_VERSION_CHECK=0`
+  `LENS_ENABLE_VERSION_CHECK=0`
 - Dataflow: spread operators in record expressions (e.g. `{...foo}`) are now translated into the Dataflow IL
-- An experimental LSP daemon mode for semgrep. Try it with `semgrep lsp --config auto`!
+- An experimental LSP daemon mode for lens. Try it with `lens lsp --config auto`!
 
 ### Changed
 
-- Rules are now downloaded from the Semgrep Registry in JSON format instead of YAML.
-  This speeds up rule parsing in the Semgrep CLI,
-  making a `semgrep --config auto` run on the semgrep Python package in 14s instead of 16s.
+- Rules are now downloaded from the Lens Registry in JSON format instead of YAML.
+  This speeds up rule parsing in the Lens CLI,
+  making a `lens --config auto` run on the lens Python package in 14s instead of 16s.
 
 ### Fixed
 
@@ -7890,12 +7890,12 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - PHP: booleans are propagated by constant propagation (#5509)
 - PHP: named arguments work in patterns (#5508)
 - Fixed a non-deterministic crash when matching a large number of regexes (#5277)
-- Fixed issue when running in GithubActions that caused semgrep to report on
+- Fixed issue when running in GithubActions that caused lens to report on
   files not changed in the PR (#5453)
 - JS/TS: `$X()` no longer matches `new Foo()`, for consistency with other languages (#5510)
 - JS/TS: Typed metavariables now match constructor calls (e.g. `($X: C)` matches `new C()`. (#5540)
 
-## [0.97.0](https://github.com/returntocorp/semgrep/releases/tag/v0.97.0) - 2022-06-08
+## [0.97.0](https://github.com/returntocorp/lens/releases/tag/v0.97.0) - 2022-06-08
 
 ### Added
 
@@ -7908,7 +7908,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Fixed
 
-- The output of `semgrep ci` should be clear it is exiting with error code 0
+- The output of `lens ci` should be clear it is exiting with error code 0
   when there are findings but none of them being blockers
 - Java: support for Sealed classes and Text Blocks via tree-sitter-java
   (#3787, #4644)
@@ -7924,7 +7924,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - When a logged in CI scan encounters a Git failure,
   we now print a helpful error message instead of a traceback.
 
-## [0.96.0](https://github.com/returntocorp/semgrep/releases/tag/v0.96.0) - 2022-06-03
+## [0.96.0](https://github.com/returntocorp/lens/releases/tag/v0.96.0) - 2022-06-03
 
 ### Added
 
@@ -7936,16 +7936,16 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Metrics now include a list of features used during an execution.
   Examples of such features are: languages scanned, CLI options passed, keys used in rules,
   or certain code paths reached, such as using an `:include` instruction in
-  a `.semgrepignore` file.
+  a `.lensignore` file.
   These strings will NOT include user data or specific settings. As an example,
-  with `semgrep scan --output=secret.txt` we might send `"option/output"` but
+  with `lens scan --output=secret.txt` we might send `"option/output"` but
   will NOT send `"option/output=secret.txt"`.
 
 ### Changed
 
 - The output summarizing a scan's results has been simplified.
 
-## [0.95.0](https://github.com/returntocorp/semgrep/releases/tag/v0.95.0) - 2022-06-02
+## [0.95.0](https://github.com/returntocorp/lens/releases/tag/v0.95.0) - 2022-06-02
 
 ### Added
 
@@ -7955,7 +7955,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Rust: added support for method chaining patterns.
 - `r2c-internal-project-depends-on`: support for poetry and gradle lockfiles
 - M1 Mac support added to PyPi
-- Accept `SEMGREP_BASELINE_REF` as alias for `SEMGREP_BASELINE_COMMIT`
+- Accept `LENS_BASELINE_REF` as alias for `LENS_BASELINE_COMMIT`
 - `r2c-internal-project-depends-on`:
   - pretty printing for SCA results
   - support for poetry and gradle lockfiles
@@ -7968,7 +7968,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   of taint through the lambda's arguments!
 - Metrics now include an anonymous Event ID. This is an ID generated at send-time
   and will be used to de-duplicate events that potentially get duplicated during transmission.
-- Metrics now include an anonymous User ID. This ID is stored in the ~/.semgrep/settings.yml file. If the ID disappears, the next run will generate a new one randomly. See the [Anonymous User ID in PRIVACY.md](PRIVACY.md#anonymous-user-id) for more details.
+- Metrics now include an anonymous User ID. This ID is stored in the ~/.lens/settings.yml file. If the ID disappears, the next run will generate a new one randomly. See the [Anonymous User ID in PRIVACY.md](PRIVACY.md#anonymous-user-id) for more details.
 
 ### Fixed
 
@@ -8017,14 +8017,14 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   (#3941, #2648, #2650, #3590, #3588, #3587, #3576, #3848, #3978, #4589)
 - TS: support number and boolean typed metavariables (#5350)
 - When a rule from the registry fails to parse, suggest user upgrade to
-  latest version of semgrep
+  latest version of lens
 - Scala: correctly handle `return` for taint analysis (#4975)
 - PHP: correctly handle namespace use declarations when they don't rename
   the imported name (#3964)
 - Constant propagation is now faster and memory efficient when analyzing
   large functions with lots of variables.
 
-## [0.94.0](https://github.com/returntocorp/semgrep/releases/tag/v0.94.0) - 2022-05-25
+## [0.94.0](https://github.com/returntocorp/lens/releases/tag/v0.94.0) - 2022-05-25
 
 ### Added
 
@@ -8071,17 +8071,17 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - In this version, we have made several performance improvements
   to the code that surrounds our source parsing and matching core.
   This includes file targeting, rule fetching, and similar parts of the codebase.
-  Running `semgrep scan --config auto` on the semgrep repo itself
+  Running `lens scan --config auto` on the lens repo itself
   went from 50-54 seconds to 28-30 seconds.
   - As part of these changes, we removed `:include .gitignore` and `.git/`
-    from the default `.semgrepignore` patterns.
+    from the default `.lensignore` patterns.
     This should not cause any difference in which files are targeted
-    as other parts of Semgrep ignore these files already.
+    as other parts of Lens ignore these files already.
   - A full breakdown of our performance updates,
     including some upcoming ones,
-    can be found here https://github.com/returntocorp/semgrep/issues/5257#issuecomment-1133395694
+    can be found here https://github.com/returntocorp/lens/issues/5257#issuecomment-1133395694
 - If a metrics event request times out, we no longer retry the request.
-  This avoids Semgrep waiting 10-20 seconds before exiting if these requests are slow.
+  This avoids Lens waiting 10-20 seconds before exiting if these requests are slow.
 - The metrics collection timeout has been raised from 2 seconds to 3 seconds.
 
 ### Fixed
@@ -8093,12 +8093,12 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - TS: parse correctly private properties (#5162)
 - Go: Support for ellipsis in multiple return values
   (e.g., `func foo() (..., error, ...) {}`) (#4896)
-- semgrep-core: you can use again rules stored in JSON instead of YAML (#5268)
+- lens-core: you can use again rules stored in JSON instead of YAML (#5268)
 - Python: adds support for parentheses around `with` context expressions
   (e.g., `with (open(x) as a, open(y) as b): pass`) (#5092)
 - C++: we now parse correctly const declarations (#5300)
 
-## [0.93.0](https://github.com/returntocorp/semgrep/releases/tag/v0.93.0) - 2022-05-17
+## [0.93.0](https://github.com/returntocorp/lens/releases/tag/v0.93.0) - 2022-05-17
 
 ### Changed
 
@@ -8107,16 +8107,16 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Licensing: The ocaml-tree-sitter-core component is now distributed
   under the terms of the LGPL 2.1, rather than previously GPL 3.
 - A new field was added to metrics collection: isAuthenticated.
-  This is a boolean flag which is true if you ran semgrep login.
+  This is a boolean flag which is true if you ran lens login.
 
 ### Fixed
 
-- `semgrep ci` used to incorrectly report the base branch as a CI job's branch
+- `lens ci` used to incorrectly report the base branch as a CI job's branch
   when running on a `pull_request_target` event in GitHub Actions.
-  By fixing this, Semgrep App can now track issue status history with `on: pull_request_target` jobs.
+  By fixing this, Lens App can now track issue status history with `on: pull_request_target` jobs.
 - Metrics events were missing timestamps even though `PRIVACY.md` had already documented a timestamp field.
 
-## [0.92.1](https://github.com/returntocorp/semgrep/releases/tag/v0.92.1) - 2022-05-13
+## [0.92.1](https://github.com/returntocorp/lens/releases/tag/v0.92.1) - 2022-05-13
 
 ### Added
 
@@ -8130,16 +8130,16 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - JS/TS: allow ellipsis in imports (e.g., `import {..., Foo, ...} from 'Bar'`) (#5012)
 - `fixed_lines` is once again included in JSON output when running with `--autofix --dryrun`
 
-## [0.92.0](https://github.com/returntocorp/semgrep/releases/tag/v0.92.0) - 2022-05-11
+## [0.92.0](https://github.com/returntocorp/lens/releases/tag/v0.92.0) - 2022-05-11
 
 ### Added
 
-- The JSON output of `semgrep scan` is now fully specified using
+- The JSON output of `lens scan` is now fully specified using
   ATD (https://atd.readthedocs.io/) and jsonschema (https://json-schema.org/).
-  See the semgrep-interfaces submodule under interfaces/
-  (e.g., interfaces/semgrep-interfaces/Semgrep_output_v0.atd for the ATD spec)
-- The JSON output of `semgrep scan` now contains a "version": field with the
-  version of Semgrep used to generate the match results.
+  See the lens-interfaces submodule under interfaces/
+  (e.g., interfaces/lens-interfaces/Lens_output_v0.atd for the ATD spec)
+- The JSON output of `lens scan` now contains a "version": field with the
+  version of Lens used to generate the match results.
 - taint-mode: Previously, to declare a function parameteter as a taint source,
   we had to rely on a trick that declared that _any_ occurence of the parameter
   was a taint source. If the parameter was overwritten with safe data, this was
@@ -8147,30 +8147,30 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   precisely specify that a function parameter is a source of taint, and the taint
   engine will handle this as expected.
 - taint-mode: Add basic support for object destructuring in languages such as
-  Javascript. For example, given `let {x} = E`, Semgrep will now infer that `x`
+  Javascript. For example, given `let {x} = E`, Lens will now infer that `x`
   is tainted if `E` is tainted.
 
 ### Fixed
 
 - OCaml: Parenthesis in autofixed code will no longer leave dangling closing-paren.
   Thanks to Elliott Cable for his contribution (#5087)
-- When running the Semgrep Docker image, we now mark all directories as safe for use by Git,
+- When running the Lens Docker image, we now mark all directories as safe for use by Git,
   which prevents a crash when the current user does not own the source code directory.
 - C++: Ellipsis are now allowed in for loop header (#5164)
 - Java: typed metavariables now leverages the type of foreach variables (#5181)
 
-## [0.91.0](https://github.com/returntocorp/semgrep/releases/tag/v0.91.0) - 2022-05-03
+## [0.91.0](https://github.com/returntocorp/lens/releases/tag/v0.91.0) - 2022-05-03
 
 ### Added
 
-- `--core-opts` flag to send options to semgrep-core. For internal use:
-  no guarantees made for semgrep-core options (#5111)
+- `--core-opts` flag to send options to lens-core. For internal use:
+  no guarantees made for lens-core options (#5111)
 
 ### Changed
 
-- `semgrep ci` prints out all findings instead of hiding nonblocking findings (#5116)
+- `lens ci` prints out all findings instead of hiding nonblocking findings (#5116)
 
-## [0.90.0](https://github.com/returntocorp/semgrep/releases/tag/v0.90.0) - 2022-04-26
+## [0.90.0](https://github.com/returntocorp/lens/releases/tag/v0.90.0) - 2022-04-26
 
 ### Added
 
@@ -8190,11 +8190,11 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 - Keep only latest run logs in last.log file (#5070)
 - r2c-internal-project-depends-on:
-  - Lockfiles that fail to parse will not crash semgrep
+  - Lockfiles that fail to parse will not crash lens
   - cargo.lock and Pipfile.lock dependencies that don't specify hashes now parse
   - go.sum files with a trailing newline now parse
 
-## [0.89.0](https://github.com/returntocorp/semgrep/releases/tag/v0.89.0) - 2022-04-20
+## [0.89.0](https://github.com/returntocorp/lens/releases/tag/v0.89.0) - 2022-04-20
 
 ### Added
 
@@ -8205,30 +8205,30 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 ### Changed
 
 - When running a baseline scan on a shallow-cloned git repository,
-  Semgrep still needs enough git history available
+  Lens still needs enough git history available
   to reach the branch-off point between the baseline and current branch.
-  Previously, Semgrep would try to gradually fetch more and more commits
+  Previously, Lens would try to gradually fetch more and more commits
   up to a thousand commits of history,
   before giving up and just fetching all commits from the remote git server.
-  Now, Semgrep will keep trying smaller batches until up to a million commits.
+  Now, Lens will keep trying smaller batches until up to a million commits.
   This change should reduce runtimes on large baseline scans on very large repositories.
-- Semgrep-core now logs the rule and file affected by a memory warning.
-- Improved error messages from semgrep-core (#5013)
+- Lens-core now logs the rule and file affected by a memory warning.
+- Improved error messages from lens-core (#5013)
 - Small changes to text output (#5008)
 - Various exit codes changed so that exit code 1 is only for blocking findings (#5039)
 - Subcommand is sent as part of user agent (#5051)
 
 ### Fixed
 
-- Lockfiles scanning now respects .semgrepignore
+- Lockfiles scanning now respects .lensignore
 - Workaround for git safe.directory change in github action (#5044)
 - When a baseline scan diff showed that a path changed a symlink a proper file,
-  Semgrep used incorrectly skip that path. This is now fixed.
+  Lens used incorrectly skip that path. This is now fixed.
 - Dockerfile support: handle image aliases correctly (#4881)
 - TS: Fixed matching of parameters with type annotations. E.g., it is now possible
   to match `({ params }: Request) => { }` with `({$VAR} : $REQ) => {...}`. (#5004)
 
-## [0.88.0](https://github.com/returntocorp/semgrep/releases/tag/v0.88.0) - 2022-04-13
+## [0.88.0](https://github.com/returntocorp/lens/releases/tag/v0.88.0) - 2022-04-13
 
 ### Added
 
@@ -8237,12 +8237,12 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   - Type metavariables are now supported
 - Ruby: Add basic support for lambdas in patterns. You can now write patterns
   of the form `-> (P) {Q}` where `P` and `Q` are sub-patterns. (#4950)
-- Experimental `semgrep install-deep-semgrep` command for DeepSemgrep beta (#4993)
+- Experimental `lens install-deep-lens` command for DeepLens beta (#4993)
 
 ### Changed
 
 - Moved description of parse/internal errors to the "skipped" section of output
-- Since 0.77.0 semgrep-core logs a warning when a worker process is consuming above
+- Since 0.77.0 lens-core logs a warning when a worker process is consuming above
   400 MiB of memory. Now, it will also log an extra warning every time memory usage
   doubles. Again, this is meant to help diagnosing OOM-related crashes.
 
@@ -8257,7 +8257,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Ruby: Fix regexp matching in the presence of escape characters (#4999)
 - `r2c-internal-project-depends-on`:
   - Generic mode rules work again
-  - Semgrep will not fail on targets that contain no relevant lockfiles
+  - Lens will not fail on targets that contain no relevant lockfiles
   - `package-lock.json` parsing now defaults to `dependencies` instead of `packages`,
     and will not completely fail on dependencies with no version
   - `yarn.lock` parsing has been rewritten to fix a bug where sometimes
@@ -8265,14 +8265,14 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Go: parse multiline string literals
 - Handle utf-8 decoding errors without crashing (#5023)
 
-## [0.87.0](https://github.com/returntocorp/semgrep/releases/tag/v0.87.0) - 2022-04-07
+## [0.87.0](https://github.com/returntocorp/lens/releases/tag/v0.87.0) - 2022-04-07
 
 ### Added
 
 - New `focus-metavariable` operator that lets you focus (or "zoom in") the match
   on the code region delimited by a metavariable. This operator is useful for
   narrowing down the code matched by a rule, to focus on what really matters. (#4453)
-- `semgrep ci` uses "GITHUB_SERVER_URL" to generate urls if it is available
+- `lens ci` uses "GITHUB_SERVER_URL" to generate urls if it is available
 - You can now set `NO_COLOR=1` to force-disable colored output
 
 ### Changed
@@ -8280,7 +8280,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - taint-mode: We no longer force the unification of metavariables between
   sources and sinks by default. It is not clear that this is the most natural
   behavior; and we realized that, in fact, it was confusing even for experienced
-  Semgrep users. Instead, each set of metavariables is now considered independent.
+  Lens users. Instead, each set of metavariables is now considered independent.
   The metavariables available to the rule message are all metavariables bound by
   `pattern-sinks`, plus the subset of metavariables bound by `pattern-sources`
   that do not collide with the ones bound by `pattern-sinks`. We do not expect
@@ -8298,14 +8298,14 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   is one with only a dependency match. Reachable findings are reported as coming from the
   code that was pattern matched. Unreachable findings are reported as coming from the lockfile
   that was dependency matched. Both kinds of findings specify their kind, along with all matched
-  dependencies, in the `extra` field of semgrep's JSON output, using the `dependency_match_only`
+  dependencies, in the `extra` field of lens's JSON output, using the `dependency_match_only`
   and `dependency_matches` fields, respectively.
 - `r2c-internal-project-depends-on`: a finding will only be considered reachable if the file
   containing the pattern match actually depends on the dependencies in the lockfile containing the
   dependency match. A file depends on a lockfile if it is the nearest lockfile going up the
   directory tree.
-- The returntocorp/semgrep Docker image no longer sets `semgrep` as the entrypoint.
-  This means that `semgrep` is no longer prepended automatically to any command you run in the image.
+- The returntocorp/lens Docker image no longer sets `lens` as the entrypoint.
+  This means that `lens` is no longer prepended automatically to any command you run in the image.
   This makes it possible to use the image in CI executors that run provisioning commands within the image.
 
 ### Fixed
@@ -8315,55 +8315,55 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - JS/TS: `...{$X}...` will no longer match `str`
 - taint-mode: Metavariables bound by a `pattern-inside` are now available to the
   rule message. (#4464)
-- parsing: fail fast on in semgrep-core if rules fail to validate (broken since 0.86.5)
-- Setting either `SEMGREP_URL` or `SEMGREP_APP_URL`
-  now updates the URL used both for Semgrep App communication,
-  and for fetching Semgrep Registry rules.
-- The pre-commit hook exposed from semgrep's repository no longer fails
+- parsing: fail fast on in lens-core if rules fail to validate (broken since 0.86.5)
+- Setting either `LENS_URL` or `LENS_APP_URL`
+  now updates the URL used both for Lens App communication,
+  and for fetching Lens Registry rules.
+- The pre-commit hook exposed from lens's repository no longer fails
   when trying to install with recent setuptools versions.
 
-## [0.86.5](https://github.com/returntocorp/semgrep/releases/tag/v0.86.5) - 2022-03-28
+## [0.86.5](https://github.com/returntocorp/lens/releases/tag/v0.86.5) - 2022-03-28
 
 ## Changed
 
 - Set minimum urllib3 version
 
-## [0.86.4](https://github.com/returntocorp/semgrep/releases/tag/v0.86.4) - 2022-03-25
+## [0.86.4](https://github.com/returntocorp/lens/releases/tag/v0.86.4) - 2022-03-25
 
 ### Changed
 
 - Increase rule fetch timeout from 20s to 30s
 
-## [0.86.3](https://github.com/returntocorp/semgrep/releases/tag/v0.86.3) - 2022-03-25
+## [0.86.3](https://github.com/returntocorp/lens/releases/tag/v0.86.3) - 2022-03-25
 
 ### Fixed
 
 - Network timeouts during rule download are now less likely.
 
-## [0.86.2](https://github.com/returntocorp/semgrep/releases/tag/v0.86.2) - 2022-03-24
+## [0.86.2](https://github.com/returntocorp/lens/releases/tag/v0.86.2) - 2022-03-24
 
 ### Fixed
 
-- Some finding fingerprints were not matching what semgrep-agent would return.
+- Some finding fingerprints were not matching what lens-agent would return.
 
-## [0.86.1](https://github.com/returntocorp/semgrep/releases/tag/v0.86.1) - 2022-03-24
+## [0.86.1](https://github.com/returntocorp/lens/releases/tag/v0.86.1) - 2022-03-24
 
 ### Fixed
 
-- The fingerprint of findings ignored with `# nosemgrep` is supposed to be the same
+- The fingerprint of findings ignored with `# nolens` is supposed to be the same
   as if the ignore comment wasn't there.
-  This has previously only worked for single-line findings, including in `semgrep-agent`.
+  This has previously only worked for single-line findings, including in `lens-agent`.
   Now the fingerprint is consistent as expected for multiline findings as well.
 
 ### Changed
 
 - `--timeout-threshold` default set to 3 instead of 0
 
-## [0.86.0](https://github.com/returntocorp/semgrep/releases/tag/v0.86.0) - 2022-03-24
+## [0.86.0](https://github.com/returntocorp/lens/releases/tag/v0.86.0) - 2022-03-24
 
 ### Added
 
-- Semgrep can now output findings in GitLab's SAST report and secret scanning
+- Lens can now output findings in GitLab's SAST report and secret scanning
   report formats with `--gitlab-sast` and `--gitlab-secrets`.
 - JSON output now includes a fingerprint of each finding.
   This fingerprint remains consistent when matching code is just moved around
@@ -8373,19 +8373,19 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   and variables (#4816)
 - HTML: you can now use metavariable ellipsis inside <script> (#4841)
   (e.g., `<script>$...JS</script>`)
-- A `semgrep ci` subcommand that auto-detects settings from your CI environment
-  and can upload findings to Semgrep App when logged in.
+- A `lens ci` subcommand that auto-detects settings from your CI environment
+  and can upload findings to Lens App when logged in.
 
 ### Changed
 
 - SARIF output will include matching code snippet (#4812)
-- semgrep-core should now be more tolerant to rules using futur extensions by
+- lens-core should now be more tolerant to rules using futur extensions by
   skipping those rules instead of just crashing (#4835)
 - Removed `tests` from published python wheel
 - Findings are now considered identical between baseline and current scans
-  based on the same logic as Semgrep CI uses, which means:
+  based on the same logic as Lens CI uses, which means:
   - Two findings are now identical after whitespace changes such as re-indentation
-  - Two findings are now identical after a nosemgrep comment is added
+  - Two findings are now identical after a nolens comment is added
   - Findings are now different if the same code triggered them on different lines
 - Docker image now runs as root to allow the docker image to be used in CI/CD pipelines
 - Support XDG Base directory specification (#4818)
@@ -8403,7 +8403,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Constant propagation now recognizes operators `++` and `--` as side-effectful
   (#4667)
 
-## [0.85.0](https://github.com/returntocorp/semgrep/releases/tag/v0.85.0) - 2022-03-16
+## [0.85.0](https://github.com/returntocorp/lens/releases/tag/v0.85.0) - 2022-03-16
 
 ### Added
 
@@ -8414,29 +8414,29 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   which will now be reported.
 - Dockerfile: allow e.g. `CMD ...` to match both `CMD ls` and `CMD ["ls"]`
   (#4770).
-- When scanning multiple languages, Semgrep will now print a table of how
+- When scanning multiple languages, Lens will now print a table of how
   many rules and files are used for each language.
 
 ### Fixed
 
-- Fixed Deep expression matching and metavariables interaction. Semgrep will
+- Fixed Deep expression matching and metavariables interaction. Lens will
   not stop anymore at the first match and will enumarate all possible matchings
   if a metavariable is used in a deep expression pattern
   (e.g., `<... $X ...>`). This can introduce some performance regressions.
 - JSX: ellipsis in JSX body (e.g., `<div>...</div>`) now matches any
   children (#4678 and #4717)
 - > ℹ️ During a `--baseline-commit` scan,
-  > Semgrep temporarily deletes files that were created since the baseline commit,
+  > Lens temporarily deletes files that were created since the baseline commit,
   > and restores them at the end of the scan.
 
   Previously, when scanning a subdirectory of a git repo with `--baseline-commit`,
-  Semgrep would delete all newly created files under the repo root,
+  Lens would delete all newly created files under the repo root,
   but restore only the ones in the subdirectory.
-  Now, Semgrep only ever deletes files in the scanned subdirectory.
+  Now, Lens only ever deletes files in the scanned subdirectory.
 
 - Previous releases allowed incompatible versions (21.1.0 & 21.2.0)
   of the `attrs` dependency to be installed.
-  `semgrep` now correctly requires attrs 21.3.0 at the minimum.
+  `lens` now correctly requires attrs 21.3.0 at the minimum.
 - `package-lock.json` parsing defaults to `packages` instead of `dependencies` as the source of dependencies
 - `package-lock.json` parsing will ignore dependencies with non-standard versions, and will succesfully parse
   dependencies with no `integrity` field
@@ -8451,23 +8451,23 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
     Previously, explicitly targeted files would be unaffected by most global filtering:
     global include/exclude patterns and the file size limit.
-    Now `.semgrepignore` patterns don't affect them either,
+    Now `.lensignore` patterns don't affect them either,
     so they are unaffected by all global filtering,
 
   - > ℹ️ With `--skip-unknown-extensions`,
-    > Semgrep scans only the explicitly targeted files that are applicable to the language you're scanning.
+    > Lens scans only the explicitly targeted files that are applicable to the language you're scanning.
 
     Previously, `--skip-unknown-extensions` would skip based only on file extension,
     even though extensionless shell scripts expose their language via the shebang of the first line.
     As a result, explicitly targeted shell files were always skipped when `--skip-unknown-extensions` was set.
-    Now, this flag decides if a file is the correct language with the same logic as other parts of Semgrep:
+    Now, this flag decides if a file is the correct language with the same logic as other parts of Lens:
     taking into account both extensions and shebangs.
 
-- Semgrep scans with `--baseline-commit` are now much faster.
+- Lens scans with `--baseline-commit` are now much faster.
   These optimizations were added:
 
   - > ℹ️ When `--baseline-commit` is set,
-    > Semgrep first runs the _current scan_,
+    > Lens first runs the _current scan_,
     > then switches to the baseline commit,
     > and runs the _baseline scan_.
 
@@ -8478,18 +8478,18 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   - The _baseline scan_ now excludes rules and files that had no matches in the _current scan_.
 
   - When `git ls-files` is unavailable or `--disable-git-ignore` is set,
-    Semgrep walks the file system to find all target files.
-    Semgrep now walks the file system 30% faster compared to previous versions.
+    Lens walks the file system to find all target files.
+    Lens now walks the file system 30% faster compared to previous versions.
 
 - The output format has been updated to visually separate lines
   with headings and indentation.
 
-## [0.84.0](https://github.com/returntocorp/semgrep/releases/tag/v0.84.0) - 2022-03-09
+## [0.84.0](https://github.com/returntocorp/lens/releases/tag/v0.84.0) - 2022-03-09
 
 ### Added
 
 - new --show-supported-languages CLI flag to display the list of languages
-  supported by semgrep. Thanks to John Wu for his contribution! (#4754)
+  supported by lens. Thanks to John Wu for his contribution! (#4754)
 - `--validate` will check that metavariable-x doesn't use an invalid
   metavariable
 - Add r2c-internal-project-depends on support for Java, Go, Ruby, and Rust
@@ -8511,7 +8511,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Report parse errors even when invoked with `--strict`
 - Show correct findings count when using `--config auto` (#4674)
 - Kotlin: store trailing lambdas in the AST (#4741)
-- Autofix: Semgrep no longer errors during `--dry-run`s where one fix changes the line numbers in a file that also has a second autofix.
+- Autofix: Lens no longer errors during `--dry-run`s where one fix changes the line numbers in a file that also has a second autofix.
 - Performance regression when running with --debug (#4761)
 - SARIF output formatter not handling lists of OWASP or CWE metadata (#4673)
 - Allow metrics flag and metrics env var at the same time if both are set to the same value (#4703)
@@ -8519,15 +8519,15 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Run `project-depends-on` rules with only `pattern-inside` at their leaves
 - Dockerfile patterns no longer need a trailing newline (#4773)
 
-## [0.83.0](https://github.com/returntocorp/semgrep/releases/tag/v0.83.0) - 2022-02-24
+## [0.83.0](https://github.com/returntocorp/lens/releases/tag/v0.83.0) - 2022-02-24
 
 ### Added
 
-- semgrep saves logs of last run to `~/.semgrep/last.log`
-- A new recursive operator, `-->`, for join mode rules for recursively chaining together Semgrep rules based on metavariable contents.
+- lens saves logs of last run to `~/.lens/last.log`
+- A new recursive operator, `-->`, for join mode rules for recursively chaining together Lens rules based on metavariable contents.
 - A new recursive operator, `-->`, for join mode rules for recursively
-  chaining together Semgrep rules based on metavariable contents.
-- Semgrep now lists the scanned paths in its JSON output under the
+  chaining together Lens rules based on metavariable contents.
+- Lens now lists the scanned paths in its JSON output under the
   `paths.scanned` key.
 - When using `--verbose`, the skipped paths are also listed under the
   `paths.skipped` key.
@@ -8536,30 +8536,30 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   supporting two kinds of analyses: prediction of regular expression
   denial-of-service vulnerabilities (ReDoS, `redos` analyzer, #4700)
   and high-entropy string detection (`entropy` analyzer, #4672).
-- A new subcommand `semgrep publish` allows users to upload private,
-  unlisted, or public rules to the Semgrep Registry
+- A new subcommand `lens publish` allows users to upload private,
+  unlisted, or public rules to the Lens Registry
 
 ### Fixed
 
 - Configure the PCRE engine with lower match-attempts and recursion limits in order
-  to prevent regex matching from potentially "hanging" Semgrep
+  to prevent regex matching from potentially "hanging" Lens
 - Terraform: Parse heredocs respecting newlines and whitespaces, so that it is
   possible to correctly match these strings with `metavariable-regex` or
-  `metavariable-pattern`. Previously, Semgrep had problems analyzing e.g. embedded
+  `metavariable-pattern`. Previously, Lens had problems analyzing e.g. embedded
   YAML content. (#4582)
 - Treat Go raw string literals like ordinary string literals (#3938)
 - Eliminate zombie uname processes (#4466)
-- Fix for: semgrep always highlights one extra character
+- Fix for: lens always highlights one extra character
 
 ### Changed
 
 - Improved constant propagation for global constants
 - PHP: Constant propagation now has built-in knowledge of `escapeshellarg` and
   `htmlspecialchars_decode`, if these functions are given constant arguments,
-  then Semgrep assumes that their output is also constant
-- The environment variable used by Semgrep login changed from `SEMGREP_LOGIN_TOKEN` to `SEMGREP_APP_TOKEN`
+  then Lens assumes that their output is also constant
+- The environment variable used by Lens login changed from `LENS_LOGIN_TOKEN` to `LENS_APP_TOKEN`
 
-## [0.82.0](https://github.com/returntocorp/semgrep/releases/tag/v0.82.0) - 2022-02-08
+## [0.82.0](https://github.com/returntocorp/lens/releases/tag/v0.82.0) - 2022-02-08
 
 ### Added
 
@@ -8568,14 +8568,14 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Changed
 
-- Performance: send all rules directly to semgrep-core instead of invoking semgrep-core
+- Performance: send all rules directly to lens-core instead of invoking lens-core
 - Scans now report a breakdown of how many target paths were skipped for what reason.
   - `--verbose` mode will list all skipped paths along with the reason they were skipped
-- Performance: send all rules directly to semgrep-core instead of invoking semgrep-core
+- Performance: send all rules directly to lens-core instead of invoking lens-core
   for each rule, reducing the overhead significantly. Other changes resulting from this:
   Sarif output now includes all rules run. Error messages use full path of rules.
   Progress bar reports by file instead of by rule
-- Required minimum version of python to run semgrep now 3.7 instead of EOL 3.6
+- Required minimum version of python to run lens now 3.7 instead of EOL 3.6
 - Bloom filter optimization now considers `import` module file names, thus
   speeding up matching of patterns like `import { $X } from 'foo'`
 - Indentation is now removed from matches to conserve horizontal space
@@ -8588,7 +8588,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Solidity: ellipsis in contract body are now supported (#4587)
 - Highlighting has been restored for matching code fragments within a finding
 
-## [0.81.0](https://github.com/returntocorp/semgrep/releases/tag/v0.81.0) - 2022-02-02
+## [0.81.0](https://github.com/returntocorp/lens/releases/tag/v0.81.0) - 2022-02-02
 
 ### Added
 
@@ -8600,7 +8600,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Gracefully handle timeout errors with missing rule_id
 - Match resources in Java try-with-resources statements (#4228)
 
-## [0.80.0](https://github.com/returntocorp/semgrep/releases/tag/v0.80.0) - 2022-01-26
+## [0.80.0](https://github.com/returntocorp/lens/releases/tag/v0.80.0) - 2022-01-26
 
 ### Added
 
@@ -8616,7 +8616,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 - Handle missing target files without raising an exception (#4462)
 
-## [0.79.0](https://github.com/returntocorp/semgrep/releases/tag/v0.79.0) - 2022-01-20
+## [0.79.0](https://github.com/returntocorp/lens/releases/tag/v0.79.0) - 2022-01-20
 
 ### Added
 
@@ -8624,11 +8624,11 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   allows rules to filter based on the presence of 3rd-party dependencies at specific
   version ranges.
 - Experimental support for Dockerfile syntax.
-- Support nosemgrep comments placed on the line before a match,
+- Support nolens comments placed on the line before a match,
   causing such match to be ignored (#3521)
-- Add experimental `semgrep login` and `semgrep logout` to store API token from semgrep.dev
-- Add experimenntal config key `semgrep --config policy` that uses stored API token to
-  retrieve configured rule policy on semgrep.dev
+- Add experimental `lens login` and `lens logout` to store API token from lens.dev
+- Add experimenntal config key `lens --config policy` that uses stored API token to
+  retrieve configured rule policy on lens.dev
 
 ### Changed
 
@@ -8639,13 +8639,13 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 - Solidity: add support for `for(...)` patterns (#4530)
 
-## [0.78.0](https://github.com/returntocorp/semgrep/releases/tag/v0.78.0) - 2022-01-13
+## [0.78.0](https://github.com/returntocorp/lens/releases/tag/v0.78.0) - 2022-01-13
 
 ### Added
 
 - Pre-alpha support for Dockerfile as a new target language
-- Semgrep is now able to symbolically propagate simple definitions. E.g., given
-  an assignment `x = foo.bar()` followed by a call `x.baz()`, Semgrep will keep
+- Lens is now able to symbolically propagate simple definitions. E.g., given
+  an assignment `x = foo.bar()` followed by a call `x.baz()`, Lens will keep
   track of `x`'s definition, and it will successfully match `x.baz()` with a
   pattern like `foo.bar().baz()`. This feature should help writing simple yet
   powerful rules, by letting the dataflow engine take care of any intermediate
@@ -8667,15 +8667,15 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Go, JavaScript, Java, Python, TypeScript: correct matching of
   multibyte characters (#4490)
 
-## [0.77.0](https://github.com/returntocorp/semgrep/releases/tag/v0.77.0) - 2021-12-16
+## [0.77.0](https://github.com/returntocorp/lens/releases/tag/v0.77.0) - 2021-12-16
 
 ### Added
 
 - New language Solidity with experimental support.
 - Scala: Patterns like List(...) now correctly match against patterns in code
-- A default set of .semgrepignore patterns (in semgrep/templates/.semgrepignore) are now used if no .semgrepignore file is provided
+- A default set of .lensignore patterns (in lens/templates/.lensignore) are now used if no .lensignore file is provided
 - Java: Ellipsis metavariables can now be used for parameters (#4420)
-- `semgrep login` and `semgrep logout` commands to save api token
+- `lens login` and `lens logout` commands to save api token
 
 ### Fixed
 
@@ -8684,7 +8684,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Scala: Translate definitions using patterns like
   `val List(x,y,z) = List(1,2,3)` to the generic AST
 - Allow name resolution on imported packages named just vN, where N is a number
-- The -json option in semgrep-core works again when used with -e/-f
+- The -json option in lens-core works again when used with -e/-f
 - Python: get the correct range when matching comprehension (#4221)
 - Python and other languages: allow matches of patterns containing
   non-ascii characters, but still with possibly many false positives (#4336)
@@ -8698,34 +8698,34 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   in some path then it will be considered as non-constant
 - Dataflow: Only consider reachable nodes, which prevents some FPs/FNs
 - Timing output handles errors and reports profiling times
-- semgrep-core will log a warning when a worker process is consuming above 400 MiB
+- lens-core will log a warning when a worker process is consuming above 400 MiB
   of memory, or reached 80% of the specified memory limit, whatever happens first.
   This is meant to help diagnosing OOM-related crashes.
 
-## [0.76.2](https://github.com/returntocorp/semgrep/releases/tag/v0.76.2) - 2021-12-08
+## [0.76.2](https://github.com/returntocorp/lens/releases/tag/v0.76.2) - 2021-12-08
 
-## [0.76.2](https://github.com/returntocorp/semgrep/releases/tag/v0.76.2) - 2021-12-08
+## [0.76.2](https://github.com/returntocorp/lens/releases/tag/v0.76.2) - 2021-12-08
 
 ### Fixed
 
 - Python: set the right scope for comprehension variables (#4260)
-- Fixed bug where the presence of .semgrepignore would cause reported targets
+- Fixed bug where the presence of .lensignore would cause reported targets
   to have absolute instead of relative file paths
 
-## [0.76.1](https://github.com/returntocorp/semgrep/releases/tag/v0.76.1) - 2021-12-07
+## [0.76.1](https://github.com/returntocorp/lens/releases/tag/v0.76.1) - 2021-12-07
 
 ### Fixed
 
-- Fixed bug where the presence of .semgrepignore would cause runs to fail on
-  files that were not subpaths of the directory where semgrep was being run
+- Fixed bug where the presence of .lensignore would cause runs to fail on
+  files that were not subpaths of the directory where lens was being run
 
-## [0.76.0](https://github.com/returntocorp/semgrep/releases/tag/v0.76.0) - 2021-12-06
+## [0.76.0](https://github.com/returntocorp/lens/releases/tag/v0.76.0) - 2021-12-06
 
 ### Added
 
 - Improved filtering of rules based on file content (important speedup
   for nodejsscan rules notably)
-- Semgrep CLI now respects .semgrepignore files
+- Lens CLI now respects .lensignore files
 - Java: support ellipsis in generics, e.g., `class Foo<...>` (#4335)
 
 ### Fixed
@@ -8737,7 +8737,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   a sink (e.g. as in `$SINK->method`), and the LHS operand is a tainted
   variable (#4320)
 - metavariable-comparison: do not throw a NotHandled exn anymore (#4328)
-- semgrep-core: Fix a segmentation fault on Apple M1 when using
+- lens-core: Fix a segmentation fault on Apple M1 when using
   `-filter_irrelevant_rules` on rules with very large `pattern-either`s (#4305)
 - Python: generate proper lexical exn for unbalanced braces (#4310)
 - YAML: fix off-by-one in location of arrays
@@ -8747,21 +8747,21 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Changed
 
-- semgrep-core: Log messages are now tagged with the process id
+- lens-core: Log messages are now tagged with the process id
 - Optimization: change bloom filters to use sets, move location of filter
 - Reduced the size of `--debug` dumps
-- Given `--output` Semgrep will no longer print search results to _stdout_,
+- Given `--output` Lens will no longer print search results to _stdout_,
   but it will only save/post them to the specified file/URL
 
-## [0.75.0](https://github.com/returntocorp/semgrep/releases/tag/v0.75.0) - 2021-11-23
+## [0.75.0](https://github.com/returntocorp/lens/releases/tag/v0.75.0) - 2021-11-23
 
 ### Fixed
 
-- semgrep-ci relies on `--disable-nosem` still tagging findings with `is_ignored`
+- lens-ci relies on `--disable-nosem` still tagging findings with `is_ignored`
   correctly. Reverting optimization in 0.74.0 that left this field None when said
   flag was used
 
-## [0.74.0](https://github.com/returntocorp/semgrep/releases/tag/v0.74.0) - 2021-11-19
+## [0.74.0](https://github.com/returntocorp/lens/releases/tag/v0.74.0) - 2021-11-19
 
 ### Added
 
@@ -8774,7 +8774,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 ### Changed
 
 - Add `profiling_times` object in `--time --json` output for more fine
-  grained visibility into slow parts of semgrep
+  grained visibility into slow parts of lens
 - Constant propagation: Any kind of Python string (raw, byte, or unicode) is
   now evaluated to a string literal and can be matched by `"..."` (#3881)
 
@@ -8793,7 +8793,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   the CFG. This could led to e.g. constant propagation incorrectly flagging
   variables as constants. (#4265)
 
-## [0.73.0](https://github.com/returntocorp/semgrep/releases/tag/v0.73.0) - 2021-11-12
+## [0.73.0](https://github.com/returntocorp/lens/releases/tag/v0.73.0) - 2021-11-12
 
 ### Added
 
@@ -8803,7 +8803,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 - Dataflow: Assume that any function/method call inside a `try-catch` could
   be raising an exception (#4091)
-- cli: if an invalid config is passed to semgrep, it will fail immediately, even
+- cli: if an invalid config is passed to lens, it will fail immediately, even
   if valid configs are also passed
 
 ### Fixed
@@ -8815,7 +8815,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Catch PCRE errors
 - Constant propagation: Avoid "Impossible" errors due to unhandled cases
 
-## [0.72.0](https://github.com/returntocorp/semgrep/releases/tag/v0.72.0) - 2021-11-10
+## [0.72.0](https://github.com/returntocorp/lens/releases/tag/v0.72.0) - 2021-11-10
 
 ### Added
 
@@ -8842,7 +8842,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Scala: parse typed patterns with variables that begin with an underscore:
   `case _x : Int => ...`
 - Scala: parse unicode identifiers
-- semgrep-core accepts `sh` as an alias for bash
+- lens-core accepts `sh` as an alias for bash
 - pattern-regex: Hexadecimal notation of Unicode code points is now
   supported and assumes UTF-8 (#4240)
 - pattern-regex: Update documentation, specifying we use PCRE (#3974)
@@ -8857,11 +8857,11 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 ### Changed
 
 - C# support is now GA
-- cli: Only suggest increasing stack size when semgrep-core segfaults
-- Semgrep now scans executable scripts whose shebang interpreter matches the
+- cli: Only suggest increasing stack size when lens-core segfaults
+- Lens now scans executable scripts whose shebang interpreter matches the
   rule's language
 
-## [0.71.0](https://github.com/returntocorp/semgrep/releases/tag/v0.71.0) - 2021-11-01
+## [0.71.0](https://github.com/returntocorp/lens/releases/tag/v0.71.0) - 2021-11-01
 
 ### Added
 
@@ -8869,16 +8869,16 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   taint mode, and these metavariables correctly appear in match messages
 - Pre-alpha support for Bash as a new target language
 - Pre-alpha support for C++ as a new target language
-- Increase soft stack limit when running semgrep-core (#4120)
-- `semgrep --validate` runs metachecks on the rule
+- Increase soft stack limit when running lens-core (#4120)
+- `lens --validate` runs metachecks on the rule
 
 ### Fixed
 
 - text_wrapping defaults to MAX_TEXT_WIDTH if get_terminal_size reports
   width < 1
-- Metrics report the error type of semgrep core errors (Timeout,
+- Metrics report the error type of lens core errors (Timeout,
   MaxMemory, etc.)
-- Prevent bad settings files from crashing Semgrep (#4164)
+- Prevent bad settings files from crashing Lens (#4164)
 - Constant propagation: Tuple/Array destructuring assignments now correctly
   prevent constant propagation
 - JS: Correctly parse metavariables in template strings
@@ -8897,7 +8897,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Bash: a simple expression pattern can now match any command argument rather
   than having to match the whole command
 
-## [0.70.0](https://github.com/returntocorp/semgrep/releases/tag/v0.70.0) - 2021-10-19
+## [0.70.0](https://github.com/returntocorp/lens/releases/tag/v0.70.0) - 2021-10-19
 
 ### Added
 
@@ -8918,14 +8918,14 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Resolution of rulesets use legacy registry instead of cdn registry
 - Benchmark suite is easier to modify
 
-## [0.69.1](https://github.com/returntocorp/semgrep/releases/tag/v0.69.1) - 2021-10-14
+## [0.69.1](https://github.com/returntocorp/lens/releases/tag/v0.69.1) - 2021-10-14
 
 ### Fixed
 
 - The `--enable-metrics` flag is now always a flag, does not optionally
   take an argument
 
-## [0.69.0](https://github.com/returntocorp/semgrep/releases/tag/v0.69.0) - 2021-10-13
+## [0.69.0](https://github.com/returntocorp/lens/releases/tag/v0.69.0) - 2021-10-13
 
 ### Added
 
@@ -8952,7 +8952,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   semantics of sanitizers is reverted back to the same as before 0.68.0, and
   `- pattern: $F(...)` is supported via the new not-conflicting sanitizers.
 
-## [0.68.2](https://github.com/returntocorp/semgrep/releases/tag/v0.68.2) - 2021-10-07
+## [0.68.2](https://github.com/returntocorp/lens/releases/tag/v0.68.2) - 2021-10-07
 
 ### Fixed
 
@@ -8961,7 +8961,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - taint-mode: Fixed (another) bug where a tainted sink could go unreported when
   the sink is a specific argument in a function call
 
-## [0.68.1](https://github.com/returntocorp/semgrep/releases/tag/v0.68.1) - 2021-10-07
+## [0.68.1](https://github.com/returntocorp/lens/releases/tag/v0.68.1) - 2021-10-07
 
 ### Added
 
@@ -8972,16 +8972,16 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 - Respect rule level path filtering
 
-## [0.68.0](https://github.com/returntocorp/semgrep/releases/tag/v0.68.0) - 2021-10-06
+## [0.68.0](https://github.com/returntocorp/lens/releases/tag/v0.68.0) - 2021-10-06
 
 ### Added
 
 - Added "automatic configuration" (`--config auto`), which collaborates with
-  the Semgrep Registry to customize rules to a project; to support this, we
+  the Lens Registry to customize rules to a project; to support this, we
   add support for logging-in to the Registry using the project URL; in
   a future release, this will also perform project analysis to determine
   project languages and frameworks
-- Input can be derived from subshells: `semgrep --config ... <(...)`
+- Input can be derived from subshells: `lens --config ... <(...)`
 - Java: support '...' in catch (#4002)
 
 ### Changed
@@ -8998,7 +8998,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Improved Kotlin parsing from 77% to 90% on our Kotlin corpus.
 - Resolution of rulesets (i.e. `p/ci`) use new rule cdn and do client-side hydration
 - Set pcre recursion limit so it will not vary with different installations of pcre
-- Better pcre error handling in semgrep-core
+- Better pcre error handling in lens-core
 
 ### Fixed
 
@@ -9006,7 +9006,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
   a specific argument in a function call
 - PHP: allows more keywords as valid field names (#3954)
 
-## [0.67.0](https://github.com/returntocorp/semgrep/releases/tag/v0.67.0) - 2021-09-29
+## [0.67.0](https://github.com/returntocorp/lens/releases/tag/v0.67.0) - 2021-09-29
 
 ### Added
 
@@ -9027,10 +9027,10 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Fix CFG dummy nodes to always connect to exit node
 - Deep ellipsis `<... x ...>` now matches sub-expressions of statements
 - Ruby: treat 'foo' as a function call when alone on its line (#3811)
-- Fixed bug in semgrep-core's `-filter_irrelevant_rules` causing Semgrep to
+- Fixed bug in lens-core's `-filter_irrelevant_rules` causing Lens to
   incorrectly skip a file (#3755)
 
-## [0.66.0](https://github.com/returntocorp/semgrep/releases/tag/v0.66.0) - 2021-09-22
+## [0.66.0](https://github.com/returntocorp/lens/releases/tag/v0.66.0) - 2021-09-22
 
 ### Added
 
@@ -9038,18 +9038,18 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Changed
 
-- **METRICS COLLECTION CHANGES**: In order to target development of Semgrep features, performance improvements,
+- **METRICS COLLECTION CHANGES**: In order to target development of Lens features, performance improvements,
   and language support, we have changed how metrics are collected by default
   - Metrics collection is now controlled with the `--metrics` option, with possible values: `auto`, `on`, or `off`
-  - `auto` will send metrics only on runs that include rules are pulled from the Semgrep Registry.
+  - `auto` will send metrics only on runs that include rules are pulled from the Lens Registry.
     It will not send metrics when rules are only read from local files or passed directly as
     strings
   - `auto` is now the default metrics collection state
   - `on` forces metrics collection on every run
   - `off` disables metrics collection entirely
-  - Metrics collection may still alternatively be controlled with the `SEMGREP_SEND_METRICS`
+  - Metrics collection may still alternatively be controlled with the `LENS_SEND_METRICS`
     environment variable, with the same possible values as the `--metrics` option. If both
-    are set, `--metrics` overrides `SEMGREP_SEND_METRICS`
+    are set, `--metrics` overrides `LENS_SEND_METRICS`
   - See `PRIVACY.md` for more information
 - Constant propagation now assumes that void methods may update the callee (#3316)
 - Add rule message to emacs output (#3851)
@@ -9063,7 +9063,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Dataflow: Recognize "concat" method and interpret it in a language-dependent manner (#3316)
 - PHP: allows certain keywords as valid field names (#3907)
 
-## [0.65.0](https://github.com/returntocorp/semgrep/releases/tag/v0.65.0) - 2021-09-13
+## [0.65.0](https://github.com/returntocorp/lens/releases/tag/v0.65.0) - 2021-09-13
 
 ### Added
 
@@ -9072,7 +9072,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Changed
 
-- Grouped semgrep CLI options and added constraints when useful (e.g. cannot use `--vim` and `--emacs` at the same time)
+- Grouped lens CLI options and added constraints when useful (e.g. cannot use `--vim` and `--emacs` at the same time)
 
 ### Fixed
 
@@ -9081,10 +9081,10 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - PHP: Added support for parsing labels and goto (#3592)
 - PHP: Parse correctly constants named PUBLIC or DEFAULT (#3589)
 - Go: Added type inference for struct literals (#3622)
-- Fix semgrep-core crash when a cache file exceeds the file size limit
-- Sped up Semgrep interface with tree-sitter parsing
+- Fix lens-core crash when a cache file exceeds the file size limit
+- Sped up Lens interface with tree-sitter parsing
 
-## [0.64.0](https://github.com/returntocorp/semgrep/releases/tag/v0.64.0) - 2021-09-01
+## [0.64.0](https://github.com/returntocorp/lens/releases/tag/v0.64.0) - 2021-09-01
 
 ### Added
 
@@ -9094,19 +9094,19 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 - Add logging on failure to git ls-files (#3777)
 - Ignore files whose contents look minified (#3795)
-- Display semgrep-core errors in a better way (#3774)
-- Calls to `semgrep --version` now check if Semgrep is up-to-date; this can
+- Display lens-core errors in a better way (#3774)
+- Calls to `lens --version` now check if Lens is up-to-date; this can
   cause a ~ 100 ms delay in run time; use --disable-version-check if you
   don't want this
 
 ### Fixed
 
 - Java: separate import static from regular imports during matching (#3772)
-- Taint mode will now benefit from semgrep-core's -filter_irrelevant_rules
+- Taint mode will now benefit from lens-core's -filter_irrelevant_rules
 - Taint mode should no longer report duplicate matches (#3742)
 - Only change source directory when running in docker context (#3732)
 
-## [0.63.0](https://github.com/returntocorp/semgrep/releases/tag/v0.63.0) - 2021-08-25
+## [0.63.0](https://github.com/returntocorp/lens/releases/tag/v0.63.0) - 2021-08-25
 
 ### Added
 
@@ -9121,7 +9121,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 - Optimize ending `...` in `pattern-inside`s to simply match anything left
 
-## [0.62.0](https://github.com/returntocorp/semgrep/releases/tag/v0.62.0) - 2021-08-17
+## [0.62.0](https://github.com/returntocorp/lens/releases/tag/v0.62.0) - 2021-08-17
 
 ### Added
 
@@ -9143,11 +9143,11 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Changed
 
-- Add backtrace to fatal errors reported by semgrep-core
+- Add backtrace to fatal errors reported by lens-core
 - Report errors during rule evaluation to the user
 - When anded with other patterns, `pattern: $X` will not be evaluated on its own, but will look at the context and find `$X` within the metavariables bound, which should be significantly faster
 
-## [0.61.0](https://github.com/returntocorp/semgrep/releases/tag/v0.61.0) - 2021-08-04
+## [0.61.0](https://github.com/returntocorp/lens/releases/tag/v0.61.0) - 2021-08-04
 
 ### Added
 
@@ -9169,7 +9169,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Run version check and print upgrade message after scan instead of before
 - OCaml: skip ocamllex and ocamlyacc files. Process only .ml and .mli files.
 - Memoize range computation for expressions and speed up taint mode
-- Report semgrep-core's message upon a parse error
+- Report lens-core's message upon a parse error
 - Deprecated the following experimental features:
   - pattern-where-python
   - taint-mode
@@ -9187,11 +9187,11 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - core: Do not crash when is not possible to compute range info
 - eliminate 6x slowdown when using the '--max-memory' option
 
-## [0.60.0](https://github.com/returntocorp/semgrep/releases/tag/v0.60.0) - 2021-07-27
+## [0.60.0](https://github.com/returntocorp/lens/releases/tag/v0.60.0) - 2021-07-27
 
 ### Added
 
-- Detect duplicate keys in YAML dictionaries in semgrep rules when parsing a rule
+- Detect duplicate keys in YAML dictionaries in lens rules when parsing a rule
   (e.g., detect multiple 'metavariable' inside one 'metavariable-regex')
 
 ### Fixed
@@ -9211,19 +9211,19 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Changed
 
-- Added precise error location for the semgrep metachecker, to detect for example
+- Added precise error location for the lens metachecker, to detect for example
   duplicate patterns in a rule
 
-## [0.59.0](https://github.com/returntocorp/semgrep/releases/tag/v0.59.0) - 2021-07-20
+## [0.59.0](https://github.com/returntocorp/lens/releases/tag/v0.59.0) - 2021-07-20
 
 ### Added
 
-- A new experimental 'join' mode. This mode runs multiple Semgrep rules
+- A new experimental 'join' mode. This mode runs multiple Lens rules
   on a codebase and "joins" the results based on metavariable contents. This
   lets users ask questions of codebases like "do any 3rd party
   libraries use a dangerous function, and do I import that library directly?" or
   "is this variable passed to an HTML template, and is it rendered in that template?"
-  with several Semgrep rules.
+  with several Lens rules.
 
 ### Fixed
 
@@ -9233,27 +9233,27 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Python: imports are unsugared correctly (#3940)
 - Ruby: `pattern: $X` in the presence of interpolated strings now works (#3560)
 
-## [0.58.2](https://github.com/returntocorp/semgrep/releases/tag/v0.58.2) - 2021-07-15
+## [0.58.2](https://github.com/returntocorp/lens/releases/tag/v0.58.2) - 2021-07-15
 
 ### Fixed
 
 - Significant speed improvements, but the binary is now 95MB (from 47MB
   in 0.58.1, but it was 170MB in 0.58.0)
 
-## [0.58.1](https://github.com/returntocorp/semgrep/releases/tag/v0.58.1) - 2021-07-15
+## [0.58.1](https://github.com/returntocorp/lens/releases/tag/v0.58.1) - 2021-07-15
 
 ### Fixed
 
 - The --debug option now displays which files are currently processed incrementally;
-  it will not wait until semgrep-core completely finishes.
+  it will not wait until lens-core completely finishes.
 
 ### Changed
 
 - Switch from OCaml 4.10.0 to OCaml 4.10.2 (and later to OCaml 4.12.0) resulted in
-  smaller semgrep-core binaries (from 170MB to 47MB) and a smaller docker
+  smaller lens-core binaries (from 170MB to 47MB) and a smaller docker
   image (from 95MB to 40MB).
 
-## [0.58.0](https://github.com/returntocorp/semgrep/releases/tag/v0.58.0) - 2021-07-14
+## [0.58.0](https://github.com/returntocorp/lens/releases/tag/v0.58.0) - 2021-07-14
 
 ### Added
 
@@ -9272,7 +9272,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Fixed
 
-- Apple M1: Semgrep installed from HomeBrew no longer hangs (#2432)
+- Apple M1: Lens installed from HomeBrew no longer hangs (#2432)
 - Ruby command shells are distinguished from strings (#3343)
 - Java varargs are now correctly matched (#3455)
 - Support for partial statements (e.g., `try { ... }`) for Java (#3417)
@@ -9290,12 +9290,12 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 - Faster matching times for generic mode
 
-## [0.57.0](https://github.com/returntocorp/semgrep/releases/tag/v0.57.0) - 2021-06-29
+## [0.57.0](https://github.com/returntocorp/lens/releases/tag/v0.57.0) - 2021-06-29
 
 ### Added
 
 - new `options:` field in a YAML rule to enable/disable certain features
-  (e.g., constant propagation). See https://github.com/returntocorp/semgrep/blob/develop/semgrep-core/src/core/Config_semgrep.atd
+  (e.g., constant propagation). See https://github.com/returntocorp/lens/blob/develop/lens-core/src/core/Config_lens.atd
   for the list of available features one can enable/disable.
 - Capture groups in pattern-regex: in $1, $2, etc. (#3356)
 - Support metavariables inside atoms (e.g., `foo(:$ATOM)`)
@@ -9331,7 +9331,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Memoize getting ranges to speed up rules with large ranges
 - When anded with other patterns, `pattern: $X` will not be evaluated on its own, but will look at the context and find `$X` within the metavariables bound, which should be significantly faster
 
-## [0.56.0](https://github.com/returntocorp/semgrep/releases/tag/v0.56.0) - 2021-06-15
+## [0.56.0](https://github.com/returntocorp/lens/releases/tag/v0.56.0) - 2021-06-15
 
 ### Added
 
@@ -9353,10 +9353,10 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Changed
 
-- `--debug` now prints out semgrep-core debug logs instead of having this
+- `--debug` now prints out lens-core debug logs instead of having this
   behavior with `--debugging-json`
 
-## [0.55.1](https://github.com/returntocorp/semgrep/releases/tag/v0.55.1) - 2021-06-9
+## [0.55.1](https://github.com/returntocorp/lens/releases/tag/v0.55.1) - 2021-06-9
 
 ### Added
 
@@ -9371,7 +9371,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - Taint mode: Allow statement-patterns when these are represented as
   statement-expressions in the Generic AST (#3191)
 
-## [0.55.0](https://github.com/returntocorp/semgrep/releases/tag/v0.55.0) - 2021-06-8
+## [0.55.0](https://github.com/returntocorp/lens/releases/tag/v0.55.0) - 2021-06-8
 
 ### Added
 
@@ -9394,9 +9394,9 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Changed
 
-- Run rules in semgrep-core (rather than patterns) by default (aka optimizations all)
+- Run rules in lens-core (rather than patterns) by default (aka optimizations all)
 
-## [0.54.0](https://github.com/returntocorp/semgrep/releases/tag/v0.54.0) - 2021-06-2
+## [0.54.0](https://github.com/returntocorp/lens/releases/tag/v0.54.0) - 2021-06-2
 
 ### Added
 
@@ -9418,7 +9418,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - $...ARGS can now match an empty list of arguments, just like ... (#3177)
 - JSON and SARIF outputs sort keys for predictable results
 
-## [0.53.0](https://github.com/returntocorp/semgrep/releases/tag/v0.53.0) - 2021-05-26
+## [0.53.0](https://github.com/returntocorp/lens/releases/tag/v0.53.0) - 2021-05-26
 
 ### Added
 
@@ -9428,16 +9428,16 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 
 ### Fixed
 
-- Running with `--strict` will now return results if there are `nosem` mismatches. Semgrep will report a nonzero exit code if `--strict` is set and there are `nosem` mismathces. [#3099](https://github.com/returntocorp/semgrep/issues/3099)
+- Running with `--strict` will now return results if there are `nosem` mismatches. Lens will report a nonzero exit code if `--strict` is set and there are `nosem` mismathces. [#3099](https://github.com/returntocorp/lens/issues/3099)
 - PHP: parsing correctly ... and metavariables in parameters
 - PHP: parsing correctly functions with a single statement in their body
 - Evaluate interpolated strings during constant propagation (#3127)
-- Fixed #3084 - Semgrep will report an InvalidRuleSchemaError for dictionaries with duplicate key names.
+- Fixed #3084 - Lens will report an InvalidRuleSchemaError for dictionaries with duplicate key names.
 - Basic type inference also for implicit variable declarations (Python, Ruby, PHP, and JS)
 - JS/TS: differentiating tagged template literals in the AST (#3187)
 - Ruby: storing parenthesis in function calls in the AST (#3178)
 
-## [0.52.0](https://github.com/returntocorp/semgrep/releases/tag/v0.52.0) - 2021-05-18
+## [0.52.0](https://github.com/returntocorp/lens/releases/tag/v0.52.0) - 2021-05-18
 
 ### Added
 
@@ -9452,7 +9452,7 @@ Version 0.99.0 of Semgrep was intentionally skipped. Version 0.100.0 immediately
 - JS/TS: Propagate constant definitions without declaration
 - Python: Make except ... match except _ as _
 
-## [0.51.0](https://github.com/returntocorp/semgrep/releases/tag/v0.51.0) - 2021-05-13
+## [0.51.0](https://github.com/returntocorp/lens/releases/tag/v0.51.0) - 2021-05-13
 
 ### Added
 
@@ -9478,19 +9478,19 @@ $ARG = [$V];
 
 ### Changed
 
-- Show log messages from semgrep-core when running semgrep with
+- Show log messages from lens-core when running lens with
   `--debug`.
-- By default, targets larger than 1 MB are now excluded from semgrep
+- By default, targets larger than 1 MB are now excluded from lens
   scans. New option `--max-target-bytes 0` restores the old behavior.
 - Report relative path instead of absolute when using `--time`
 
-## [0.50.1](https://github.com/returntocorp/semgrep/releases/tag/v0.50.1) - 2021-05-06
+## [0.50.1](https://github.com/returntocorp/lens/releases/tag/v0.50.1) - 2021-05-06
 
 ### Changed
 
 - Reinstate `--debugging-json` to avoid stderr output of `--debug`
 
-## [0.50.0](https://github.com/returntocorp/semgrep/releases/tag/v0.50.0) - 2021-05-06
+## [0.50.0](https://github.com/returntocorp/lens/releases/tag/v0.50.0) - 2021-05-06
 
 ### Added
 
@@ -9500,7 +9500,7 @@ $ARG = [$V];
 ### Fixed
 
 - Empty yaml files do not crash
-- Autofix does not insert newline characters for patterns from semgrep.live (#3045)
+- Autofix does not insert newline characters for patterns from lens.live (#3045)
 - Autofix printout is grouped with its own finding rather than the one below it (#3046)
 - Do not assign constant values to assigned variables (#2805)
 - A `--time` flag instead of `--json-time` which shows a summary of the
@@ -9510,7 +9510,7 @@ $ARG = [$V];
 ### Changed
 
 - .git/ directories are ignored when scanning
-- External Python API (`semgrep_main.invoke_semgrep`) now takes an
+- External Python API (`lens_main.invoke_lens`) now takes an
   optional `OutputSettings` argument for controlling output
 - `OutputSettings.json_time` has moved to `OutputSettings.output_time`,
   this and many other `OutputSettings` arguments have been made optional
@@ -9520,7 +9520,7 @@ $ARG = [$V];
 - `--debugging-json` flag in favor of `--json` + `--debug`
 - `--json-time` flag in favor of `--json` + `--time`
 
-## [0.49.0](https://github.com/returntocorp/semgrep/releases/tag/v0.49.0) - 2021-04-28
+## [0.49.0](https://github.com/returntocorp/lens/releases/tag/v0.49.0) - 2021-04-28
 
 ### Added
 
@@ -9553,7 +9553,7 @@ $ARG = [$V];
   flag to control maxmium characters (defaults to 160).
   Thanks to Ankush Menat
 
-## [0.48.0](https://github.com/returntocorp/semgrep/releases/tag/v0.48.0) - 2021-04-20
+## [0.48.0](https://github.com/returntocorp/lens/releases/tag/v0.48.0) - 2021-04-20
 
 ### Added
 
@@ -9570,16 +9570,16 @@ $ARG = [$V];
 ### Changed
 
 - The `extra` `lines` data is now consistent across scan types
-  (e.g. `semgrep-core`, `spacegrep`, `pattern-regex`)
+  (e.g. `lens-core`, `spacegrep`, `pattern-regex`)
 
-## [0.47.0](https://github.com/returntocorp/semgrep/releases/tag/v0.47.0) - 2021-04-15
+## [0.47.0](https://github.com/returntocorp/lens/releases/tag/v0.47.0) - 2021-04-15
 
 ### Added
 
 - support `for(...)` for Java
 - Ability to match lambdas or functions in Javascript with ellipsis after
   the function keyword, (e.g., `function ...(...) { ... }`)
-- Rust: Semgrep patterns now support top-level statements (#2910)
+- Rust: Lens patterns now support top-level statements (#2910)
 - support for utf-8 code with non-ascii chars (#2944)
 - Java switch expressions
 
@@ -9591,7 +9591,7 @@ $ARG = [$V];
   and everything else is handled by its respective language extension (e.g. `.py`).
 - Single array field in yaml in a pattern is parsed as a field, not a one element array
 
-## [0.46.0](https://github.com/returntocorp/semgrep/releases/tag/v0.46.0) - 2021-04-08
+## [0.46.0](https://github.com/returntocorp/lens/releases/tag/v0.46.0) - 2021-04-08
 
 ### Added
 
@@ -9623,11 +9623,11 @@ exec("dangerous");
   anonymous functions (a.k.a. lambda-expressions), and arbitrary language-specific
   statements (e.g. the Golang `go` statement)
 
-## [0.45.0](https://github.com/returntocorp/semgrep/releases/tag/v0.45.0) - 2021-03-30
+## [0.45.0](https://github.com/returntocorp/lens/releases/tag/v0.45.0) - 2021-03-30
 
 ### Added
 
-- New `--experimental` flag for passing rules directly to semgrep-core (#2836)
+- New `--experimental` flag for passing rules directly to lens-core (#2836)
 
 ### Fixed
 
@@ -9635,17 +9635,17 @@ exec("dangerous");
 - Go: correctly parse select/switch clauses like in tree-sitter (#2847)
 - Go: parse correctly 'for ...' header in Go patterns (#2838)
 
-## [0.44.0](https://github.com/returntocorp/semgrep/releases/tag/v0.44.0) - 2021-03-25
+## [0.44.0](https://github.com/returntocorp/lens/releases/tag/v0.44.0) - 2021-03-25
 
 ### Added
 
 - Support for YAML! You can now write YAML patterns in rules
-  to match over YAML target files (including semgrep YAML rules, inception!)
+  to match over YAML target files (including lens YAML rules, inception!)
 - A new Bloomfilter-based optimisation to speedup matching (#2816)
-- Many benchmarks to cover semgrep advertised packs (#2772)
-- A new semgrep-dev docker container useful for benchmarking semgrep (#2800)
+- Many benchmarks to cover lens advertised packs (#2772)
+- A new lens-dev docker container useful for benchmarking lens (#2800)
 - Titles to rule schema definitions, which can be leveraged in
-  the Semgrep playground (#2703)
+  the Lens playground (#2703)
 
 ### Fixed
 
@@ -9660,16 +9660,16 @@ exec("dangerous");
 - Generic: correctly match the same metavariable when used in different
   generic patterns
 
-#### Fixed in `semgrep-core` only
+#### Fixed in `lens-core` only
 
-These features are not yet available via the `semgrep` CLI,
-but have been fixed to the internal `semgrep-core` binary.
+These features are not yet available via the `lens` CLI,
+but have been fixed to the internal `lens-core` binary.
 
-- Fixed all regressions on semgrep-rules when using -fast
-- Handle pattern-not: and pattern-not-inside: as in semgrep
-- Handle pattern: and pattern-inside: as in semgrep (#2777)
+- Fixed all regressions on lens-rules when using -fast
+- Handle pattern-not: and pattern-not-inside: as in lens
+- Handle pattern: and pattern-inside: as in lens (#2777)
 
-## [0.43.0](https://github.com/returntocorp/semgrep/releases/tag/v0.43.0) - 2021-03-16
+## [0.43.0](https://github.com/returntocorp/lens/releases/tag/v0.43.0) - 2021-03-16
 
 ### Added
 
@@ -9687,11 +9687,11 @@ but have been fixed to the internal `semgrep-core` binary.
 - Pfff java parser and tree-sitter-java parser are now more similar
 - Octal numbers parsed correctly in tree-sitter parsers
 
-## [0.42.0](https://github.com/returntocorp/semgrep/releases/tag/v0.42.0) - 2021-03-09
+## [0.42.0](https://github.com/returntocorp/lens/releases/tag/v0.42.0) - 2021-03-09
 
 ### Added
 
-- Added propagation of metavariables to clauses nested under `patterns:`. Fixes (#2548)[https://github.com/returntocorp/semgrep/issues/2548].
+- Added propagation of metavariables to clauses nested under `patterns:`. Fixes (#2548)[https://github.com/returntocorp/lens/issues/2548].
 - `--json-time` flag which reports runtimes for (rule, target file)
 - `--vim` flag for Syntastic
 - PHP - Support for partial if statements
@@ -9705,13 +9705,13 @@ but have been fixed to the internal `semgrep-core` binary.
 
 - The timeout for downloading config files from a URL was extended from 10s to 20s.
 
-## [0.41.1](https://github.com/returntocorp/semgrep/releases/tag/v0.41.1) - 2021-02-24
+## [0.41.1](https://github.com/returntocorp/lens/releases/tag/v0.41.1) - 2021-02-24
 
 ### Fixed
 
-- Statically link pcre in semgrep-core for MacOS releases
+- Statically link pcre in lens-core for MacOS releases
 
-## [0.41.0](https://github.com/returntocorp/semgrep/releases/tag/v0.41.0) - 2021-02-24
+## [0.41.0](https://github.com/returntocorp/lens/releases/tag/v0.41.0) - 2021-02-24
 
 ### Added
 
@@ -9722,19 +9722,19 @@ but have been fixed to the internal `semgrep-core` binary.
   thx to Ross Nanopoulos!
 - Allow 'nosem' in HTML. (#2574)
 
-#### Added in `semgrep-core` only
+#### Added in `lens-core` only
 
-These features are not yet available via the `semgrep` CLI,
-but have been added to the internal `semgrep-core` binary.
+These features are not yet available via the `lens` CLI,
+but have been added to the internal `lens-core` binary.
 
-- ability to process a whole rule in semgrep-core; this will allow
+- ability to process a whole rule in lens-core; this will allow
   whole-rule optimisations and avoid some fork and communication with the
-  semgrep Python wrapper
+  lens Python wrapper
 - handling the none (regexp) and generic (spacegrep) patterns in a rule
 - handling the metavariable-regexp, metavariable-comparison
 - correctly handle boolean formula using inclusion checks on metavariables
-- new semgrep-core -test_rules action to test rules; it reports only
-  28/2800 mismatches on the semgrep-rules repository
+- new lens-core -test_rules action to test rules; it reports only
+  28/2800 mismatches on the lens-rules repository
 
 ### Changed
 
@@ -9748,23 +9748,23 @@ but have been added to the internal `semgrep-core` binary.
 ### Fixed
 
 - remove cycle in named AST for Rust 'fn foo(self)' (#2584)
-  and also typescript, which could cause semgrep to use giga bytes of memory
+  and also typescript, which could cause lens to use giga bytes of memory
 - fix missing token location on Go type assertion (#2577)
 
-## [0.40.0](https://github.com/returntocorp/semgrep/releases/tag/v0.40.0) - 2021-02-17
+## [0.40.0](https://github.com/returntocorp/lens/releases/tag/v0.40.0) - 2021-02-17
 
 ### Added
 
 - Documentation for contributing new languages.
 - New language Kotlin with experimental support.
-- Work on caching improvements for semgrep-core.
+- Work on caching improvements for lens-core.
 - Work on bloom filters for matching performance improvement.
 
 ### Changed
 
 - Typescript grammar upgraded.
 - Ruby parser updated from the latest tree-sitter-ruby.
-- New Semgrep logo!
+- New Lens logo!
 - metavariable_regex now supported with PCRE.
 - Rust macros now parsed. Thanks Ruin0x11!
 
@@ -9778,36 +9778,36 @@ but have been added to the internal `semgrep-core` binary.
 - Helpful errors added for Windows installation. (#2533)
 - Helpful suggestions provided on output encoding error. (#2514)
 - Import metavariables now bind to the entire Java path. (#2502)
-- Semgrep matches the short name for a type in Java. (#2400)
+- Lens matches the short name for a type in Java. (#2400)
 - Interface types explicitly handled in Go patterns. (#2376)
 - TooManyMatches error generated instead of Timeout error when appropriate. (#2411)
 
-## [0.39.1](https://github.com/returntocorp/semgrep/releases/tag/v0.39.1) - 2021-01-26
+## [0.39.1](https://github.com/returntocorp/lens/releases/tag/v0.39.1) - 2021-01-26
 
 No new changes in this version.
 This is a re-release of 0.39.0 due to an error in the release process.
 
-## [0.39.0](https://github.com/returntocorp/semgrep/releases/tag/v0.39.0) - 2021-01-26
+## [0.39.0](https://github.com/returntocorp/lens/releases/tag/v0.39.0) - 2021-01-26
 
 ### Added
 
 - Typed metavariables in C.
   Patterns like `$X == $Y` can now match specific types like so: `(char *$X) == $Y`. (#2431)
 
-#### Added in `semgrep-core` only
+#### Added in `lens-core` only
 
-These features are not yet available via the `semgrep` CLI,
-but have been added to the internal `semgrep-core` binary.
+These features are not yet available via the `lens` CLI,
+but have been added to the internal `lens-core` binary.
 
-- `semgrep-core` supports rules in JSON and Jsonnet format. (#2428)
-- `semgrep-core` supports a new nested format
+- `lens-core` supports rules in JSON and Jsonnet format. (#2428)
+- `lens-core` supports a new nested format
   for combining patterns into a boolean query. (#2430)
 
 ### Changed
 
 - When an unknown language is set on a rule,
   the error message now lists all supported languages. (#2448)
-- When semgrep is executed without a config specified,
+- When lens is executed without a config specified,
   the error message now includes some suggestions on how to pick a config. (#2449)
 - `-c` is the new shorthand for `--config` in the CLI.
   `-f` is kept as an alias for backward-compatibility. (#2447)
@@ -9818,11 +9818,11 @@ but have been added to the internal `semgrep-core` binary.
 - Typed metavariables in go match literal strings (#2401).
 - Fix bug that caused m_compatible_type to only bind the type (#2441).
 
-## [0.38.0](https://github.com/returntocorp/semgrep/releases/tag/v0.38.0) - 2021-01-20
+## [0.38.0](https://github.com/returntocorp/lens/releases/tag/v0.38.0) - 2021-01-20
 
 ### Added
 
-- Added a new language: Rust. Support for basic semgrep patterns (#2391)
+- Added a new language: Rust. Support for basic lens patterns (#2391)
   thanks to Ruin0x11!
 - Added a new language: R. Just parsing for now (#2407)
   thanks to Ross Nanopoulos!
@@ -9830,7 +9830,7 @@ but have been added to the internal `semgrep-core` binary.
   thanks to Ruin0x11!
 - Parse more C# constructs: Linq queries, type parameter constraints (#2378, #2408)
   thanks to Sjord!
-- new experimental semgrep rule (meta)linter (#2420) with semgrep-core -check_rules
+- new experimental lens rule (meta)linter (#2420) with lens-core -check_rules
 
 ### Changed
 
@@ -9840,19 +9840,19 @@ but have been added to the internal `semgrep-core` binary.
 ### Fixed
 
 - matching correctly Ruby functions with rescue block (#2390)
-- semgrep crashing on permission error on a file (#2394)
+- lens crashing on permission error on a file (#2394)
 - metavariable interpolation for pattern-inside (#2361)
 - managing Lua assignment correctly (#2406) thanks to Ruin0x11!
 - correctly parse metavariables in PHP, and ellipsis in fields (#2419)
 
-## [0.37.0](https://github.com/returntocorp/semgrep/releases/tag/v0.37.0) - 2021-01-13
+## [0.37.0](https://github.com/returntocorp/lens/releases/tag/v0.37.0) - 2021-01-13
 
 ### Added
 
 - pattern-not-regex added so findings can be filtered using regular expression (#2364)
-- Added a new language: Lua. Support for basic semgrep patterns (#2337, #2312)
+- Added a new language: Lua. Support for basic lens patterns (#2337, #2312)
   thanks to Ruin0x11!
-- C# support for basic semgrep patterns (#2336)
+- C# support for basic lens patterns (#2336)
 - Parse event access, conditional access, async-await in C# (#2314, #2329, #2358)
   thanks to Sjord
 
@@ -9862,9 +9862,9 @@ but have been added to the internal `semgrep-core` binary.
 
 ### Fixed
 
-- Semgrep crashing due to missing token information in AST (#2380)
+- Lens crashing due to missing token information in AST (#2380)
 
-## [0.36.0](https://github.com/returntocorp/semgrep/releases/tag/v0.36.0) - 2021-01-05
+## [0.36.0](https://github.com/returntocorp/lens/releases/tag/v0.36.0) - 2021-01-05
 
 ### Added
 
@@ -9875,7 +9875,7 @@ but have been added to the internal `semgrep-core` binary.
 ### Changed
 
 - Packaging and `setup.py` functionality (`.whl` and `pip` install unchanged):
-  `SEMGREP_SKIP_BIN`, `SEMGREP_CORE_BIN`, and `SPACEGREP_BIN` now available
+  `LENS_SKIP_BIN`, `LENS_CORE_BIN`, and `SPACEGREP_BIN` now available
 
 ### Fixed
 
@@ -9883,7 +9883,7 @@ but have been added to the internal `semgrep-core` binary.
   site and use site for Java
 - add classname attribute to junit.xml report
 
-## [0.35.0](https://github.com/returntocorp/semgrep/releases/tag/v0.35.0) - 2020-12-16
+## [0.35.0](https://github.com/returntocorp/lens/releases/tag/v0.35.0) - 2020-12-16
 
 ### Added
 
@@ -9894,7 +9894,7 @@ but have been added to the internal `semgrep-core` binary.
 
 - Separate out test and pattern files with `--test` (#1796)
 
-## [0.34.0](https://github.com/returntocorp/semgrep/releases/tag/v0.34.0) - 2020-12-09
+## [0.34.0](https://github.com/returntocorp/lens/releases/tag/v0.34.0) - 2020-12-09
 
 ### Added
 
@@ -9922,40 +9922,40 @@ but have been added to the internal `semgrep-core` binary.
 
 ### Changed
 
-- Matches are now truncated to 10 lines in Semgrep's output.
+- Matches are now truncated to 10 lines in Lens's output.
   This was done to avoid filling the screen with output
   when a rule captures a whole class or function.
   If you'd like to adjust this behavior,
   you can set the new `--max-lines-per-finding` option.
 - Fans of explicit & verbose code can now ignore findings
-  with a `// nosemgrep` comment instead of the original `// nosem`.
+  with a `// nolens` comment instead of the original `// nosem`.
   The two keywords have identical behavior.
 - Generic pattern matching is now 10-20% faster
   on large codebases.
 
 ### Fixed
 
-- Semgrep would crash when tens of thousands of matches were found
+- Lens would crash when tens of thousands of matches were found
   for the same rule in one file.
-  A new internally used `semgrep-core` flag named `-max_match_per_file`
+  A new internally used `lens-core` flag named `-max_match_per_file`
   prevents these crashes by forcing a 'timeout' state
   when 10,000 matches are reached.
-  Semgrep can then gracefully report
+  Lens can then gracefully report
   what combination of rules and paths causes too much work.
-- `semgrep --debug` works again,
-  and now outputs even more debugging information from `semgrep-core`.
+- `lens --debug` works again,
+  and now outputs even more debugging information from `lens-core`.
   The new debugging output is especially helpful to discover
   which rules have too many matches.
 - A pattern that looks like `$X & $Y`
   will now correctly match bitwise AND operations in Ruby.
 - Metavariables can now capture the name of a class
   and match its occurrences later in the class definition.
-- Semgrep used to crash when a metavariable matched
+- Lens used to crash when a metavariable matched
   over text that cannot be read as UTF-8 text.
   Such matches will now try to recover what they can
   from apparent broken unicode text.
 
-## [0.33.0](https://github.com/returntocorp/semgrep/releases/tag/v0.33.0) - 2020-12-01
+## [0.33.0](https://github.com/returntocorp/lens/releases/tag/v0.33.0) - 2020-12-01
 
 ### Added
 
@@ -9973,14 +9973,14 @@ but have been added to the internal `semgrep-core` binary.
 
 ### Fixed
 
-- Correctly bind a metavariable in an import to the fully-qualified name. [Issue](https://github.com/returntocorp/semgrep/issues/1771)
+- Correctly bind a metavariable in an import to the fully-qualified name. [Issue](https://github.com/returntocorp/lens/issues/1771)
 - Fix invalid match locations on target files containing both CRLF line
   endings UTF-8 characters (#2111)
 - Fix NoTokenLocation error when parsing Python f-strings
 - [C] Support `include $X`
 - [Go] Fix wrong order of imports
 
-## [0.32.0](https://github.com/returntocorp/semgrep/releases/tag/v0.32.0) - 2020-11-18
+## [0.32.0](https://github.com/returntocorp/lens/releases/tag/v0.32.0) - 2020-11-18
 
 ### Added
 
@@ -9992,11 +9992,11 @@ but have been added to the internal `semgrep-core` binary.
 
 ### Changed
 
-- `// nosemgrep` can now also be used to ignore findings,
+- `// nolens` can now also be used to ignore findings,
   in addition to `// nosem`
 - Added a default timeout of 30 seconds per file instead of none (#1981).
 
-## [0.31.1](https://github.com/returntocorp/semgrep/releases/tag/v0.31.1) - 2020-11-11
+## [0.31.1](https://github.com/returntocorp/lens/releases/tag/v0.31.1) - 2020-11-11
 
 ### Fixed
 
@@ -10004,28 +10004,28 @@ but have been added to the internal `semgrep-core` binary.
   was given a directory with multiple rules (#2019).
 - Cheatsheet's html functionality now has correct output.
 
-## [0.31.0](https://github.com/returntocorp/semgrep/releases/tag/v0.31.0) - 2020-11-10
+## [0.31.0](https://github.com/returntocorp/lens/releases/tag/v0.31.0) - 2020-11-10
 
 ### Fixed
 
 - Gracefully handle empty configuration file.
-- Gracefully handle LexicalErrors from semgrep-core.
+- Gracefully handle LexicalErrors from lens-core.
 - Fix stack overflows in spacegrep on large input files (#1944).
 - Fix extension-based file selection when the language is `generic` (#1968).
-- Fix semgrep error when no valid config on path provided (#1912).
+- Fix lens error when no valid config on path provided (#1912).
 - Fix NO_FILE_INFO_YET error which causes the python wrapper to crash (#1925).
 - Fix usage of '...' in special builtin arguments for PHP (#1963).
 - Fix automatic semicolon insertion parse error in javascript (#1960).
 
 ### Added
 
-- kotlin-tree-sitter integration into semgrep-core. Can now call
+- kotlin-tree-sitter integration into lens-core. Can now call
   dump-tree-sitter-cst on kotlin files.
-- c++ tree-sitter integration into semgrep-core (#1952).
+- c++ tree-sitter integration into lens-core (#1952).
 - More documents for language porting.
 - Error handling in spacegrep to print stderr when CalledProcessError occurs.
 
-## [0.30.0](https://github.com/returntocorp/semgrep/releases/tag/v0.30.0) - 2020-11-03
+## [0.30.0](https://github.com/returntocorp/lens/releases/tag/v0.30.0) - 2020-11-03
 
 ### Added
 
@@ -10042,29 +10042,29 @@ but have been added to the internal `semgrep-core` binary.
 - Typescript class properties/declarations not recognized (#1846).
 - Can't match inside Python try/except clause (#1902).
 
-## [0.29.0](https://github.com/returntocorp/semgrep/releases/tag/v0.29.0) - 2020-10-27
+## [0.29.0](https://github.com/returntocorp/lens/releases/tag/v0.29.0) - 2020-10-27
 
 ### Added
 
-- Semgrep will now partially parse files with parse errors and report findings detected before the parse errors was encountered.
-- Allow user to specify registry path without having to add semgrep.dev url
-  i.e.: instead of `--config https://semgrep.dev/p/r2c-ci` users can use `--config p/r2c-ci`
-- Allow user to specify snippet id without having to add semgrep.dev url
-  i.e.: instead of `--config https://semgrep.dev/s/username:snippetname`
+- Lens will now partially parse files with parse errors and report findings detected before the parse errors was encountered.
+- Allow user to specify registry path without having to add lens.dev url
+  i.e.: instead of `--config https://lens.dev/p/r2c-ci` users can use `--config p/r2c-ci`
+- Allow user to specify snippet id without having to add lens.dev url
+  i.e.: instead of `--config https://lens.dev/s/username:snippetname`
   users can use `--config username:snippetname`
 - `--test` will now error out if `ruleid` or `ok` is not in reported IDs
-- Semgrep will run JavaScript rules on TypeScript files automatically.
+- Lens will run JavaScript rules on TypeScript files automatically.
 
 ### Fixed
 
 - More off by one fixes in autofix
 - Support for matching dynamic class names in Ruby
 - Removed `nosem` findings from the final findings count
-- Matching nested JSX elements works properly. See https://semgrep.dev/s/erlE?version=0.29.0.
-- Can now match partial class definitions with annotations in Java. See https://github.com/returntocorp/semgrep/issues/1877.
-- Fixed errors in TypeScript "implements" keyword. See https://github.com/returntocorp/semgrep/issues/1850.
+- Matching nested JSX elements works properly. See https://lens.dev/s/erlE?version=0.29.0.
+- Can now match partial class definitions with annotations in Java. See https://github.com/returntocorp/lens/issues/1877.
+- Fixed errors in TypeScript "implements" keyword. See https://github.com/returntocorp/lens/issues/1850.
 
-## [0.28.0](https://github.com/returntocorp/semgrep/releases/tag/v0.28.0) - 2020-10-21
+## [0.28.0](https://github.com/returntocorp/lens/releases/tag/v0.28.0) - 2020-10-21
 
 ### Added
 
@@ -10072,7 +10072,7 @@ but have been added to the internal `semgrep-core` binary.
   for evaluating numeric comparisons on metavariable values,
   such as `comparison: $KEY_SIZE < 2048`.
   This is a safe alternative to `pattern-where-python` snippets.
-  Check the [full documentation of this feature](https://github.com/returntocorp/semgrep/blob/12d25a5c/docs/experimental.md#metavariable-comparison)!
+  Check the [full documentation of this feature](https://github.com/returntocorp/lens/blob/12d25a5c/docs/experimental.md#metavariable-comparison)!
 - Matching 1-to-N attributes with a `...` wildcard
   in JSX tags' attribute lists,
   such as `<$TAG attr="1" ... />`
@@ -10089,8 +10089,8 @@ but have been added to the internal `semgrep-core` binary.
 ### Fixed
 
 - PHP superglobals such as `$_GET`,
-  which start with a dollar sign just like Semgrep metavariables,
-  are now correctly interpreted as PHP code instead of Semgrep pattern code.
+  which start with a dollar sign just like Lens metavariables,
+  are now correctly interpreted as PHP code instead of Lens pattern code.
 - Calls to `isset(...)` in PHP look like function calls,
   but technically are not functions calls.
   Now you can match them anyway!
@@ -10103,7 +10103,7 @@ but have been added to the internal `semgrep-core` binary.
 - Missing characters in metavariable interpolation in messages
 - And many more minor code parser fixes!
 
-## [0.27.0](https://github.com/returntocorp/semgrep/releases/tag/v0.27.0) - 2020-10-06
+## [0.27.0](https://github.com/returntocorp/lens/releases/tag/v0.27.0) - 2020-10-06
 
 ### Added
 
@@ -10120,10 +10120,10 @@ but have been added to the internal `semgrep-core` binary.
 ### Fixed
 
 - Dislayed types using the `message` key are more complete.
-- Triple token repeat for EncodedString in semgrep messages fixed.
+- Triple token repeat for EncodedString in lens messages fixed.
 - Crashes on 3 or more layered jsonschema errors fixed.
 
-## [0.26.0](https://github.com/returntocorp/semgrep/releases/tag/v0.26.0) - 2020-09-30
+## [0.26.0](https://github.com/returntocorp/lens/releases/tag/v0.26.0) - 2020-09-30
 
 ### Fixed
 
@@ -10136,21 +10136,21 @@ but have been added to the internal `semgrep-core` binary.
 
 - Added default timeout of 5 seconds to javascript parsing (related to ?. on large minified files stalling)
 
-## [0.25.0](https://github.com/returntocorp/semgrep/releases/tag/v0.25.0) - 2020-09-23
+## [0.25.0](https://github.com/returntocorp/lens/releases/tag/v0.25.0) - 2020-09-23
 
 ### Added
 
 - Added support for the JUnit XML report format (`--junit-xml`)
-- C now supports the deep expression operator: `<... $X ...>`. See [this example](https://semgrep.dev/s/boKP/?version=develop).
-- Added support for ellipses `...` in PHP. (https://github.com/returntocorp/semgrep/issues/1715). See [this example](https://semgrep.dev/s/NxRn/?version=develop).
+- C now supports the deep expression operator: `<... $X ...>`. See [this example](https://lens.dev/s/boKP/?version=develop).
+- Added support for ellipses `...` in PHP. (https://github.com/returntocorp/lens/issues/1715). See [this example](https://lens.dev/s/NxRn/?version=develop).
 
 ### Fixed
 
-- JavaScript will parse empty yields (https://github.com/returntocorp/semgrep/issues/1688).
-- In JavaScript, arrow functions are now considered lambdas (https://github.com/returntocorp/semgrep/issues/1691). This allows [matching](https://semgrep.dev/s/Kd1j/?version=develop) arrow functions in `var` assignments.
-- `tsx` and `typescript` are now properly recognized in the `languages` key. (https://github.com/returntocorp/semgrep/issues/1705)
+- JavaScript will parse empty yields (https://github.com/returntocorp/lens/issues/1688).
+- In JavaScript, arrow functions are now considered lambdas (https://github.com/returntocorp/lens/issues/1691). This allows [matching](https://lens.dev/s/Kd1j/?version=develop) arrow functions in `var` assignments.
+- `tsx` and `typescript` are now properly recognized in the `languages` key. (https://github.com/returntocorp/lens/issues/1705)
 
-## [0.24.0](https://github.com/returntocorp/semgrep/releases/tag/v0.24.0) - 2020-09-16
+## [0.24.0](https://github.com/returntocorp/lens/releases/tag/v0.24.0) - 2020-09-16
 
 ### Added
 
@@ -10163,7 +10163,7 @@ but have been added to the internal `semgrep-core` binary.
 
 - Can now parse ECMAScript object patterns with ellipses in place of fields
 
-## [0.23.0](https://github.com/returntocorp/semgrep/releases/tag/v0.23.0) - 2020-09-09
+## [0.23.0](https://github.com/returntocorp/lens/releases/tag/v0.23.0) - 2020-09-09
 
 ### Added
 
@@ -10175,31 +10175,31 @@ but have been added to the internal `semgrep-core` binary.
 ### Changed
 
 - You can now specify timeouts using floats instead of integers
-  (e.g., semgrep -timeout 0.5 will timeout after half a second)
+  (e.g., lens -timeout 0.5 will timeout after half a second)
 
 ### Fixed
 
 - We now respect the -timeout when analyzing languages which have
   both a Tree-sitter and pfff parser (e.g., Javascript, Go).
 
-## [0.22.0](https://github.com/returntocorp/semgrep/releases/tag/v0.22.0) - 2020-09-01
+## [0.22.0](https://github.com/returntocorp/lens/releases/tag/v0.22.0) - 2020-09-01
 
 ### Added
 
-- The 'languages' key now supports 'none' for running `pattern-regex` on arbitrary files. See [this file](https://github.com/returntocorp/semgrep/blob/develop/semgrep/tests/e2e/rules/regex-any-language.yaml) for an example.
+- The 'languages' key now supports 'none' for running `pattern-regex` on arbitrary files. See [this file](https://github.com/returntocorp/lens/blob/develop/lens/tests/e2e/rules/regex-any-language.yaml) for an example.
 - You can now use the '...' ellipsis operator in OCaml.
 - True negatives to '--test' functionality via the 'ok:<rule-id>' annotation.
 
 ### Changed
 
-- Groups of rules are now called "Rulesets" in the Semgrep ecosystem,
+- Groups of rules are now called "Rulesets" in the Lens ecosystem,
   instead of their previous name, "Packs".
 - We now use also the tree-sitter-javascript Javascript parser, which
   can parse quickly minified files. Thus, we also removed the 5 seconds
   parsing timeout we were using for Javascript.
 - We should correctly report ranges when matching array access expressions
   (e.g., 'foo[$X]').
-- Breaking: regular expressions in semgrep string patterns (e.g., `"=~/foo/"`)
+- Breaking: regular expressions in lens string patterns (e.g., `"=~/foo/"`)
   are now using the PCRE (Perl Compatible Regular Expressions) syntax instead of
   the OCaml syntax. This means you should not escape parenthesis for grouping
   or escape pipes for dijunctions (e.g., use simply `"=~/foo|bar/"` instead of
@@ -10213,10 +10213,10 @@ but have been added to the internal `semgrep-core` binary.
 
 ### Removed
 
-- Breaking: install script installation procedure (semgrep-<version>-ubuntu-generic.sh).
+- Breaking: install script installation procedure (lens-<version>-ubuntu-generic.sh).
   Please use 'pip install' for equivalent Linux installation.
 
-## [0.21.0](https://github.com/returntocorp/semgrep/releases/tag/v0.21.0) - 2020-08-25
+## [0.21.0](https://github.com/returntocorp/lens/releases/tag/v0.21.0) - 2020-08-25
 
 ### Added
 
@@ -10230,7 +10230,7 @@ but have been added to the internal `semgrep-core` binary.
 - Our custom-made rules YAML validator has been replaced with a jsonschema standard one.
   This results in more reliable and comprehensive error messages
   to help you get back on track when bumping into validation issues.
-- Calling `semgrep --validate` now includes more information,
+- Calling `lens --validate` now includes more information,
   such as the number of rules validation ran on.
 
 ### Fixed
@@ -10238,7 +10238,7 @@ but have been added to the internal `semgrep-core` binary.
 - Fixed a bug where multiple assignment,
   also known as tuple unpacking assignment in Python,
   such as `a, b = foo`,
-  could be misinterpreted by semgrep.
+  could be misinterpreted by lens.
 - Fixed a bug that would cause a crash when trying to get debug steps output as JSON.
 - `.mly` and `.mll` files are no longer targeted implicitly by OCaml scans.
 - Fixed the `--skip-unknown-extensions` flag skipping files even with recognized extensions.
@@ -10246,30 +10246,30 @@ but have been added to the internal `semgrep-core` binary.
   such as `if (true) return;`,
   not being matched by patterns such as `if (true) { return; }`.
 
-## [0.20.0](https://github.com/returntocorp/semgrep/releases/tag/v0.20.0) - 2020-08-18
+## [0.20.0](https://github.com/returntocorp/lens/releases/tag/v0.20.0) - 2020-08-18
 
 ### Added
 
 - Support for JSX tag metavariables (e.g., <$TAG />) and ellipsis inside
   JSX attributes (e.g., <foo attr=... />)
-- By default Semgrep treats explicitly passed files with unknown extension as possibly any language and so runs all rules on said files. Add a flag `--skip-unknown-extensions` so that Semgrep will treat these files as if they matched no language and will so run no rules on them. [Link: PR](https://github.com/returntocorp/semgrep/pull/1507)
+- By default Lens treats explicitly passed files with unknown extension as possibly any language and so runs all rules on said files. Add a flag `--skip-unknown-extensions` so that Lens will treat these files as if they matched no language and will so run no rules on them. [Link: PR](https://github.com/returntocorp/lens/pull/1507)
 
 ### Fixed
 
 - Python patterns do not have to end with a newline anymore.
-- Pattern `$X = '...';` in JavaScript matches `var $X = '...'`. Additionally, semicolon is no longer required to match. [Link: Issue](https://github.com/returntocorp/semgrep/issues/1497); [Link: Example](https://semgrep.dev/7g0Q?version=0.20.0)
-- In JavaScript, can now match destructured object properties inside functions. [Link: Issue](https://github.com/returntocorp/semgrep/issues/1005); [Link: Example](https://semgrep.dev/d72E/?version=0.20.0)
-- Java annotations can be matched with fully qualified names. [Link: Issue](https://github.com/returntocorp/semgrep/issues/1508); [Link: Example](https://semgrep.dev/vZqY/?version=0.20.0)
-- Ensure `/src` exists in Dockerfile; [Link: PR](https://github.com/returntocorp/semgrep/pull/1512)
+- Pattern `$X = '...';` in JavaScript matches `var $X = '...'`. Additionally, semicolon is no longer required to match. [Link: Issue](https://github.com/returntocorp/lens/issues/1497); [Link: Example](https://lens.dev/7g0Q?version=0.20.0)
+- In JavaScript, can now match destructured object properties inside functions. [Link: Issue](https://github.com/returntocorp/lens/issues/1005); [Link: Example](https://lens.dev/d72E/?version=0.20.0)
+- Java annotations can be matched with fully qualified names. [Link: Issue](https://github.com/returntocorp/lens/issues/1508); [Link: Example](https://lens.dev/vZqY/?version=0.20.0)
+- Ensure `/src` exists in Dockerfile; [Link: PR](https://github.com/returntocorp/lens/pull/1512)
 
-## [0.19.1](https://github.com/returntocorp/semgrep/releases/tag/v0.19.1) - 2020-08-13
+## [0.19.1](https://github.com/returntocorp/lens/releases/tag/v0.19.1) - 2020-08-13
 
 ### Fixed
 
 - Update Docker container to run successfully without special volume
   permissions
 
-## [0.19.0](https://github.com/returntocorp/semgrep/releases/tag/v0.19.0) - 2020-08-11
+## [0.19.0](https://github.com/returntocorp/lens/releases/tag/v0.19.0) - 2020-08-11
 
 ### Added
 
@@ -10284,7 +10284,7 @@ but have been added to the internal `semgrep-core` binary.
 - Add ability to use ellipses in Go struct definitions
 - No longer convert Go expressions with a newline to a statement
 
-## [0.18.0](https://github.com/returntocorp/semgrep/releases/tag/v0.18.0) - 2020-08-04
+## [0.18.0](https://github.com/returntocorp/lens/releases/tag/v0.18.0) - 2020-08-04
 
 ### Added
 
@@ -10294,20 +10294,20 @@ but have been added to the internal `semgrep-core` binary.
 - Support Python 3.8 self-documenting fstrings
 - `--max-memory` flag to set a maximum amount of memory that can be used to apply a rule to a file
 
-## [0.17.0](https://github.com/returntocorp/semgrep/releases/tag/v0.17.0) - 2020-07-28
+## [0.17.0](https://github.com/returntocorp/lens/releases/tag/v0.17.0) - 2020-07-28
 
 ### Added
 
 - The `metavariable-regex` operator, which filters finding's by metavariable
   value against a Python re.match compatible expression.
 - `--timeout` flag to set maximum time a rule is applied to a file
-- Typed metavariables moved to official support. See [docs](https://github.com/returntocorp/semgrep/blob/develop/docs/pattern-features.md#typed-metavariables)
+- Typed metavariables moved to official support. See [docs](https://github.com/returntocorp/lens/blob/develop/docs/pattern-features.md#typed-metavariables)
 
 ### Changed
 
 - Improved `pattern-where-python` error messages
 
-## [0.16.0](https://github.com/returntocorp/semgrep/releases/tag/v0.16.0) - 2020-07-21
+## [0.16.0](https://github.com/returntocorp/lens/releases/tag/v0.16.0) - 2020-07-21
 
 ### Added
 
@@ -10326,7 +10326,7 @@ but have been added to the internal `semgrep-core` binary.
 - Parse binding patterns in ECMAScript 2021 catch expressions
 - Was mistakenly reporting only one of each type of issue even if multiple issues exist
 
-## [0.15.0](https://github.com/returntocorp/semgrep/releases/tag/v0.15.0) - 2020-07-14
+## [0.15.0](https://github.com/returntocorp/lens/releases/tag/v0.15.0) - 2020-07-14
 
 ### Added
 
@@ -10334,7 +10334,7 @@ but have been added to the internal `semgrep-core` binary.
 
 ### Changed
 
-- Show semgrep rule matches even with --quiet flag
+- Show lens rule matches even with --quiet flag
 
 ### Fixed
 
@@ -10342,14 +10342,14 @@ but have been added to the internal `semgrep-core` binary.
 - Fix SARIF output format
 - Parse nested destructured parameters in JavaScript
 - True and False are not keywords in Python2
-- Send informative error message when user tries to use semgrep on missing files
+- Send informative error message when user tries to use lens on missing files
 
-## [0.14.0](https://github.com/returntocorp/semgrep/releases/tag/v0.14.0) - 2020-07-07
+## [0.14.0](https://github.com/returntocorp/lens/releases/tag/v0.14.0) - 2020-07-07
 
 ### Changed
 
 - Default Docker code mount point from `/home/repo` to `/src` - this is also
-  configurable via the `SEMGREP_SRC_DIRECTORY` environment variable
+  configurable via the `LENS_SRC_DIRECTORY` environment variable
 
 ### Removed
 
@@ -10362,10 +10362,10 @@ but have been added to the internal `semgrep-core` binary.
 - Parse python2 tuple as parameter in function/lambda definition
 - Parse python3.8 positional only parameters (PEP 570)
 - Parse python2 implicit array in comprehension
-- Cache timeout errors in semgrep-core so running multiple rules does not
+- Cache timeout errors in lens-core so running multiple rules does not
   retry parsing
 
-## [0.13.0](https://github.com/returntocorp/semgrep/releases/tag/v0.13.0) - 2020-06-30
+## [0.13.0](https://github.com/returntocorp/lens/releases/tag/v0.13.0) - 2020-06-30
 
 ### Added
 
@@ -10397,17 +10397,17 @@ def fetch_global_const():
 
 - More clear Parse error message
 
-## [0.12.0](https://github.com/returntocorp/semgrep/releases/tag/v0.12.0) - 2020-06-23
+## [0.12.0](https://github.com/returntocorp/lens/releases/tag/v0.12.0) - 2020-06-23
 
 ### Added
 
 - Support for a new configuration language: JSON. You can now write
-  JSON semgrep patterns with -lang json
+  JSON lens patterns with -lang json
 - Support for '...' inside set and dictionaries
 - Version check to recommend updating when out-of-date, disable with `--disable-version-check`
 - Support for multiline pattern-where-python
 - `--dryrun` flag to show result of autofixes without modifying any files
-- Add capability to use regex replacement for autofixing. See documentaion [here](https://github.com/returntocorp/semgrep/blob/develop/docs/experimental.md#autofix-using-regular-expression-replacement)
+- Add capability to use regex replacement for autofixing. See documentaion [here](https://github.com/returntocorp/lens/blob/develop/docs/experimental.md#autofix-using-regular-expression-replacement)
 - Add version check to recommend upgrading when applicable
 
 ### Fixed
@@ -10426,15 +10426,15 @@ def fetch_global_const():
 - Colapsed `--include-dir` and `--exclude-dir` functionaity into `--include` and
   `--exclude` respectively
 
-## [0.11.0](https://github.com/returntocorp/semgrep/releases/tag/v0.11.0) - 2020-06-16
+## [0.11.0](https://github.com/returntocorp/lens/releases/tag/v0.11.0) - 2020-06-16
 
 ### Added
 
 - Support for another programming language: OCaml. You can now write
-  OCaml semgrep patterns with -lang ocaml
+  OCaml lens patterns with -lang ocaml
 - Inline whitelisting capabilities via `nosem` comments and the
-  `--disable-nosem` flag [#900](https://github.com/returntocorp/semgrep/issues/900)
-- Show a progress bar when using semgrep in an interactive shell
+  `--disable-nosem` flag [#900](https://github.com/returntocorp/lens/issues/900)
+- Show a progress bar when using lens in an interactive shell
 - More understandable error messages
 
 ### Changed
@@ -10447,19 +10447,19 @@ def fetch_global_const():
 
 - Handle parsing unicode characters
 
-## [0.10.1](https://github.com/returntocorp/semgrep/releases/tag/v0.10.1) - 2020-06-10
+## [0.10.1](https://github.com/returntocorp/lens/releases/tag/v0.10.1) - 2020-06-10
 
 ### Fixed
 
-- Value of `pattern_id` when using nested pattern operators [#828](https://github.com/returntocorp/semgrep/issues/828)
+- Value of `pattern_id` when using nested pattern operators [#828](https://github.com/returntocorp/lens/issues/828)
 - `...` now works inside for loops in javascript
 - Metavariable
-- Infinite loop in python [#923](https://github.com/returntocorp/semgrep/issues/923)
+- Infinite loop in python [#923](https://github.com/returntocorp/lens/issues/923)
 - Treat field definition (`{x: 1}`) differently from assignment (`{x = 1}`)
 - Support triple-quoted f-strings in python
-- Fix ubuntu build error [#965](https://github.com/returntocorp/semgrep/pull/965)
+- Fix ubuntu build error [#965](https://github.com/returntocorp/lens/pull/965)
 
-## [0.10.0](https://github.com/returntocorp/semgrep/releases/tag/v0.10.0) - 2020-06-09
+## [0.10.0](https://github.com/returntocorp/lens/releases/tag/v0.10.0) - 2020-06-09
 
 ### Fixed
 
@@ -10469,13 +10469,13 @@ def fetch_global_const():
   ECMAScript 6+
 - Fix an issue where an error was raised when matching to Python else
   blocks with a metavariable
-- Don't filter out files that are explicitly passed as arguments to semgrep
+- Don't filter out files that are explicitly passed as arguments to lens
   even if they do not have expected extension
 
 ### Added
 
 - Java imports can now be searched with patterns written like `import javax.crypto.$ANYTHING`
-- `--debugging-json` flag for use on semgrep.dev
+- `--debugging-json` flag for use on lens.dev
 
 ### Changed
 
@@ -10484,7 +10484,7 @@ def fetch_global_const():
   possibilities
 - Print output before exiting when using --strict
 
-## [0.9.0](https://github.com/returntocorp/semgrep/releases/tag/v0.9.0) - 2020-06-02
+## [0.9.0](https://github.com/returntocorp/lens/releases/tag/v0.9.0) - 2020-06-02
 
 ### Fixed
 
@@ -10503,13 +10503,13 @@ def fetch_global_const():
 - `--exclude-tests` flag - prefer `--exclude` or `--exclude-dir`
 - `--r2c` flag - this was completely unused
 
-## [0.8.1](https://github.com/returntocorp/semgrep/releases/tag/v0.8.1) - 2020-05-26
+## [0.8.1](https://github.com/returntocorp/lens/releases/tag/v0.8.1) - 2020-05-26
 
 ### Fixed
 
-- `semgrep --version` on ubuntu was not returning the correct version
+- `lens --version` on ubuntu was not returning the correct version
 
-## [0.8.0](https://github.com/returntocorp/semgrep/releases/tag/v0.8.0) - 2020-05-20
+## [0.8.0](https://github.com/returntocorp/lens/releases/tag/v0.8.0) - 2020-05-20
 
 ### Added
 
@@ -10539,10 +10539,10 @@ def fetch_global_const():
   ```python
   "foo"
   ```
-- Change location of r2c rule config to https://semgrep.live/c/r/all which filters out
+- Change location of r2c rule config to https://lens.live/c/r/all which filters out
   pattern-where-python rules
 
-## [0.7.0](https://github.com/returntocorp/semgrep/releases/tag/v0.7.0) - 2020-05-12
+## [0.7.0](https://github.com/returntocorp/lens/releases/tag/v0.7.0) - 2020-05-12
 
 ### Added
 
@@ -10568,13 +10568,13 @@ def fetch_global_const():
 - Correctly parse `%` token in python f-string format
 - Correctly parse python fstrings with spaces in interpolants
 
-## [0.6.1](https://github.com/returntocorp/semgrep/releases/tag/v0.6.1) - 2020-05-06
+## [0.6.1](https://github.com/returntocorp/lens/releases/tag/v0.6.1) - 2020-05-06
 
 ### Fix
 
 - Message field in output was not using proper interpolated message
 
-## [0.6.0](https://github.com/returntocorp/semgrep/releases/tag/v0.6.0) - 2020-05-05
+## [0.6.0](https://github.com/returntocorp/lens/releases/tag/v0.6.0) - 2020-05-05
 
 ### Added
 
@@ -10597,7 +10597,7 @@ def fetch_global_const():
   ```
 - Add severity to json output and prepend the rule line with it. Color yellow if `WARNING`, and red if `ERROR`. e.g. WARNING rule:tests.equivalence-tests
 - For languages not allowing the dollar sign in identifiers (e.g., Python),
-  semgrep will return an error if your pattern contains an identifier
+  lens will return an error if your pattern contains an identifier
   starting with a dollar that is actually not considered a metavariable
   (e.g., `$x`)
 - Support top level `metadata` field in rule.yaml. Entire metadata object is attached to
@@ -10608,12 +10608,12 @@ def fetch_global_const():
 - Config files in hidden paths can now be used by explicitly specifying
   the hidden path:
   ```
-  semgrep --config some/hidden/.directory
+  lens --config some/hidden/.directory
   ```
 - Metavariables can now contain digits or `_`. `$USERS_2` is now
   a valid metavariable name. A metavariable must start with a letter
   or `_` though.
-- Simple calls of the `semgrep` CLI, such as `semgrep --version`, are now 60% faster.
+- Simple calls of the `lens` CLI, such as `lens --version`, are now 60% faster.
 - Display autofix suggestion in regular and json output mode.
 - Update command line help texts.
 
@@ -10622,11 +10622,11 @@ def fetch_global_const():
 - Correctly parse `f"{foo:,f}"` in Python
 - Correctly parse Python files where the last line is a comment
 
-## [0.5.0](https://github.com/returntocorp/semgrep/releases/tag/v0.5.0) - 2020-04-28
+## [0.5.0](https://github.com/returntocorp/lens/releases/tag/v0.5.0) - 2020-04-28
 
 ### Changed
 
-- Rename executable to semgrep
+- Rename executable to lens
 - Deep expression matching in conditionals requires different syntax:
   ```
   if <... $X = True ...>:
@@ -10637,7 +10637,7 @@ def fetch_global_const():
   if foo == bar and baz == True:
       return 1
   ```
-- Deduplicate semgrep output in cases where there are multiple ways
+- Deduplicate lens output in cases where there are multiple ways
   a rule matches section of code
 - Deep statement matchings goes into functions and classes:
 
@@ -10682,7 +10682,7 @@ def fetch_global_const():
   foo()
   ```
 
-## [0.4.9](https://github.com/returntocorp/semgrep/releases/tag/v0.4.9) - 2020-04-07
+## [0.4.9](https://github.com/returntocorp/lens/releases/tag/v0.4.9) - 2020-04-07
 
 ### Changed
 
@@ -10883,7 +10883,7 @@ def fetch_global_const():
 
 - Metavariables were not matching due to go parser adding empty statements in golang
 
-## [0.4.8](https://github.com/returntocorp/semgrep/releases/tag/0.4.8) - 2020-03-09
+## [0.4.8](https://github.com/returntocorp/lens/releases/tag/0.4.8) - 2020-03-09
 
 ### Added
 

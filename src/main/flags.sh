@@ -43,10 +43,10 @@ TREE_SITTER_LANGS="$2"
 #   name. It is assumed that the reason we're on alpine is to get
 #   statically-linked executables.
 
-# Check if SEMGREP_NIX_BUILD is not set
+# Check if LENS_NIX_BUILD is not set
 # If it is set, we are in a nix-shell and we should not statically link
 # This is first because opam won't exist in a nix build environment
-if [[ -n "${SEMGREP_NIX_BUILD-}" ]]; then
+if [[ -n "${LENS_NIX_BUILD-}" ]]; then
     FLAGS=()
     CCLIB=()
     CCOPT=()
@@ -108,7 +108,7 @@ else
     # to be linked statically. However, this breaks the build in the case
     # where later build steps require programs which dynamically linked
     # against those libraries. Notably, this occurs for PCRE2. See
-    # <https://github.com/semgrep/semgrep/pull/10064>.
+    # <https://github.com/lens/lens/pull/10064>.
     #
     # One might hope that we could specify the linker to use the `.a` version
     # without deleting the `.dylib`, but the only way to do this is to disable
@@ -178,10 +178,10 @@ else
         # <http://lists.schmorp.de/pipermail/libev/2024q1/002940.html>. As a
         # result we still use the brew prefix, but with the option of an
         # environment variable for the build to override the location.
-        if [ -z ${SEMGREP_LIBEV_ARCHIVE_PATH+set} ]; then
+        if [ -z ${LENS_LIBEV_ARCHIVE_PATH+set} ]; then
             CCLIB+=("$(brew --prefix libev)/lib/libev.a")
         else
-            CCLIB+=("${SEMGREP_LIBEV_ARCHIVE_PATH}")
+            CCLIB+=("${LENS_LIBEV_ARCHIVE_PATH}")
         fi
 
         for lang in $langs; do

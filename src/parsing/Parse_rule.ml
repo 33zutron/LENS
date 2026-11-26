@@ -1,6 +1,6 @@
 (* Yoann Padioleau, Emma Jin
  *
- * Copyright (C) 2019-2024 Semgrep Inc.
+ * Copyright (C) 2019-2024 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -25,7 +25,7 @@ module MV = Metavariable
 open Parse_rule_helpers
 module H = Parse_rule_helpers
 
-(* alt: use a separate Logs src "semgrep.parsing.rule" *)
+(* alt: use a separate Logs src "lens.parsing.rule" *)
 module Log = Log_parsing.Log
 
 let ( >>= ) = Result.bind
@@ -33,13 +33,13 @@ let ( >>= ) = Result.bind
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* Parsing a Semgrep rule, including complex pattern formulas.
+(* Parsing a Lens rule, including complex pattern formulas.
  *
  * See also the JSON schema for a rule in rule_schema_v1.yaml (and
  * also now in rule_schema_v2.atd for the v2 syntax).
  *
  * history:
- *  - we used to parse a semgrep rule by simply using the basic API of
+ *  - we used to parse a lens rule by simply using the basic API of
  *    the OCaml 'yaml' library. This API allows converting a yaml file into
  *    a simple and compact JSON.t value.
  *    However, this JSON.t value did not contain any location information, which
@@ -47,9 +47,9 @@ let ( >>= ) = Result.bind
  *  - This is why we switched to the low-level API of the 'yaml' library that
  *    returns a stream of tokens with location information. We actually used
  *    first that low-level API to return the generic AST of a yaml file, to add
- *    support for YAML in semgrep (allowing semgrep rules on any YAML files).
+ *    support for YAML in lens (allowing lens rules on any YAML files).
  *    See the Yaml_to_generic.parse_rule function.
- *  - We then (ab)used this function to also parse a semgrep rule (which is a
+ *  - We then (ab)used this function to also parse a lens rule (which is a
  *    yaml file) in this file.
  *
  * Should we use the new AST_yaml.ml instead of parsing using the
@@ -81,7 +81,7 @@ let parse_language ~id ((s, t) as _lang) : (Lang.t, Rule_error.t) result =
    - target selection is either generic or a list of programming languages
      that can be detected by file extensions and other quick lookups.
    - target analysis is done by one of the generic analyzers (regex,
-     spacegrep, aliengrep, ...) or by trying to parse the semgrep pattern
+     spacegrep, aliengrep, ...) or by trying to parse the lens pattern
      as one of several programming languages.
    This decouples target selection from pattern parsing.
 
@@ -118,7 +118,7 @@ let parse_severity ~id (s, t) : (Rule.severity, Rule_error.t) result =
   | "WARNING" -> Ok `Warning
   | "INVENTORY" -> Ok `Inventory
   | "EXPERIMENT" -> Ok `Experiment
-  (* since Semgrep 1.72.0 *)
+  (* since Lens 1.72.0 *)
   | "CRITICAL" -> Ok `Critical
   | "HIGH" -> Ok `High
   | "MEDIUM" -> Ok `Medium
@@ -144,11 +144,11 @@ let parse_fix_regex (env : env) (key : key) fields =
    paths.include and paths.exclude globs are applied on normalized
    file paths relative to the project root (Ppath.t).
 
-   Patterns are matched according the Semgrepignore specification which
+   Patterns are matched according the Lensignore specification which
    obeys the Gitignore specification.
 
    coupling: legacy_rule_filtering: true for now, will become false after a
-   deprecation period. See the variable of the same name in pysemgrep
+   deprecation period. See the variable of the same name in pylens
    (target_manager.py) where this behavior is duplicated.
 *)
 let make_glob ~rule_name ~is_include source_pattern : Rule.glob =
@@ -171,7 +171,7 @@ let make_glob ~rule_name ~is_include source_pattern : Rule.glob =
         let include_or_exclude = if is_include then "include" else "exclude" in
         m
           "Rule %s contains an %s pattern %s' that will soon be interpreted as \
-           '/%s' to comply with the Semgrepignore v2 and Gitignore \
+           '/%s' to comply with the Lensignore v2 and Gitignore \
            specifications. To make this pattern permanently unanchored, edit \
            rule %s and change it to '**/%s'. To confirm the anchored behavior \
            and avoid this warning, change it to '/%s'."
@@ -203,7 +203,7 @@ let parse_paths env key value =
     take_opt paths_dict env (parse_glob_list ~is_include:false) "exclude"
   in
   (* alt: we could use H.warn_if_remaining_unparsed_fields() but better to
-   * raise an error for now to be compatible with pysemgrep.
+   * raise an error for now to be compatible with pylens.
    *)
   if Base.Hashtbl.length paths_dict.h > 0 then
     error_at_key env.id key
@@ -225,7 +225,7 @@ let parse_options rule_id (key : key) value =
          * ignore the new fields.
          * old: raise (InvalidYamlException (spf "unknown opt: %s" field_name))
          *)
-        (* nosemgrep: no-logs-in-library *)
+        (* nolens: no-logs-in-library *)
         Logs.warn (fun m -> m "unknown rule option: %s" field_name))
       (fun () -> Rule_options_j.t_of_string s)
   in
@@ -450,8 +450,8 @@ let parse_taint_sink_mvar_requires env key x =
                         [
                           {
                             e =
-                              (* When running `semgrep-core` directly this gets parsed as a literal,
-                                 but when running via "pysemgrep" this gets parsed as an id... so we
+                              (* When running `lens-core` directly this gets parsed as a literal,
+                                 but when running via "pylens" this gets parsed as an id... so we
                                  accept both forms. *)
                               ( L (String (_, (mvar, tok), _))
                               | N (Id ((mvar, tok), _)) );
@@ -635,7 +635,7 @@ let parse_rules_to_run_with_extract env key value =
   in
   let/ inc_opt = parse_rule_ids ruleids_dict env "include" in
   let/ exc_opt = parse_rule_ids ruleids_dict env "exclude" in
-  (* to be compatible with pysemgrep *)
+  (* to be compatible with pylens *)
   if Base.Hashtbl.length ruleids_dict.h > 0 then
     error_at_key env.id key
       "Additional properties are not allowed (only 'include' and 'exclude' are \
@@ -971,7 +971,7 @@ let parse_ecosystem env key value =
       (* ATD deserializers expect JSON values, so we need to wrap the ecosystem in quotes. *)
       try
         Ok
-          (Semgrep_output_v1_j.ecosystem_of_string
+          (Lens_output_v1_j.ecosystem_of_string
              (Common.spf "\"%s\"" ecosystem))
       with
       (* It's not clear to me what exception could be raised here, so catch-all. *)
@@ -1120,10 +1120,10 @@ let check_version_compatibility rule_id ~min_version ~max_version =
 
 (* TODO: Unify how we differentiate which rules correspond to which
    products. This basically just copies the logic of
-   semgrep/cli/src/semgrep/rule.py::Rule.product *)
+   lens/cli/src/lens/rule.py::Rule.product *)
 let parse_product (metadata : J.t option)
     (dep_formula_opt : R.sca_dependency_formula option) :
-    Semgrep_output_v1_t.product =
+    Lens_output_v1_t.product =
   match dep_formula_opt with
   | Some _ -> `SCA
   | None -> (
@@ -1296,7 +1296,7 @@ let parse_generic_ast ?(error_recovery = false) ?par_conf ?num_jobs
                           "expected a list of rules following `rules:`")
               in
               (* TODO: 'missed' key is present in the rules downloaded from
-                 semgrep.dev. We don't do anything with the value, but consume
+                 lens.dev. We don't do anything with the value, but consume
                  it from the dict to prevent error about unknown or duplicate
                  properties in YAML. *)
               let _missed = dict_take_opt root_dict "missed" in
@@ -1324,7 +1324,7 @@ let parse_generic_ast ?(error_recovery = false) ?par_conf ?num_jobs
 [@@trace]
 
 (* We can't call just Yaml_to_generic.program below because when we parse
- * YAML Semgrep rules, we preprocess unicode characters differently.
+ * YAML Lens rules, we preprocess unicode characters differently.
  * We also need to translate Parse_info.Other_error exn in
  * (Rule.Err (Rule.InvalidYaml)) exn.
  * Note that we can't generate a Rule.Err in Yaml_to_generic directly
@@ -1386,10 +1386,10 @@ let parse_file ?error_recovery ?par_conf ?num_jobs ?rewrite_rule_ids file :
         *)
         let ast = Parse_jsonnet.parse_program file in
         (* Note that here we do not support registry-aware import;
-         * those are defined in osemgrep/.../Rule_fetching.ml where
-         * we use Network.get functions. Thus, semgrep-core -dump_rule
+         * those are defined in olens/.../Rule_fetching.ml where
+         * we use Network.get functions. Thus, lens-core -dump_rule
          * will not work with registry-aware import either.
-         * Use osemgrep --dump-config instead.
+         * Use olens --dump-config instead.
          *)
         let core = Desugar_jsonnet.desugar_program file ast in
         let value_ = Eval_jsonnet.eval_program core in

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2023-2025 Semgrep Inc.
+# Copyright (c) 2023-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -12,7 +12,7 @@
 #
 # Test rule ID syntax
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
 @pytest.mark.kinda_slow
@@ -24,8 +24,8 @@ from tests.fixtures import RunSemgrep
         ("rules/rule_id/@npm-style", "rule_id/hello.txt"),
     ],
 )
-def test_rule_id_paths(run_semgrep_in_tmp: RunSemgrep, posix_snapshot, rule, target):
+def test_rule_id_paths(run_lens_in_tmp: RunLens, posix_snapshot, rule, target):
     posix_snapshot.assert_match(
-        run_semgrep_in_tmp(rule, target_name=target).stdout,
+        run_lens_in_tmp(rule, target_name=target).stdout,
         "results.json",
     )

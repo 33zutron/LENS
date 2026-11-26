@@ -8,26 +8,26 @@
  *)
 open Common
 open Fpath_.Operators
-module Flag = Flag_semgrep
+module Flag = Flag_lens
 module E = Core_error
 module J = JSON
-module Out = Semgrep_output_v1_j
+module Out = Lens_output_v1_j
 
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* This module contains the main command-line parsing logic of semgrep-core.
+(* This module contains the main command-line parsing logic of lens-core.
  *
  * It is packaged as a library so it can be used both for the stand-alone
- * semgrep-core binary as well as the semgrep-core-proprietary one.
+ * lens-core binary as well as the lens-core-proprietary one.
  * history: the code here used to be in Main.ml.
  *
- * DEPRECATED: semgrep-core used to recognize lots of options (e.g., -e/-f) and
+ * DEPRECATED: lens-core used to recognize lots of options (e.g., -e/-f) and
  * is still used extensively by PA for many things. It was doing its own file
  * targeting, its own text output, but all of this should be gradually removed.
- * Ideally semgrep-core should support just the options that are required
- * by pysemgrep in core_runner.py and nothing else. You should use
- * osemgrep if you want some of the old benefits of semgrep-core (e.g., -e).
+ * Ideally lens-core should support just the options that are required
+ * by pylens in core_runner.py and nothing else. You should use
+ * olens if you want some of the old benefits of lens-core (e.g., -e).
  *)
 
 (*****************************************************************************)
@@ -38,18 +38,18 @@ module Out = Semgrep_output_v1_j
 (* debugging/profiling/logging flags *)
 (* ------------------------------------------------------------------------- *)
 
-(* This is useful when you don't call directly semgrep-core but instead use
- * pysemgrep but still want to tweak the call to semgrep-core.
+(* This is useful when you don't call directly lens-core but instead use
+ * pylens but still want to tweak the call to lens-core.
  *)
-let env_extra = "SEMGREP_CORE_EXTRA"
+let env_extra = "LENS_CORE_EXTRA"
 let log_to_file = ref None
 
 (* related:
- * - Flag_semgrep.debug_matching
- * - Flag_semgrep.fail_fast
+ * - Flag_lens.debug_matching
+ * - Flag_lens.fail_fast
  * - Trace_matching.on
  *
- * see also verbose/... flags in Flag_semgrep.ml
+ * see also verbose/... flags in Flag_lens.ml
  *)
 let debug = ref false
 let trace = ref false
@@ -70,14 +70,14 @@ let add_rule_file file =
   | Some (Core_scan_config.Rules _) ->
       failwith "internal error: cannot combine preparsed rules with rule files"
 
-(* -targets (takes the list of files in a file given by pysemgrep) *)
+(* -targets (takes the list of files in a file given by pylens) *)
 let target_file : Fpath.t option ref = ref None
 
-(* This used to be used for `semgrep-core -l <lang> -e <pattern> <single file>`
- * instead of `semgrep-core -targets`. But we now use osemgrep directly for
- * such use cases. Now, this is mostly useful for semgrep-core "actions" as
- * in `semgrep-core -l <lang> -dump_ast <file` (even if in this case
- * you should use 'osemgrep show dump-ast file' where we even infer the language
+(* This used to be used for `lens-core -l <lang> -e <pattern> <single file>`
+ * instead of `lens-core -targets`. But we now use olens directly for
+ * such use cases. Now, this is mostly useful for lens-core "actions" as
+ * in `lens-core -l <lang> -dump_ast <file` (even if in this case
+ * you should use 'olens show dump-ast file' where we even infer the language
  * from the filename)
  * old: this used to be an Analyzer.t option, but "regex" and "generic" are
  * not useful for the new uses of -lang, and in any case if it was we should
@@ -85,7 +85,7 @@ let target_file : Fpath.t option ref = ref None
  *)
 let lang : Lang.t option ref = ref None
 
-(* this is used not only by pysemgrep but also by a few actions *)
+(* this is used not only by pylens but also by a few actions *)
 let output_format = ref Core_scan_config.default.output_format
 let strict = ref Core_scan_config.default.strict
 let respect_rule_paths = ref Core_scan_config.default.respect_rule_paths
@@ -160,7 +160,7 @@ let dump_pattern (file : Fpath.t) =
   (* mostly copy-paste of parse_pattern in runner, but with better error report *)
   let lang = Lang.of_opt_exn !lang in
   Core_actions.try_with_log_exn_and_reraise file (fun () ->
-      (* TODO? enable "semgrep.parsing" log level *)
+      (* TODO? enable "lens.parsing" log level *)
       match Parse_pattern.parse_pattern lang s with
       | Ok any ->
           let v = Meta_AST.vof_any any in
@@ -169,7 +169,7 @@ let dump_pattern (file : Fpath.t) =
       | Error e -> Logs.app (fun m -> m "Parse error: %s" e))
 [@@action]
 
-(* TODO: remove, deprecated by osemgrep show dump-rule *)
+(* TODO: remove, deprecated by olens show dump-rule *)
 let dump_patterns_of_rule (file : Fpath.t) =
   match Parse_rule.parse file with
   | Ok rules ->
@@ -187,7 +187,7 @@ let dump_patterns_of_rule (file : Fpath.t) =
   | Error e -> failwith (Rule_error.string_of_error e)
 [@@action]
 
-(* TODO: remove, deprecated by osemgrep show dump-ast *)
+(* TODO: remove, deprecated by olens show dump-ast *)
 let dump_ast ?(naming = false) (lang : Lang.t) (file : Fpath.t) =
   Core_actions.try_with_log_exn_and_reraise file (fun () ->
       let res =
@@ -201,19 +201,19 @@ let dump_ast ?(naming = false) (lang : Lang.t) (file : Fpath.t) =
       UConsole.print s;
       if Parsing_result2.has_error res then (
         log_parsing_errors file res;
-        Core_exit_code.(exit_semgrep False)))
+        Core_exit_code.(exit_lens False)))
 [@@action]
 
 (*****************************************************************************)
 (* Output *)
 (*****************************************************************************)
 
-(* also used in semgrep-pro *)
+(* also used in lens-pro *)
 let output_core_results (result_or_exn : Core_result.result_or_exn)
     (config : Core_scan_config.t) : unit =
   match config.output_format with
   (* note that the dots have been displayed before in Core_scan.scan ()
-   * for pysemgrep. Here we print the matches (and errors).
+   * for pylens. Here we print the matches (and errors).
    *)
   | Json _ -> (
       let res =
@@ -239,11 +239,11 @@ let output_core_results (result_or_exn : Core_result.result_or_exn)
           m "size of returned JSON string: %d" (String.length s));
       UConsole.print s;
       match result_or_exn with
-      | Error exn -> Core_exit_code.exit_semgrep (Unknown_exception exn)
+      | Error exn -> Core_exit_code.exit_lens (Unknown_exception exn)
       | Ok _ -> ())
   (* The matches have already been printed before in Core_scan.scan(). We just
    * print the errors here (and matching explanations).
-   * LATER: you should now use osemgrep for this
+   * LATER: you should now use olens for this
    *)
   | Text -> (
       match result_or_exn with
@@ -309,7 +309,7 @@ let mk_config ?rules () : Core_scan_config.t =
     filter_irrelevant_rules = !filter_irrelevant_rules;
     (* open telemetry *)
     telemetry =
-      (let env = Sys.getenv_opt "SEMGREP_DEPLOYMENT_ENV" in
+      (let env = Sys.getenv_opt "LENS_DEPLOYMENT_ENV" in
        match (!trace, !trace_endpoint) with
        | true, Some url ->
            let endpoint = Trace_endpoints.resolve url in
@@ -343,7 +343,7 @@ let mk_config ?rules () : Core_scan_config.t =
 let all_actions ?(par_conf = Parallelism_config.default) () =
   let num_jobs = Core_scan_config.finalize_num_jobs !num_jobs in
   [
-    (* this is run by pysemgrep --validate *)
+    (* this is run by pylens --validate *)
     ( "-check_rules",
       " <metachecks file> <files or dirs>",
       Arg_.mk_action_n_conv Fpath.v (Check_rule.check_files !output_format) );
@@ -549,11 +549,11 @@ let options (actions : unit -> Arg_.cmdline_actions) =
        memory available because the limit will be exceeded before it gets \
        detected. Try 5% less or 15000 if you have 16 GB." );
     ( "-max_tainted_vars",
-      Arg.Set_int Flag_semgrep.max_tainted_vars,
+      Arg.Set_int Flag_lens.max_tainted_vars,
       "<int> maximum number of vars to store. This is mostly for internal use \
        to make performance testing easier" );
     ( "-max_taint_set_size",
-      Arg.Set_int Flag_semgrep.max_taint_set_size,
+      Arg.Set_int Flag_lens.max_taint_set_size,
       "<int> maximum size of a taint set. This is mostly for internal use to \
        make performance testing easier" );
     ( "-max_match_per_file",
@@ -583,7 +583,7 @@ let options (actions : unit -> Arg_.cmdline_actions) =
         Arg.Set Common.debugger,
         " option to set if launched inside ocamldebug" );
       ( "-keep_tmp_files",
-        (* nosemgrep: forbid-tmp *)
+        (* nolens: forbid-tmp *)
         Arg.Set UTmp.save_temp_files,
         " keep temporary generated files" );
     ]
@@ -594,18 +594,18 @@ let options (actions : unit -> Arg_.cmdline_actions) =
         Arg.Unit
           (fun () ->
             let version =
-              spf "semgrep-core version: %s (%s)" Version.version
+              spf "lens-core version: %s (%s)" Version.version
                 Git_info.commit
             in
             UConsole.print version;
-            Core_exit_code.(exit_semgrep Success)),
+            Core_exit_code.(exit_lens Success)),
         "  guess what" );
       ( "-ocaml_version",
         Arg.Unit
           (fun () ->
             let version = spf "OCaml version: %s" Sys.ocaml_version in
             UConsole.print version;
-            Core_exit_code.(exit_semgrep Success)),
+            Core_exit_code.(exit_lens Success)),
         "  The version of OCaml that was used to build this binary" );
     ]
   @ [
@@ -705,7 +705,7 @@ let maybe_with_tracing function_name engine analysis_flags
       in
       let configure_otel ?eio_sw_base ?curl_supported () =
         Telemetry.configure_otel ?eio_sw_base ?curl_supported
-          ~attrs:resource_attrs "semgrep-core" tracing.endpoint
+          ~attrs:resource_attrs "lens-core" tracing.endpoint
       in
       let run () =
         if is_rpc_call () then
@@ -783,7 +783,7 @@ let main_exn (argv : string array) : unit =
   let level : Logs.level option = if !debug then Some Debug else Some Warning in
 
   (* coupling: lots of similarities with what we do in Scan_subcommand.ml *)
-  Log_semgrep.with_setup ~log_to_otel:!trace ?log_to_file:!log_to_file
+  Log_lens.with_setup ~log_to_otel:!trace ?log_to_file:!log_to_file
     ?require_one_of_these_tags:None ~quiet_log_setup:(is_rpc_call ()) ~color:On
     ~level
   @@ fun () ->
@@ -800,7 +800,7 @@ let main_exn (argv : string array) : unit =
        * [Invalid_argument] out of cohttp, so report [msg], which names the
        * offending variable, and exit instead. *)
       Logs.err (fun m -> m "%s" msg);
-      Core_exit_code.(exit_semgrep Bad_command_line));
+      Core_exit_code.(exit_lens Bad_command_line));
   Http_helpers.set_client_ref (module Cohttp_lwt_unix.Client);
 
   (* must be done after Arg.parse, because Common.profile is set by it *)
@@ -835,13 +835,13 @@ let main_exn (argv : string array) : unit =
                         Targets [ Target.mk_unfilterable_lang_target lang file ]
                     | _ ->
                         (* alt: use the file targeting in Find_targets_lang but better
-                 to "dumb-down" semgrep-core to its minimum.
+                 to "dumb-down" lens-core to its minimum.
               *)
                         failwith
                           "this combination of targets and flags is not \
-                           supported; semgrep-core supports either the use of \
+                           supported; lens-core supports either the use of \
                            -targets, or -lang and a single target file; if you \
-                           need more complex file targeting use semgrep"
+                           need more complex file targeting use lens"
                   in
                   let config = { config with target_source } in
                   run config)))

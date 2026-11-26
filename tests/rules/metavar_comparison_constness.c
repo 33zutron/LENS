@@ -1,4 +1,4 @@
-/* https://github.com/returntocorp/semgrep/issues/3727 */
+/* https://github.com/returntocorp/lens/issues/3727 */
 int main() {
     int x = 3;
     int y = 5;

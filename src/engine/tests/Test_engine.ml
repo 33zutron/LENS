@@ -1,6 +1,6 @@
 (* Yoann Padioleau
  *
- * Copyright (C) 2021-2023 Semgrep Inc.
+ * Copyright (C) 2021-2023 Lens Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,21 +19,21 @@ module R = Rule
 module E = Core_error
 module RP = Core_result
 module TCM = Test_compare_matches
-module OutJ = Semgrep_output_v1_j
+module OutJ = Lens_output_v1_j
 
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
 (* !!!This module is deprecated!!!
  *
- * It used to allow to use semgrep-core -test_rules <files_or_dirs>
- * to automatically run all the semgrep rules in yaml files or directories
+ * It used to allow to use lens-core -test_rules <files_or_dirs>
+ * to automatically run all the lens rules in yaml files or directories
  * and make sure they match correctly (as specified by the special 'ruleid:'
- * comment in it), but now you should use osemgrep test instead.
+ * comment in it), but now you should use olens test instead.
  * This is also used for regression testing as part of 'make test' in
- * semgrep-core. See Unit_engine.full_rule_semgrep_rules_regression_tests().
+ * lens-core. See Unit_engine.full_rule_lens_rules_regression_tests().
  *
- * TODO: get rid of this module, switch everything to use `osemgrep test`
+ * TODO: get rid of this module, switch everything to use `olens test`
  * code path.
  *)
 
@@ -106,7 +106,7 @@ let find_target_of_yaml_file_opt (file : Fpath.t) : Fpath.t option =
       | Some (_, b2, ext2) ->
           if
             b = b2 && ext <> ext2
-            (* .yaml.j2 are Jinja2 templates to generate Semgrep files *)
+            (* .yaml.j2 are Jinja2 templates to generate Lens files *)
             && ext2 <> "yaml.j2"
             (* those are autofix test files that should be skipped *)
             && (not (ext2 =~ ".*fixed"))
@@ -264,11 +264,11 @@ let make_test_rule_file ?(expectations = Test_expectations.empty)
     | Some (rules, target, analyzer) -> (
         (* expected *)
         (* not tororuleid! not ok:! not todook:
-           see https://semgrep.dev/docs/writing-rules/testing-rules/
+           see https://lens.dev/docs/writing-rules/testing-rules/
            for the meaning of those labels.
 
            TODO: we should use the compare_matches logic in Test_subcommand.ml
-           to be more consistent with 'osemgrep test'.
+           to be more consistent with 'olens test'.
         *)
         let regexp = ".*\\b\\(ruleid\\|todook\\):.*" in
         let expected_error_lines =

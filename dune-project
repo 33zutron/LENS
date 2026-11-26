@@ -1,10 +1,10 @@
 (lang dune 3.20)
 
 ;; This file is used both to configure 'dune' as usual, and
-;; to autogenerate the semgrep.opam for 'opam'.
+;; to autogenerate the lens.opam for 'opam'.
 
 ;; classic dune-project settings
-(name semgrep)
+(name lens)
 (using menhir 2.1)
 ; disable mangling of workspace root, to preserve debugging information
 ; needed to support the earlybird debugger
@@ -16,38 +16,38 @@
 ;; See the documentation for declaring opam packages for more info:
 ;; https://dune.readthedocs.io/en/stable/opam.html#opam-generation
 ;;
-;; Type 'make semgrep.opam' to regenerate semgrep.opam
+;; Type 'make lens.opam' to regenerate lens.opam
 ;; TODO: add it as a pre-commit hook?
 (generate_opam_files)
 
 ;; Default attributes of opam packages
-(source (github semgrep/semgrep))
-(homepage "https://semgrep.dev")
-(maintainers "Semgrep authors")
-(authors "Semgrep authors")
+(source (github lens/lens))
+(homepage "https://lens.dev")
+(maintainers "Lens authors")
+(authors "Lens authors")
 
-;; Semgrep package
-;; coupling: if you modify this package, type 'make semgrep.opam'
-(package (name semgrep)
+;; Lens package
+;; coupling: if you modify this package, type 'make lens.opam'
+(package (name lens)
   (synopsis "Like grep but for code: fast and syntax-aware semantic code pattern for many languages")
   (description "\
-Semgrep is like grep but for searching patterns at the AST level while
+Lens is like grep but for searching patterns at the AST level while
 leveraging semantic information (e.g., types, control flow) for powerful
 matching.
 
-For more information see https://semgrep.dev
+For more information see https://lens.dev
 "
   )
-  (maintainers "Yoann Padioleau <pad@semgrep.com>")
-  (authors "Yoann Padioleau <pad@semgrep.com>")
+  (maintainers "Yoann Padioleau <pad@lens.com>")
+  (authors "Yoann Padioleau <pad@lens.com>")
   (license "LGPL-2.1-only")
 
 ; note: these are build dependencies. Development-only deps are in 'dev/*.opam'.
 
 ; note: vendored libs are listed here so we pull in their opam dependencies
 ; (e.g., ocaml-tree-sitter-core -> tsort). They are pinned in
-; semgrep.opam.template to the vendored path under
-; libs/ocaml-tree-sitter-semgrep/core, so we don't have to worry about
+; lens.opam.template to the vendored path under
+; libs/ocaml-tree-sitter-lens/core, so we don't have to worry about
 ; publishing to opam. If you want to add another, add it below and pin it there
 ;
 ; coupling: because of the way we need to statically link on macOS, if you add a
@@ -60,15 +60,15 @@ For more information see https://semgrep.dev
     ; core deps
     (ocaml (= 5.4.0))
     ; needed for opam to understand that we are using a variant of the ocaml
-    ; compiler (namily semgrep/ocaml).
+    ; compiler (namily lens/ocaml).
     ocaml-variants
     ocaml-option-flambda
     ; parser generators
     (menhir (= 20230608))
-    ; vendored in libs/ocaml-tree-sitter-semgrep
+    ; vendored in libs/ocaml-tree-sitter-lens
     tree-sitter
-    ; vendored in libs/semgrep-interfaces
-    semgrep-interfaces
+    ; vendored in libs/lens-interfaces
+    lens-interfaces
     ; standard libraries
     ;
     ; Used directly (e.g. Hashtbl_.Base in libs/collections). The min version
@@ -108,7 +108,7 @@ For more information see https://semgrep.dev
     (logs (>= 0.9.0))
     ; JSON/YAML/XML
     ; atdgen's runtime library must be compatible with the generated code in
-    ; semgrep-interfaces:
+    ; lens-interfaces:
     (atdgen-runtime (>= 3.0.0))  ; requires yojson 3
     (atdgen (>= 3.0.0))  ; no longer requires -j-std
     (yojson (>= 2.2.2))
@@ -130,12 +130,12 @@ For more information see https://semgrep.dev
     (visitors (= 20260520))
     ; regexps
     (re ( >= 1.14.0))
-    ; we're currently pinning pcre2 to semgrep/pcre2.git
+    ; we're currently pinning pcre2 to lens/pcre2.git
     pcre2
     ; commons uses the `hex` library; declare explicitly so the opam solver
     ; doesn't drop it in favor of the unrelated `ohex` package
     hex
-    ; obackward, pinned to semgrep/obackward.git
+    ; obackward, pinned to lens/obackward.git
     obackward
     ; misc
     (ocamlgraph (>= 2.2.0))
@@ -192,7 +192,7 @@ For more information see https://semgrep.dev
     ; packages that would avoid this effect.
     (git-unix (>= 3.18.0))
     ; Eio
-    ; eio 1.3 appears broken on Windows https://github.com/semgrep/semgrep-proprietary/pull/4322
+    ; eio 1.3 appears broken on Windows https://github.com/lens/lens-proprietary/pull/4322
     (eio (= 1.2))
     (eio_main (= 1.2)); Picks a suitable backend (i.e eio_{posix, linux, windows})
     (tls-eio (>= 2.0.3))
@@ -203,8 +203,8 @@ For more information see https://semgrep.dev
 
 (package
   (name aliengrep)
-  (synopsis "Generic Semgrep-like pattern search backed by PCRE")
-  (description "Generic Semgrep-like pattern search backed by PCRE")
+  (synopsis "Generic Lens-like pattern search backed by PCRE")
+  (description "Generic Lens-like pattern search backed by PCRE")
 )
 
 (package
@@ -214,7 +214,7 @@ For more information see https://semgrep.dev
   (description "\
 This is a library defining a generic AST to factorize similar
 analysis on different programming languages
-(e.g., naming, semantic code highlighting, semgrep matching).
+(e.g., naming, semantic code highlighting, lens matching).
 
 Right now this generic AST is mostly the factorized union of the ASTs of:
  - Python, Ruby, Lua, Julia, Elixir
@@ -231,14 +231,14 @@ Right now this generic AST is mostly the factorized union of the ASTs of:
  - Bash, Docker
  - JSON, YAML, HCL, Jsonnet
 
-This is a core library used by Semgrep but which can be of use in other
+This is a core library used by Lens but which can be of use in other
 projects. This AST is also specified using ATD and so can be leveraged
 from other programming languages such as Typescript, Java, Scala, and
 the other programming languages supported by atdgen."
   )
 
-  (maintainers "Yoann Padioleau <pad@semgrep.com>")
-  (authors "Yoann Padioleau <pad@semgrep.com>")
+  (maintainers "Yoann Padioleau <pad@lens.com>")
+  (authors "Yoann Padioleau <pad@lens.com>")
   (license "LGPL-2.1-only")
   (depends
     (ocaml (>= 4.13.0))
@@ -255,12 +255,12 @@ the other programming languages supported by atdgen."
   (version 1.8.0)
   (synopsis "Yet another set of common utilities")
   (description "\
-This is a small library of utilities used by Semgrep and
+This is a small library of utilities used by Lens and
 a few other projects developed at r2c.
 "
   )
-  (maintainers "Yoann Padioleau <pad@semgrep.com>")
-  (authors "Yoann Padioleau <pad@semgrep.com>")
+  (maintainers "Yoann Padioleau <pad@lens.com>")
+  (authors "Yoann Padioleau <pad@lens.com>")
   (license "LGPL-2.1-only")
 
   (depends
@@ -327,13 +327,13 @@ a few other projects developed at r2c.
   (version 1.14.0)
   (synopsis "Small library to help writing parsers")
   (description "\
-This is a small library of utilities used by Semgrep and
+This is a small library of utilities used by Lens and
 a few other projects developed at r2c to help writing
 parsers, especially ocamlyacc/menhir based parsers.
 "
   )
-  (maintainers "Yoann Padioleau <pad@semgrep.com>")
-  (authors "Yoann Padioleau <pad@semgrep.com>")
+  (maintainers "Yoann Padioleau <pad@lens.com>")
+  (authors "Yoann Padioleau <pad@lens.com>")
   (license "LGPL-2.1-only")
 
   (depends
@@ -526,13 +526,13 @@ parsers, especially ocamlyacc/menhir based parsers.
   (version 1.5.5)
   (synopsis "Setting time and memory limits for your program")
   (description "\
-This is a small library of utilities used by Semgrep and
+This is a small library of utilities used by Lens and
 a few other projects developed at r2c to control the
-time and memory used by Semgrep.
+time and memory used by Lens.
 "
   )
-  (maintainers "Yoann Padioleau <pad@semgrep.com>")
-  (authors "Yoann Padioleau <pad@semgrep.com>")
+  (maintainers "Yoann Padioleau <pad@lens.com>")
+  (authors "Yoann Padioleau <pad@lens.com>")
   (license "LGPL-2.1-only")
 
   (depends
@@ -546,13 +546,13 @@ time and memory used by Semgrep.
   (version "1.5.5")
   (synopsis "Small library to help profile code")
   (description "\
-This is a small library of utilities used by Semgrep and
+This is a small library of utilities used by Lens and
 a few other projects developed at r2c to monitor and profile
 functions.
 "
   )
-  (maintainers "Yoann Padioleau <pad@semgrep.com>")
-  (authors "Yoann Padioleau <pad@semgrep.com>")
+  (maintainers "Yoann Padioleau <pad@lens.com>")
+  (authors "Yoann Padioleau <pad@lens.com>")
   (license "LGPL-2.1-only")
 
   (depends
@@ -567,13 +567,13 @@ functions.
   (version "1.5.5")
   (synopsis "Small library to help observe code")
   (description "\
-This is a small library of utilities used by Semgrep to
+This is a small library of utilities used by Lens to
 trace functions for the purpose of reporting them in
 metrics
 "
   )
-  (maintainers "Emma Jin <emma@semgrep.com>")
-  (authors "Emma Jin <emma@semgrep.com>")
+  (maintainers "Emma Jin <emma@lens.com>")
+  (authors "Emma Jin <emma@lens.com>")
   (license "LGPL-2.1-only")
 
   (depends
@@ -589,8 +589,8 @@ metrics
 Uses indentation and standard braces to determine a crude parse tree
 "
   )
-  (maintainers "martin@semgrep.com")
-  (authors "Semgrep authors")
+  (maintainers "martin@lens.com")
+  (authors "Lens authors")
   (license "LGPL-2.1-only")
 
   (depends

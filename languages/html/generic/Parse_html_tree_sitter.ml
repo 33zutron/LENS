@@ -21,7 +21,7 @@ module G = AST_generic
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* HTML parser using tree-sitter-lang/semgrep-html and converting
+(* HTML parser using tree-sitter-lang/lens-html and converting
  * directly to AST_generic.ml.
  *
  * This is also now used to parse XML!
@@ -40,7 +40,7 @@ let fb = Tok.unsafe_fake_bracket
 (*****************************************************************************)
 (* Boilerplate converter *)
 (*****************************************************************************)
-(* This was started by copying tree-sitter-lang/semgrep-html/Boilerplate.ml *)
+(* This was started by copying tree-sitter-lang/lens-html/Boilerplate.ml *)
 
 (**
    Boilerplate to be used as a template when mapping the html CST

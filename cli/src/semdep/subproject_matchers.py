@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2024-2025 Semgrep Inc.
+# Copyright (c) 2024-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -13,7 +13,7 @@
 from typing import FrozenSet
 from typing import List
 
-import semgrep.semgrep_interfaces.semgrep_output_v1 as out
+import lens.lens_interfaces.lens_output_v1 as out
 from semdep.matchers.base import ExactLockfileManifestMatcher
 from semdep.matchers.base import ExactManifestOnlyMatcher
 from semdep.matchers.base import PatternManifestStaticLockfileMatcher
@@ -22,8 +22,8 @@ from semdep.matchers.bazel import BazelMavenInstallMatcher
 from semdep.matchers.gradle import GradleMatcher
 from semdep.matchers.pip_requirements import PipRequirementsMatcher
 from semdep.matchers.sbt import SbtMatcher
-from semgrep.simple_profiling import simple_profiling
-from semgrep.types import Target
+from lens.simple_profiling import simple_profiling
+from lens.types import Target
 
 # NOTE: the order that these matchers are defined in matters. In find_subprojects, we
 # use each dependency source file for at most one matcher, running the matchers in the

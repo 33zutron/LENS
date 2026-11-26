@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -15,10 +15,10 @@ open Common
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* End-to-end (e2e) testing of the semgrep-core CLI program
+(* End-to-end (e2e) testing of the lens-core CLI program
  *
- * See also tests for the semgrep-core -generate_ast_json in
- * in semgrep-interfaces/tests/test-ast run from make core-test-e2 run
+ * See also tests for the lens-core -generate_ast_json in
+ * in lens-interfaces/tests/test-ast run from make core-test-e2 run
  * itself from .github/workflow/test.yml
  *)
 
@@ -34,8 +34,8 @@ type exn_res = ExnExit of int
 let run_main (cmd : string) : (unit, exn_res) result =
   let args = String_.split ~sep:"[ \t]+" cmd in
   try
-    print_string (spf "executing: semgrep-core %s\n" cmd);
-    Ok (Core_CLI.main_exn (Array.of_list ("semgrep-core" :: args)))
+    print_string (spf "executing: lens-core %s\n" cmd);
+    Ok (Core_CLI.main_exn (Array.of_list ("lens-core" :: args)))
   with
   | Common.UnixExit (n, msg) ->
       Logs.err (fun m -> m "exn UnixExit(%d): %s" n msg);
@@ -50,8 +50,8 @@ let assert_Ok res =
 (* The tests *)
 (*****************************************************************************)
 
-let semgrep_core_tests : Testo.t list =
-  Testo.categorize "semgrep-core CLI (e2e)"
+let lens_core_tests : Testo.t list =
+  Testo.categorize "lens-core CLI (e2e)"
     [
       t "--help" (fun () ->
           match run_main "handle --help" with
@@ -67,7 +67,7 @@ let semgrep_core_tests : Testo.t list =
           | Error (ExnExit 0) -> ()
           | _ -> failwith "expected -version to exit with code 0");
           let expected =
-            spf "semgrep-core version: %s (%s)" Version.version Git_info.commit
+            spf "lens-core version: %s (%s)" Version.version Git_info.commit
           in
           if String_.contains ~term:expected (snd res) then print_string "OK"
           else failwith (spf "missing %S in -version output" expected));
@@ -80,8 +80,8 @@ let semgrep_core_tests : Testo.t list =
       t ~checked_output:(Testo.stdout ())
         "output of -rules <rule> -l <lang> <single_file>" (fun () ->
           let cmd =
-            "-rules tests/semgrep-core-e2e/rules/basic.yaml -l python \
-             tests/semgrep-core-e2e/targets/basic.py -debug"
+            "-rules tests/lens-core-e2e/rules/basic.yaml -l python \
+             tests/lens-core-e2e/targets/basic.py -debug"
           in
           run_main cmd |> assert_Ok);
       (* we could also assert that the output is actually equal to the
@@ -89,8 +89,8 @@ let semgrep_core_tests : Testo.t list =
        *)
       t ~checked_output:(Testo.stdout ()) "handle -targets" (fun () ->
           let cmd =
-            "-rules tests/semgrep-core-e2e/rules/basic.yaml  -targets \
-             tests/semgrep-core-e2e/targets.json -debug"
+            "-rules tests/lens-core-e2e/rules/basic.yaml  -targets \
+             tests/lens-core-e2e/targets.json -debug"
           in
           run_main cmd |> assert_Ok);
     ]
@@ -113,7 +113,7 @@ let assert_no_exporter () =
   if Opentelemetry.Sdk.present () then failwith "unexpected OTel exporter"
 
 let telemetry_tests : Testo.t list =
-  Testo.categorize "semgrep-core telemetry exporter"
+  Testo.categorize "lens-core telemetry exporter"
     [
       Testo.create "curl exporter is only supported on Linux" (fun () ->
           let supported = Core_CLI.curl_telemetry_supported in
@@ -151,4 +151,4 @@ let telemetry_tests : Testo.t list =
           assert_no_exporter ());
     ]
 
-let tests () : Testo.t list = semgrep_core_tests @ telemetry_tests
+let tests () : Testo.t list = lens_core_tests @ telemetry_tests

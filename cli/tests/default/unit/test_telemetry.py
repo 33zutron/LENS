@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 Semgrep Inc.
+# Copyright (c) 2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -10,11 +10,11 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file
 # LICENSE for more details.
 #
-# Testing src/semgrep/telemetry.py
+# Testing src/lens/telemetry.py
 import pytest
 
-from semgrep.telemetry import _env_from_app_url
-from semgrep.telemetry import cli_args_to_attrs
+from lens.telemetry import _env_from_app_url
+from lens.telemetry import cli_args_to_attrs
 
 
 class TestEnvFromAppUrl:
@@ -23,26 +23,26 @@ class TestEnvFromAppUrl:
         "url, expected",
         [
             # prod: bare domain
-            ("https://semgrep.dev", "prod"),
+            ("https://lens.dev", "prod"),
             # prod: customer subdomain
-            ("https://intuit.semgrep.dev", "prod"),
+            ("https://intuit.lens.dev", "prod"),
             # prod: trailing slash stripped
-            ("https://semgrep.dev/", "prod"),
+            ("https://lens.dev/", "prod"),
             # staging: exact
-            ("https://staging.semgrep.dev", "staging"),
+            ("https://staging.lens.dev", "staging"),
             # staging: subdomain
-            ("https://mystack.staging.semgrep.dev", "staging"),
+            ("https://mystack.staging.lens.dev", "staging"),
             # dev2: exact
-            ("https://dev2.semgrep.dev", "dev2"),
+            ("https://dev2.lens.dev", "dev2"),
             # dev2: subdomain
-            ("https://mystack.dev2.semgrep.dev", "dev2"),
+            ("https://mystack.dev2.lens.dev", "dev2"),
             # dev2: with path
-            ("https://dev2.semgrep.dev/some/path", "dev2"),
+            ("https://dev2.lens.dev/some/path", "dev2"),
             # unknown: unrelated domain
             ("https://example.com", "unknown"),
             # unknown: looks similar but isn't
-            ("https://notsemgrep.dev", "unknown"),
-            ("https://semgrep.dev.evil.com", "unknown"),
+            ("https://notlens.dev", "unknown"),
+            ("https://lens.dev.evil.com", "unknown"),
         ],
     )
     def test_env_from_app_url(self, url: str, expected: str) -> None:

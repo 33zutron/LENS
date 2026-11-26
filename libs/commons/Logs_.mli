@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2022-2025 Semgrep Inc.
+   Copyright (c) 2022-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -99,11 +99,11 @@ val with_setup :
    destinations, e.g. an opentelemetry collector, a log file, etc.
 
    The following shell command shows for example how to
-   make semgrep run at the debug level but only show lines tagged with
+   make lens run at the debug level but only show lines tagged with
    [Match_rules] or [Core_scan].
 
 {v
-     $ LOG_TAGS=Match_rules,Core_scan semgrep -e 'Obj.magic' -l ocaml --debug
+     $ LOG_TAGS=Match_rules,Core_scan lens -e 'Obj.magic' -l ocaml --debug
      ...
      [00.45][INFO](Core_scan): Analyzing libs/commons/UCmd.ml
      [00.45][INFO](Core_scan): Analyzing tests/parsing/ocaml/attribute_type.ml

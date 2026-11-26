@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2024-2025 Semgrep Inc.
+   Copyright (c) 2024-2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -11,15 +11,15 @@
    LICENSE for more details.
 *)
 open Telemetry
-(** Tracing library for Semgrep
+(** Tracing library for Lens
 
    Provide a simple interface to send contextualized performance metrics
-   for Semgrep code using Opentelemetry traces. By default, they send to
+   for Lens code using Opentelemetry traces. By default, they send to
    our Datadog endpoint, but the collector can be customized using the
-   SEMGREP_OTEL_ENDPOINT environment variable.
+   LENS_OTEL_ENDPOINT environment variable.
 
    To trace a program, start by calling `configure_otel`. Then, wrap
-   the entry point of the program (e.g. `Core_command.semgrep_core_dispatch`)
+   the entry point of the program (e.g. `Core_command.lens_core_dispatch`)
    with `with_tracing`. Traces will now be sent for the duration of that
    function.
 
@@ -38,12 +38,12 @@ type level =
           anything that occurs linearly with files/rules, e.g. operations that
           repeat N times, where N is the number of targets, etc. *)
   | Debug
-      (** Enable commonly used debug tracing. For Semgrep this usually means any
+      (** Enable commonly used debug tracing. For Lens this usually means any
           high level operations related to files/rules/targets. Please avoid
           tracing any operations that occurs exponentially, e.g. functions that
           run many times for each target, like specific match functions *)
   | Trace
-      (** Enable everything! For Semgrep this can be anything, but be wary that
+      (** Enable everything! For Lens this can be anything, but be wary that
           this level won't work well with non-toy repositories, as trace viewers
           are liable to fall over from trying to load giant traces *)
 
@@ -58,7 +58,7 @@ val add_data_to_span : scope -> (string * user_data) list -> unit
 (** Expose the Trace function to add data to a span *)
 
 val add_data : (string * user_data) list -> config option -> unit
-(** Convenience version of add_data_to_span for Semgrep *)
+(** Convenience version of add_data_to_span for Lens *)
 
 val add_global_attribute : string -> user_data -> unit
 (** Expose the Trace function to add global attributes to the top level span *)

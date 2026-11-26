@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2021-2025 Semgrep Inc.
+# Copyright (c) 2021-2025 Lens Inc.
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -11,7 +11,7 @@
 # LICENSE for more details.
 #
 import pytest
-from tests.fixtures import RunSemgrep
+from tests.fixtures import RunLens
 
 
 @pytest.mark.kinda_slow
@@ -41,9 +41,9 @@ from tests.fixtures import RunSemgrep
     ],
 )
 @pytest.mark.osemfail
-def test_basic(run_semgrep_on_copied_files: RunSemgrep, snapshot, rule, target):
+def test_basic(run_lens_on_copied_files: RunLens, snapshot, rule, target):
     snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             rule,
             target_name=target,
             # we now need to be logged in to access metavariables
@@ -67,11 +67,11 @@ def test_basic(run_semgrep_on_copied_files: RunSemgrep, snapshot, rule, target):
             "join_rules/recursive/java-callgraph-example/vulnado-chain-broken",
         ),
         # TODO: regression because of
-        # https://github.com/returntocorp/semgrep/pull/6900
+        # https://github.com/returntocorp/lens/pull/6900
         # commented for now
         #
         # Let's say you have a pattern `func($X)` to match `func(bar)` where `bar`
-        # comes from package `foo`. Semgrep-core returns two matches, in each match
+        # comes from package `foo`. Lens-core returns two matches, in each match
         # the abstract_content of $X is different, in one it is `bar` and in the
         # other it is `foo.bar`. Right, but the token associated with both is now
         # the same since PR #6900, it's the token of `bar` for both matches! And
@@ -89,9 +89,9 @@ def test_basic(run_semgrep_on_copied_files: RunSemgrep, snapshot, rule, target):
     ],
 )
 @pytest.mark.osemfail
-def test_recursive(run_semgrep_on_copied_files: RunSemgrep, snapshot, rule, target):
+def test_recursive(run_lens_on_copied_files: RunLens, snapshot, rule, target):
     snapshot.assert_match(
-        run_semgrep_on_copied_files(
+        run_lens_on_copied_files(
             rule, target_name=target, is_logged_in_weak=True
         ).stdout,
         "results.json",

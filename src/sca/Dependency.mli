@@ -1,5 +1,5 @@
 (*
-   Copyright (c) 2025 Semgrep Inc.
+   Copyright (c) 2025 Lens Inc.
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public License
@@ -14,11 +14,11 @@
    Complete information about a package dependency and especially its location
    in a lockfile.
 
-   This is similar to found_dependency in semgrep_output_v1.atd
+   This is similar to found_dependency in lens_output_v1.atd
    (hence the to_found_dependency() function further below)
 *)
 
-type kind = Semgrep_output_v1_t.dependency_kind =
+type kind = Lens_output_v1_t.dependency_kind =
   (* we depend directly on the 3rd-party library mentioned in the lockfile
    * (e.g., use of log4j library and concrete calls to log4j in 1st-party code).
    * log4j must be declared as a direct dependency in the manifest file.
@@ -116,4 +116,4 @@ val to_found_dependency :
   ?manifest_path:Fpath.t ->
   t ->
   t list option ->
-  Semgrep_output_v1_t.found_dependency
+  Lens_output_v1_t.found_dependency
